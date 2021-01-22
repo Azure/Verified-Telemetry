@@ -1,0 +1,64 @@
+{
+  "@context": "dtmi:dtdl:context;2",
+  "@id": "dtmi:azure:verifiedtelemetry:sample:device;1",
+  "@type": "Interface",
+  "displayName": "Device Sensors",
+  "description": "Device Sensors",
+  "contents": [
+    {
+      "@type": "Telemetry",
+      "name": "soilMoistureExternal",
+      "displayName" : "Soil Moisture External",
+      "schema": "float"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "accelerometerXExternal",
+      "displayName" : "Accelerometer X Axis External",
+      "schema": "float"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "temperature",
+      "displayName" : "Temperature",
+      "schema": "float"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "pressure",
+      "displayName" : "Pressure",
+      "schema": "float"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "humidityPercentage",
+      "displayName" : "Humidity Percentage",
+      "schema": "float"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "acceleration",
+      "displayName" : "Acceleration",
+      "schema": "float"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "magnetic",
+      "displayName" : "Magnetic",
+      "schema": "float"
+    },
+    {
+      "@type": "Command",
+      "name": "setLedState",
+      "request": {
+          "name": "state",
+          "schema": "boolean"
+      }
+    },
+    {
+      "@type": "Property",
+      "name": "ledState",
+      "schema": "boolean"
+    }
+  ]
+}
