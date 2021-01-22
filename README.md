@@ -6,7 +6,7 @@
 # Architecture Diagram
 ![Architecture](./docs/architecture.png)
 
-#Dependencies
+# Dependencies
 Verified Telemetry is dependant on following SDK's:
   * [NetXDuo](https://github.com/azure-rtos/netxduo)
   * Device Specific HAL SDK (as shown in the table below)
