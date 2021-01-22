@@ -1,0 +1,43 @@
+{
+  "@context": "dtmi:dtdl:context;2",
+  "@id": "dtmi:azure:verifiedtelemetry:telemetryinfomation;1",
+  "@type": "Interface",
+  "displayName": "Verified Telemetry Information",
+  "description": "Provides information about Verified Telemetry for the associated telemetry and supporting Fingerprint Information",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "telemetryStatus",
+      "displayName" : "Status of Telemetry to which this fingerprint is associated",
+      "schema": "boolean"
+    },
+    {
+      "@type": "Property",
+      "name": "fingerprintType", 
+      "displayName" : "Type of the fingerprint",
+      "schema": "string"
+    },
+    {
+      "@type": "Property",
+      "name": "fingerprintTemplate",
+      "displayName" : "Fingerprint template for the associated sensor",
+      "schema": {
+        "@type": "Map",
+        "mapKey": {
+            "name": "TemplateProperty", 
+            "schema": "string"
+        },
+        "mapValue": {
+            "name": "TemplatePropertyValue", 
+            "schema": "string"
+        }
+      }
+    },
+    {
+      "@type": "Command",
+      "name": "resetFingerprintTemplate",
+      "displayName":"Reset fingerprint template",
+      "comment": "This command will reset the fingerprint template"
+    }    
+  ]
+}
