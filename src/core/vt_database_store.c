@@ -4,7 +4,7 @@
 
 void storeinflash(VT_DATABASE* database_ptr, uint32_t* fallcurvearray,int sampling_frequency, int sensorid);
 
-uint32_t temp[1012];
+
 
 uint vt_database_store(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensorid)
 {
@@ -90,11 +90,13 @@ uint _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, double pea
 void storeinflash(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensorid)
 {
     uint32_t total_fingerprints;
+    uint32_t temp[1012];
     
     _vt_dsc_flash_read(database_ptr->vt_flash_address, temp, 2);
 
     if (temp[0] == FLASH_DB_START_VALUE)
     {
+
         total_fingerprints = temp[1];
         _vt_dsc_flash_read(database_ptr->vt_flash_address, temp, (2 + total_fingerprints * 103));
 

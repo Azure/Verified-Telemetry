@@ -1,7 +1,8 @@
 /* Copyright (c) Microsoft Corporation. */
 
 #include "vt_database.h"
-uint32_t temp[1012];
+
+
 uint vt_database_clear(VT_DATABASE* database_ptr)
 {
     uint32_t total_fingerprints;
@@ -11,6 +12,8 @@ uint vt_database_clear(VT_DATABASE* database_ptr)
 
     if (database_ptr->vt_flash_address != 0x00)
     {
+        uint32_t temp[1012];
+
         _vt_dsc_flash_read(database_ptr->vt_flash_address, temp, 2);
         
         if (temp[0] == FLASH_DB_START_VALUE)
