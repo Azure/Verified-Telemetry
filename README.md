@@ -3,6 +3,13 @@
 - This is achieved by devising an intelligent fingerprint for a sensor to determine the status of the sensor.  
 - The sensor fingerprint captures electrical properties of the sensor such as voltage and current using seamless software code running on the IoT device. 
 
+# [Verified Telemetry Device Samples](https://github.com/Azure/Verified-Telemetry-Device-Sample)
+- These Getting Started guides shows device developers how to include Verified Telemetry with Azure IoT on Azure RTOS.
+
+# [Verified Telemetry Solution Samples](https://github.com/Azure/Verified-Telemetry-Solution-Sample)
+- These Getting Started guides showcase how the Verified Telemetry features can be utilised in real world scenarios.
+
+
 # Architecture Diagram
 ![Architecture](./docs/architecture.png)
 
