@@ -15,7 +15,7 @@
 
 # Dependencies
 Verified Telemetry is dependant on following SDK's:
-  * [NetXDuo](https://github.com/azure-rtos/netxduo)
+  * [NetXDuo](https://github.com/azure-rtos/netxduo/tree/feature/iot_pnp)
   * Device Specific HAL SDK (as shown in the table below)
 
     | Device          | SDK                                                           |																				  
