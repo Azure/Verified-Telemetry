@@ -57,7 +57,9 @@ Verified Telemetry is dependant on following SDK's:
 |---------------|---------|
 | `RAM`		    | 14 Kb   |
 
-
+# Plug and Play Model
+Verified Telemetry Library provides capabilities of interaction using a Plug and Play Model.
+Details about this model can be found [here](./PnPModel)
 # API Documentation
 ## Overview of functions
 | Function          | Description                                                                     |
