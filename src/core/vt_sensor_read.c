@@ -50,12 +50,9 @@ uint vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uin
 
     *sensorid = 0;
 
-    int sensorid_nrmse = _vt_database_evaluate_nrmse(database_ptr, fingerprint);
-    printf("\n Status with NRMSE = %d", sensorid_nrmse);
-
     if (_vt_fingerprint_calculate_falltime_pearsoncoefficient(fingerprint, 100, sensor_ptr->vt_sampling_frequency, &fall_time, &pearson_coefficient) == VT_SUCCESS) {
         int sensorid_ftpc = _vt_database_evaluate_pearson_falltime(database_ptr, fall_time, pearson_coefficient);
-        printf("\n Status with FTPC = %d \n", sensorid_ftpc);
+        printf("\nStatus with FTPC = %d \n", sensorid_ftpc);
 
         *sensorid = sensorid_ftpc;
 

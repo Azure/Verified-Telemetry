@@ -10,6 +10,8 @@ VT_FALL_STATE _vt_index37_state(int index_37);
 
 void vt_sensor_calibrate(VT_SENSOR* sensor_ptr)
 {
+    printf("\nCalibrating Sensor Fingerprint\n");
+
     VT_STATE_BLOCK states;
     int status;
 
@@ -22,15 +24,16 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr)
     status                                       = _vt_sensor_calibrate(sensor_ptr, &states);
     sensor_ptr->vt_sampling_frequency            = states.current_sampling_frequency;
 
-    printf("\nBest Possible Sampling Frequency = %d\n", states.current_sampling_frequency);
+
+    printf("Best Possible Sampling Frequency = %d\n", states.current_sampling_frequency);
     if (status == VT_SUCCESS)
-        printf("\nSensor has a good fall Curve\n");
+        printf("Sensor has a good fall Curve\n");
 
     else if (status == VT_NOISY_FUNCTION_ERROR)
-        printf("\nThe Sensor doesnt give a fall curve in the specified frequency range.\n");
+        printf("The Sensor doesnt give a fall curve in the specified frequency range.\n");
 
     else
-        printf("\nThe Sensor gives a consistent curve, but the fall is imperfect. Error Code = (0x%02x)\n", status);
+        printf("The Sensor gives a consistent curve, but the fall is imperfect. Error Code = (0x%02x)\n", status);
 }
 
 uint _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states)
@@ -38,11 +41,8 @@ uint _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states)
     int index_max;
     int index_37;
 
-    printf("\n\nTest Sampling Frequency = %d", states->current_sampling_frequency);
     _vt_sensor_read_fingerprint(sensor_ptr, states->current_fingerprint, states->current_sampling_frequency);
-
     states->current_shape = _vt_fingerprint_calculate_shape(states->current_fingerprint, VT_FINGERPRINT_LENGTH);
-    printf("\nShape =%d", states->current_shape);
 
     switch (states->current_shape)
     {
@@ -50,7 +50,6 @@ uint _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states)
             index_max = _vt_fingerprint_calculate_maximum_index(states->current_fingerprint, VT_FINGERPRINT_LENGTH);
             index_37  = _vt_fingerprint_calculate_37index(states->current_fingerprint, VT_FINGERPRINT_LENGTH);
             VT_FALL_STATE index37_state = _vt_index37_state(index_37);
-            printf(" \n Max Index = %d\n Index_37 =%d", index_max, index_37);
 
             switch (index37_state)
             {
