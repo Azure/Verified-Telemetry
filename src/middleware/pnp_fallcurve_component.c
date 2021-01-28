@@ -1,4 +1,5 @@
-/* Copyright (c) Microsoft Corporation. */
+/* Copyright (c) Microsoft Corporation.
+   Licensed under the MIT License. */
 
 #include "pnp_fallcurve_component.h"
 

@@ -1,4 +1,5 @@
 ﻿# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 
 # CMakeList.txt : CMake project for CMakeProject2, include source and define
 # project specific logic here.

@@ -1,4 +1,5 @@
-/* Copyright (c) Microsoft Corporation. */
+/* Copyright (c) Microsoft Corporation.
+   Licensed under the MIT License. */
 
 #ifndef _VT_API_H
 #define _VT_API_H
@@ -50,7 +51,7 @@ typedef struct VT_DATABASE_STRUCT
 {
     uint32_t vt_flash_address;
     uint32_t vt_fallcurve_component_id;
-    
+
     int _vt_total_fingerprints;
     uint32_t _vt_fingerprintdb[10][102];
 
@@ -63,7 +64,7 @@ typedef struct VT_DATABASE_STRUCT
 } VT_DATABASE;
 
 // Initialize
-uint vt_sensor_initialize(VT_SENSOR* sensor_ptr,char* Port_Name,GPIO_PORT_TYPEDEF* GPIOx,GPION_PIN_TYPEDEF GPIO_Pin,ADC_CONTROLLER_TYPEDEF* ADC_Controller,ADC_CHANNEL_TYPEDEF ADC_Channel,TIMER_HANDLE_TYPEDEF* Timer_Handler);
+uint vt_sensor_initialize(VT_SENSOR* sensor_ptr, char* Port_Name, GPIO_PORT_TYPEDEF* GPIOx, GPION_PIN_TYPEDEF GPIO_Pin, ADC_CONTROLLER_TYPEDEF* ADC_Controller, ADC_CHANNEL_TYPEDEF ADC_Channel, TIMER_HANDLE_TYPEDEF* Timer_Handler);
 
 // Calibrate
 void vt_sensor_calibrate(VT_SENSOR* sensor_ptr);

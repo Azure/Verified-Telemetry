@@ -1,4 +1,5 @@
-/* Copyright (c) Microsoft Corporation. */
+/* Copyright (c) Microsoft Corporation.
+   Licensed under the MIT License. */
 
 #ifndef _VT_PORT_H
 #define _VT_PORT_H

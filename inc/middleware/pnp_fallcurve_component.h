@@ -1,4 +1,5 @@
-/* Copyright (c) Microsoft Corporation. */
+/* Copyright (c) Microsoft Corporation.
+   Licensed under the MIT License. */
 
 #ifndef PNP_FALLCURVE_COMPONENT_H
 #define PNP_FALLCURVE_COMPONENT_H
