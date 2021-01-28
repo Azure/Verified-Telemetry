@@ -3,12 +3,19 @@
 - This is achieved by devising an intelligent fingerprint for a sensor to determine the status of the sensor.  
 - The sensor fingerprint captures electrical properties of the sensor such as voltage and current using seamless software code running on the IoT device. 
 
+# [Verified Telemetry Device Samples](https://github.com/Azure/Verified-Telemetry-Device-Sample)
+- These Getting Started guides shows device developers how to include Verified Telemetry with Azure IoT on Azure RTOS.
+
+# [Verified Telemetry Solution Samples](https://github.com/Azure/Verified-Telemetry-Solution-Sample)
+- These Getting Started guides showcase how the Verified Telemetry features can be utilised in real world scenarios.
+
+
 # Architecture Diagram
 ![Architecture](./docs/architecture.png)
 
-#Dependencies
+# Dependencies
 Verified Telemetry is dependant on following SDK's:
-  * [NetXDuo](https://github.com/azure-rtos/netxduo)
+  * [NetXDuo](https://github.com/azure-rtos/netxduo/tree/feature/iot_pnp)
   * Device Specific HAL SDK (as shown in the table below)
 
     | Device          | SDK                                                           |																				  
@@ -50,7 +57,9 @@ Verified Telemetry is dependant on following SDK's:
 |---------------|---------|
 | `RAM`		    | 14 Kb   |
 
-
+# Plug and Play Model
+Verified Telemetry Library provides capabilities of interaction using a Plug and Play Model.
+Details about this model can be found [here](./PnPModel)
 # API Documentation
 ## Overview of functions
 | Function          | Description                                                                     |
@@ -275,5 +284,121 @@ UINT pnp_vt_properties(
 ## Return Value
 NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
 
+# Steps to integrate Verified Telemetry with existing device code
+* While developers can refer to the [Device Samples](https://github.com/Azure/Verified-Telemetry-Device-Sample) for Verified Telemetry, the following steps showcase how Verified Telemetry Library can be integrated separately with [Azure RTOS getting started samples](https://github.com/azure-rtos/getting-started)
 
+	> NOTE: The following steps demonstrate the integration of Verified Telemetry for the [AZ3166 getting started sample.](https://github.com/azure-rtos/getting-started/tree/master/MXChip/AZ3166) 
+	Similar steps can be followed for B-L475E-IOT01A/B-L4S5I-IOT01A device samples.
 
+## Step 1: Include Verified Telemetry library
+* In the root folder, run the following command
+	```shell
+	git submodule add https://github.com/Azure/Verified-Telemetry.git core/lib/verified-telemetry
+	```
+* Include library files in [getting-started/MXChip/AZ3166/lib/CMakeLists.txt](https://github.com/azure-rtos/getting-started/blob/master/MXChip/AZ3166/lib/CMakeLists.txt)
+	```
+	add_subdirectory(${CORE_LIB_DIR}/verified-telemetry verified_telemetry)
+	```
+* Configure VT_DEVICE option in [getting-started/MXChip/AZ3166/lib/CMakeLists.txt](https://github.com/azure-rtos/getting-started/blob/master/MXChip/AZ3166/lib/CMakeLists.txt)
+	```
+	set(VT_DEVICE "MXCHIP_AZ3166")
+	```
+## Step 2: Initialize Verified Telemetry
+Make the following additions to the [/getting-started/blob/master/MXChip/AZ3166/app/nx_client.c](https://github.com/azure-rtos/getting-started/blob/master/MXChip/AZ3166/app/nx_client.c) file
+* Include headers
+	```C
+	#include "pnp_verified_telemetry.h"
+	#include "pnp_fallcurve_component.h"
+	```
+* Define number of verified Telemetries that the device would be supporting
+	```C
+	#define NUMBER_OF_VT_ENABLED_TELEMETRIES                         N
+	```
+* Define Verified Telemetry DB which will store configuration and runtime information
+	```C
+	static VERIFIED_TELEMETRY_DB verified_telemetry_DB;
+	```
+* Define one FallCurve component for each telemetry that will be supporting Verified Telemetry
+	```C
+	static PNP_FALLCURVE_COMPONENT sample_fallcurve_1;
+	// static PNP_FALLCURVE_COMPONENT sample_fallcurve_2;
+	static PNP_FALLCURVE_COMPONENT sample_fallcurve_N;
+	```
+* Assign a name to each FallCurve component
+	```C
+	static const CHAR sample_fallcurve_1_component[] = "vTTelemetry1";
+	// static const CHAR sample_fallcurve_2_component[] = "vTTelemetry2";
+	static const CHAR sample_fallcurve_N_component[] = "vTTelemetryN";
+	```
+* Register Verified Telemetry components with Azure RTOS Middleware for Azure IoT
+ 	```C
+	nx_azure_iot_pnp_client_component_add( iotpnp_client_ptr, 
+					       (const UCHAR *)sample_fallcurve_1_component,
+           				       sizeof(sample_fallcurve_1_component) - 1));
+	// nx_azure_iot_pnp_client_component_add( iotpnp_client_ptr, 
+					        (const UCHAR *)sample_fallcurve_2_component,
+           				        sizeof(sample_fallcurve_2_component) - 1));
+	nx_azure_iot_pnp_client_component_add( iotpnp_client_ptr, 
+					       (const UCHAR *)sample_fallcurve_N_component,
+           				       sizeof(sample_fallcurve_N_component) - 1))				       
+					       
+	```
+* Define variables to hold Verified Telemetry configuration information
+	```C
+	static PNP_FALLCURVE_COMPONENT * fallcurve_components[NUMBER_OF_VT_ENABLED_TELEMETRIES] = {NULL};
+	static CHAR * connected_sensors[NUMBER_OF_VT_ENABLED_TELEMETRIES] = {NULL};
+	```
+* Define a Verified Telemetry User Initialization wrapper function which will make calls to necessary initilization function from the vT library
+	```C
+	void * sample_pnp_verified_telemetry_user_init()
+	{
+	    UINT status;
+	    if ((status = pnp_fallcurve_init(&sample_fallcurve_1, (UCHAR *)"vTTelemetry1", GPIOB,
+						    GPIO_PIN_8, &hadc1, ADC_CHANNEL_1, NULL, fallcurve_components,
+						    connected_sensors, (UCHAR *) "Telemetry1", 
+						    NUMBER_OF_VT_ENABLED_TELEMETRIES)))
+	    {
+		printf("Failed to initialize vTTelemetry1 component: error code = 0x%08x\r\n", status);
+	    }
+	    
+    	//  else if ((status = pnp_fallcurve_init(&sample_fallcurve_2, (UCHAR *)"vTTelemetry2", GPIOB,
+		// 					    GPIO_PIN_10, &hadc1, ADC_CHANNEL_3, NULL, fallcurve_components,
+		// 					    connected_sensors, (UCHAR *) "Telemetry2", 
+		// 					    NUMBER_OF_VT_ENABLED_TELEMETRIES)))
+    	// {
+    	//     printf("Failed to initialize vTTelemetry2 component: error code = 0x%08x\r\n", status);
+    	// }
+		
+	    else if ((status = pnp_fallcurve_init(&sample_fallcurve_N, (UCHAR *) "vTTelemetryN", GPIOB,
+						    GPIO_PIN_9, &hadc1, ADC_CHANNEL_2, NULL, fallcurve_components,
+						    connected_sensors, (UCHAR *) "TelemetryN", 
+						    NUMBER_OF_VT_ENABLED_TELEMETRIES )))
+	    {
+		printf("Failed to initialize vTTelemetryN component: error code = 0x%08x\r\n", status);
+	    }
+	    else if ((status = pnp_vt_init(&verified_telemetry_DB, fallcurve_components, NUMBER_OF_VT_ENABLED_TELEMETRIES, 
+							true, 0x080E0000 )))
+	    {
+		printf("Failed to initialize Verified Telemetry: error code = 0x%08x\r\n", status);
+	    }
+	    return (void*)(&verified_telemetry_DB);
+	}
+	```
+* Call the Verified Telemetry User Initialization wrapper function and update verified_telemetry_DB
+	 ```C
+	verified_telemetry_DB = sample_pnp_verified_telemetry_user_init();
+	 ```
+## Step 3: Add Verified Telemetry functions to existing routines for Property updates and Command Processing
+Make the following modifications to the [/getting-started/blob/master/MXChip/AZ3166/app/nx_client.c](https://github.com/azure-rtos/getting-started/blob/master/MXChip/AZ3166/app/nx_client.c) file
+
+* Invoke Verified Telemetry Property transmission function at regular intervals
+	```C
+	pnp_vt_properties(verified_telemetry_DB, &(context->iotpnp_client));
+	```
+* Call Verified Telemetry Command Processing when direct methods/ commands are received
+	```C
+	pnp_vt_process_command( verified_telemetry_DB, &(sample_context_ptr->iotpnp_client),
+                 		(UCHAR *)component_name_ptr, component_name_length,
+                  		(UCHAR *)pnp_command_name_ptr, pnp_command_name_length,
+                  		&json_reader, &json_writer, &status_code);
+	```
