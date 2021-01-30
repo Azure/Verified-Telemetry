@@ -9,14 +9,14 @@ uint32_t  vt_database_initialize(VT_DATABASE* database_ptr,uint32_t flash_addres
     database_ptr->vt_flash_address = flash_address;
     database_ptr->vt_fallcurve_component_id = fallcurve_component_id;
 
-    _vt_database_initialize_fingerpintdb(database_ptr);
+    _vt_database_initialize_fingerprintdb(database_ptr);
     _vt_database_initialize_falltimedb(database_ptr);
     _vt_database_initialize_pearsoncoefficientdb(database_ptr);
 
     return VT_SUCCESS;
 }
 
-void _vt_database_initialize_fingerpintdb(VT_DATABASE* database_ptr)
+void _vt_database_initialize_fingerprintdb(VT_DATABASE* database_ptr)
 {
 
     database_ptr->_vt_total_fingerprints = 0;

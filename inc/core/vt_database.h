@@ -14,7 +14,7 @@
 #include "math.h"
 
 //Initialize
-void _vt_database_initialize_fingerpintdb(VT_DATABASE* database_ptr);
+void _vt_database_initialize_fingerprintdb(VT_DATABASE* database_ptr);
 void _vt_database_initialize_falltimedb(VT_DATABASE* database_ptr);
 void _vt_database_initialize_pearsoncoefficientdb(VT_DATABASE* database_ptr);
 
