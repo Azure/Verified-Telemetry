@@ -7,7 +7,7 @@ void storeinflash(VT_DATABASE* database_ptr, uint32_t* fallcurvearray,int sampli
 
 
 
-uint vt_database_store(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensorid)
+uint32_t  vt_database_store(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensorid)
 {
     int falltime;
     double pearson_coefficient;
@@ -27,7 +27,7 @@ uint vt_database_store(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int 
 }
 
 
-uint _vt_database_store_fingerprint(VT_DATABASE* database_ptr, uint32_t* fallcurvearray,int sampling_frequency, int sensorid)
+uint32_t  _vt_database_store_fingerprint(VT_DATABASE* database_ptr, uint32_t* fallcurvearray,int sampling_frequency, int sensorid)
 {
     if (database_ptr == NULL)
         return (VT_PTR_ERROR);
@@ -40,7 +40,7 @@ uint _vt_database_store_fingerprint(VT_DATABASE* database_ptr, uint32_t* fallcur
     return VT_SUCCESS;
 }
 
-uint _vt_database_store_falltime(VT_DATABASE* database_ptr, int fall_time, int sensorid)
+uint32_t  _vt_database_store_falltime(VT_DATABASE* database_ptr, int fall_time, int sensorid)
 {
     int i;
 
@@ -62,7 +62,7 @@ uint _vt_database_store_falltime(VT_DATABASE* database_ptr, int fall_time, int s
     return VT_SUCCESS;
 }
 
-uint _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, double pearson_coefficient, int sensorid)
+uint32_t  _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, double pearson_coefficient, int sensorid)
 {
     int i;
 

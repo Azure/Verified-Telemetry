@@ -4,7 +4,7 @@
 #include "vt_database.h"
 
 
-uint vt_database_clear(VT_DATABASE* database_ptr)
+uint32_t  vt_database_clear(VT_DATABASE* database_ptr)
 {
     uint32_t total_fingerprints;
     uint32_t total_fingerprints_of_this_component = 0;
@@ -21,7 +21,7 @@ uint vt_database_clear(VT_DATABASE* database_ptr)
         {
             total_fingerprints = temp[1];
             _vt_dsc_flash_read(database_ptr->vt_flash_address, temp, 2 + total_fingerprints * 103);
-            for (uint index = 2; index < (2 + total_fingerprints * 103); index+=103)
+            for (uint32_t  index = 2; index < (2 + total_fingerprints * 103); index+=103)
             {
                 while(temp[index] == database_ptr->vt_fallcurve_component_id && index < (total_fingerprints * 103 + 2))
                 {

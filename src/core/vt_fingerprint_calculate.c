@@ -4,7 +4,7 @@
 #include "vt_fingerprint.h"
 
 
-uint _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerprint, uint32_t fingerprint_length, uint32_t sampling_frequency, int* fall_time, double* pearson_coefficient)
+uint32_t  _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerprint, uint32_t fingerprint_length, uint32_t sampling_frequency, int* fall_time, double* pearson_coefficient)
 {
 
     // Find index of  Maxima

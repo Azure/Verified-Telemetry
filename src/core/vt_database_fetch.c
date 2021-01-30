@@ -3,7 +3,7 @@
 
 #include "vt_database.h"
 
-uint vt_database_fingerprint_fetch(VT_DATABASE* database_ptr, int* index, uint32_t* fallcurvearray, int* sensorid)
+uint32_t  vt_database_fingerprint_fetch(VT_DATABASE* database_ptr, int* index, uint32_t* fallcurvearray, int* sensorid)
 {
     if (database_ptr == NULL)
         return (VT_PTR_ERROR);
@@ -18,7 +18,7 @@ uint vt_database_fingerprint_fetch(VT_DATABASE* database_ptr, int* index, uint32
     return VT_SUCCESS;
 }
 
-uint vt_database_falltime_fetch(VT_DATABASE* database_ptr, int* index, int* fall_time, int* sensorid)
+uint32_t  vt_database_falltime_fetch(VT_DATABASE* database_ptr, int* index, int* fall_time, int* sensorid)
 {
     if (database_ptr == NULL)
         return (VT_PTR_ERROR);
@@ -33,7 +33,7 @@ uint vt_database_falltime_fetch(VT_DATABASE* database_ptr, int* index, int* fall
     return VT_SUCCESS;
 }
 
-uint vt_database_pearsoncoefficient_fetch(VT_DATABASE* database_ptr, int* index, double* pearson_coefficient, int* sensorid)
+uint32_t  vt_database_pearsoncoefficient_fetch(VT_DATABASE* database_ptr, int* index, double* pearson_coefficient, int* sensorid)
 {
     if (database_ptr == NULL)
         return (VT_PTR_ERROR);
