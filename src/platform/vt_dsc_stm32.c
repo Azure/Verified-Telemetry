@@ -80,12 +80,14 @@ uint32_t  _vt_dsc_flash_erase(uint32_t flashAddress, uint32_t Nsize)
     uint32_t PAGEError;
 
     uint32_t startpage = _vt_dsc_flash_get_page(flashAddress);
-    if (startpage == VT_FLASH_ADDRESS_ERROR)
+    if (startpage == VT_FLASH_ADDRESS_ERROR){
         return VT_FLASH_ADDRESS_ERROR;
+    }
 
     uint32_t endpage = _vt_dsc_flash_get_page(flashAddress + Nsize * 8);
-    if (endpage == VT_FLASH_ADDRESS_ERROR)
+    if (endpage == VT_FLASH_ADDRESS_ERROR){
         return VT_FLASH_WRITE_SIZE_ERROR;
+    }
 
     EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
     EraseInitStruct.Banks     = _vt_dsc_flash_get_bank(flashAddress);
@@ -107,12 +109,14 @@ uint32_t  _vt_dsc_flash_write(uint32_t flashAddress, void* wrBuf, uint32_t Nsize
     uint32_t PAGEError;
 
     uint32_t startpage = _vt_dsc_flash_get_page(flashAddress);
-    if (startpage == VT_FLASH_ADDRESS_ERROR)
+    if (startpage == VT_FLASH_ADDRESS_ERROR){
         return VT_FLASH_ADDRESS_ERROR;
+    }
 
     uint32_t endpage = _vt_dsc_flash_get_page(flashAddress + Nsize * 8);
-    if (endpage == VT_FLASH_ADDRESS_ERROR)
+    if (endpage == VT_FLASH_ADDRESS_ERROR){
         return VT_FLASH_WRITE_SIZE_ERROR;
+    }
 
     EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
     EraseInitStruct.Banks     = _vt_dsc_flash_get_bank(flashAddress);
@@ -171,11 +175,13 @@ Bank 2
 
 uint32_t _vt_dsc_flash_get_bank(uint32_t Address)
 {
-    if ((Address >= 0x08000000) && (Address < 0x0807FFFF))
+    if ((Address >= 0x08000000) && (Address < 0x0807FFFF)){
         return FLASH_BANK_1;
+    }
 
-    else if ((Address >= 0x08080000) && (Address < 0x080FFFFF))
+    else if ((Address >= 0x08080000) && (Address < 0x080FFFFF)){
         return FLASH_BANK_2;
+    }
 
     return VT_ERROR;
 }
@@ -184,8 +190,9 @@ uint32_t _vt_dsc_flash_get_bank(uint32_t Address)
 uint32_t _vt_dsc_flash_get_page(uint32_t Address)
 {
     uint32_t startaddress = 0x08000000;
-    if (Address >= 0x08080000)
+    if (Address >= 0x08080000){
         startaddress = 0x08080000;
+    }
 
 
     for (int indx = 0; indx <=255; indx++)

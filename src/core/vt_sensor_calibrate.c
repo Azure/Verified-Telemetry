@@ -26,14 +26,17 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr)
 
 
     printf("Best Possible Sampling Frequency = %d\n", states.current_sampling_frequency);
-    if (status == VT_SUCCESS)
+    if (status == VT_SUCCESS){
         printf("Sensor has a good fall Curve\n");
+    }
 
-    else if (status == VT_NOISY_FUNCTION_ERROR)
+    else if (status == VT_NOISY_FUNCTION_ERROR){
         printf("The Sensor doesnt give a fall curve in the specified frequency range.\n");
+    }
 
-    else
+    else{
         printf("The Sensor gives a consistent curve, but the fall is imperfect. Error Code = (0x%02x)\n", status);
+    }
 }
 
 uint32_t  _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states)
@@ -69,19 +72,23 @@ uint32_t  _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states)
             break;
 
         case VT_SHAPE_RISE:
-            if (states->previous_shape == VT_SHAPE_STEP)
+            if (states->previous_shape == VT_SHAPE_STEP){
                 states->current_sampling_frequency =
                     (states->current_sampling_frequency + states->previous_sampling_frequency) / 2;
-            else
+            }
+            else{
                 states->current_sampling_frequency = VT_MAXIMUM_FREQUENCY;
+            }
             break;
 
         case VT_SHAPE_STEP:
-            if (states->previous_shape == VT_SHAPE_RISE)
+            if (states->previous_shape == VT_SHAPE_RISE){
                 states->current_sampling_frequency =
                     (states->current_sampling_frequency + states->previous_sampling_frequency) / 2;
-            else
+            }
+            else{
                 states->current_sampling_frequency = VT_MINIMUM_FREQUENCY;
+            }
             break;
 
         case VT_SHAPE_NOISE:
@@ -110,8 +117,9 @@ uint32_t  _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states)
     if (states->current_sampling_frequency < VT_MINIMUM_FREQUENCY)
         states->current_sampling_frequency = VT_MINIMUM_FREQUENCY;
 
-    else if (states->current_sampling_frequency > VT_MAXIMUM_FREQUENCY)
+    else if (states->current_sampling_frequency > VT_MAXIMUM_FREQUENCY){
         states->current_sampling_frequency = VT_MAXIMUM_FREQUENCY;
+    }
 
     if (states->current_sampling_frequency == states->previous_sampling_frequency)
     {
@@ -145,11 +153,13 @@ uint32_t  _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states)
 
 VT_FALL_STATE _vt_index37_state(int index_37)
 {
-    if (index_37 == -1)
+    if (index_37 == -1){
         return VT_FALL_STATE_UNDERSHOOT;
+    }
 
-    else if (100 - index_37 >= VT_PRECISION_THRESHOLD)
+    else if (100 - index_37 >= VT_PRECISION_THRESHOLD){
         return VT_FALL_STATE_OVERSHOOT;
+    }
 
     return VT_FALL_STATE_TARGET;
 }

@@ -20,8 +20,10 @@ uint32_t  vt_database_fingerprint_fetch(VT_DATABASE* database_ptr, int* index, u
 
 uint32_t  vt_database_falltime_fetch(VT_DATABASE* database_ptr, int* index, int* fall_time, int* sensorid)
 {
-    if (database_ptr == NULL)
+    if (database_ptr == NULL){
         return (VT_PTR_ERROR);
+    }
+
     if(!(*index < (int)(database_ptr->_vt_total_falltime)))
     {
         *index = -1;
@@ -35,8 +37,9 @@ uint32_t  vt_database_falltime_fetch(VT_DATABASE* database_ptr, int* index, int*
 
 uint32_t  vt_database_pearsoncoefficient_fetch(VT_DATABASE* database_ptr, int* index, double* pearson_coefficient, int* sensorid)
 {
-    if (database_ptr == NULL)
+    if (database_ptr == NULL){
         return (VT_PTR_ERROR);
+    }
 
     if(!(*index < (int)(database_ptr->_vt_total_pearson_coefficient)))
     {

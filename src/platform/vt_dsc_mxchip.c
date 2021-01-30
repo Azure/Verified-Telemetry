@@ -80,12 +80,14 @@ uint32_t  _vt_dsc_flash_erase(uint32_t flashAddress, uint32_t Nsize)
     uint32_t SECTORError;
 
     uint32_t startsector = _vt_dsc_flash_get_sector(flashAddress);
-    if (startsector == VT_ERROR)
+    if (startsector == VT_ERROR){
         return VT_FLASH_ADDRESS_ERROR;
+    }
 
     uint32_t endsector = _vt_dsc_flash_get_sector(flashAddress + Nsize * 4);
-    if (startsector == VT_ERROR)
+    if (startsector == VT_ERROR){
         return VT_FLASH_ERAZE_SIZE_ERROR;
+    }
 
     EraseInitStruct.TypeErase    = FLASH_TYPEERASE_SECTORS;
     EraseInitStruct.Sector       = startsector;
@@ -109,12 +111,14 @@ uint32_t  _vt_dsc_flash_write(uint32_t flashAddress, void* wrBuf, uint32_t Nsize
     uint32_t SECTORError;
 
     uint32_t startsector = _vt_dsc_flash_get_sector(flashAddress);
-    if (startsector == VT_ERROR)
+    if (startsector == VT_ERROR){
         return VT_FLASH_ADDRESS_ERROR;
+    }
 
     uint32_t endsector = _vt_dsc_flash_get_sector(flashAddress + Nsize * 4);
-    if (startsector == VT_ERROR)
+    if (startsector == VT_ERROR){
         return VT_FLASH_WRITE_SIZE_ERROR;
+    }
 
     EraseInitStruct.TypeErase    = FLASH_TYPEERASE_SECTORS;
     EraseInitStruct.Sector       = startsector;
@@ -164,41 +168,53 @@ Sector 11   0x080E 0000 - 0x080F FFFF 128 Kbyte
 uint32_t _vt_dsc_flash_get_sector(uint32_t Address)
 {
 
-    if ((Address >= 0x08000000) && (Address < 0x08003FFF))
+    if ((Address >= 0x08000000) && (Address < 0x08003FFF)){
         return FLASH_SECTOR_0;
+    }
 
-    else if ((Address >= 0x08004000) && (Address < 0x08007FFF))
+    else if ((Address >= 0x08004000) && (Address < 0x08007FFF)){
         return FLASH_SECTOR_1;
+        }
  
-    else if ((Address >= 0x08008000) && (Address < 0x0800BFFF))
+    else if ((Address >= 0x08008000) && (Address < 0x0800BFFF)){
         return FLASH_SECTOR_2;
+        }
  
-    else if ((Address >= 0x0800C000) && (Address < 0x0800FFFF))
+    else if ((Address >= 0x0800C000) && (Address < 0x0800FFFF)){
         return FLASH_SECTOR_3;
+        }
  
-    else if ((Address >= 0x08010000) && (Address < 0x0801FFFF))
+    else if ((Address >= 0x08010000) && (Address < 0x0801FFFF)){
         return FLASH_SECTOR_4;
+        }
  
-    else if ((Address >= 0x08020000) && (Address < 0x0803FFFF))
+    else if ((Address >= 0x08020000) && (Address < 0x0803FFFF)){
         return FLASH_SECTOR_5;
+        }
  
-    else if ((Address >= 0x08040000) && (Address < 0x0805FFFF))
+    else if ((Address >= 0x08040000) && (Address < 0x0805FFFF)){
         return FLASH_SECTOR_6;
+        }
  
-    else if ((Address >= 0x08060000) && (Address < 0x0807FFFF))
+    else if ((Address >= 0x08060000) && (Address < 0x0807FFFF)){
         return FLASH_SECTOR_7;
+        }
  
-    else if ((Address >= 0x08080000) && (Address < 0x0809FFFF))
+    else if ((Address >= 0x08080000) && (Address < 0x0809FFFF)){
         return FLASH_SECTOR_8;
+        }
  
-    else if ((Address >= 0x080A0000) && (Address < 0x080BFFFF))
+    else if ((Address >= 0x080A0000) && (Address < 0x080BFFFF)){
         return FLASH_SECTOR_9;
+        }
  
-    else if ((Address >= 0x080C0000) && (Address < 0x080DFFFF))
+    else if ((Address >= 0x080C0000) && (Address < 0x080DFFFF)){
         return FLASH_SECTOR_10;
+        }
  
-    else if ((Address >= 0x080E0000) && (Address < 0x080FFFFF))
+    else if ((Address >= 0x080E0000) && (Address < 0x080FFFFF)){
         return FLASH_SECTOR_11;
+        }
     
     return VT_ERROR;
 }

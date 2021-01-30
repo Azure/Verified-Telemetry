@@ -28,8 +28,9 @@ uint32_t  _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* finger
     uint32_t index_37 = _vt_fingerprint_calculate_37index(fingerprint, fingerprint_length);
 
     // fingerprint_length of this new fingerprint
-    if (index_37 != 2000)
+    if (index_37 != 2000){
         fingerprint_length = index_37+1;
+    }
 
     // N > 2 ?
     if (fingerprint_length >= 2)
@@ -70,8 +71,9 @@ VT_CURVE_SHAPE _vt_fingerprint_calculate_shape(uint32_t* fingerprint, int finger
     if (_vt_fingerprint_evaluate_correlationCoefficient(ranked, arraylinear, fingerprint_length) >
             VT_SHAPE_THRESHOLD ||
         _vt_fingerprint_evaluate_correlationCoefficient(fingerprint, arrayexp, fingerprint_length) >
-            VT_SHAPE_THRESHOLD)
-        return VT_SHAPE_FALL;
+            VT_SHAPE_THRESHOLD){
+            return VT_SHAPE_FALL;
+            }
 
     for (i = 0; i < fingerprint_length; i++)
     {
@@ -81,16 +83,18 @@ VT_CURVE_SHAPE _vt_fingerprint_calculate_shape(uint32_t* fingerprint, int finger
     if (_vt_fingerprint_evaluate_correlationCoefficient(ranked, arraylinear, fingerprint_length) >
             VT_SHAPE_THRESHOLD ||
         _vt_fingerprint_evaluate_correlationCoefficient(fingerprint, arrayexp, fingerprint_length) >
-            VT_SHAPE_THRESHOLD)
+            VT_SHAPE_THRESHOLD){
         return VT_SHAPE_RISE;
+            }
 
     arraylinear[0] = fingerprint_length;
     for (i = 1; i < fingerprint_length; i++)
         arraylinear[i] = 1;
 
     if (_vt_fingerprint_evaluate_correlationCoefficient(fingerprint, arraylinear, fingerprint_length) >
-        VT_SHAPE_THRESHOLD)
+        VT_SHAPE_THRESHOLD){
         return VT_SHAPE_STEP;
+        }
 
     return VT_SHAPE_NOISE;
 }
@@ -99,9 +103,11 @@ uint32_t _vt_fingerprint_calculate_maximum_index(uint32_t* fingerprint, uint32_t
 {
     uint32_t index_max = 0;
 
-    for (uint32_t i = 0; i < fingerprint_length; i++)
-        if (fingerprint[i] > fingerprint[index_max])
+    for (uint32_t i = 0; i < fingerprint_length; i++){
+        if (fingerprint[i] > fingerprint[index_max]){
             index_max = i;
+        }
+    }
 
     return index_max;
 }
@@ -110,9 +116,11 @@ uint32_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, uint32_t
 {
     uint32_t index_min = 0;
 
-    for (uint32_t i = 0; i < fingerprint_length; i++)
-        if (fingerprint[i] < fingerprint[index_min])
+    for (uint32_t i = 0; i < fingerprint_length; i++){
+        if (fingerprint[i] < fingerprint[index_min]){
             index_min = i;
+        }
+    }
 
     return index_min;
 }
@@ -121,9 +129,11 @@ uint32_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint32_t finge
 {
     uint32_t index_max = _vt_fingerprint_calculate_maximum_index(fingerprint, fingerprint_length);
 
-    for (uint32_t i = index_max; i < fingerprint_length; i++)
-        if ((double)fingerprint[i] <= (0.37 * (double)fingerprint[index_max]))
+    for (uint32_t i = index_max; i < fingerprint_length; i++){
+        if ((double)fingerprint[i] <= (0.37 * (double)fingerprint[index_max])){
             return i;
+        }
+    }
 
     return 2000;
 }
@@ -139,20 +149,25 @@ void _vt_fingerprint_rankify(uint32_t* X, int length, uint32_t* Y)
         // in 0 to i-1
         for (int j = 0; j < i; j++)
         {
-            if (X[j] < X[i])
+            if (X[j] < X[i]){
                 r++;
-            if (X[j] == X[i])
+            }
+
+            if (X[j] == X[i]){
                 s++;
+            }
         }
 
         // Count no of smaller elements
         // in i+1 to N-1
         for (int j = i + 1; j < length; j++)
         {
-            if (X[j] < X[i])
+            if (X[j] < X[i]){
                 r++;
-            if (X[j] == X[i])
+            }
+            if (X[j] == X[i]){
                 s++;
+            }
         }
 
         // Use Fractional Rank formula
