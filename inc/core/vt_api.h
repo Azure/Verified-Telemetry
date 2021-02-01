@@ -6,22 +6,22 @@
 
 #include "stdio.h"
 
-#include "vt_port.h"
 #include "vt_dsc.h"
+#include "vt_port.h"
 
-#define VT_SUCCESS                              0X00
-#define VT_ERROR                                0X01
-#define VT_PTR_ERROR                            0X02
-#define VT_MUTEX_ERROR                          0X03
-#define VT_CUSTOM_IMPLEMENTATION_NOT_PROVIDED   0X04
-#define VT_UNIDENTIFIED_SENSOR_NAME             0X05
-#define VT_THREAD_SLEEP_ERROR                   0X06
-#define VT_REPEATABILITY_ERROR                  0X11
-#define VT_RISING_FUNCTION_ERROR                0X12
-#define VT_STEP_FUNCTION_ERROR                  0X13
-#define VT_NOISY_FUNCTION_ERROR                 0X14
+#define VT_SUCCESS                            0X00
+#define VT_ERROR                              0X01
+#define VT_PTR_ERROR                          0X02
+#define VT_MUTEX_ERROR                        0X03
+#define VT_CUSTOM_IMPLEMENTATION_NOT_PROVIDED 0X04
+#define VT_UNIDENTIFIED_SENSOR_NAME           0X05
+#define VT_THREAD_SLEEP_ERROR                 0X06
+#define VT_REPEATABILITY_ERROR                0X11
+#define VT_RISING_FUNCTION_ERROR              0X12
+#define VT_STEP_FUNCTION_ERROR                0X13
+#define VT_NOISY_FUNCTION_ERROR               0X14
 
-#define FLASH_DB_START_VALUE    0x42
+#define FLASH_DB_START_VALUE       0x42
 #define VT_SHAPE_THRESHOLD         0.85
 #define VT_PRECISION_THRESHOLD     20
 #define VT_REPEATABILITY_THRESHOLD 0.3
@@ -32,7 +32,6 @@
 
 #define FALL_TIME_THRESHOLD           5
 #define PEARSON_COEFFICIENT_THRESHOLD 5
-
 
 typedef struct VT_SENSOR_STRUCT
 {
@@ -65,28 +64,37 @@ typedef struct VT_DATABASE_STRUCT
 } VT_DATABASE;
 
 // Initialize
-uint32_t  vt_sensor_initialize(VT_SENSOR* sensor_ptr, char* Port_Name, GPIO_PORT_TYPEDEF* GPIOx, GPION_PIN_TYPEDEF GPIO_Pin, ADC_CONTROLLER_TYPEDEF* ADC_Controller, ADC_CHANNEL_TYPEDEF ADC_Channel, TIMER_HANDLE_TYPEDEF* Timer_Handler);
+uint32_t vt_sensor_initialize(VT_SENSOR* sensor_ptr,
+    char* Port_Name,
+    GPIO_PORT_TYPEDEF* GPIOx,
+    GPION_PIN_TYPEDEF GPIO_Pin,
+    ADC_CONTROLLER_TYPEDEF* ADC_Controller,
+    ADC_CHANNEL_TYPEDEF ADC_Channel,
+    TIMER_HANDLE_TYPEDEF* Timer_Handler);
 
 // Calibrate
 void vt_sensor_calibrate(VT_SENSOR* sensor_ptr);
 
 // Read
-uint32_t  vt_sensor_read_value(VT_SENSOR* sensor_ptr, uint32_t* sensor_value);
-uint32_t  vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint_array, char* fingerprint_string);
-uint32_t  vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int* sensorid);
+uint32_t vt_sensor_read_value(VT_SENSOR* sensor_ptr, uint32_t* sensor_value);
+
+uint32_t vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint_array, char* fingerprint_string);
+
+uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int* sensorid);
 
 // database
-uint32_t  vt_database_initialize(VT_DATABASE* database_ptr, uint32_t flash_address, uint32_t fallcurve_component_id);
-uint32_t  vt_database_store(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensorid);
-uint32_t  vt_database_clear(VT_DATABASE* database_ptr);
+uint32_t vt_database_initialize(VT_DATABASE* database_ptr, uint32_t flash_address, uint32_t fallcurve_component_id);
+
+uint32_t vt_database_store(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensorid);
+
+uint32_t vt_database_clear(VT_DATABASE* database_ptr);
 
 // Database Fetch
-uint32_t  vt_database_fingerprint_fetch(VT_DATABASE* database_ptr, int* index, uint32_t* fallcurvearray, int* sensorid);
-uint32_t  vt_database_falltime_fetch(VT_DATABASE* database_ptr, int* index, int* fall_time, int* sensorid);
-uint32_t  vt_database_pearsoncoefficient_fetch(VT_DATABASE* database_ptr, int* index, double* pearson_coefficient, int* sensorid);
+uint32_t vt_database_fingerprint_fetch(VT_DATABASE* database_ptr, int* index, uint32_t* fallcurvearray, int* sensorid);
 
+uint32_t vt_database_falltime_fetch(VT_DATABASE* database_ptr, int* index, int* fall_time, int* sensorid);
 
-
-
+uint32_t vt_database_pearsoncoefficient_fetch(
+    VT_DATABASE* database_ptr, int* index, double* pearson_coefficient, int* sensorid);
 
 #endif

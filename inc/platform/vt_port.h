@@ -12,21 +12,19 @@
 #endif
 
 #ifdef MXCHIP_AZ3166
-#define GPIO_PORT_TYPEDEF		GPIO_TypeDef
-#define GPION_PIN_TYPEDEF		uint16_t
-#define ADC_CONTROLLER_TYPEDEF	ADC_HandleTypeDef
-#define ADC_CHANNEL_TYPEDEF		uint16_t
-#define TIMER_HANDLE_TYPEDEF    TIM_HandleTypeDef
+#define GPIO_PORT_TYPEDEF      GPIO_TypeDef
+#define GPION_PIN_TYPEDEF      uint16_t
+#define ADC_CONTROLLER_TYPEDEF ADC_HandleTypeDef
+#define ADC_CHANNEL_TYPEDEF    uint16_t
+#define TIMER_HANDLE_TYPEDEF   TIM_HandleTypeDef
 #endif
 
 #ifdef STM_BL475EIOT01A
-#define GPIO_PORT_TYPEDEF		GPIO_TypeDef
-#define GPION_PIN_TYPEDEF		uint16_t
-#define ADC_CONTROLLER_TYPEDEF	ADC_HandleTypeDef
-#define ADC_CHANNEL_TYPEDEF		long
-#define TIMER_HANDLE_TYPEDEF    TIM_HandleTypeDef
+#define GPIO_PORT_TYPEDEF      GPIO_TypeDef
+#define GPION_PIN_TYPEDEF      uint16_t
+#define ADC_CONTROLLER_TYPEDEF ADC_HandleTypeDef
+#define ADC_CHANNEL_TYPEDEF    long
+#define TIMER_HANDLE_TYPEDEF   TIM_HandleTypeDef
 #endif
-
-
 
 #endif

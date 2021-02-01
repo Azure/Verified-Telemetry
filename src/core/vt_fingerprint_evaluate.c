@@ -1,12 +1,12 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-#include "vt_fingerprint.h"
 #include "math.h"
+#include "vt_fingerprint.h"
 
 double _vt_fingerprint_evaluate_correlationCoefficient(uint32_t* fingerpint1, uint32_t* fingerpint2, int length)
 {
-    int n       = length;
+    int n                 = length;
     float sum_fingerpint1 = 0, sum_fingerpint2 = 0, sum_fingerpint1fingerpint2 = 0;
     float squareSum_fingerpint1 = 0, squareSum_fingerpint2 = 0;
 
@@ -29,7 +29,8 @@ double _vt_fingerprint_evaluate_correlationCoefficient(uint32_t* fingerpint1, ui
     // use formula for calculating
     // correlation coefficient.
     double corr = (double)(n * sum_fingerpint1fingerpint2 - sum_fingerpint1 * sum_fingerpint2) /
-                  sqrt((n * squareSum_fingerpint1 - sum_fingerpint1 * sum_fingerpint1) * (n * squareSum_fingerpint2 - sum_fingerpint2 * sum_fingerpint2));
+                  sqrt((n * squareSum_fingerpint1 - sum_fingerpint1 * sum_fingerpint1) *
+                       (n * squareSum_fingerpint2 - sum_fingerpint2 * sum_fingerpint2));
 
     return corr;
 }
@@ -39,7 +40,7 @@ double _vt_fingerprint_evaluate_nrmse(uint32_t* fingerpint1, uint32_t* fingerpin
     double nrmse;
     uint32_t diff;
 
-    uint32_t aggregate = 0;
+    uint32_t aggregate   = 0;
     uint32_t aggregatesq = 0;
 
     uint32_t mean;
