@@ -3,20 +3,19 @@
 
 #include "vt_database.h"
 
-
-uint vt_database_initialize(VT_DATABASE* database_ptr,uint32_t flash_address, uint32_t fallcurve_component_id)
+uint32_t vt_database_initialize(VT_DATABASE* database_ptr, uint32_t flash_address, uint32_t fallcurve_component_id)
 {
-    database_ptr->vt_flash_address = flash_address;
+    database_ptr->vt_flash_address          = flash_address;
     database_ptr->vt_fallcurve_component_id = fallcurve_component_id;
 
-    _vt_database_initialize_fingerpintdb(database_ptr);
+    _vt_database_initialize_fingerprintdb(database_ptr);
     _vt_database_initialize_falltimedb(database_ptr);
     _vt_database_initialize_pearsoncoefficientdb(database_ptr);
 
     return VT_SUCCESS;
 }
 
-void _vt_database_initialize_fingerpintdb(VT_DATABASE* database_ptr)
+void _vt_database_initialize_fingerprintdb(VT_DATABASE* database_ptr)
 {
 
     database_ptr->_vt_total_fingerprints = 0;
@@ -29,7 +28,7 @@ void _vt_database_initialize_fingerpintdb(VT_DATABASE* database_ptr)
         uint32_t temp[1012];
 
         _vt_dsc_flash_read(database_ptr->vt_flash_address, temp, 2);
-        
+
         if (temp[0] == FLASH_DB_START_VALUE)
         {
             total_fingerprints = temp[1];
@@ -39,7 +38,7 @@ void _vt_database_initialize_fingerpintdb(VT_DATABASE* database_ptr)
 
             for (row = 0, index = 2; index < (total_fingerprints * 103 + 2); row++)
             {
-                while(temp[index] != database_ptr->vt_fallcurve_component_id && index < (total_fingerprints * 103 + 2))
+                while (temp[index] != database_ptr->vt_fallcurve_component_id && index < (total_fingerprints * 103 + 2))
                 {
                     index += 103;
                 }
@@ -47,7 +46,7 @@ void _vt_database_initialize_fingerpintdb(VT_DATABASE* database_ptr)
                 {
                     break;
                 }
-                
+
                 index++;
                 total_fingerprints_of_this_component++;
                 for (column = 0; column < 102; column++, index++)
@@ -55,30 +54,27 @@ void _vt_database_initialize_fingerpintdb(VT_DATABASE* database_ptr)
                     database_ptr->_vt_fingerprintdb[row][column] = (uint32_t)temp[index];
                 }
             }
-            database_ptr->_vt_total_fingerprints = total_fingerprints_of_this_component;    
+            database_ptr->_vt_total_fingerprints = total_fingerprints_of_this_component;
             printf("\nTotal Fingerprints %d\n", (int)database_ptr->_vt_total_fingerprints);
         }
         else
         {
             temp[0] = FLASH_DB_START_VALUE;
-            temp[1] =  database_ptr->_vt_total_fingerprints;
+            temp[1] = database_ptr->_vt_total_fingerprints;
             _vt_dsc_flash_write(database_ptr->vt_flash_address, temp, 2);
         }
-        
-             
     }
-    
 }
 
 void _vt_database_initialize_falltimedb(VT_DATABASE* database_ptr)
 {
     database_ptr->_vt_total_falltime = 0;
     memset(database_ptr->_vt_falltimedb, 0, sizeof(database_ptr->_vt_falltimedb));
-    
+
     if ((database_ptr->vt_flash_address != 0x00) && (database_ptr->_vt_total_fingerprints > 0))
     {
         int falltime;
-        double pearson_coefficient;
+        float pearson_coefficient;
 
         for (int i = 0; i < database_ptr->_vt_total_fingerprints; i++)
         {
@@ -91,20 +87,18 @@ void _vt_database_initialize_falltimedb(VT_DATABASE* database_ptr)
                 _vt_database_store_falltime(database_ptr, falltime, (database_ptr->_vt_fingerprintdb[i][0]));
             }
         }
-        
     }
-
 }
 
 void _vt_database_initialize_pearsoncoefficientdb(VT_DATABASE* database_ptr)
 {
     database_ptr->_vt_total_pearson_coefficient = 0;
     memset(database_ptr->_vt_pearson_coefficientdb, 0, sizeof(database_ptr->_vt_pearson_coefficientdb));
-    
+
     if ((database_ptr->vt_flash_address != 0x00) && (database_ptr->_vt_total_fingerprints > 0))
     {
         int falltime;
-        double pearson_coefficient;
+        float pearson_coefficient;
 
         for (int i = 0; i < database_ptr->_vt_total_fingerprints; i++)
         {
@@ -117,8 +111,6 @@ void _vt_database_initialize_pearsoncoefficientdb(VT_DATABASE* database_ptr)
                 _vt_database_store_pearsoncoefficient(
                     database_ptr, pearson_coefficient, (database_ptr->_vt_fingerprintdb[i][0]));
             }
-                
         }
     }
-
 }

@@ -1,11 +1,12 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
+#include "math.h"
 #include "vt_fingerprint.h"
 
-double _vt_fingerprint_evaluate_correlationCoefficient(uint32_t* fingerpint1, uint32_t* fingerpint2, int length)
+float _vt_fingerprint_evaluate_correlationCoefficient(uint32_t* fingerpint1, uint32_t* fingerpint2, int length)
 {
-    int n       = length;
+    int n                 = length;
     float sum_fingerpint1 = 0, sum_fingerpint2 = 0, sum_fingerpint1fingerpint2 = 0;
     float squareSum_fingerpint1 = 0, squareSum_fingerpint2 = 0;
 
@@ -27,23 +28,24 @@ double _vt_fingerprint_evaluate_correlationCoefficient(uint32_t* fingerpint1, ui
 
     // use formula for calculating
     // correlation coefficient.
-    double corr = (double)(n * sum_fingerpint1fingerpint2 - sum_fingerpint1 * sum_fingerpint2) /
-                  sqrt((n * squareSum_fingerpint1 - sum_fingerpint1 * sum_fingerpint1) * (n * squareSum_fingerpint2 - sum_fingerpint2 * sum_fingerpint2));
+    float corr = (float)(n * sum_fingerpint1fingerpint2 - sum_fingerpint1 * sum_fingerpint2) /
+                  sqrtf((n * squareSum_fingerpint1 - sum_fingerpint1 * sum_fingerpint1) *
+                       (n * squareSum_fingerpint2 - sum_fingerpint2 * sum_fingerpint2));
 
     return corr;
 }
 
-double _vt_fingerprint_evaluate_nrmse(uint32_t* fingerpint1, uint32_t* fingerpint2, int length)
+float _vt_fingerprint_evaluate_nrmse(uint32_t* fingerpint1, uint32_t* fingerpint2, int length)
 {
-    double nrmse;
+    float nrmse;
     uint32_t diff;
 
-    uint32_t aggregate = 0;
+    uint32_t aggregate   = 0;
     uint32_t aggregatesq = 0;
 
     uint32_t mean;
     uint32_t meansq;
-    double rmse;
+    float rmse;
 
     for (int iter1 = 0; iter1 < length; iter1++)
     {
@@ -54,7 +56,7 @@ double _vt_fingerprint_evaluate_nrmse(uint32_t* fingerpint1, uint32_t* fingerpin
 
     mean   = (aggregate) / length;
     meansq = (aggregatesq) / length;
-    rmse   = sqrt((double)meansq);
+    rmse   = sqrt((float)meansq);
     nrmse  = rmse / mean;
 
     return nrmse;

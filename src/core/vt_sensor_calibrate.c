@@ -5,8 +5,9 @@
 #include "vt_dsc.h"
 #include "vt_sensor.h"
 
-VT_FALL_STATE _vt_index37_state(int index_37);
+static VT_FALL_STATE _vt_index37_state(int index_37);
 
+static uint32_t _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states);
 
 void vt_sensor_calibrate(VT_SENSOR* sensor_ptr)
 {
@@ -19,24 +20,32 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr)
     states.previous_shape              = -1;
     states.current_sampling_frequency  = VT_STARTING_FREQUENCY;
     states.current_shape               = -1;
-    states.noise_state                 =  0;
+    states.noise_state                 = 0;
 
-    status                                       = _vt_sensor_calibrate(sensor_ptr, &states);
-    sensor_ptr->vt_sampling_frequency            = states.current_sampling_frequency;
-
+    status                            = _vt_sensor_calibrate(sensor_ptr, &states);
+    sensor_ptr->vt_sampling_frequency = states.current_sampling_frequency;
 
     printf("Best Possible Sampling Frequency = %d\n", states.current_sampling_frequency);
     if (status == VT_SUCCESS)
+    {
         printf("Sensor has a good fall Curve\n");
+    }
 
     else if (status == VT_NOISY_FUNCTION_ERROR)
-        printf("The Sensor doesnt give a fall curve in the specified frequency range.\n");
+    {
+        printf("The Sensor doesnt give a fall curve in the specified frequency "
+               "range.\n");
+    }
 
     else
-        printf("The Sensor gives a consistent curve, but the fall is imperfect. Error Code = (0x%02x)\n", status);
+    {
+        printf("The Sensor gives a consistent curve, but the fall is imperfect. "
+               "Error Code = (0x%02x)\n",
+            status);
+    }
 }
 
-uint _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states)
+static uint32_t _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states)
 {
     int index_max;
     int index_37;
@@ -70,18 +79,26 @@ uint _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states)
 
         case VT_SHAPE_RISE:
             if (states->previous_shape == VT_SHAPE_STEP)
+            {
                 states->current_sampling_frequency =
                     (states->current_sampling_frequency + states->previous_sampling_frequency) / 2;
+            }
             else
+            {
                 states->current_sampling_frequency = VT_MAXIMUM_FREQUENCY;
+            }
             break;
 
         case VT_SHAPE_STEP:
             if (states->previous_shape == VT_SHAPE_RISE)
+            {
                 states->current_sampling_frequency =
                     (states->current_sampling_frequency + states->previous_sampling_frequency) / 2;
+            }
             else
+            {
                 states->current_sampling_frequency = VT_MINIMUM_FREQUENCY;
+            }
             break;
 
         case VT_SHAPE_NOISE:
@@ -111,7 +128,9 @@ uint _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states)
         states->current_sampling_frequency = VT_MINIMUM_FREQUENCY;
 
     else if (states->current_sampling_frequency > VT_MAXIMUM_FREQUENCY)
+    {
         states->current_sampling_frequency = VT_MAXIMUM_FREQUENCY;
+    }
 
     if (states->current_sampling_frequency == states->previous_sampling_frequency)
     {
@@ -143,13 +162,17 @@ uint _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states)
     return _vt_sensor_calibrate(sensor_ptr, states);
 }
 
-VT_FALL_STATE _vt_index37_state(int index_37)
+static VT_FALL_STATE _vt_index37_state(int index_37)
 {
     if (index_37 == -1)
+    {
         return VT_FALL_STATE_UNDERSHOOT;
+    }
 
     else if (100 - index_37 >= VT_PRECISION_THRESHOLD)
+    {
         return VT_FALL_STATE_OVERSHOOT;
+    }
 
     return VT_FALL_STATE_TARGET;
 }

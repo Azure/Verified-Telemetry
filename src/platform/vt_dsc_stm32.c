@@ -3,17 +3,17 @@
 
 #include "vt_dsc.h"
 
-uint32_t _vt_dsc_flash_get_page(uint32_t Address);
-uint32_t _vt_dsc_flash_get_bank(uint32_t Address);
+static uint32_t _vt_dsc_flash_get_page(uint32_t Address);
+static uint32_t _vt_dsc_flash_get_bank(uint32_t Address);
 
-uint _vt_dsc_delay_msec(uint32_t delay)
+uint32_t _vt_dsc_delay_msec(uint32_t delay)
 {
     HAL_Delay(delay);
 
     return VT_SUCCESS;
 }
 
-uint _vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
+uint32_t _vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
 {
     uint32_t start_time;
 
@@ -26,7 +26,7 @@ uint _vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
     return VT_SUCCESS;
 }
 
-uint _vt_dsc_gpio_read(GPIO_PORT_TYPEDEF* GPIOx, GPION_PIN_TYPEDEF GPIO_Pin, int *state)
+uint32_t _vt_dsc_gpio_read(GPIO_PORT_TYPEDEF* GPIOx, GPION_PIN_TYPEDEF GPIO_Pin, int* state)
 {
     if (HAL_GPIO_ReadPin(GPIOx, GPIO_Pin) == GPIO_PIN_SET)
     {
@@ -41,21 +41,21 @@ uint _vt_dsc_gpio_read(GPIO_PORT_TYPEDEF* GPIOx, GPION_PIN_TYPEDEF GPIO_Pin, int
     return VT_SUCCESS;
 }
 
-uint _vt_dsc_gpio_turn_on(GPIO_PORT_TYPEDEF* GPIOx, GPION_PIN_TYPEDEF GPIO_Pin)
+uint32_t _vt_dsc_gpio_turn_on(GPIO_PORT_TYPEDEF* GPIOx, GPION_PIN_TYPEDEF GPIO_Pin)
 {
     HAL_GPIO_WritePin(GPIOx, GPIO_Pin, GPIO_PIN_SET);
 
     return VT_SUCCESS;
 }
 
-uint _vt_dsc_gpio_turn_off(GPIO_PORT_TYPEDEF* GPIOx, GPION_PIN_TYPEDEF GPIO_Pin)
+uint32_t _vt_dsc_gpio_turn_off(GPIO_PORT_TYPEDEF* GPIOx, GPION_PIN_TYPEDEF GPIO_Pin)
 {
     HAL_GPIO_WritePin(GPIOx, GPIO_Pin, GPIO_PIN_RESET);
 
     return VT_SUCCESS;
 }
 
-uint _vt_dsc_adc_read(ADC_CONTROLLER_TYPEDEF* ADC_Controller, ADC_CHANNEL_TYPEDEF ADC_Channel, uint32_t* value)
+uint32_t _vt_dsc_adc_read(ADC_CONTROLLER_TYPEDEF* ADC_Controller, ADC_CHANNEL_TYPEDEF ADC_Channel, uint32_t* value)
 {
     ADC_ChannelConfTypeDef sConfig = {0};
 
@@ -73,19 +73,22 @@ uint _vt_dsc_adc_read(ADC_CONTROLLER_TYPEDEF* ADC_Controller, ADC_CHANNEL_TYPEDE
     return VT_SUCCESS;
 }
 
-
-uint _vt_dsc_flash_erase(uint32_t flashAddress, uint32_t Nsize)
+uint32_t _vt_dsc_flash_erase(uint32_t flashAddress, uint32_t Nsize)
 {
     static FLASH_EraseInitTypeDef EraseInitStruct;
     uint32_t PAGEError;
 
     uint32_t startpage = _vt_dsc_flash_get_page(flashAddress);
     if (startpage == VT_FLASH_ADDRESS_ERROR)
+    {
         return VT_FLASH_ADDRESS_ERROR;
+    }
 
     uint32_t endpage = _vt_dsc_flash_get_page(flashAddress + Nsize * 8);
     if (endpage == VT_FLASH_ADDRESS_ERROR)
+    {
         return VT_FLASH_WRITE_SIZE_ERROR;
+    }
 
     EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
     EraseInitStruct.Banks     = _vt_dsc_flash_get_bank(flashAddress);
@@ -101,26 +104,29 @@ uint _vt_dsc_flash_erase(uint32_t flashAddress, uint32_t Nsize)
     return VT_SUCCESS;
 }
 
-uint _vt_dsc_flash_write(uint32_t flashAddress, void* wrBuf, uint32_t Nsize)
+uint32_t _vt_dsc_flash_write(uint32_t flashAddress, void* wrBuf, uint32_t Nsize)
 {
     static FLASH_EraseInitTypeDef EraseInitStruct;
     uint32_t PAGEError;
 
     uint32_t startpage = _vt_dsc_flash_get_page(flashAddress);
     if (startpage == VT_FLASH_ADDRESS_ERROR)
+    {
         return VT_FLASH_ADDRESS_ERROR;
+    }
 
     uint32_t endpage = _vt_dsc_flash_get_page(flashAddress + Nsize * 8);
     if (endpage == VT_FLASH_ADDRESS_ERROR)
+    {
         return VT_FLASH_WRITE_SIZE_ERROR;
+    }
 
     EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
     EraseInitStruct.Banks     = _vt_dsc_flash_get_bank(flashAddress);
     EraseInitStruct.Page      = startpage;
-    EraseInitStruct.NbPages   = endpage - startpage +1;
+    EraseInitStruct.NbPages   = endpage - startpage + 1;
 
     printf("\n\n Bank = %d, Start = %d, End = %d", (int)EraseInitStruct.Banks, (int)startpage, (int)endpage);
-
 
     // Unlock Flash
     HAL_FLASH_Unlock();
@@ -136,14 +142,13 @@ uint _vt_dsc_flash_write(uint32_t flashAddress, void* wrBuf, uint32_t Nsize)
     return VT_SUCCESS;
 }
 
-uint _vt_dsc_flash_read(uint32_t flashAddress, void* rdBuf, uint32_t Nsize)
+uint32_t _vt_dsc_flash_read(uint32_t flashAddress, void* rdBuf, uint32_t Nsize)
 {
     for (uint32_t i = 0; i < Nsize; i++, flashAddress += 8)
         *((uint64_t*)rdBuf + i) = *(uint64_t*)flashAddress;
 
     return VT_SUCCESS;
 }
-
 
 /*
 
@@ -169,26 +174,30 @@ Bank 2
 
 */
 
-uint32_t _vt_dsc_flash_get_bank(uint32_t Address)
+static uint32_t _vt_dsc_flash_get_bank(uint32_t Address)
 {
     if ((Address >= 0x08000000) && (Address < 0x0807FFFF))
+    {
         return FLASH_BANK_1;
+    }
 
     else if ((Address >= 0x08080000) && (Address < 0x080FFFFF))
+    {
         return FLASH_BANK_2;
+    }
 
     return VT_ERROR;
 }
 
-
-uint32_t _vt_dsc_flash_get_page(uint32_t Address)
+static uint32_t _vt_dsc_flash_get_page(uint32_t Address)
 {
     uint32_t startaddress = 0x08000000;
     if (Address >= 0x08080000)
+    {
         startaddress = 0x08080000;
+    }
 
-
-    for (int indx = 0; indx <=255; indx++)
+    for (int indx = 0; indx <= 255; indx++)
     {
         if ((Address >= (startaddress + 2048 * indx)) && (Address < (startaddress + (2048 * (indx + 1)))))
         {
