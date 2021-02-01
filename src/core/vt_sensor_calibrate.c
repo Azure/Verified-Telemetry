@@ -5,8 +5,8 @@
 #include "vt_dsc.h"
 #include "vt_sensor.h"
 
-VT_FALL_STATE _vt_index37_state(int index_37);
-
+static VT_FALL_STATE _vt_index37_state(int index_37);
+static uint32_t  _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states);
 
 void vt_sensor_calibrate(VT_SENSOR* sensor_ptr)
 {
@@ -39,7 +39,7 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr)
     }
 }
 
-uint32_t  _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states)
+static uint32_t  _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states)
 {
     int index_max;
     int index_37;
@@ -151,7 +151,7 @@ uint32_t  _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states)
     return _vt_sensor_calibrate(sensor_ptr, states);
 }
 
-VT_FALL_STATE _vt_index37_state(int index_37)
+static VT_FALL_STATE _vt_index37_state(int index_37)
 {
     if (index_37 == -1){
         return VT_FALL_STATE_UNDERSHOOT;

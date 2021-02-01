@@ -4,6 +4,8 @@
 #include "vt_fingerprint.h"
 #include "math.h"
 
+static uint32_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, uint32_t fingerprint_length);
+static void _vt_fingerprint_rankify(uint32_t* fingerprint, int fingerprint_length, uint32_t* fingerprint_ranked);
 
 uint32_t  _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerprint, uint32_t fingerprint_length, uint32_t sampling_frequency, int* fall_time, double* pearson_coefficient)
 {
@@ -139,7 +141,7 @@ uint32_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint32_t finge
     return 2000;
 }
 
-void _vt_fingerprint_rankify(uint32_t* X, int length, uint32_t* Y)
+static void _vt_fingerprint_rankify(uint32_t* X, int length, uint32_t* Y)
 {
 
     for (int i = 0; i < length; i++)

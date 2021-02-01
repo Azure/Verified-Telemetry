@@ -4,7 +4,7 @@
 #include "vt_database.h"
 
 
-uint32_t  vt_database_initialize(VT_DATABASE* database_ptr,uint32_t flash_address, uint32_t fallcurve_component_id)
+uint32_t vt_database_initialize(VT_DATABASE* database_ptr,uint32_t flash_address, uint32_t fallcurve_component_id)
 {
     database_ptr->vt_flash_address = flash_address;
     database_ptr->vt_fallcurve_component_id = fallcurve_component_id;
