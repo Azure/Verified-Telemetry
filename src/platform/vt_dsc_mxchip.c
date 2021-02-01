@@ -3,7 +3,7 @@
 
 #include "vt_dsc.h"
 
-uint32_t _vt_dsc_flash_get_sector(uint32_t Address);
+static uint32_t _vt_dsc_flash_get_sector(uint32_t Address);
 
 uint32_t _vt_dsc_delay_msec(uint32_t delay)
 {
@@ -162,7 +162,7 @@ Sector 11   0x080E 0000 - 0x080F FFFF 128 Kbyte
 
 */
 
-uint32_t _vt_dsc_flash_get_sector(uint32_t Address)
+static uint32_t _vt_dsc_flash_get_sector(uint32_t Address)
 {
 
     if ((Address >= 0x08000000) && (Address < 0x08003FFF))

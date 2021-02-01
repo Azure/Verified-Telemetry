@@ -13,8 +13,8 @@ int _vt_database_evaluate_nrmse(VT_DATABASE* database_ptr, uint32_t* fallcurvear
         return -1;
     }
 
-    double nrmse[database_ptr->_vt_total_fingerprints];
-    double min = 65355.00;
+    float nrmse[database_ptr->_vt_total_fingerprints];
+    float min = 65355.00;
     int index;
 
     for (int i = 0; i < (database_ptr->_vt_total_fingerprints); i++)
@@ -36,7 +36,7 @@ int _vt_database_evaluate_nrmse(VT_DATABASE* database_ptr, uint32_t* fallcurvear
     }
 }
 
-int _vt_database_evaluate_pearson_falltime(VT_DATABASE* database_ptr, int fall_time, double pearson_coefficient)
+int _vt_database_evaluate_pearson_falltime(VT_DATABASE* database_ptr, int fall_time, float pearson_coefficient)
 {
     if (database_ptr->_vt_total_falltime == 0)
     {

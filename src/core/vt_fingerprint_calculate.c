@@ -11,7 +11,7 @@ uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerp
     uint32_t fingerprint_length,
     uint32_t sampling_frequency,
     int* fall_time,
-    double* pearson_coefficient)
+    float* pearson_coefficient)
 {
 
     // Find index of  Maxima
@@ -141,7 +141,7 @@ uint32_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint32_t finge
 
     for (uint32_t i = index_max; i < fingerprint_length; i++)
     {
-        if ((double)fingerprint[i] <= (0.37 * (double)fingerprint[index_max]))
+        if (fingerprint[i] <= (0.37 * fingerprint[index_max]))
         {
             return i;
         }

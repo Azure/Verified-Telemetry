@@ -10,7 +10,7 @@ static void storeinflash(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, in
 uint32_t vt_database_store(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensorid)
 {
     int falltime;
-    double pearson_coefficient;
+    float pearson_coefficient;
 
     if (_vt_fingerprint_calculate_falltime_pearsoncoefficient(
             fallcurvearray, 100, sampling_frequency, &falltime, &pearson_coefficient) == VT_SUCCESS)
@@ -71,7 +71,7 @@ uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, int fall_time, i
     return VT_SUCCESS;
 }
 
-uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, double pearson_coefficient, int sensorid)
+uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float pearson_coefficient, int sensorid)
 {
     int i;
 

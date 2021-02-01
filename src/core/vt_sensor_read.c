@@ -51,7 +51,7 @@ uint32_t vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint
 uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int* sensorid)
 {
     int fall_time;
-    double pearson_coefficient;
+    float pearson_coefficient;
 
     *sensorid = 0;
 

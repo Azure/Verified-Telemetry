@@ -22,9 +22,9 @@
 #define VT_NOISY_FUNCTION_ERROR               0X14
 
 #define FLASH_DB_START_VALUE       0x42
-#define VT_SHAPE_THRESHOLD         0.85
+#define VT_SHAPE_THRESHOLD         0.85f
 #define VT_PRECISION_THRESHOLD     20
-#define VT_REPEATABILITY_THRESHOLD 0.3
+#define VT_REPEATABILITY_THRESHOLD 0.3f
 #define VT_STARTING_FREQUENCY      5
 #define VT_MAXIMUM_FREQUENCY       65
 #define VT_MINIMUM_FREQUENCY       1
@@ -59,7 +59,7 @@ typedef struct VT_DATABASE_STRUCT
     int _vt_falltimedb[10][2];
 
     int _vt_total_pearson_coefficient;
-    double _vt_pearson_coefficientdb[10][2];
+    float _vt_pearson_coefficientdb[10][2];
 
 } VT_DATABASE;
 
@@ -95,6 +95,6 @@ uint32_t vt_database_fingerprint_fetch(VT_DATABASE* database_ptr, int* index, ui
 uint32_t vt_database_falltime_fetch(VT_DATABASE* database_ptr, int* index, int* fall_time, int* sensorid);
 
 uint32_t vt_database_pearsoncoefficient_fetch(
-    VT_DATABASE* database_ptr, int* index, double* pearson_coefficient, int* sensorid);
+    VT_DATABASE* database_ptr, int* index, float* pearson_coefficient, int* sensorid);
 
 #endif

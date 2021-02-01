@@ -3,8 +3,8 @@
 
 #include "vt_dsc.h"
 
-uint32_t _vt_dsc_flash_get_page(uint32_t Address);
-uint32_t _vt_dsc_flash_get_bank(uint32_t Address);
+static uint32_t _vt_dsc_flash_get_page(uint32_t Address);
+static uint32_t _vt_dsc_flash_get_bank(uint32_t Address);
 
 uint32_t _vt_dsc_delay_msec(uint32_t delay)
 {
@@ -174,7 +174,7 @@ Bank 2
 
 */
 
-uint32_t _vt_dsc_flash_get_bank(uint32_t Address)
+static uint32_t _vt_dsc_flash_get_bank(uint32_t Address)
 {
     if ((Address >= 0x08000000) && (Address < 0x0807FFFF))
     {
@@ -189,7 +189,7 @@ uint32_t _vt_dsc_flash_get_bank(uint32_t Address)
     return VT_ERROR;
 }
 
-uint32_t _vt_dsc_flash_get_page(uint32_t Address)
+static uint32_t _vt_dsc_flash_get_page(uint32_t Address)
 {
     uint32_t startaddress = 0x08000000;
     if (Address >= 0x08080000)

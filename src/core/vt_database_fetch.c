@@ -44,7 +44,7 @@ uint32_t vt_database_falltime_fetch(VT_DATABASE* database_ptr, int* index, int* 
 }
 
 uint32_t vt_database_pearsoncoefficient_fetch(
-    VT_DATABASE* database_ptr, int* index, double* pearson_coefficient, int* sensorid)
+    VT_DATABASE* database_ptr, int* index, float* pearson_coefficient, int* sensorid)
 {
     if (database_ptr == NULL)
     {

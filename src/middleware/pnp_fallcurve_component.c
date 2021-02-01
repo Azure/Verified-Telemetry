@@ -286,7 +286,7 @@ static UINT hub_store_all_db(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_C
     CHAR sensorIDStr[3];
     int fallTime = 0;
     CHAR fallTimeStr[5];
-    double pearsonCoeff = 0;
+    float pearsonCoeff = 0;
     CHAR pearsonCoeffStr[7];
     if ((status = nx_azure_iot_pnp_client_reported_properties_create(iotpnp_client_ptr, &json_writer, NX_WAIT_FOREVER)))
     {
@@ -443,7 +443,7 @@ static UINT sync_fingerprintTemplate(
     CHAR jsonValue[50];
     UINT bytes_copied   = 0;
     int32_t fallTime    = 0;
-    double pearsonCoeff = 0;
+    float pearsonCoeff = 0;
 
     if (handle->flash_address != 0x00)
     {
