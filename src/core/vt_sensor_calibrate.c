@@ -5,6 +5,7 @@
 #include "vt_dsc.h"
 #include "vt_sensor.h"
 
+
 static VT_FALL_STATE _vt_index37_state(int index_37);
 static uint32_t  _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states);
 

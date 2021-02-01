@@ -6,12 +6,8 @@
 
 #include "stdio.h"
 
-#include "vt_user.h"
 #include "vt_port.h"
 #include "vt_dsc.h"
-
-
-#define FALLCURVE_LENGTH 100
 
 #define VT_SUCCESS                              0X00
 #define VT_ERROR                                0X01
@@ -25,7 +21,17 @@
 #define VT_STEP_FUNCTION_ERROR                  0X13
 #define VT_NOISY_FUNCTION_ERROR                 0X14
 
-#define FLASH_DB_START_VALUE 0x42
+#define FLASH_DB_START_VALUE    0x42
+#define VT_SHAPE_THRESHOLD         0.85
+#define VT_PRECISION_THRESHOLD     20
+#define VT_REPEATABILITY_THRESHOLD 0.3
+#define VT_STARTING_FREQUENCY      5
+#define VT_MAXIMUM_FREQUENCY       65
+#define VT_MINIMUM_FREQUENCY       1
+#define VT_FINGERPRINT_LENGTH      100
+
+#define FALL_TIME_THRESHOLD           5
+#define PEARSON_COEFFICIENT_THRESHOLD 5
 
 
 typedef struct VT_SENSOR_STRUCT

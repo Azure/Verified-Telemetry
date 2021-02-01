@@ -7,6 +7,7 @@
 #include "vt_api.h"
 #include "vt_fingerprint.h"
 
+
 typedef enum VT_FALL_STATE
 {
     //VT_FALL_STATE_INIT       = 0,

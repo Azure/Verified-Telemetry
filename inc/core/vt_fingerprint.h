@@ -6,6 +6,7 @@
 
 #include "vt_api.h"
 
+
 typedef enum VT_CURVE_SHAPE
 {
     VT_SHAPE_FALL  = 0,

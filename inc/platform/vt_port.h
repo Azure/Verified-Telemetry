@@ -16,7 +16,7 @@
 #define GPION_PIN_TYPEDEF		uint16_t
 #define ADC_CONTROLLER_TYPEDEF	ADC_HandleTypeDef
 #define ADC_CHANNEL_TYPEDEF		uint16_t
-#define TIMER_HANDLE_TYPEDEF     TIM_HandleTypeDef
+#define TIMER_HANDLE_TYPEDEF    TIM_HandleTypeDef
 #endif
 
 #ifdef STM_BL475EIOT01A
