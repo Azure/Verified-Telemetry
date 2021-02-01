@@ -39,6 +39,7 @@ list(APPEND VT_SOURCES
 
 	"src/middleware/pnp_verified_telemetry.c" 
 	"src/middleware/pnp_fallcurve_component.c"
+	"src/middleware/pnp_middleware_helper.c"
 	)
 
 list(APPEND VT_LINK_LIBRARIES "app_common")
