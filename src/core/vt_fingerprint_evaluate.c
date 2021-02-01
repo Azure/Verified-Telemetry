@@ -2,6 +2,7 @@
    Licensed under the MIT License. */
 
 #include "vt_fingerprint.h"
+#include "math.h"
 
 double _vt_fingerprint_evaluate_correlationCoefficient(uint32_t* fingerpint1, uint32_t* fingerpint2, int length)
 {

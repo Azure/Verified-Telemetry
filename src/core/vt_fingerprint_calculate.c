@@ -2,6 +2,7 @@
    Licensed under the MIT License. */
 
 #include "vt_fingerprint.h"
+#include "math.h"
 
 
 uint32_t  _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerprint, uint32_t fingerprint_length, uint32_t sampling_frequency, int* fall_time, double* pearson_coefficient)

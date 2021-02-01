@@ -192,7 +192,7 @@ UINT get_fallcurve(PNP_FALLCURVE_COMPONENT *handle, VT_DATABASE *fingerprintdb, 
         }
         else
         {
-            printf("Fall Curve Evaluation Successful\r\n");
+            printf("Fingerprint Evaluation Successful\r\n");
             if(sensorid > 0)
             {
                 handle -> sensorConnected = (CHAR *)handle -> connected_sensors[sensorid-1];
@@ -531,7 +531,7 @@ UINT pnp_fallcurve_telemetryStatus_property(PNP_FALLCURVE_COMPONENT *handle, NX_
 
     if(oldTelemetryStatus == handle -> telemetryStatus && handle -> vTInfo_property_sent != 0)
     {
-        printf("Telemetry Status is the same, not updating digitalTwin!\r\n");
+        // printf("Telemetry Status is the same, not updating digitalTwin!\r\n");
         return(status);
     }
 

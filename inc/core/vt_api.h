@@ -4,16 +4,11 @@
 #ifndef _VT_API_H
 #define _VT_API_H
 
-//Dependancy Libraries
 #include "stdio.h"
-#include "stdbool.h"
-#include "string.h"
-#include "stdlib.h"
-#include "math.h"
 
 #include "vt_user.h"
 #include "vt_port.h"
-#include"vt_dsc.h"
+#include "vt_dsc.h"
 
 
 #define FALLCURVE_LENGTH 100
