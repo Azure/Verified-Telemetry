@@ -8,6 +8,7 @@ The main interface of Verified Telemetry is [Verified Telemetry Information](./v
 | **Properties (read-only)** | `fingerprintType` | Type of the fingerprint (String). e.g., FallCurve or CurrentSense or Custom. |
 | **Properties (read-only)** | `fingerprintTemplate` | Template Fingerprint information in a Map |
 | **Commands** | `resetFingerprintTemplate` | This command will reset the template fingerprint |
+| **Commands** | `retrainFingerprintTemplate` | This command will retrain the template fingerprint |
 
 ## [Getting started guide](./sample/gsg.json) interface has the following components:
 1. Device Component using the [Device Sensors](./sample/device.json) interface. This represents the Default Device Component from the ODMs.

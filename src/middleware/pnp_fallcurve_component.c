@@ -22,6 +22,7 @@ static const CHAR init_fingerprint[] = "--";
 
 /* Pnp command supported */
 static const CHAR command_reset_fingerprint[] = "resetFingerprintTemplate";
+static const CHAR command_retrain_fingerprint[] = "retrainFingerprintTemplate";
 
 /* Default Telemetry Values */
 static const CHAR fail_fingerprint[]           = "--";
@@ -275,6 +276,39 @@ static UINT reset_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT
     return (status);
 }
 
+/* retrain fingerprint method implementation */
+static UINT retrain_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_JSON_READER* json_reader_ptr)
+{
+    UINT status = 0;
+    INT ground_truth_label;
+    uint32_t fallcurvearray[100];
+
+    if (identify_ground_truth_label(
+            (UCHAR*)handle->associatedSensor, strlen(handle->associatedSensor), handle, &ground_truth_label))
+    {
+        printf("Sensor Name does not match with any registered sensors\r\n");
+        return (NX_NOT_SUCCESSFUL);
+    }
+    else if (vt_sensor_read_fingerprint(&(handle->portInfo), fallcurvearray, fallcurvestring))
+    {
+        printf("Error in collecting requested Fall Curve\r\n");
+        return (NX_NOT_SUCCESSFUL);
+    }
+    else
+    {
+        // _vt_fingerprint_calculate_falltime_pearsoncoefficient(fallcurvearray,
+        // 100, fallcurve_components[index]->portInfo.vt_sampling_frequency ,
+        // &falltime, &pearson_coefficient);
+        if (vt_database_store(
+                &(handle->fingerprintdb), fallcurvearray, handle->portInfo.vt_sampling_frequency, ground_truth_label))
+        {
+            printf("Failed to collect and store Golden Fingerprint\r\n");
+        }
+    }
+
+    return (status);
+}
+
 static UINT hub_store_all_db(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
 {
     UINT status;
@@ -285,9 +319,13 @@ static UINT hub_store_all_db(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_C
     int sensorid = 0;
     CHAR sensorIDStr[3];
     int fallTime = 0;
+    CHAR fallTimeDB[60];
     CHAR fallTimeStr[5];
     float pearsonCoeff = 0;
     CHAR pearsonCoeffStr[7];
+
+    memset(fallTimeDB,0,sizeof(fallTimeDB));
+
     if ((status = nx_azure_iot_pnp_client_reported_properties_create(iotpnp_client_ptr, &json_writer, NX_WAIT_FOREVER)))
     {
         printf("Failed create reported properties: error code = 0x%08x\r\n", status);
@@ -350,7 +388,6 @@ static UINT hub_store_all_db(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_C
     }
     iter = 0;
     vt_database_falltime_fetch(&(handle->fingerprintdb), &iter, &fallTime, &sensorid);
-    snprintf(fallTimeStr, sizeof(fallTimeStr), "%04d", fallTime);
     if (iter < 0)
     {
         if ((status = nx_azure_iot_json_writer_append_null(&json_writer)))
@@ -362,8 +399,20 @@ static UINT hub_store_all_db(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_C
     }
     else
     {
+        snprintf(fallTimeStr, sizeof(fallTimeStr), "%04d", fallTime);
+        strcat(fallTimeDB, fallTimeStr);
+        vt_database_falltime_fetch(&(handle->fingerprintdb), &iter, &fallTime, &sensorid);
+
+        while(!(iter < 0))
+        {
+            snprintf(fallTimeStr, sizeof(fallTimeStr), "%04d", fallTime);
+            strcat(fallTimeDB, ",");
+            strcat(fallTimeDB, fallTimeStr);
+            vt_database_falltime_fetch(&(handle->fingerprintdb), &iter, &fallTime, &sensorid);
+        }
+
         if ((status =
-                    nx_azure_iot_json_writer_append_string(&json_writer, (UCHAR*)fallTimeStr, sizeof(fallTimeStr) - 1)))
+                    nx_azure_iot_json_writer_append_string(&json_writer, (UCHAR*)fallTimeDB, strlen(fallTimeDB))))
         {
             printf("Failed to append FallTime DB data: error code = 0x%08x\r\n", status);
             nx_azure_iot_json_writer_deinit(&json_writer);
@@ -444,6 +493,8 @@ static UINT sync_fingerprintTemplate(
     UINT bytes_copied   = 0;
     int32_t fallTime    = 0;
     float pearsonCoeff = 0;
+    CHAR* token; 
+    CHAR* saveptr;
 
     if (handle->flash_address != 0x00)
     {
@@ -466,10 +517,11 @@ static UINT sync_fingerprintTemplate(
         return NX_NOT_SUCCESSFUL;
     }
     if (((strlen(jsonKey) == (sizeof(sensorName_json_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)sensorName_json_property, strlen(jsonKey))))) == 1)
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)sensorName_json_property, strlen(jsonKey))))) == 0)
     {
-        // If required use sensorName string
+        return NX_NOT_SUCCESSFUL;
     }
+    // If required use sensorName string
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(
@@ -484,14 +536,15 @@ static UINT sync_fingerprintTemplate(
         return NX_NOT_SUCCESSFUL;
     }
     if (((strlen(jsonKey) == (sizeof(sensorID_json_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)sensorID_json_property, strlen(jsonKey))))) == 1)
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)sensorID_json_property, strlen(jsonKey))))) == 0)
     {
-        sensorid = atoi((CHAR*)jsonValue);
+        return NX_NOT_SUCCESSFUL;
     }
+    sensorid = atoi((CHAR*)jsonValue);
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(
-            property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+        property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
     {
         return NX_NOT_SUCCESSFUL;
     }
@@ -502,15 +555,19 @@ static UINT sync_fingerprintTemplate(
         return NX_NOT_SUCCESSFUL;
     }
     if (((strlen(jsonKey) == (sizeof(fallTime_json_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)fallTime_json_property, strlen(jsonKey))))) == 1)
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)fallTime_json_property, strlen(jsonKey))))) == 0)
     {
-        fallTime = atoi((CHAR*)jsonValue);
-        _vt_database_store_falltime(&(handle->fingerprintdb), fallTime, sensorid);
+        return NX_NOT_SUCCESSFUL;
     }
+    while ((token = strtok_r(saveptr, ",", &saveptr)))
+    {
+        fallTime = atoi((CHAR*)token);
+        _vt_database_store_falltime(&(handle->fingerprintdb), fallTime, sensorid);
+    } 
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(
-            property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+        property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
     {
         return NX_NOT_SUCCESSFUL;
     }
@@ -519,13 +576,16 @@ static UINT sync_fingerprintTemplate(
             property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
     {
         return NX_NOT_SUCCESSFUL;
-    }
+    }    
     if (((strlen(jsonKey) == (sizeof(pearsonCoeff_json_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)pearsonCoeff_json_property, strlen(jsonKey))))) == 1)
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)pearsonCoeff_json_property, strlen(jsonKey))))) == 0)
     {
-        pearsonCoeff = atof((CHAR*)jsonValue);
-        _vt_database_store_pearsoncoefficient(&(handle->fingerprintdb), pearsonCoeff, sensorid);
+        return NX_NOT_SUCCESSFUL;
     }
+    pearsonCoeff = atof((CHAR*)jsonValue);
+    _vt_database_store_pearsoncoefficient(&(handle->fingerprintdb), pearsonCoeff, sensorid);
+    
+    
 
     return NX_SUCCESS;
 }
@@ -664,6 +724,20 @@ UINT pnp_fallcurve_process_command(PNP_FALLCURVE_COMPONENT* handle,
             (!(strncmp((CHAR*)pnp_command_name_ptr, (CHAR*)command_reset_fingerprint, pnp_command_name_length)))) == 1)
     {
         dm_status = (reset_golden_fallcurve(handle, json_reader_ptr) != NX_AZURE_IOT_SUCCESS)
+                        ? SAMPLE_COMMAND_ERROR_STATUS
+                        : SAMPLE_COMMAND_SUCCESS_STATUS;
+
+        if (hub_store_all_db(handle, iotpnp_client_ptr))
+        {
+            printf("Failed to update db in cloud\r\n");
+        }
+    }
+
+    // Command 2 : Retrain Fingerprint
+    else if (((pnp_command_name_length == (sizeof(command_retrain_fingerprint) - 1)) &&
+            (!(strncmp((CHAR*)pnp_command_name_ptr, (CHAR*)command_retrain_fingerprint, pnp_command_name_length)))) == 1)
+    {
+        dm_status = (retrain_golden_fallcurve(handle, json_reader_ptr) != NX_AZURE_IOT_SUCCESS)
                         ? SAMPLE_COMMAND_ERROR_STATUS
                         : SAMPLE_COMMAND_SUCCESS_STATUS;
 
