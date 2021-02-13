@@ -1,7 +1,11 @@
-# Verified Telemetry
-- Verified Telemetry is a state-of-the-art solution to determine the working of the sensor, i.e., working or faulty, consequently used to determine the quality of the sensed data. 
-- This is achieved by devising an intelligent fingerprint for a sensor to determine the status of the sensor.  
-- The sensor fingerprint captures electrical properties of the sensor such as voltage and current using seamless software code running on the IoT device. 
+# Verified Telemetry Overview
+The Quality of sensor data is fundamental for IoT adoption. Since IoT sensors are made of low-cost components, deployed in-the-wild and in harsh environments, they are prone to failures leading to faulty or dirty data. The effect of bad data will lead to the well-known garbage-in garbage-out process, leading to cascading ill-effects upstream and at times catastrophic decisions.  
+
+Verified Telemetry is a state-of-the-art solution to determine the working of the sensor, i.e., working or faulty, which is consequently used to determine the quality of the sensed data. This is achieved by devising an intelligent “sensor fingerprint”, a set of unique electrical characteristics that differs between working, drifted and faulty sensors. The fingerprints can detect faults for a wide variety of off-the-shelf sensors and can be easily implemented with lightweight software code running on the IoT device. This novel approach empowers customers with a reliable and automated way to remotely measure and observe the health of the sensor in real-time alongside the data collected. The data associated with a validated fingerprint results in verified telemetry (as shown below).
+![VT_Overview](./docs/Azure_VT.PNG)
+
+# Table of Contents
+
 
 # [Verified Telemetry Device Samples](https://github.com/Azure/Verified-Telemetry-Device-Sample)
 - These Getting Started guides shows device developers how to include Verified Telemetry with Azure IoT on Azure RTOS.
