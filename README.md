@@ -1,10 +1,22 @@
 # Verified Telemetry Overview
-The Quality of sensor data is fundamental for IoT adoption. Since IoT sensors are made of low-cost components, deployed in-the-wild and in harsh environments, they are prone to failures leading to faulty or dirty data. The effect of bad data will lead to the well-known garbage-in garbage-out process, leading to cascading ill-effects upstream and at times catastrophic decisions.  
+The quality of sensor data is fundamental for IoT adoption. Since IoT sensors are made of low-cost components, deployed in-the-wild and in harsh environments, they are prone to failures leading to faulty or dirty data. The effect of bad data will lead to the well-known garbage-in garbage-out process, leading to cascading ill-effects upstream and at times catastrophic decisions.  
 
-Verified Telemetry is a state-of-the-art solution to determine the working of the sensor, i.e., working or faulty, which is consequently used to determine the quality of the sensed data. This is achieved by devising an intelligent “sensor fingerprint”, a set of unique electrical characteristics that differs between working, drifted and faulty sensors. The fingerprints can detect faults for a wide variety of off-the-shelf sensors and can be easily implemented with lightweight software code running on the IoT device. This novel approach empowers customers with a reliable and automated way to remotely measure and observe the health of the sensor in real-time alongside the data collected. The data associated with a validated fingerprint results in verified telemetry (as shown below).
+Verified Telemetry (VT) is a state-of-the-art solution to determine the health of the sensor, i.e., working or faulty, which is consequently used to determine the quality of the sensed data. This is achieved by devising an intelligent “sensor fingerprint”, a set of unique electrical characteristics that differs between working and faulty sensors. The fingerprints can detect faults for a wide variety of off-the-shelf sensors and can be easily implemented with lightweight software code running on the IoT device. This novel approach empowers customers with a reliable and automated way to remotely measure and observe the health of the sensor in real-time alongside the data collected. The data associated with a validated fingerprint results in verified telemetry (as shown below).
+
 ![VT_Overview](./docs/Azure_VT.PNG)
 
 # Table of Contents
+
+* [Architecture](https://github.com/Azure/Verified-Telemetry#architecture-diagram)
+* [Dependencies](https://github.com/Azure/Verified-Telemetry#dependencies)
+* [Samples](https://github.com/Azure/Verified-Telemetry#samples)
+	* [Device Samples](https://github.com/Azure/Verified-Telemetry#device-sample)
+	* [Solution Samples](https://github.com/Azure/Verified-Telemetry#solution-sample)
+* [File Structure](https://github.com/Azure/Verified-Telemetry#file-structure)
+* [Resource Requirements](https://github.com/Azure/Verified-Telemetry#resource-requirements)
+* [Plug and Play Model for VT](https://github.com/Azure/Verified-Telemetry#plug-and-play-model)
+* [API Documentation](https://github.com/Azure/Verified-Telemetry#api-documentation)
+* [Integration of VT with existing device code](https://github.com/Azure/Verified-Telemetry#integration-of-VT-with-existing-device-code)
 
 
 # [Verified Telemetry Device Samples](https://github.com/Azure/Verified-Telemetry-Device-Sample)
@@ -27,6 +39,8 @@ Verified Telemetry is dependant on following SDK's:
     | [MXChip_AZ3166](https://en.mxchip.com/az3166)									  | [STM32Cubef4](https://github.com/STMicroelectronics/STM32CubeF4) |
     | [B-L475E-IOT01A](https://www.st.com/en/evaluation-tools/b-l475e-iot01a.html)	  | [STM32Cubel4](https://github.com/STMicroelectronics/STM32CubeL4)|
       
+
+# Samples
 
 
 # File Structure
@@ -288,7 +302,7 @@ UINT pnp_vt_properties(
 ## Return Value
 NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
 
-# Steps to integrate Verified Telemetry with existing device code
+# Integration of VT with existing device code
 * While developers can refer to the [Device Samples](https://github.com/Azure/Verified-Telemetry-Device-Sample) for Verified Telemetry, the following steps showcase how Verified Telemetry Library can be integrated separately with [Azure RTOS getting started samples](https://github.com/azure-rtos/getting-started)
 
 	> NOTE: The following steps demonstrate the integration of Verified Telemetry for the [AZ3166 getting started sample.](https://github.com/azure-rtos/getting-started/tree/master/MXChip/AZ3166) 
