@@ -7,16 +7,16 @@ Verified Telemetry (VT) is a state-of-the-art solution to determine the health o
 
 # Table of Contents
 
-* [Architecture](https://github.com/Azure/Verified-Telemetry#architecture)
-* [File Structure](https://github.com/Azure/Verified-Telemetry#file-structure)
-* [Dependencies](https://github.com/Azure/Verified-Telemetry#dependencies)
-* [Samples](https://github.com/Azure/Verified-Telemetry#samples)
-	* [Device Samples](https://github.com/Azure/Verified-Telemetry#device-sample)
-	* [Solution Samples](https://github.com/Azure/Verified-Telemetry#solution-sample)
-* [Resource Requirements](https://github.com/Azure/Verified-Telemetry#resource-requirements)
-* [Plug and Play Model for VT](https://github.com/Azure/Verified-Telemetry#plug-and-play-model)
-* [API Documentation](https://github.com/Azure/Verified-Telemetry#api-documentation)
-* [Integration of VT with existing device code](https://github.com/Azure/Verified-Telemetry#integration-of-VT-with-existing-device-code)
+* [Architecture](./Verified-Telemetry#architecture)
+* [File Structure](./Verified-Telemetry#file-structure)
+* [Dependencies](./Verified-Telemetry#dependencies)
+* [Samples](./Verified-Telemetry#samples)
+	* [Device Samples](./Verified-Telemetry#device-sample)
+	* [Solution Samples](./Verified-Telemetry#solution-sample)
+* [Resource Requirements](./Verified-Telemetry#resource-requirements)
+* [Plug and Play Model for VT](./Verified-Telemetry#plug-and-play-model)
+* [API Documentation](./Verified-Telemetry#api-documentation)
+* [Integration of VT with existing device code](./Verified-Telemetry#integration-of-VT-with-existing-device-code)
 
 
 # Architecture
