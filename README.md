@@ -66,11 +66,11 @@ Verified Telemetry is dependant on following SDK's:
 
 # Samples
 We provide multiple device and solution sample to showcase the usage of verified Telemetry. Please follow the following Getting started Guides to get started. 
-* [Device Samples](https://github.com/Azure/Verified-Telemetry-Device-Sample)
-- These Getting Started guides shows device developers how to include Verified Telemetry with Azure IoT on Azure RTOS.
+## Device Samples (https://github.com/Azure/Verified-Telemetry-Device-Sample)
+	- These Getting Started guides shows device developers how to include Verified Telemetry with Azure IoT on Azure RTOS.
 
-* [Solution Samples](https://github.com/Azure/Verified-Telemetry-Solution-Sample)
-- These Getting Started guides showcase how the Verified Telemetry features can be utilised in real world scenarios.
+## Solution Samples (https://github.com/Azure/Verified-Telemetry-Solution-Sample)
+	- These Getting Started guides showcase how the Verified Telemetry features can be utilised in real world scenarios.
 
 # Resource Requirements
 We except Verified Telemetery code to run on microcontrollers, which have very limited amounts of flash and RAM. Below is our resource requirements to add verified telemetry code:
