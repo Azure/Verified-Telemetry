@@ -8,26 +8,48 @@ Verified Telemetry (VT) is a state-of-the-art solution to determine the health o
 # Table of Contents
 
 * [Architecture](https://github.com/Azure/Verified-Telemetry#architecture-diagram)
+* [File Structure](https://github.com/Azure/Verified-Telemetry#file-structure)
 * [Dependencies](https://github.com/Azure/Verified-Telemetry#dependencies)
 * [Samples](https://github.com/Azure/Verified-Telemetry#samples)
 	* [Device Samples](https://github.com/Azure/Verified-Telemetry#device-sample)
 	* [Solution Samples](https://github.com/Azure/Verified-Telemetry#solution-sample)
-* [File Structure](https://github.com/Azure/Verified-Telemetry#file-structure)
 * [Resource Requirements](https://github.com/Azure/Verified-Telemetry#resource-requirements)
 * [Plug and Play Model for VT](https://github.com/Azure/Verified-Telemetry#plug-and-play-model)
 * [API Documentation](https://github.com/Azure/Verified-Telemetry#api-documentation)
 * [Integration of VT with existing device code](https://github.com/Azure/Verified-Telemetry#integration-of-VT-with-existing-device-code)
 
 
-# [Verified Telemetry Device Samples](https://github.com/Azure/Verified-Telemetry-Device-Sample)
-- These Getting Started guides shows device developers how to include Verified Telemetry with Azure IoT on Azure RTOS.
-
-# [Verified Telemetry Solution Samples](https://github.com/Azure/Verified-Telemetry-Solution-Sample)
-- These Getting Started guides showcase how the Verified Telemetry features can be utilised in real world scenarios.
-
-
 # Architecture Diagram
+Verified Telemetry Library currently supports Azure RTOS and uses the following components:
+* [Azure NetX Duo.](https://github.com/azure-rtos/netxduo) Provides a full TCP/IP IPv4 and IPv6 network stack, and networking support integrated with ThreadX.
+* [Azure IoT Middleware for Azure RTOS](https://github.com/azure-rtos/netxduo/tree/master/addons/azure_iot) Platform specific library that acts as a binding layer between the Azure RTOS and the Azure SDK for Embedded C.
+
+The architecture of VT library is also shown below:
 ![Architecture](./docs/architecture.png)
+
+
+# File Structure
+The VT library has been structured around the following components:
+* [Core.] This module includes core functions to support verified telemetry, such as functions to collect, validate and evaluate sensor fingerprints.
+* [Middleware.]() This module contains implementations to support interactions with Azure IoT Middleware for Azure RTOS.
+* [Platform.]() This module helps in making the library compatible with several hardware devices and OS kernels.
+
+* **/inc** Contains Header files for core, middeware and platform components
+
+* **/src** Contains implementations for all the header files in **/inc**.
+
+* **/PnPModel** Contains impementations for sample PnP models to support Verified Telemtery.
+
+* **CmakeLists.txt**  
+	CMake script to generate buid files.	
+	Verified Telemetry provides several options to customize the library according to the project requirement:
+
+	| Option          | Description                                                                     | Available Values                                  | Default Value				  |
+	|-----------------|---------------------------------------------------------------------------------|---------------------------------------------------|-----------------------------|
+	| `VT_DEVICE`  | This option links the correct HAL implementation to the library.                | `MXCHIP_AZ3166` `STM_BL475EIOT01A` `CUSTOM_DEVICE`| `MXCHIP_AZ3166`			  |
+
+	
+	Note: While selecting `CUSTOM_DEVICE`  option, user must provide implementations for the functions present [vt_dsc_custom.c](./src/platform/vt_dsc_custom.c).
 
 # Dependencies
 Verified Telemetry is dependant on following SDK's:
@@ -38,37 +60,16 @@ Verified Telemetry is dependant on following SDK's:
     |-----------------|---------------------------------------------------------------|
     | [MXChip_AZ3166](https://en.mxchip.com/az3166)									  | [STM32Cubef4](https://github.com/STMicroelectronics/STM32CubeF4) |
     | [B-L475E-IOT01A](https://www.st.com/en/evaluation-tools/b-l475e-iot01a.html)	  | [STM32Cubel4](https://github.com/STMicroelectronics/STM32CubeL4)|
-      
+
+
 
 # Samples
+We provide multiple device and solution sample to showcase the usageof verified Telemetry. Please follow the following Getting started Guides to get started. 
+	* [Device Samples](https://github.com/Azure/Verified-Telemetry-Device-Sample)
+		- These Getting Started guides shows device developers how to include Verified Telemetry with Azure IoT on Azure RTOS.
 
-
-# File Structure
-
-* **/inc**  
-	Contains Header files
-	* **/core**  
-		This module includes core functions to support verified telemetry, such as functions to collect, validate and evaluate sensor fingerprints.	
-	* **/middleware**  
-		This module contains implementations to support interactions with Azure IoT services (IoT hub, Central, etc.). The Azure IoT interactions are described in terms of telemetry, properties, and commands using the Digital Twins Definition Language (DTDL) version 2. 
-
-	* **/platform**  
-		This module helps in making the library compatible with several hardware devices and OS kernels.
-
-* **/src**  
-	Contains implementations for all the header files mentioned above.
-
-* **CmakeLists.txt**  
-	CMake script to generate buid files.	
-	Verified Telemetry provides several options to customize the library according to project requirement:
-
-	| Option          | Description                                                                     | Available Values                                  | Default Value				  |
-	|-----------------|---------------------------------------------------------------------------------|---------------------------------------------------|-----------------------------|
-	| `VT_DEVICE`  | This option links the correct HAL implementation to the library.                | `MXCHIP_AZ3166` `STM_BL475EIOT01A` `CUSTOM_DEVICE`| `MXCHIP_AZ3166`			  |
-
-	
-	Note: While selecting `CUSTOM_DEVICE`  option, user must provide implementations for the functions present [vt_dsc_custom.c](./src/platform/vt_dsc_custom.c).
-
+	* [Solution Samples](https://github.com/Azure/Verified-Telemetry-Solution-Sample)
+	- These Getting Started guides showcase how the Verified Telemetry features can be utilised in real world scenarios.
 
 # Resource Requirements
 | `Flash`       |  46 Kb  |																				  
@@ -76,8 +77,9 @@ Verified Telemetry is dependant on following SDK's:
 | `RAM`		    | 14 Kb   |
 
 # Plug and Play Model
-Verified Telemetry Library provides capabilities of interaction using a Plug and Play Model.
+Verified Telemetry Library provides capabilities for interaction using a Plug and Play Model.
 Details about this model can be found [here](./PnPModel)
+
 # API Documentation
 ## Overview of functions
 | Function          | Description                                                                     |
