@@ -7,7 +7,7 @@ Verified Telemetry (VT) is a state-of-the-art solution to determine the health o
 
 # Table of Contents
 
-* [Architecture](https://github.com/Azure/Verified-Telemetry#architecture-diagram)
+* [Architecture](https://github.com/Azure/Verified-Telemetry#architecture)
 * [File Structure](https://github.com/Azure/Verified-Telemetry#file-structure)
 * [Dependencies](https://github.com/Azure/Verified-Telemetry#dependencies)
 * [Samples](https://github.com/Azure/Verified-Telemetry#samples)
@@ -19,7 +19,7 @@ Verified Telemetry (VT) is a state-of-the-art solution to determine the health o
 * [Integration of VT with existing device code](https://github.com/Azure/Verified-Telemetry#integration-of-VT-with-existing-device-code)
 
 
-# Architecture Diagram
+# Architecture
 Verified Telemetry Library currently supports Azure RTOS and uses the following components:
 * [Azure NetX Duo.](https://github.com/azure-rtos/netxduo) Provides a full TCP/IP IPv4 and IPv6 network stack, and networking support integrated with ThreadX.
 * [Azure IoT Middleware for Azure RTOS](https://github.com/azure-rtos/netxduo/tree/master/addons/azure_iot) Platform specific library that acts as a binding layer between the Azure RTOS and the Azure SDK for Embedded C.
@@ -30,10 +30,11 @@ The architecture of VT library is also shown below:
 
 # File Structure
 The VT library has been structured around the following components:
-* [Core.] This module includes core functions to support verified telemetry, such as functions to collect, validate and evaluate sensor fingerprints.
-* [Middleware.]() This module contains implementations to support interactions with Azure IoT Middleware for Azure RTOS.
-* [Platform.]() This module helps in making the library compatible with several hardware devices and OS kernels.
+* [Core.](./src/core) This module includes core functions to support verified telemetry, such as functions to collect, validate and evaluate sensor fingerprints.
+* [Middleware.](./src/middleware) This module contains implementations to support interactions with Azure IoT Middleware for Azure RTOS.
+* [Platform.](./src/platform) This module helps in making the library compatible with several hardware devices and OS kernels.
 
+The structure of the library is as follows:
 * **/inc** Contains Header files for core, middeware and platform components
 
 * **/src** Contains implementations for all the header files in **/inc**.
@@ -64,21 +65,23 @@ Verified Telemetry is dependant on following SDK's:
 
 
 # Samples
-We provide multiple device and solution sample to showcase the usageof verified Telemetry. Please follow the following Getting started Guides to get started. 
-	* [Device Samples](https://github.com/Azure/Verified-Telemetry-Device-Sample)
-		- These Getting Started guides shows device developers how to include Verified Telemetry with Azure IoT on Azure RTOS.
+We provide multiple device and solution sample to showcase the usage of verified Telemetry. Please follow the following Getting started Guides to get started. 
+* [Device Samples](https://github.com/Azure/Verified-Telemetry-Device-Sample)
+- These Getting Started guides shows device developers how to include Verified Telemetry with Azure IoT on Azure RTOS.
 
-	* [Solution Samples](https://github.com/Azure/Verified-Telemetry-Solution-Sample)
-	- These Getting Started guides showcase how the Verified Telemetry features can be utilised in real world scenarios.
+* [Solution Samples](https://github.com/Azure/Verified-Telemetry-Solution-Sample)
+- These Getting Started guides showcase how the Verified Telemetry features can be utilised in real world scenarios.
 
 # Resource Requirements
+We except Verified Telemetery code to run on microcontrollers, which have very limited amounts of flash and RAM. Below is our resource requirements to add verified telemetry code:
+
 | `Flash`       |  46 Kb  |																				  
 |---------------|---------|
 | `RAM`		    | 14 Kb   |
 
 # Plug and Play Model
 Verified Telemetry Library provides capabilities for interaction using a Plug and Play Model.
-Details about this model can be found [here](./PnPModel)
+Details about this model can be found [here](./PnPModel).
 
 # API Documentation
 ## Overview of functions
