@@ -88,11 +88,11 @@ Details about this model can be found [here](./PnPModel).
 | Function          | Description                                                                     |
 |-----------------|---------------------------------------------------------------------------------|
 | [pnp_vt_init](./docs/VT_API.md#pnp_vt_init) | Initializes Global Verified Telemetry                |
-| `pnp_fallcurve_init`  | Initializes an instance of Verified Telemetry Information Interface                   |
-| `pnp_vt_process_command`  | Processes all commands supported by vT Middleware                 |
-| `pnp_vt_process_property_update`  |  Processes all desired property updates supported by vT Middleware               |
-| `pnp_vt_process_reported_property_sync`  |  Syncronizes vT Settings stored in digital Twin as reported properties at startup               |
-| `pnp_vt_properties`  | Creates payloads and sends all reported properties supported by vT Middleware                 |
+| [pnp_fallcurve_init](./docs/VT_API.md#pnp_fallcurve_init)  | Initializes an instance of Verified Telemetry Information Interface                   |
+| [pnp_vt_process_command](./docs/VT_API.md#pnp_vt_process_command)  | Processes all commands supported by vT Middleware                 |
+| [pnp_vt_process_property_update](./docs/VT_API.md#pnp_vt_process_property_update)  |  Processes all desired property updates supported by vT Middleware               |
+| [pnp_vt_process_reported_property_sync](./docs/VT_API.md#pnp_vt_process_reported_property_sync)  |  Syncronizes vT Settings stored in digital Twin as reported properties at startup               |
+| [pnp_vt_properties](./docs/VT_API.md#pnp_vt_properties)  | Creates payloads and sends all reported properties supported by vT Middleware                 |
  
 # pnp_vt_init()
 
