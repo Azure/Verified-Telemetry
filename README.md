@@ -87,7 +87,7 @@ Details about this model can be found [here](./PnPModel).
 ## Overview of functions
 | Function          | Description                                                                     |
 |-----------------|---------------------------------------------------------------------------------|
-| `pnp_vt_init`  | Initializes Global Verified Telemetry                |
+| [pnp_vt_init](./docs/VT_API.md#pnp_vt_init) | Initializes Global Verified Telemetry                |
 | `pnp_fallcurve_init`  | Initializes an instance of Verified Telemetry Information Interface                   |
 | `pnp_vt_process_command`  | Processes all commands supported by vT Middleware                 |
 | `pnp_vt_process_property_update`  |  Processes all desired property updates supported by vT Middleware               |
