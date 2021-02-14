@@ -7,16 +7,16 @@ Verified Telemetry (VT) is a state-of-the-art solution to determine the health o
 
 # Table of Contents
 
-* [Architecture](./Verified-Telemetry#architecture)
-* [File Structure](./Verified-Telemetry#file-structure)
-* [Dependencies](./Verified-Telemetry#dependencies)
-* [Samples](./Verified-Telemetry#samples)
-	* [Device Samples](./Verified-Telemetry#device-sample)
-	* [Solution Samples](./Verified-Telemetry#solution-sample)
-* [Resource Requirements](./Verified-Telemetry#resource-requirements)
-* [Plug and Play Model for VT](./Verified-Telemetry#plug-and-play-model)
-* [API Documentation](./Verified-Telemetry#api-documentation)
-* [Integration of VT with existing device code](./Verified-Telemetry#integration-of-VT-with-existing-device-code)
+* [Architecture](https://github.com/Azure/Verified-Telemetry#architecture)
+* [File Structure](https://github.com/Azure/Verified-Telemetry#file-structure)
+* [Dependencies](https://github.com/Azure/Verified-Telemetry#dependencies)
+* [Samples](https://github.com/Azure/Verified-Telemetry#samples)
+	* [Device Samples](https://github.com/Azure/Verified-Telemetry#device-sample)
+	* [Solution Samples](https://github.com/Azure/Verified-Telemetry#solution-sample)
+* [Resource Requirements](https://github.com/Azure/Verified-Telemetry#resource-requirements)
+* [Plug and Play Model for VT](https://github.com/Azure/Verified-Telemetry#plug-and-play-model)
+* [API Documentation](https://github.com/Azure/Verified-Telemetry#api-documentation)
+* [Integration of VT with existing device code](https://github.com/Azure/Verified-Telemetry#integration-of-VT-with-existing-device-code)
 
 
 # Architecture
@@ -84,7 +84,6 @@ Verified Telemetry Library provides capabilities for interaction using a Plug an
 Details about this model can be found [here](./PnPModel).
 
 # API Documentation
-## Overview of functions
 | Function          | Description                                                                     |
 |-----------------|---------------------------------------------------------------------------------|
 | [pnp_vt_init](./docs/VT_API.md#pnp_vt_init) | Initializes Global Verified Telemetry                |
@@ -94,221 +93,9 @@ Details about this model can be found [here](./PnPModel).
 | [pnp_vt_process_reported_property_sync](./docs/VT_API.md#pnp_vt_process_reported_property_sync)  |  Syncronizes vT Settings stored in digital Twin as reported properties at startup               |
 | [pnp_vt_properties](./docs/VT_API.md#pnp_vt_properties)  | Creates payloads and sends all reported properties supported by vT Middleware                 |
  
-# pnp_vt_init()
-
-Initializes Global Verified Telemetry.
-
-## Syntax
-
-\#include "[verified-telemetry\inc\middleware\pnp_verified_telemetry.h](./inc/middleware/pnp_verified_telemetry.h)"  
-```C
-UINT pnp_vt_init(
-	void * 				verified_telemetry_DB, 
-	PNP_FALLCURVE_COMPONENT ** 	fallcurve_components,
-	UINT 				numberVerifiedTelemetries,
-	bool 				enableVerifiedTelemetry, 
-	UINT 				flash_address
-	);
-```
-
-## Parameters
-* `verified_telemetry_DB` Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data. 
-
-* `fallcurve_components` Pointer to array of variables of type PNP_FALLCURVE_COMPONENT holding information for each component of Verified Telemetry Information Interface. 
-
-* `numberVerifiedTelemetries` Number of telemetries which would be supporting verified telemetry feature.
-
-* `enableVerifiedTelemetry` User specified value to set Verified Telemetry active or inactive, can also be configured during runtime from a writable Digital Twin property.
-
-* `flash_address` Starting address of FLASH memory where runtime configuration settings of Verified Telemetry can be stored. This can be NULL if user does not want to use FLASH to store Verified Telemetry runtime configuration settings.
-
-## Return Value
-NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
-
-# pnp_fallcurve_init()
-
-Initializes an instance of Verified Telemetry Information Interface
-
-## Syntax
-
-\#include "[verified-telemetry\inc\middleware\pnp_fallcurve_component.h](./inc/middleware/pnp_fallcurve_component.h)"  
-```C
-UINT pnp_fallcurve_init(
-    PNP_FALLCURVE_COMPONENT             handle, 
-    UCHAR *                     	component_name_ptr,
-    GPIO_PORT_TYPEDEF *                 GPIOx,
-    GPION_PIN_TYPEDEF               	GPIO_Pin, 
-    ADC_CONTROLLER_TYPEDEF *            ADC_Controller,
-    ADC_CHANNEL_TYPEDEF                 ADC_Channel,
-    TIMER_HANDLE_TYPEDEF *              Timer,
-    PNP_FALLCURVE_COMPONENT **          fallcurve_components,
-    CHAR **                     	connected_sensors,
-    UCHAR *                     	associatedTelemetry
-    UINT                        	numberVerifiedTelemetries
-    );
-```
-
-## Parameters
-* `handle` The handle created by a call to the initialization function.
-
-* `component_name_ptr` Name of the component. 
-
-* `GPIOx` GPIO Port to which the corresponding sensor is connected.
-
-* `GPIO_Pin` GPIO Pin to which the corresponding sensor is connected.
-
-* `ADC_Controller` ADC Controller to which the corresponding sensor is connected.
-
-* `ADC_Channel` ADC Channel to which the corresponding sensor is connected.
-
-* `Timer` Provide initialized timer for better performance of vT Library, if not available pass NULL.
-
-* `fallcurve_components` Pointer to array of variables of type PNP_FALLCURVE_COMPONENT created by the function which holds information for each component of Verified Telemetry Information Interface.
-
-* `connected_sensors` Pointer to list of connected sensor names created by the function.
-
-* `associatedTelemetry` Name of the telemetry associated with this component.
-
-* `numberVerifiedTelemetries` Number of telemetries which would be supporting verified telemetry feature.
-
-## Return Value
-NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
-
-# pnp_vt_process_command()
-
-Processes all commands supported by vT Middleware
-
-## Syntax
-
-\#include "[verified-telemetry\inc\middleware\pnp_verified_telemetry.h](./inc/middleware/pnp_verified_telemetry.h)"  
-```C
-UINT pnp_vt_process_command(
-    void *                              verified_telemetry_DB, 
-    NX_AZURE_IOT_PNP_CLIENT *           iotpnp_client_ptr,
-    UCHAR *                             component_name_ptr,
-    UINT               	                component_name_length, 
-    UCHAR *                             pnp_command_name_ptr,
-    UINT                                pnp_command_name_length,
-    NX_AZURE_IOT_JSON_READER *          json_reader_ptr,
-    NX_AZURE_IOT_JSON_WRITER *          json_response_ptr,
-    UINT *                     	        status_code
-    );
-```
-
-## Parameters
-* `verified_telemetry_DB` Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data. 
-
-* `iotpnp_client_ptr` Pointer to initialized Azure IoT PnP instance.
-
-* `component_name_ptr` Name of the component. 
-
-* `component_name_length` Length of name of the component. 
-
-* `pnp_command_name_ptr` Name of the command invoked.
-
-* `pnp_command_name_length` Length of name of the command invoked.
-
-* `json_reader_ptr` Pointer to read the JSON payload of command.
-
-* `json_response_ptr` Pointer to write response JSON payload.
-
-* `status_code` Status updated by function based on command execution.
-
-## Return Value
-NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
-
-# pnp_vt_process_property_update()
-
-Processes all desired property updates supported by vT Middleware
-
-## Syntax
-
-\#include "[verified-telemetry\inc\middleware\pnp_verified_telemetry.h](./inc/middleware/pnp_verified_telemetry.h)"  
-```C
-UINT pnp_vt_process_property_update(
-    void *                              verified_telemetry_DB, 
-    NX_AZURE_IOT_PNP_CLIENT *           iotpnp_client_ptr,
-    UCHAR *                             component_name_ptr,
-    UINT               	                component_name_length, 
-    NX_AZURE_IOT_JSON_READER *          name_value_reader_ptr,
-    UINT                      	        version
-    );
-```
-
-## Parameters
-* `verified_telemetry_DB` Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data. 
-
-* `iotpnp_client_ptr` Pointer to initialized Azure IoT PnP instance.
-
-* `component_name_ptr` Name of the component. 
-
-* `component_name_length` Length of name of the component. 
-
-* `json_reader_ptr` Pointer to read the JSON payload of command.
-
-* `version` Property version stored in digital twin.
-
-## Return Value
-NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
-
-# pnp_vt_process_reported_property_sync()
-
-Syncronizes vT Settings stored in digital Twin as reported properties at startup
-
-## Syntax
-
-\#include "[verified-telemetry\inc\middleware\pnp_verified_telemetry.h](./inc/middleware/pnp_verified_telemetry.h)"  
-```C
-UINT pnp_vt_process_reported_property_sync(
-    void *                              verified_telemetry_DB, 
-    NX_AZURE_IOT_PNP_CLIENT *           iotpnp_client_ptr,
-    UCHAR *                             component_name_ptr,
-    UINT               	                component_name_length, 
-    NX_AZURE_IOT_JSON_READER *          name_value_reader_ptr,
-    UINT                      	        version
-    );
-```
-
-## Parameters
-* `verified_telemetry_DB` Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data. 
-
-* `iotpnp_client_ptr` Pointer to initialized Azure IoT PnP instance.
-
-* `component_name_ptr` Name of the component. 
-
-* `component_name_length` Length of name of the component. 
-
-* `json_reader_ptr` Pointer to read the JSON payload of command.
-
-* `version` Property version stored in digital twin.
-
-## Return Value
-NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
-
-# pnp_vt_properties()
-
-Creates payloads and sends all reported properties supported by vT Middleware 
-
-## Syntax
-
-\#include "[verified-telemetry\inc\middleware\pnp_verified_telemetry.h](./inc/middleware/pnp_verified_telemetry.h)"  
-```C
-UINT pnp_vt_properties(
-    void *                              verified_telemetry_DB, 
-    NX_AZURE_IOT_PNP_CLIENT *           iotpnp_client_ptr
-    );
-```
-
-## Parameters
-* `verified_telemetry_DB` Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data. 
-
-* `iotpnp_client_ptr` Pointer to initialized Azure IoT PnP instance.
-
-## Return Value
-NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
 
 # Integration of VT with existing device code
-* While developers can refer to the [Device Samples](https://github.com/Azure/Verified-Telemetry-Device-Sample) for Verified Telemetry, the following steps showcase how Verified Telemetry Library can be integrated separately with [Azure RTOS getting started samples](https://github.com/azure-rtos/getting-started)
+* Developers can refer to the [Device Samples](https://github.com/Azure/Verified-Telemetry-Device-Sample) for Verified Telemetry sample code. The following steps showcase how Verified Telemetry Library can be integrated separately with [Azure RTOS getting started samples](https://github.com/azure-rtos/getting-started)
 
 	> NOTE: The following steps demonstrate the integration of Verified Telemetry for the [AZ3166 getting started sample.](https://github.com/azure-rtos/getting-started/tree/master/MXChip/AZ3166) 
 	Similar steps can be followed for B-L475E-IOT01A/B-L4S5I-IOT01A device samples.
