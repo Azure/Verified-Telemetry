@@ -266,6 +266,9 @@ static UINT reset_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT
         // _vt_fingerprint_calculate_falltime_pearsoncoefficient(fallcurvearray,
         // 100, fallcurve_components[index]->portInfo.vt_sampling_frequency ,
         // &falltime, &pearson_coefficient);
+
+        vt_sensor_calibrate(&(handle->portInfo));
+
         if (vt_database_store(
                 &(handle->fingerprintdb), fallcurvearray, handle->portInfo.vt_sampling_frequency, ground_truth_label))
         {

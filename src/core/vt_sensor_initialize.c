@@ -19,15 +19,13 @@ uint32_t vt_sensor_initialize(VT_SENSOR* sensor_ptr,
 
     memset((void*)sensor_ptr, 0, sizeof(VT_SENSOR));
 
-    sensor_ptr->vt_sensor_name    = strdup(Port_Name);
-    sensor_ptr->vt_gpio_port      = GPIOx;
-    sensor_ptr->vt_gpio_pin       = GPIO_Pin;
-    sensor_ptr->vt_adc_controller = ADC_Controller;
-    sensor_ptr->vt_adc_channel    = ADC_Channel;
-
-    sensor_ptr->vt_timer = Timer_Handler;
-
-    vt_sensor_calibrate(sensor_ptr);
+    sensor_ptr->vt_sensor_name        = strdup(Port_Name);
+    sensor_ptr->vt_gpio_port          = GPIOx;
+    sensor_ptr->vt_gpio_pin           = GPIO_Pin;
+    sensor_ptr->vt_adc_controller     = ADC_Controller;
+    sensor_ptr->vt_adc_channel        = ADC_Channel;
+    sensor_ptr->vt_timer              = Timer_Handler;
+    sensor_ptr->vt_sampling_frequency = 1;
 
     return (VT_SUCCESS);
 }
