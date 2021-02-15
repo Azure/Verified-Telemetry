@@ -1,5 +1,5 @@
 # Verified Telemetry Overview
-The quality of sensor data is fundamental for IoT adoption. Since IoT sensors are made of low-cost components, deployed in-the-wild and in harsh environments, they are prone to failures leading to faulty or dirty data. The effect of bad data will lead to the well-known garbage-in garbage-out process, leading to cascading ill-effects upstream and at times catastrophic decisions.  
+The quality of sensor data is fundamental for driving IoT adoption. Since IoT sensors are made of low-cost components, deployed in-the-wild and in harsh environments, they are prone to failures leading to faulty or dirty data. The effect of bad data will lead to the well-known garbage-in garbage-out process, leading to cascading ill-effects upstream and at times catastrophic decisions.  
 
 Verified Telemetry (VT) is a state-of-the-art solution to determine the health of the sensor, i.e., working or faulty, which is consequently used to determine the quality of the sensed data. This is achieved by devising an intelligent “sensor fingerprint”, a set of unique electrical characteristics that differs between working and faulty sensors. The fingerprints can detect faults for a wide variety of off-the-shelf sensors and can be easily implemented with lightweight software code running on the IoT device. This novel approach empowers customers with a reliable and automated way to remotely measure and observe the health of the sensor in real-time alongside the data collected. The data associated with a validated fingerprint results in verified telemetry (as shown below).
 
@@ -39,10 +39,10 @@ The structure of the library is as follows:
 
 * **/src** Contains implementations for all the header files in **/inc**.
 
-* **/PnPModel** Contains impementations for sample PnP models to support Verified Telemtery.
+* **/PnPModel** Contains impementations for sample PnP models to support Verified Telemetry.
 
 * **CmakeLists.txt**  
-	CMake script to generate buid files.	
+	CMake script to generate build files.	
 	Verified Telemetry provides several options to customize the library according to the project requirement:
 
 	| Option          | Description                                                                     | Available Values                                  | Default Value				  |
@@ -65,12 +65,12 @@ Verified Telemetry is dependant on following SDK's:
 
 
 # Samples
-We provide multiple device and solution sample to showcase the usage of verified Telemetry. Please follow the following Getting started Guides to get started. 
+We provide multiple device and solution samples to showcase the usage of verified Telemetry. Please follow the Getting Started Guides below to see Verified Telemetry in action. 
 ## Device Samples 
-These [device sample](https://github.com/Azure/Verified-Telemetry-Device-Sample) shows device developers how to include Verified Telemetry with Azure IoT on Azure RTOS.
+The [device samples](https://github.com/Azure/Verified-Telemetry-Device-Sample) shows device developers how to include Verified Telemetry with Azure IoT on Azure RTOS.
 
 ## Solution Samples 
-These [solution samples](https://github.com/Azure/Verified-Telemetry-Solution-Sample) showcase how the Verified Telemetry features can be utilised in real world scenarios. This uses InfluxDB, Grafana and the [Azure IoT Node.js SDK](https://github.com/Azure/azure-iot-sdk-node) to communicate with Azure IoT Hub.
+The [solution samples](https://github.com/Azure/Verified-Telemetry-Solution-Sample) showcase how the Verified Telemetry features can be utilised in real world scenarios. This uses InfluxDB, Grafana and the [Azure IoT Node.js SDK](https://github.com/Azure/azure-iot-sdk-node) to communicate with Azure IoT Hub.
 
 # Resource Requirements
 We except Verified Telemetery code to run on microcontrollers, which have very limited amounts of flash and RAM. Below is our resource requirements to add verified telemetry code:
@@ -88,10 +88,10 @@ Details about this model can be found [here](./PnPModel).
 |-----------------|---------------------------------------------------------------------------------|
 | [pnp_vt_init](./docs/VT_API.md#pnp_vt_init) | Initializes Global Verified Telemetry                |
 | [pnp_fallcurve_init](./docs/VT_API.md#pnp_fallcurve_init)  | Initializes an instance of Verified Telemetry Information Interface                   |
-| [pnp_vt_process_command](./docs/VT_API.md#pnp_vt_process_command)  | Processes all commands supported by vT Middleware                 |
-| [pnp_vt_process_property_update](./docs/VT_API.md#pnp_vt_process_property_update)  |  Processes all desired property updates supported by vT Middleware               |
-| [pnp_vt_process_reported_property_sync](./docs/VT_API.md#pnp_vt_process_reported_property_sync)  |  Syncronizes vT Settings stored in digital Twin as reported properties at startup               |
-| [pnp_vt_properties](./docs/VT_API.md#pnp_vt_properties)  | Creates payloads and sends all reported properties supported by vT Middleware                 |
+| [pnp_vt_process_command](./docs/VT_API.md#pnp_vt_process_command)  | Processes all commands supported by VT Middleware                 |
+| [pnp_vt_process_property_update](./docs/VT_API.md#pnp_vt_process_property_update)  |  Processes all desired property updates supported by VT Middleware               |
+| [pnp_vt_process_reported_property_sync](./docs/VT_API.md#pnp_vt_process_reported_property_sync)  |  Syncronizes VT Settings stored in digital Twin as reported properties at startup               |
+| [pnp_vt_properties](./docs/VT_API.md#pnp_vt_properties)  | Creates payloads and sends all reported properties supported by VT Middleware                 |
  
 
 # Integration of VT with existing device code
