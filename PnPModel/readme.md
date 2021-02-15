@@ -15,12 +15,12 @@ The main interface of Verified Telemetry is defined in [Verified Telemetry Infor
 ## Getting started sample model
 The [Getting started guide](./sample/gsg.json) interface has the following components:
 1. Device Component uses the [Device Sensors](./sample/device.json) interface. This represents the default Device Component from the manufacturers.
-1. vTsoilMoistureExternal Component uses the [Verified Telemetry Information](./vTInfo.json). This represents the verified telemetry component for soilMoistureExternal telemetry.
-1. vTaccelerometerXExternal Component uses the [Verified Telemetry Information](./vTInfo.json). This represents the verified telemetry component for accelerometerXExternal telemetry.
+1. vTsoilMoistureExternal Component uses the [Verified Telemetry Information](./vTInfo.json) interface. This represents the verified telemetry component for soilMoistureExternal telemetry.
+1. vTaccelerometerXExternal Component uses the [Verified Telemetry Information](./vTInfo.json) interface. This represents the verified telemetry component for accelerometerXExternal telemetry.
 
 	> NOTE: Include as many components with [Verified Telemetry Information](./vTInfo.json) as there are telemetries for which verifcation is required. In the above example Verified Telemetry is enabled on two sensors SoilMositure and AccelerometerX.
 
-The structure of the PnP model for Getting Started Guide is as follows:
+The structure of the PnP model for [Getting started guide](./sample/gsg.json) is as follows:
 
 | Type | Name | Description |
 |---|---|---|
