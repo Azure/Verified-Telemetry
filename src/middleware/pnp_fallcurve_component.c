@@ -40,6 +40,7 @@ static const CHAR sensorID_json_property[]             = "sensorID";
 static const CHAR sensorName_json_property[]           = "sensorName";
 static const CHAR fallTime_json_property[]             = "fallTime";
 static const CHAR pearsonCoeff_json_property[]         = "pearsonCoeff";
+static const CHAR samplingFrequency_json_property[]    = "samplingFrequency";
 
 // static UCHAR scratch_buffer[2500]; // Dependent on fallcurve length
 
@@ -249,7 +250,7 @@ static UINT reset_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT
 
     vt_database_clear(&(handle->fingerprintdb));
     printf("Cleared DB\r\n");
-
+    vt_sensor_calibrate(&(handle->portInfo));
     if (identify_ground_truth_label(
             (UCHAR*)handle->associatedSensor, strlen(handle->associatedSensor), handle, &ground_truth_label))
     {
@@ -266,8 +267,6 @@ static UINT reset_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT
         // _vt_fingerprint_calculate_falltime_pearsoncoefficient(fallcurvearray,
         // 100, fallcurve_components[index]->portInfo.vt_sampling_frequency ,
         // &falltime, &pearson_coefficient);
-
-        vt_sensor_calibrate(&(handle->portInfo));
 
         if (vt_database_store(
                 &(handle->fingerprintdb), fallcurvearray, handle->portInfo.vt_sampling_frequency, ground_truth_label))
@@ -321,6 +320,7 @@ static UINT hub_store_all_db(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_C
     INT iter     = 0;
     int sensorid = 0;
     CHAR sensorIDStr[3];
+    CHAR samplingFreqStr[5];
     int fallTime = 0;
     CHAR fallTimeDB[60];
     CHAR fallTimeStr[5];
@@ -328,6 +328,7 @@ static UINT hub_store_all_db(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_C
     CHAR pearsonCoeffStr[7];
 
     memset(fallTimeDB,0,sizeof(fallTimeDB));
+    memset(samplingFreqStr,0,sizeof(samplingFreqStr));
 
     if ((status = nx_azure_iot_pnp_client_reported_properties_create(iotpnp_client_ptr, &json_writer, NX_WAIT_FOREVER)))
     {
@@ -357,6 +358,22 @@ static UINT hub_store_all_db(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_C
              &json_writer, (UCHAR*)handle->associatedSensor, strlen(handle->associatedSensor))))
     {
         printf("Failed to append sensorName DB data: error code = 0x%08x\r\n", status);
+        nx_azure_iot_json_writer_deinit(&json_writer);
+        return (status);
+    }
+
+    if ((status = nx_azure_iot_json_writer_append_property_name(
+             &json_writer, (UCHAR*)samplingFrequency_json_property, strlen((const char*)samplingFrequency_json_property))))
+    {
+        printf("Failed to append samplingFrequency DB data: error code = 0x%08x\r\n", status);
+        nx_azure_iot_json_writer_deinit(&json_writer);
+        return (status);
+    }
+    snprintf(samplingFreqStr, sizeof(samplingFreqStr), "%d", (&(handle->portInfo))->vt_sampling_frequency);
+    if ((status = nx_azure_iot_json_writer_append_string(
+             &json_writer, (UCHAR*)samplingFreqStr, strlen(samplingFreqStr))))
+    {
+        printf("Failed to append samplingFrequency DB data: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
         return (status);
     }
@@ -544,6 +561,25 @@ static UINT sync_fingerprintTemplate(
         return NX_NOT_SUCCESSFUL;
     }
     sensorid = atoi((CHAR*)jsonValue);
+    
+    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        nx_azure_iot_json_reader_token_string_get(
+            property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        nx_azure_iot_json_reader_token_string_get(
+            property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    if (((strlen(jsonKey) == (sizeof(samplingFrequency_json_property) - 1)) &&
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)samplingFrequency_json_property, strlen(jsonKey))))) == 0)
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    (&(handle->portInfo))->vt_sampling_frequency = atoi((CHAR*)jsonValue);
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(
