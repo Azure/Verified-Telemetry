@@ -11,7 +11,7 @@ static uint32_t _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* stat
 
 void vt_sensor_calibrate(VT_SENSOR* sensor_ptr)
 {
-    printf("\t\tCalibrating Sensor Fingerprint\n");
+    printf("\tCalibrating Sensor Fingerprint\n");
 
     VT_STATE_BLOCK states;
     int status;
@@ -25,21 +25,21 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr)
     status                            = _vt_sensor_calibrate(sensor_ptr, &states);
     sensor_ptr->vt_sampling_frequency = states.current_sampling_frequency;
 
-    printf("\t\tBest Possible Sampling Frequency = %d\n", states.current_sampling_frequency);
+    printf("\tBest Possible Sampling Frequency = %d\n", states.current_sampling_frequency);
     if (status == VT_SUCCESS)
     {
-        printf("\t\tFingerprint successfully generated.\n\n");
+        printf("\tFingerprint successfully generated.\n");
     }
 
     else if (status == VT_NOISY_FUNCTION_ERROR)
     {
-        printf("\t\tFingerprint could not be generated. Check if a working sensor is connected.\n\n");
+        printf("\tFingerprint could not be generated. Check if a working sensor is connected.\n");
     }
 
     else
     {
-        printf("\t\tFingerprint successfully generated, but it is not unique. Increase frequency range to improve the Fingerprint."
-               "Error Code = (0x%02x)\n\n",
+        printf("\tFingerprint successfully generated, but it is not unique. Increase frequency range to improve the Fingerprint."
+               "Error Code = (0x%02x)\n",
             status);
     }
 }

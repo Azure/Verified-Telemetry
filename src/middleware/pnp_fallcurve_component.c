@@ -21,7 +21,7 @@ static const CHAR telemetry_name_Telemetry_Status[] = "telemetryStatus";
 static const CHAR init_fingerprint[] = "--";
 
 /* Pnp command supported */
-static const CHAR command_reset_fingerprint[] = "resetFingerprintTemplate";
+static const CHAR command_reset_fingerprint[] = "setResetFingerprintTemplate";
 static const CHAR command_retrain_fingerprint[] = "retrainFingerprintTemplate";
 
 /* Default Telemetry Values */
@@ -249,17 +249,17 @@ static UINT reset_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT
     uint32_t fallcurvearray[100];
 
     vt_database_clear(&(handle->fingerprintdb));
-    printf("\t\tCleared DB\r\n");
+    printf("\tCleared DB\r\n");
     vt_sensor_calibrate(&(handle->portInfo));
     if (identify_ground_truth_label(
             (UCHAR*)handle->associatedSensor, strlen(handle->associatedSensor), handle, &ground_truth_label))
     {
-        printf("\t\tSensor Name does not match with any registered sensors\r\n");
+        printf("\tSensor Name does not match with any registered sensors\r\n");
         return (NX_NOT_SUCCESSFUL);
     }
     else if (vt_sensor_read_fingerprint(&(handle->portInfo), fallcurvearray, fallcurvestring))
     {
-        printf("\t\tError in collecting requested Fall Curve\r\n");
+        printf("\tError in collecting requested Fall Curve\r\n");
         return (NX_NOT_SUCCESSFUL);
     }
     else
@@ -271,7 +271,7 @@ static UINT reset_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT
         if (vt_database_store(
                 &(handle->fingerprintdb), fallcurvearray, handle->portInfo.vt_sampling_frequency, ground_truth_label))
         {
-            printf("\t\tFailed to collect and store Golden Fingerprint\r\n");
+            printf("\tFailed to collect and store Golden Fingerprint\r\n");
         }
     }
 
@@ -288,12 +288,12 @@ static UINT retrain_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_I
     if (identify_ground_truth_label(
             (UCHAR*)handle->associatedSensor, strlen(handle->associatedSensor), handle, &ground_truth_label))
     {
-        printf("\t\tSensor Name does not match with any registered sensors\r\n");
+        printf("\tSensor Name does not match with any registered sensors\r\n");
         return (NX_NOT_SUCCESSFUL);
     }
     else if (vt_sensor_read_fingerprint(&(handle->portInfo), fallcurvearray, fallcurvestring))
     {
-        printf("\t\tError in collecting requested Fall Curve\r\n");
+        printf("\tError in collecting requested Fall Curve\r\n");
         return (NX_NOT_SUCCESSFUL);
     }
     else
@@ -304,7 +304,7 @@ static UINT retrain_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_I
         if (vt_database_store(
                 &(handle->fingerprintdb), fallcurvearray, handle->portInfo.vt_sampling_frequency, ground_truth_label))
         {
-            printf("\t\tFailed to collect and store Golden Fingerprint\r\n");
+            printf("\tFailed to collect and store Golden Fingerprint\r\n");
         }
     }
 
@@ -537,7 +537,7 @@ static UINT sync_fingerprintTemplate(
     {
         return NX_NOT_SUCCESSFUL;
     }
-    printf("\t\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+    printf("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
     if (((strlen(jsonKey) == (sizeof(sensorName_json_property) - 1)) &&
             (!(strncmp((CHAR*)jsonKey, (CHAR*)sensorName_json_property, strlen(jsonKey))))) == 0)
     {
@@ -557,7 +557,7 @@ static UINT sync_fingerprintTemplate(
     {
         return NX_NOT_SUCCESSFUL;
     }
-    printf("\t\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+    printf("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
     if (((strlen(jsonKey) == (sizeof(samplingFrequency_json_property) - 1)) &&
             (!(strncmp((CHAR*)jsonKey, (CHAR*)samplingFrequency_json_property, strlen(jsonKey))))) == 0)
     {
@@ -577,7 +577,7 @@ static UINT sync_fingerprintTemplate(
     {
         return NX_NOT_SUCCESSFUL;
     }
-    printf("\t\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+    printf("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
     if (((strlen(jsonKey) == (sizeof(sensorID_json_property) - 1)) &&
             (!(strncmp((CHAR*)jsonKey, (CHAR*)sensorID_json_property, strlen(jsonKey))))) == 0)
     {
@@ -597,7 +597,7 @@ static UINT sync_fingerprintTemplate(
     {
         return NX_NOT_SUCCESSFUL;
     }
-    printf("\t\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+    printf("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
     if (((strlen(jsonKey) == (sizeof(fallTime_json_property) - 1)) &&
             (!(strncmp((CHAR*)jsonKey, (CHAR*)fallTime_json_property, strlen(jsonKey))))) == 0)
     {
@@ -626,7 +626,7 @@ static UINT sync_fingerprintTemplate(
     {
         return NX_NOT_SUCCESSFUL;
     }
-    printf("\t\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue); 
+    printf("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue); 
     if (((strlen(jsonKey) == (sizeof(pearsonCoeff_json_property) - 1)) &&
             (!(strncmp((CHAR*)jsonKey, (CHAR*)pearsonCoeff_json_property, strlen(jsonKey))))) == 0)
     {
@@ -844,16 +844,16 @@ UINT pnp_fallcurve_process_reported_property_sync(PNP_FALLCURVE_COMPONENT* handl
             (UCHAR*)fingerprintTemplate_property,
             sizeof(fingerprintTemplate_property) - 1) == NX_TRUE)
     {
-        printf("Syncing Fingerprint Template...\r\n\n");
+        printf("Syncing Fingerprint Template...\r\n");
         if (nx_azure_iot_json_reader_next_token(name_value_reader_ptr) ||
             sync_fingerprintTemplate(name_value_reader_ptr, handle))
         {
-            printf("\n Error in syncing fingerprint template for component %.*s \r\n\n", component_name_length, component_name_ptr);
+            printf("Error in syncing fingerprint template for component %.*s \r\n\n", component_name_length, component_name_ptr);
             return (NX_AZURE_IOT_FAILURE);
         }
         else
         {
-            printf("\nSuccessfully synced fingerprint template for component %.*s \r\n\n", component_name_length, component_name_ptr);
+            printf("Successfully synced fingerprint template for component %.*s \r\n\n", component_name_length, component_name_ptr);
             return (NX_AZURE_IOT_SUCCESS);
         }
     }

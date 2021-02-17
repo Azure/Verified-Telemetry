@@ -35,7 +35,7 @@
     },
     {
       "@type": "Command",
-      "name": "resetFingerprintTemplate",
+      "name": "setResetFingerprintTemplate",
       "displayName":"Reset fingerprint template",
       "comment": "This command will reset the fingerprint template"
     },
