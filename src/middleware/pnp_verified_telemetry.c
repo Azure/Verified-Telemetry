@@ -207,7 +207,6 @@ UINT pnp_vt_process_reported_property_sync(void* verified_telemetry_DB,
                 name_value_reader_ptr,
                 version) == NX_AZURE_IOT_SUCCESS)
         {
-            printf("property synced for %.*s component\r\n", component_name_length, component_name_ptr);
             return NX_AZURE_IOT_SUCCESS;
         }
     }

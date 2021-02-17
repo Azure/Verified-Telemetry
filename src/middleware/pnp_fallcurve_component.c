@@ -202,7 +202,7 @@ UINT get_fallcurve(PNP_FALLCURVE_COMPONENT* handle, VT_DATABASE* fingerprintdb, 
         }
         else
         {
-            printf("Fingerprint Evaluation Successful\r\n");
+            // printf("Fingerprint Evaluation Successful\r\n");
             if (sensorid > 0)
             {
                 handle->sensorConnected = (CHAR*)handle->connected_sensors[sensorid - 1];
@@ -515,6 +515,7 @@ static UINT sync_fingerprintTemplate(
     float pearsonCoeff = 0;
     CHAR* token; 
     CHAR* saveptr;
+    CHAR* csvString;
 
     if (handle->flash_address != 0x00)
     {
@@ -522,7 +523,7 @@ static UINT sync_fingerprintTemplate(
     }
 
     vt_database_clear(&(handle->fingerprintdb));
-    printf("Cleared DB\r\n");
+    // printf("Cleared DB\r\n");
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(
@@ -536,31 +537,13 @@ static UINT sync_fingerprintTemplate(
     {
         return NX_NOT_SUCCESSFUL;
     }
+    printf("\t\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
     if (((strlen(jsonKey) == (sizeof(sensorName_json_property) - 1)) &&
             (!(strncmp((CHAR*)jsonKey, (CHAR*)sensorName_json_property, strlen(jsonKey))))) == 0)
     {
         return NX_NOT_SUCCESSFUL;
     }
     // If required use sensorName string
-
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(
-            property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(
-            property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    if (((strlen(jsonKey) == (sizeof(sensorID_json_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)sensorID_json_property, strlen(jsonKey))))) == 0)
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    sensorid = atoi((CHAR*)jsonValue);
     
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(
@@ -574,6 +557,7 @@ static UINT sync_fingerprintTemplate(
     {
         return NX_NOT_SUCCESSFUL;
     }
+    printf("\t\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
     if (((strlen(jsonKey) == (sizeof(samplingFrequency_json_property) - 1)) &&
             (!(strncmp((CHAR*)jsonKey, (CHAR*)samplingFrequency_json_property, strlen(jsonKey))))) == 0)
     {
@@ -583,7 +567,7 @@ static UINT sync_fingerprintTemplate(
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(
-        property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+            property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
     {
         return NX_NOT_SUCCESSFUL;
     }
@@ -593,16 +577,13 @@ static UINT sync_fingerprintTemplate(
     {
         return NX_NOT_SUCCESSFUL;
     }
-    if (((strlen(jsonKey) == (sizeof(fallTime_json_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)fallTime_json_property, strlen(jsonKey))))) == 0)
+    printf("\t\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+    if (((strlen(jsonKey) == (sizeof(sensorID_json_property) - 1)) &&
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)sensorID_json_property, strlen(jsonKey))))) == 0)
     {
         return NX_NOT_SUCCESSFUL;
     }
-    while ((token = strtok_r(saveptr, ",", &saveptr)))
-    {
-        fallTime = atoi((CHAR*)token);
-        _vt_database_store_falltime(&(handle->fingerprintdb), fallTime, sensorid);
-    } 
+    sensorid = atoi((CHAR*)jsonValue);
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(
@@ -615,7 +596,37 @@ static UINT sync_fingerprintTemplate(
             property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
     {
         return NX_NOT_SUCCESSFUL;
-    }    
+    }
+    printf("\t\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+    if (((strlen(jsonKey) == (sizeof(fallTime_json_property) - 1)) &&
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)fallTime_json_property, strlen(jsonKey))))) == 0)
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    for (csvString = jsonValue; ; csvString = NULL) 
+    {
+        token = strtok_r(csvString, ",", &saveptr);
+        if (token == NULL)
+        {   
+            break;
+        }
+        fallTime = atoi((CHAR*)token);
+        _vt_database_store_falltime(&(handle->fingerprintdb), fallTime, sensorid);
+    }
+
+    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        nx_azure_iot_json_reader_token_string_get(
+        property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        nx_azure_iot_json_reader_token_string_get(
+            property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    printf("\t\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue); 
     if (((strlen(jsonKey) == (sizeof(pearsonCoeff_json_property) - 1)) &&
             (!(strncmp((CHAR*)jsonKey, (CHAR*)pearsonCoeff_json_property, strlen(jsonKey))))) == 0)
     {
@@ -644,6 +655,10 @@ UINT pnp_fallcurve_telemetryStatus_property(PNP_FALLCURVE_COMPONENT* handle,
         printf("Fetching Fall Curve failed!: error code = 0x%08x\r\n", status);
         return (status);
     }
+    printf("Telemetry %.*s %s\r\n\n",
+            strlen(handle->associatedSensor),
+            (UCHAR*)handle->associatedSensor,
+            (handle->telemetryStatus) ? "is VERIFIED" : "has a FAULT!");
 
     *deviceStatus &= handle->telemetryStatus;
 
@@ -829,15 +844,16 @@ UINT pnp_fallcurve_process_reported_property_sync(PNP_FALLCURVE_COMPONENT* handl
             (UCHAR*)fingerprintTemplate_property,
             sizeof(fingerprintTemplate_property) - 1) == NX_TRUE)
     {
+        printf("Syncing Fingerprint Template...\r\n\n");
         if (nx_azure_iot_json_reader_next_token(name_value_reader_ptr) ||
             sync_fingerprintTemplate(name_value_reader_ptr, handle))
         {
-            printf("Error in syncing fingerprint template\r\n");
+            printf("\n Error in syncing fingerprint template for component %.*s \r\n\n", component_name_length, component_name_ptr);
             return (NX_AZURE_IOT_FAILURE);
         }
         else
         {
-            printf("Successfully synced fingerprint template\r\n");
+            printf("\nSuccessfully synced fingerprint template for component %.*s \r\n\n", component_name_length, component_name_ptr);
             return (NX_AZURE_IOT_SUCCESS);
         }
     }
