@@ -249,17 +249,17 @@ static UINT reset_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT
     uint32_t fallcurvearray[100];
 
     vt_database_clear(&(handle->fingerprintdb));
-    printf("Cleared DB\r\n");
+    printf("\t\tCleared DB\r\n");
     vt_sensor_calibrate(&(handle->portInfo));
     if (identify_ground_truth_label(
             (UCHAR*)handle->associatedSensor, strlen(handle->associatedSensor), handle, &ground_truth_label))
     {
-        printf("Sensor Name does not match with any registered sensors\r\n");
+        printf("\t\tSensor Name does not match with any registered sensors\r\n");
         return (NX_NOT_SUCCESSFUL);
     }
     else if (vt_sensor_read_fingerprint(&(handle->portInfo), fallcurvearray, fallcurvestring))
     {
-        printf("Error in collecting requested Fall Curve\r\n");
+        printf("\t\tError in collecting requested Fall Curve\r\n");
         return (NX_NOT_SUCCESSFUL);
     }
     else
@@ -271,7 +271,7 @@ static UINT reset_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT
         if (vt_database_store(
                 &(handle->fingerprintdb), fallcurvearray, handle->portInfo.vt_sampling_frequency, ground_truth_label))
         {
-            printf("Failed to collect and store Golden Fingerprint\r\n");
+            printf("\t\tFailed to collect and store Golden Fingerprint\r\n");
         }
     }
 
@@ -288,12 +288,12 @@ static UINT retrain_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_I
     if (identify_ground_truth_label(
             (UCHAR*)handle->associatedSensor, strlen(handle->associatedSensor), handle, &ground_truth_label))
     {
-        printf("Sensor Name does not match with any registered sensors\r\n");
+        printf("\t\tSensor Name does not match with any registered sensors\r\n");
         return (NX_NOT_SUCCESSFUL);
     }
     else if (vt_sensor_read_fingerprint(&(handle->portInfo), fallcurvearray, fallcurvestring))
     {
-        printf("Error in collecting requested Fall Curve\r\n");
+        printf("\t\tError in collecting requested Fall Curve\r\n");
         return (NX_NOT_SUCCESSFUL);
     }
     else
@@ -304,7 +304,7 @@ static UINT retrain_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_I
         if (vt_database_store(
                 &(handle->fingerprintdb), fallcurvearray, handle->portInfo.vt_sampling_frequency, ground_truth_label))
         {
-            printf("Failed to collect and store Golden Fingerprint\r\n");
+            printf("\t\tFailed to collect and store Golden Fingerprint\r\n");
         }
     }
 

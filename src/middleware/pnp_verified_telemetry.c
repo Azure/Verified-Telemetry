@@ -122,7 +122,7 @@ UINT pnp_vt_process_command(void* verified_telemetry_DB,
                  json_response_ptr,
                  status_code)) == NX_AZURE_IOT_SUCCESS)
         {
-            printf("Successfully executed command %.*s on %.*s component\r\n",
+            printf("Successfully executed command %.*s on %.*s component\r\n\n",
                 pnp_command_name_length,
                 pnp_command_name_ptr,
                 component_name_length,
