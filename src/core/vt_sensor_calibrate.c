@@ -28,19 +28,18 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr)
     printf("Best Possible Sampling Frequency = %d\n", states.current_sampling_frequency);
     if (status == VT_SUCCESS)
     {
-        printf("Sensor has a good fall Curve\n");
+        printf("Fingerprint successfully generated.\n\n");
     }
 
     else if (status == VT_NOISY_FUNCTION_ERROR)
     {
-        printf("The Sensor doesnt give a fall curve in the specified frequency "
-               "range.\n");
+        printf("Fingerprint could not be generated. Check if a working sensor is connected.\n\n");
     }
 
     else
     {
-        printf("The Sensor gives a consistent curve, but the fall is imperfect. "
-               "Error Code = (0x%02x)\n",
+        printf("Fingerprint successfully generated, but it is not unique. Increase frequency range to improve the Fingerprint."
+               "Error Code = (0x%02x)\n\n",
             status);
     }
 }
