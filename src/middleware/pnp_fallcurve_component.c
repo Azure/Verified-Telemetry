@@ -202,7 +202,7 @@ UINT get_fallcurve(PNP_FALLCURVE_COMPONENT* handle, VT_DATABASE* fingerprintdb, 
         }
         else
         {
-            printf("Fingerprint Evaluation Successful\r\n");
+            //printf("Fingerprint Evaluation Successful\r\n");
             if (sensorid > 0)
             {
                 handle->sensorConnected = (CHAR*)handle->connected_sensors[sensorid - 1];
@@ -232,7 +232,7 @@ UINT get_fallcurve(PNP_FALLCURVE_COMPONENT* handle, VT_DATABASE* fingerprintdb, 
     }
     else
     {
-        printf("Verified Telemetry OFF\r\n");
+        printf("Verified Telemetry is DISABLED\r\n");
         handle->fallcurveString = (CHAR*)collection_off_fingerprint;
         handle->sensorConnected = (CHAR*)classification_status_no_eval;
         handle->telemetryStatus = 0;
