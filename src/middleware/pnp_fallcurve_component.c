@@ -34,6 +34,7 @@ static const CHAR classification_status_no_eval[]      = "Evaluation OFF";
 static const CHAR classification_status_dbempty[]      = "DB Empty";
 static const CHAR classification_status_unidentified[] = "Unidentified";
 static const CHAR fingerprintType_property[]           = "fingerprintType";
+static const CHAR templateConfidenceMetric_property[]  = "fingerprintTemplateConfidenceMetric";
 static const CHAR fingerprintType_value[]              = "FallCurve";
 static const CHAR fingerprintTemplate_property[]       = "fingerprintTemplate";
 static const CHAR sensorID_json_property[]             = "sensorID";
@@ -144,6 +145,7 @@ UINT pnp_fallcurve_init(PNP_FALLCURVE_COMPONENT* handle,
     handle->associatedSensor      = (CHAR*)associatedTelemetry;
     handle->connected_sensors     = connected_sensors;
     handle->connected_sensors_num = numberVerifiedTelemetries;
+    handle->templateConfidenceMetric = 0;
     // vt_database_initialize(&(handle->fingerprintdb), 0x080E0000);
 
     if (addFallcurveToDB(fallcurve_components, handle, numberVerifiedTelemetries))
@@ -264,10 +266,12 @@ static UINT reset_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT
     UINT status = 0;
     INT ground_truth_label;
     uint32_t fallcurvearray[100];
+    float templateConfidenceMetric;
 
     vt_database_clear(&(handle->fingerprintdb));
     printf("\tCleared DB\r\n");
-    vt_sensor_calibrate(&(handle->portInfo));
+    vt_sensor_calibrate(&(handle->portInfo), &templateConfidenceMetric);
+    handle->templateConfidenceMetric = templateConfidenceMetric;
     if (identify_ground_truth_label(
             (UCHAR*)handle->associatedSensor, strlen(handle->associatedSensor), handle, &ground_truth_label))
     {
@@ -763,6 +767,52 @@ UINT pnp_fallcurve_fingerprintType_property(PNP_FALLCURVE_COMPONENT* handle, NX_
     return (status);
 }
 
+UINT pnp_fallcurve_fingerprintTemplateConfidenceMetric_property(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
+{
+    UINT status;
+    UINT response_status = 0;
+    NX_AZURE_IOT_JSON_WRITER json_writer;
+    if ((status = nx_azure_iot_pnp_client_reported_properties_create(iotpnp_client_ptr, &json_writer, NX_WAIT_FOREVER)))
+    {
+        printf("Failed create reported properties: error code = 0x%08x\r\n", status);
+        return (status);
+    }
+    CHAR *templateConfidenceMetricValue = ((double)handle->templateConfidenceMetric > 0.75) ? "HIGH"
+                                        : ((double)handle->templateConfidenceMetric > 0.25) ? "MEDIUM"
+                                        : "LOW"; 
+    if ((status = nx_azure_iot_pnp_client_reported_property_component_begin(
+             iotpnp_client_ptr, &json_writer, handle->component_name_ptr, handle->component_name_length)) ||
+        (status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer,
+             (const UCHAR*)templateConfidenceMetric_property,
+             sizeof(templateConfidenceMetric_property) - 1,
+             (const UCHAR*)templateConfidenceMetricValue,
+             strlen((const char*)templateConfidenceMetricValue))) ||
+        (status = nx_azure_iot_pnp_client_reported_property_component_end(iotpnp_client_ptr, &json_writer)))
+    {
+        printf("Failed to build reported property!: error code = 0x%08x\r\n", status);
+        nx_azure_iot_json_writer_deinit(&json_writer);
+        return (status);
+    }
+
+    if ((status = nx_azure_iot_pnp_client_reported_properties_send(
+             iotpnp_client_ptr, &json_writer, NX_NULL, &response_status, NX_NULL, (5 * NX_IP_PERIODIC_RATE))))
+    {
+        printf("Device twin reported properties failed!: error code = 0x%08x\r\n", status);
+        nx_azure_iot_json_writer_deinit(&json_writer);
+        return (status);
+    }
+
+    nx_azure_iot_json_writer_deinit(&json_writer);
+
+    if ((response_status < 200) || (response_status >= 300))
+    {
+        printf("device twin report properties failed with code : %d\r\n", response_status);
+        return (NX_NOT_SUCCESSFUL);
+    }
+
+    return (status);
+}
+
 UINT pnp_fallcurve_process_command(PNP_FALLCURVE_COMPONENT* handle,
     NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
     UCHAR* component_name_ptr,
@@ -797,6 +847,10 @@ UINT pnp_fallcurve_process_command(PNP_FALLCURVE_COMPONENT* handle,
         if (hub_store_all_db(handle, iotpnp_client_ptr))
         {
             printf("Failed to update db in cloud\r\n");
+        }
+        if (pnp_fallcurve_fingerprintTemplateConfidenceMetric_property(handle, iotpnp_client_ptr))
+        {
+            printf("Failed to update Fingerprint Template Confidence Metric\r\n");
         }
     }
 

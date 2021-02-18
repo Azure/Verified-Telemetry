@@ -9,6 +9,7 @@ The main interface of Verified Telemetry is defined in [Verified Telemetry Infor
 | **Properties (read-only)** | `telemetryStatus` | Status of the telemetry, i.e. Working/Faulty to which the component of this interface is asscoiated. |
 | **Properties (read-only)** | `fingerprintType` | Type of the fingerprint (String). e.g., FallCurve or CurrentSense or Custom. |
 | **Properties (read-only)** | `fingerprintTemplate` | Template Fingerprint information of a working sensor. |
+| **Properties (read-only)** | `fingerprintTemplateConfidenceMetric` | Stores information on how much the Fingerprint Template can be trusted |
 | **Commands** | `setResetFingerprintTemplate` | This command will clear the template fingerprint of a sensor and collect a new template fingerprint of the attached sensor. |
 | **Commands** | `retrainFingerprintTemplate` | This command will append a new template fingerprint to the `fingerprintTemplate'. Appending more fingerprints will increase the accuracy in detecting the telemetry status. |
 

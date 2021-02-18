@@ -52,6 +52,9 @@ extern "C"
         /* Flash Address for storage of verified telemetry properties */
         UINT flash_address;
 
+        /* Stores on the scale of 0-1 how much Fingerprint Template can be trusted */
+        float templateConfidenceMetric;
+
     } PNP_FALLCURVE_COMPONENT;
 
     UINT pnp_fallcurve_init(PNP_FALLCURVE_COMPONENT* handle,

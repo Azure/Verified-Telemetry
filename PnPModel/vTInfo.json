@@ -34,6 +34,12 @@
       }
     },
     {
+      "@type": "Property",
+      "name": "fingerprintTemplateConfidenceMetric", 
+      "displayName" : "Fingerprint Template Confidence Metric",
+      "schema": "string"
+    },
+    {
       "@type": "Command",
       "name": "setResetFingerprintTemplate",
       "displayName":"Reset fingerprint template",
