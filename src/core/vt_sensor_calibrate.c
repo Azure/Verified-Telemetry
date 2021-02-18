@@ -38,7 +38,7 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr)
 
     else
     {
-        printf("\tFingerprint could not be generated. Check if a working sensor is connected.\n\n");
+        printf("\tFingerprint could not be generated. Please check if a working sensor is connected.\n\n");
     }
 }
 

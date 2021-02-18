@@ -211,31 +211,48 @@ UINT get_fallcurve(PNP_FALLCURVE_COMPONENT* handle, VT_DATABASE* fingerprintdb, 
                             (CHAR*)handle->associatedSensor,
                             (strlen(handle->sensorConnected)))))) == 1)
                 {
+                    printf("Collected Fingerprint matched with Fingerprint Template\n");
                     handle->telemetryStatus = 1;
                 }
                 else
                 {
                     handle->telemetryStatus = 0;
                 }
+                printf("Telemetry %.*s %s\r\n\n",
+                        strlen(handle->associatedSensor),
+                        (UCHAR*)handle->associatedSensor,
+                        (handle->telemetryStatus) ? "is VERIFIED" : "has a FAULT!");
             }
             else if (sensorid == 0)
             {
+                printf("Collected Fingerprint NOT matching with Fingerprint Template\n");
                 handle->sensorConnected = (CHAR*)classification_status_unidentified;
                 handle->telemetryStatus = 0;
+                printf("Telemetry %.*s %s\r\n\n",
+                        strlen(handle->associatedSensor),
+                        (UCHAR*)handle->associatedSensor,
+                        (handle->telemetryStatus) ? "is VERIFIED" : "has a FAULT!");
             }
             else
             {
+                printf("Fingerprint Template NOT Available! Please invoke command setResetFingerprintTemplate\n");
                 handle->sensorConnected = (CHAR*)classification_status_dbempty;
                 handle->telemetryStatus = 0;
+                printf("Telemetry %.*s cannot be verified as a Fingerprint Template is not available!\r\n\n",
+                        strlen(handle->associatedSensor),
+                        (UCHAR*)handle->associatedSensor);
             }
         }
     }
     else
     {
-        printf("Verified Telemetry is DISABLED\r\n");
+        printf("Verified Telemetry is DISABLED! Please set Root Component property enableVerifiedTelemetry to TRUE\r\n");
         handle->fallcurveString = (CHAR*)collection_off_fingerprint;
         handle->sensorConnected = (CHAR*)classification_status_no_eval;
         handle->telemetryStatus = 0;
+        printf("Telemetry %.*s cannot be verified as Verified Telemetry is disabled!\r\n\n",
+                        strlen(handle->associatedSensor),
+                        (UCHAR*)handle->associatedSensor);
     }
 
     return (NX_AZURE_IOT_SUCCESS);
@@ -655,10 +672,6 @@ UINT pnp_fallcurve_telemetryStatus_property(PNP_FALLCURVE_COMPONENT* handle,
         printf("Fetching Fall Curve failed!: error code = 0x%08x\r\n", status);
         return (status);
     }
-    printf("Telemetry %.*s %s\r\n\n",
-            strlen(handle->associatedSensor),
-            (UCHAR*)handle->associatedSensor,
-            (handle->telemetryStatus) ? "is VERIFIED" : "has a FAULT!");
 
     *deviceStatus &= handle->telemetryStatus;
 
