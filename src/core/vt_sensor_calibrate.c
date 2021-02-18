@@ -32,16 +32,13 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr)
 
         if (status != VT_SUCCESS && sensor_ptr->vt_timer == NULL)
         {
-
-        printf("But it is not unique. Increase frequency range to improve the "
-               "Fingerprint."
-               "Error Code = (0x%02x)\n\n",
+        printf("But it is not unique. Increase frequency range to improve the Fingerprint.Error Code = (0x%02x)\n\n",
         }
     }
 
     else
     {
-        printf("\tFingerprint could not be generated. Check if a working sensor is connected.\n");
+        printf("\tFingerprint could not be generated. Check if a working sensor is connected.\n\n");
     }
 }
 
