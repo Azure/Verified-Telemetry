@@ -32,7 +32,7 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr)
 
         if (status != VT_SUCCESS && sensor_ptr->vt_timer == NULL)
         {
-        printf("But it is not unique. Increase frequency range to improve the Fingerprint.Error Code = (0x%02x)\n\n",
+            printf("But it is not unique. To improve performance, please provide a dedicated Timer using pnp_fallcurve_init()\n\n");
         }
     }
 
