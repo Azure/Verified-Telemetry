@@ -38,8 +38,14 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr)
 
     else
     {
+<<<<<<< Updated upstream
         printf("\tFingerprint successfully generated, but it is not unique. Increase frequency range to improve the Fingerprint."
                "Error Code = (0x%02x)\n",
+=======
+        printf("Fingerprint successfully generated, but it is not unique. Increase frequency range to improve the "
+               "Fingerprint."
+               "Error Code = (0x%02x)\n\n",
+>>>>>>> Stashed changes
             status);
     }
 }
