@@ -306,6 +306,11 @@ static UINT retrain_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_I
     INT ground_truth_label;
     uint32_t fallcurvearray[100];
 
+    if((&(handle->fingerprintdb))->_vt_total_falltime == 0)
+    {
+        return (NX_NOT_SUCCESSFUL);
+    }
+
     if (identify_ground_truth_label(
             (UCHAR*)handle->associatedSensor, strlen(handle->associatedSensor), handle, &ground_truth_label))
     {
