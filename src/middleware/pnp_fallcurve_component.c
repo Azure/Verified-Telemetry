@@ -346,14 +346,15 @@ static UINT hub_store_all_db(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_C
     INT iter     = 0;
     int sensorid = 0;
     CHAR sensorIDStr[3];
-    CHAR samplingFreqStr[5];
+    CHAR samplingFreqStr[6];
     int fallTime = 0;
     CHAR fallTimeDB[60];
-    CHAR fallTimeStr[5];
+    CHAR fallTimeStr[10];
     float pearsonCoeff = 0;
     CHAR pearsonCoeffStr[7];
 
     memset(fallTimeDB,0,sizeof(fallTimeDB));
+    memset(fallTimeStr,0,sizeof(fallTimeStr));
     memset(samplingFreqStr,0,sizeof(samplingFreqStr));
 
     if ((status = nx_azure_iot_pnp_client_reported_properties_create(iotpnp_client_ptr, &json_writer, NX_WAIT_FOREVER)))
