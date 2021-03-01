@@ -53,7 +53,7 @@ extern "C"
         UINT flash_address;
 
         /* Stores on the scale of 0-1 how much Fingerprint Template can be trusted */
-        float templateConfidenceMetric;
+        UINT templateConfidenceMetric;
 
     } PNP_FALLCURVE_COMPONENT;
 

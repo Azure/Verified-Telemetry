@@ -73,7 +73,7 @@ uint32_t vt_sensor_initialize(VT_SENSOR* sensor_ptr,
     TIMER_HANDLE_TYPEDEF* Timer_Handler);
 
 // Calibrate
-void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, float* confidenceMetric);
+void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint32_t* confidenceMetric);
 
 // Read
 uint32_t vt_sensor_read_value(VT_SENSOR* sensor_ptr, uint32_t* sensor_value);

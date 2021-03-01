@@ -266,7 +266,7 @@ static UINT reset_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT
     UINT status = 0;
     INT ground_truth_label;
     uint32_t fallcurvearray[100];
-    float templateConfidenceMetric;
+    uint32_t templateConfidenceMetric;
 
     vt_database_clear(&(handle->fingerprintdb));
     printf("\tCleared DB\r\n");
@@ -783,16 +783,15 @@ UINT pnp_fallcurve_fingerprintTemplateConfidenceMetric_property(PNP_FALLCURVE_CO
         printf("Failed create reported properties: error code = 0x%08x\r\n", status);
         return (status);
     }
-    CHAR *templateConfidenceMetricValue = ((double)handle->templateConfidenceMetric > 0.75) ? "HIGH"
-                                        : ((double)handle->templateConfidenceMetric > 0.25) ? "MEDIUM"
-                                        : "LOW"; 
+    // CHAR *templateConfidenceMetricValue = ((double)handle->templateConfidenceMetric > 0.75) ? "HIGH"
+    //                                     : ((double)handle->templateConfidenceMetric > 0.25) ? "MEDIUM"
+    //                                     : "LOW"; 
     if ((status = nx_azure_iot_pnp_client_reported_property_component_begin(
              iotpnp_client_ptr, &json_writer, handle->component_name_ptr, handle->component_name_length)) ||
-        (status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer,
+        (status = nx_azure_iot_json_writer_append_property_with_int32_value(&json_writer,
              (const UCHAR*)templateConfidenceMetric_property,
              sizeof(templateConfidenceMetric_property) - 1,
-             (const UCHAR*)templateConfidenceMetricValue,
-             strlen((const char*)templateConfidenceMetricValue))) ||
+             (int32_t)handle->templateConfidenceMetric)) ||
         (status = nx_azure_iot_pnp_client_reported_property_component_end(iotpnp_client_ptr, &json_writer)))
     {
         printf("Failed to build reported property!: error code = 0x%08x\r\n", status);
