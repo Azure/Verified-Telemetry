@@ -40,7 +40,7 @@ uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerp
     }
 
     // N > 2 ?
-    if (fingerprint_length >= 2)
+    if (fingerprint_length > 2)
     {
         // Calculate FallTime
         *fall_time = fingerprint_length * sampling_frequency;

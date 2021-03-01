@@ -43,6 +43,7 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, float* confidenceMetric)
         printf("\tFingerprint could not be generated. Please check if a working sensor is connected.\n\n");
         *confidenceMetric = 0;
     }
+    _vt_dsc_delay_usec(sensor_ptr->vt_timer, 1000000);
 }
 
 static uint32_t _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states)
