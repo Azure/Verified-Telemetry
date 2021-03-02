@@ -289,8 +289,8 @@ static UINT reset_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT
         // 100, fallcurve_components[index]->portInfo.vt_sampling_frequency ,
         // &falltime, &pearson_coefficient);
 
-        if (vt_database_store(
-                &(handle->fingerprintdb), fallcurvearray, handle->portInfo.vt_sampling_frequency, ground_truth_label))
+        if ((status = vt_database_store(
+                &(handle->fingerprintdb), fallcurvearray, handle->portInfo.vt_sampling_frequency, ground_truth_label)))
         {
             printf("\tFailed to collect and store Golden Fingerprint\r\n");
         }
@@ -920,7 +920,7 @@ UINT pnp_fallcurve_process_reported_property_sync(PNP_FALLCURVE_COMPONENT* handl
         if (nx_azure_iot_json_reader_next_token(name_value_reader_ptr) ||
             sync_fingerprintTemplate(name_value_reader_ptr, handle))
         {
-            printf("Error in syncing fingerprint template for component %.*s \r\n\n", component_name_length, component_name_ptr);
+            printf("Could not sync fingerprint template for component %.*s, invoke command setResetFingerprintTemplate to collect new fingerprint template \r\n\n", component_name_length, component_name_ptr);
             return (NX_AZURE_IOT_FAILURE);
         }
         else

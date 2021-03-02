@@ -69,7 +69,7 @@ uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr,
         return VT_SUCCESS;
     }
 
-    return VT_SUCCESS;
+    return VT_ERROR;
 }
 
 uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint_array, int sampling_frequency)
