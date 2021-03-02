@@ -23,6 +23,9 @@ uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, int fall_time, i
 
 uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float pearson_coefficient, int sensorid);
 
+//Check if Empty
+int _vt_database_check_pearson_falltime_availability(VT_DATABASE* database_ptr);
+
 // Evaluate
 int _vt_database_evaluate_nrmse(VT_DATABASE* database_ptr, uint32_t* fallcurvearray);
 

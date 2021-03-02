@@ -67,6 +67,7 @@ uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, int fall_time, i
     // Add new entry
     database_ptr->_vt_falltimedb[i][0] = sensorid;
     database_ptr->_vt_falltimedb[i][1] = fall_time;
+    printf("\tStored FallTime = %d\r\n", database_ptr->_vt_falltimedb[i][1]);
 
     return VT_SUCCESS;
 }
@@ -74,6 +75,9 @@ uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, int fall_time, i
 uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float pearson_coefficient, int sensorid)
 {
     int i;
+    int pearsonCoeffInt1;
+    float pearsonCoeffFrac;
+    int pearsonCoeffInt2;
 
     // Scan through DB
     for (i = 0; (i < database_ptr->_vt_total_pearson_coefficient) &&
@@ -87,6 +91,10 @@ uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float 
         database_ptr->_vt_pearson_coefficientdb[i][0] = sensorid;
         database_ptr->_vt_pearson_coefficientdb[i][1] =
             (database_ptr->_vt_pearson_coefficientdb[i][1] + pearson_coefficient) / 2;
+        pearsonCoeffInt1   = database_ptr->_vt_pearson_coefficientdb[i][1];
+        pearsonCoeffFrac = pearson_coefficient - pearsonCoeffInt1;
+        pearsonCoeffInt2   = pearsonCoeffFrac * 10000;
+        printf("\tStored Pearson Coefficient = %d.%04d\r\n", pearsonCoeffInt1, pearsonCoeffInt2);
     }
 
     // Add new entry if the label is not already present
@@ -94,6 +102,10 @@ uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float 
     {
         database_ptr->_vt_pearson_coefficientdb[database_ptr->_vt_total_pearson_coefficient][0] = sensorid;
         database_ptr->_vt_pearson_coefficientdb[database_ptr->_vt_total_pearson_coefficient][1] = pearson_coefficient;
+        pearsonCoeffInt1   = database_ptr->_vt_pearson_coefficientdb[database_ptr->_vt_total_pearson_coefficient][1];
+        pearsonCoeffFrac = pearson_coefficient - pearsonCoeffInt1;
+        pearsonCoeffInt2   = pearsonCoeffFrac * 10000;
+        printf("\tStored Pearson Coefficient = %d.%04d\r\n", pearsonCoeffInt1, pearsonCoeffInt2);
         database_ptr->_vt_total_pearson_coefficient++;
     }
 

@@ -55,6 +55,12 @@ uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr,
 
     *sensorid = 0;
 
+    if(_vt_database_check_pearson_falltime_availability(database_ptr))
+    {
+        *sensorid = -1;
+        return VT_SUCCESS;
+    }
+
     if (_vt_fingerprint_calculate_falltime_pearsoncoefficient(
             fingerprint, 100, sensor_ptr->vt_sampling_frequency, &fall_time, &pearson_coefficient) == VT_SUCCESS)
     {

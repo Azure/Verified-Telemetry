@@ -197,7 +197,8 @@ UINT get_fallcurve(PNP_FALLCURVE_COMPONENT* handle, VT_DATABASE* fingerprintdb, 
 
         if (vt_sensor_read_status(&handle->portInfo, fingerprintdb, fallcurvearray, &sensorid))
         {
-            printf("Failed to classify FallCurve\r\n");
+            printf("Invalid Fingerprint collected, ensure you have connected sensor %.*s correctly \r\n",strlen(handle->associatedSensor),
+                        (UCHAR*)handle->associatedSensor);
             handle->sensorConnected = (CHAR*)classification_status_fail;
             handle->telemetryStatus = 0;
             return (NX_NOT_SUCCESSFUL);
@@ -679,7 +680,7 @@ UINT pnp_fallcurve_telemetryStatus_property(PNP_FALLCURVE_COMPONENT* handle,
     /* Get fallcurve data. */
     if ((status = get_fallcurve(handle, &(handle->fingerprintdb), toggleVerifiedTelemetry)))
     {
-        printf("Fetching Fall Curve failed!: error code = 0x%08x\r\n", status);
+        // printf("Fetching Fall Curve failed!: error code = 0x%08x\r\n\n", status);
         return (status);
     }
 

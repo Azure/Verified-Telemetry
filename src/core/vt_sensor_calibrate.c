@@ -33,14 +33,14 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint32_t* confidenceMetric)
 
         if (status != VT_SUCCESS && sensor_ptr->vt_timer == NULL)
         {
-            printf("But it is not unique. To improve performance, please provide a dedicated Timer using pnp_fallcurve_init()\n\n");
+            printf("But it is not unique. To improve performance, please provide a dedicated Timer using pnp_fallcurve_init()\n");
             *confidenceMetric = 50;
         }
     }
 
     else
     {
-        printf("\tFingerprint could not be generated. Please check if a working sensor is connected.\n\n");
+        printf("\tTemplate Fingerprint has some issues. Please check if a working sensor is connected.\n");
         *confidenceMetric = 0;
     }
     _vt_dsc_delay_usec(sensor_ptr->vt_timer, 1000000);

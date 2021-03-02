@@ -36,6 +36,15 @@ int _vt_database_evaluate_nrmse(VT_DATABASE* database_ptr, uint32_t* fallcurvear
     }
 }
 
+int _vt_database_check_pearson_falltime_availability(VT_DATABASE* database_ptr)
+{
+    if (database_ptr->_vt_total_falltime == 0)
+    {
+        return VT_ERROR;
+    }
+    return VT_SUCCESS;
+}
+
 int _vt_database_evaluate_pearson_falltime(VT_DATABASE* database_ptr, int fall_time, float pearson_coefficient)
 {
     if (database_ptr->_vt_total_falltime == 0)

@@ -228,8 +228,10 @@ UINT pnp_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iot
         if ((status = pnp_fallcurve_telemetryStatus_property(
                  fallcurve_components[i], iotpnp_client_ptr, enableVerifiedTelemetry, &deviceStatus)))
         {
-            printf("Failed pnp_fallcurve_telemetryStatus_property: error code = "
-                   "0x%08x\r\n",
+            printf("Failed pnp_fallcurve_telemetryStatus_property for component %.*s: error code = "
+                   "0x%08x\r\n\n",
+                (INT)fallcurve_components[i]->component_name_length,
+                (CHAR*)fallcurve_components[i]->component_name_ptr,
                 status);
         }
 
@@ -242,9 +244,11 @@ UINT pnp_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iot
             if ((status = pnp_fallcurve_telemetryStatus_property(
                      fallcurve_components[i], iotpnp_client_ptr, enableVerifiedTelemetry, &deviceStatus)))
             {
-                printf("Failed pnp_fallcurve_telemetryStatus_property: error code = "
-                       "0x%08x\r\n",
-                    status);
+                printf("Failed pnp_fallcurve_telemetryStatus_property for component %.*s: error code = "
+                       "0x%08x\r\n\n",
+                (INT)fallcurve_components[i]->component_name_length,
+                (CHAR*)fallcurve_components[i]->component_name_ptr,
+                status);
             }
 
             fallcurve_components[i]->vTInfo_property_sent = 1;
