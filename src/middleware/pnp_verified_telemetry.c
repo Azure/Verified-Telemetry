@@ -13,6 +13,8 @@ static const CHAR temp_response_description_success[] = "success";
 static const CHAR temp_response_description_failed[]  = "failed";
 
 static VOID send_reported_property(NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
+    const UCHAR* component_name_ptr,
+    UINT component_name_length,
     bool status,
     INT status_code,
     UINT version,
@@ -29,7 +31,9 @@ static VOID send_reported_property(NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
         return;
     }
 
-    if (nx_azure_iot_pnp_client_reported_property_status_begin(iotpnp_client_ptr,
+    if (nx_azure_iot_pnp_client_reported_property_component_begin(iotpnp_client_ptr,
+            &json_writer, component_name_ptr, component_name_length) ||
+        nx_azure_iot_pnp_client_reported_property_status_begin(iotpnp_client_ptr,
             &json_writer,
             (UCHAR*)property_name,
             property_name_length,
@@ -38,7 +42,8 @@ static VOID send_reported_property(NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
             (const UCHAR*)description,
             strlen(description)) ||
         nx_azure_iot_json_writer_append_bool(&json_writer, status) ||
-        nx_azure_iot_pnp_client_reported_property_status_end(iotpnp_client_ptr, &json_writer))
+        nx_azure_iot_pnp_client_reported_property_status_end(iotpnp_client_ptr, &json_writer) ||
+        nx_azure_iot_pnp_client_reported_property_component_end(iotpnp_client_ptr, &json_writer))
     {
         nx_azure_iot_json_writer_deinit(&json_writer);
         printf("Failed to build reported response\r\n");
@@ -55,7 +60,7 @@ static VOID send_reported_property(NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
     }
 }
 
-UINT pnp_vt_deviceStatus_property(bool deviceStatus, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
+UINT pnp_vt_deviceStatus_property( VERIFIED_TELEMETRY_DB* verified_telemetry_DB, bool deviceStatus, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
 {
     UINT status;
     UINT response_status = 0;
@@ -66,8 +71,11 @@ UINT pnp_vt_deviceStatus_property(bool deviceStatus, NX_AZURE_IOT_PNP_CLIENT* io
         return (status);
     }
 
-    if ((status = nx_azure_iot_json_writer_append_property_with_bool_value(
-             &json_writer, (const UCHAR*)deviceStatus_property, sizeof(deviceStatus_property) - 1, deviceStatus)))
+    if ((status = nx_azure_iot_pnp_client_reported_property_component_begin(
+             iotpnp_client_ptr, &json_writer, verified_telemetry_DB->component_name_ptr, verified_telemetry_DB->component_name_length)) ||
+        (status = nx_azure_iot_json_writer_append_property_with_bool_value(
+             &json_writer, (const UCHAR*)deviceStatus_property, sizeof(deviceStatus_property) - 1, deviceStatus)) ||
+        (status = nx_azure_iot_pnp_client_reported_property_component_end(iotpnp_client_ptr, &json_writer)))
     {
         printf("Failed to build reported property!: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
@@ -147,41 +155,46 @@ UINT pnp_vt_process_property_update(void* verified_telemetry_DB,
     CHAR property_name[50];
     UINT property_name_length = 0;
 
-    if (!component_name_ptr)
+    if (((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->component_name_length != component_name_length ||
+        strncmp((CHAR*)((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->component_name_ptr, (CHAR*)component_name_ptr, component_name_length) != 0)
     {
-        // Get Property Name
-        nx_azure_iot_json_reader_token_string_get(
-            name_value_reader_ptr, (UCHAR*)property_name, sizeof(property_name), &property_name_length);
+        return (NX_NOT_SUCCESSFUL);
+    }
+    
+    // Get Property Name
+    nx_azure_iot_json_reader_token_string_get(
+        name_value_reader_ptr, (UCHAR*)property_name, sizeof(property_name), &property_name_length);
 
-        // Property 1: Enable Verified Telemetry
-        if (nx_azure_iot_json_reader_token_is_text_equal(name_value_reader_ptr,
-                (UCHAR*)enableVerifiedTelemetry_property,
-                sizeof(enableVerifiedTelemetry_property) - 1) == NX_TRUE)
+    // Property 1: Enable Verified Telemetry
+    if (nx_azure_iot_json_reader_token_is_text_equal(name_value_reader_ptr,
+            (UCHAR*)enableVerifiedTelemetry_property,
+            sizeof(enableVerifiedTelemetry_property) - 1) == NX_TRUE)
+    {
+        if (nx_azure_iot_json_reader_next_token(name_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_bool_get(name_value_reader_ptr, &parsed_value))
         {
-            if (nx_azure_iot_json_reader_next_token(name_value_reader_ptr) ||
-                nx_azure_iot_json_reader_token_bool_get(name_value_reader_ptr, &parsed_value))
-            {
-                status_code = 401;
-                description = temp_response_description_failed;
-            }
-            else
-            {
-                status_code = 200;
-                description = temp_response_description_success;
-
-                ((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->enableVerifiedTelemetry = (bool)parsed_value;
-                printf("Received Enable Verified Telemetry Twin update with value %s\r\n",
-                    (bool)parsed_value ? "true" : "false");
-            }
-            send_reported_property(iotpnp_client_ptr,
-                (bool)parsed_value,
-                status_code,
-                version,
-                description,
-                (UCHAR*)property_name,
-                property_name_length);
-            return NX_AZURE_IOT_SUCCESS;
+            status_code = 401;
+            description = temp_response_description_failed;
         }
+        else
+        {
+            status_code = 200;
+            description = temp_response_description_success;
+
+            ((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->enableVerifiedTelemetry = (bool)parsed_value;
+            printf("Received Enable Verified Telemetry Twin update with value %s\r\n",
+                (bool)parsed_value ? "true" : "false");
+        }
+        send_reported_property(iotpnp_client_ptr,
+            component_name_ptr,
+            component_name_length,
+            (bool)parsed_value,
+            status_code,
+            version,
+            description,
+            (UCHAR*)property_name,
+            property_name_length);
+        return NX_AZURE_IOT_SUCCESS;
     }
 
     return NX_NOT_SUCCESSFUL;
@@ -260,7 +273,8 @@ UINT pnp_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iot
     {
 
         ((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->deviceStatus = deviceStatus;
-        if ((status = pnp_vt_deviceStatus_property(deviceStatus, iotpnp_client_ptr)))
+        if ((status = pnp_vt_deviceStatus_property((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB,
+        deviceStatus, iotpnp_client_ptr)))
         {
             printf("Failed pnp_vt_deviceStatus_property: error code = 0x%08x\r\n", status);
         }
@@ -274,12 +288,15 @@ UINT pnp_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iot
 }
 
 UINT pnp_vt_init(void* verified_telemetry_DB,
+    UCHAR* component_name_ptr,
     PNP_FALLCURVE_COMPONENT** fallcurve_components,
     UINT numberVerifiedTelemetries,
     bool enableVerifiedTelemetry,
     UINT flash_address)
 {
     VERIFIED_TELEMETRY_DB* VT_DB     = ((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB);
+    VT_DB->component_name_ptr    = component_name_ptr;
+    VT_DB->component_name_length = strlen((const char*)component_name_ptr);
     VT_DB->fallcurve_components      = fallcurve_components;
     VT_DB->fallcurve_components_num  = numberVerifiedTelemetries;
     VT_DB->enableVerifiedTelemetry   = enableVerifiedTelemetry;

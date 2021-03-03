@@ -13,20 +13,29 @@ The main interface of Verified Telemetry is defined in [Verified Telemetry Infor
 | **Commands** | `setResetFingerprintTemplate` | This command will clear the template fingerprint of a sensor and collect a new template fingerprint of the attached sensor. |
 | **Commands** | `retrainFingerprintTemplate` | This command will append a new template fingerprint to the `fingerprintTemplate'. Appending more fingerprints will increase the accuracy in detecting the telemetry status. |
 
+## Verified Telemetry Device Interface
+* The [Verified Telemetry Device Information](./vTDevice.json) Interface implements and conveys device wide Verified Telemetry Settings and Information 
+    | Type | Name | Description |
+    |---|---|---|
+    | **Properties (writable)** | `enableVerifiedTelemetry` | Controls whether Fingerprint Collection and Evaluation is implemented or not. When this property is set to 'false', Telemetry Verification cannot be performed.  |
+    | **Properties (read-only)** | `deviceStatus` | Device status is set to false if any sensor supported by VT has a fault. |
+
 ## Getting started sample model
 The [Getting started guide](./sample/gsg.json) interface has the following components:
 1. Device Component uses the [Device Sensors](./sample/device.json) interface. This represents the default Device Component from the manufacturers.
 1. vTsoilMoistureExternal Component uses the [Verified Telemetry Information](./vTInfo.json) interface. This represents the verified telemetry component for soilMoistureExternal telemetry.
 1. vTaccelerometerXExternal Component uses the [Verified Telemetry Information](./vTInfo.json) interface. This represents the verified telemetry component for accelerometerXExternal telemetry.
-
 	> NOTE: Include as many components with [Verified Telemetry Information](./vTInfo.json) as there are telemetries for which verifcation is required. In the above example Verified Telemetry is enabled on two sensors SoilMositure and AccelerometerX.
+
+1. vTDevice Component uses the [Verified Telemetry Device Information](./vTDevice.json) interface.
+
+
 
 The structure of the PnP model for [Getting started guide](./sample/gsg.json) is as follows:
 
 | Type | Name | Description |
 |---|---|---|
-| **Properties (read-only)** | `deviceStatus` | Overall Device Status (Working or Faulty). e.g., A device status is set to Faulty if any of the sensor has a fault. |
-| **Properties (writable)** | `enableVerifiedTelemetry` | Enable Verified Telemetry (True/False). e.g., True enables Verified Telemetry functionalities. |
 | **Interface** | `sampleDevice` | Default Device Component from the manufacturer. |
+| **Interface** | `vTDevice` | Device Level Verified Telemetry component |
 | **Interface** | `vTsoilMoistureExternal` |  The Verified Telemetry component for soilMoistureExternal telemetry. |
 | **Interface** | `vTaccelerometerXExternal` | The Verified Telemetry component for accelerometerXExternal telemetry. |

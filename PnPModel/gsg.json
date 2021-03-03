@@ -6,21 +6,6 @@
   "description": "Verified Telemetry Sample",
   "contents": [
     {
-      "@type": "Property",
-      "name": "deviceStatus",
-      "displayName" : "Overall device status",
-      "description": "A device status is set to Faulty if any of the sensor has a fault.",
-      "schema": "boolean"
-    },
-    {
-      "@type": "Property",
-      "name": "enableVerifiedTelemetry", 
-      "displayName" : "Enable Verified Telemetry",
-      "description": "True enables Verified Telemetry functionalities.",
-      "schema": "boolean",
-      "writable": true
-    },
-    {
       "@type" : "Component",
       "schema": "dtmi:azure:verifiedtelemetry:sample:device;1",
       "name": "sampleDevice",
@@ -29,16 +14,23 @@
     },
     {
       "@type" : "Component",
-      "schema": "dtmi:azure:verifiedtelemetry:telemetryinfomation;1",
+      "schema": "dtmi:azure:verifiedtelemetry:deviceinformation;1",
+      "name": "vTDevice",
+      "displayName": "Verified Telemetry Device Information",
+      "description": "Provides Verified Telemetry information and settings on a device level"
+    },
+    {
+      "@type" : "Component",
+      "schema": "dtmi:azure:verifiedtelemetry:telemetryinformation;1",
       "name": "vTsoilMoistureExternal",
       "displayName": "Verified Telemetry component for SoilMoistureExternal telemetry",
       "description": "Verified Telemetry and Fingerprint information of SoilMoistureExternal telemetry"
     },
     {
       "@type" : "Component",
-      "schema": "dtmi:azure:verifiedtelemetry:telemetryinfomation;1",
+      "schema": "dtmi:azure:verifiedtelemetry:telemetryinformation;1",
       "name": "vTaccelerometerXExternal",
-      "displayName": "Verified Telemetry component for accelerometerXExternal telemetry",
+      "displayName": "Verified Telemetry component for accelerometerExternal telemetry",
       "description": "Verified Telemetry and Fingerprint information of accelerometerXExternal telemetry"
     }
   ]

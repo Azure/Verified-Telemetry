@@ -18,6 +18,11 @@ extern "C"
 
     typedef struct VERIFIED_TELEMETRY_DB_TAG
     {
+        /* Name of this component */
+        UCHAR* component_name_ptr;
+
+        UINT component_name_length;
+
         /* FallCurve components Array*/
         PNP_FALLCURVE_COMPONENT** fallcurve_components;
 
@@ -62,6 +67,7 @@ extern "C"
     UINT pnp_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr);
 
     UINT pnp_vt_init(void* verified_telemetry_DB,
+        UCHAR* component_name_ptr,
         PNP_FALLCURVE_COMPONENT** fallcurve_components,
         UINT numberVerifiedTelemetries,
         bool enableVerifiedTelemetry,

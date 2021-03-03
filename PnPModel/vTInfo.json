@@ -1,6 +1,6 @@
 {
   "@context": "dtmi:dtdl:context;2",
-  "@id": "dtmi:azure:verifiedtelemetry:telemetryinfomation;1",
+  "@id": "dtmi:azure:verifiedtelemetry:telemetryinformation;1",
   "@type": "Interface",
   "displayName": "Verified Telemetry Information",
   "description": "Provides information about Verified Telemetry for the associated telemetry and supporting Fingerprint Information",
@@ -37,7 +37,27 @@
       "@type": "Property",
       "name": "fingerprintTemplateConfidenceMetric", 
       "displayName" : "Fingerprint Template Confidence Metric",
-      "schema": "string"
+      "schema": {
+        "@type": "Enum",
+        "valueSchema": "integer",
+        "enumValues": [
+          {
+            "name": "high",
+            "displayName": "HIGH",
+            "enumValue": 100
+          },
+          {
+            "name": "medium",
+            "displayName": "MEDIUM",
+            "enumValue": 50
+          },
+          {
+            "name": "low",
+            "displayName": "LOW",
+            "enumValue": 0
+          }
+        ]
+      }
     },
     {
       "@type": "Command",
