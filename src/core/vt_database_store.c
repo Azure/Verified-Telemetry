@@ -67,7 +67,7 @@ uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, int fall_time, i
     // Add new entry
     database_ptr->_vt_falltimedb[i][0] = sensorid;
     database_ptr->_vt_falltimedb[i][1] = fall_time;
-    printf("\tStored FallTime = %d\r\n", database_ptr->_vt_falltimedb[i][1]);
+    VT_DEBUG_PRINT(USER,"\tStored FallTime = %d\r\n", database_ptr->_vt_falltimedb[i][1]);
 
     return VT_SUCCESS;
 }
@@ -94,7 +94,7 @@ uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float 
         pearsonCoeffInt1   = database_ptr->_vt_pearson_coefficientdb[i][1];
         pearsonCoeffFrac = pearson_coefficient - pearsonCoeffInt1;
         pearsonCoeffInt2   = pearsonCoeffFrac * 10000;
-        printf("\tStored Pearson Coefficient = %d.%04d\r\n", pearsonCoeffInt1, pearsonCoeffInt2);
+        VT_DEBUG_PRINT(USER,"\tStored Pearson Coefficient = %d.%04d\r\n", pearsonCoeffInt1, pearsonCoeffInt2);
     }
 
     // Add new entry if the label is not already present
@@ -105,7 +105,7 @@ uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float 
         pearsonCoeffInt1   = database_ptr->_vt_pearson_coefficientdb[database_ptr->_vt_total_pearson_coefficient][1];
         pearsonCoeffFrac = pearson_coefficient - pearsonCoeffInt1;
         pearsonCoeffInt2   = pearsonCoeffFrac * 10000;
-        printf("\tStored Pearson Coefficient = %d.%04d\r\n", pearsonCoeffInt1, pearsonCoeffInt2);
+        VT_DEBUG_PRINT(USER,"\tStored Pearson Coefficient = %d.%04d\r\n", pearsonCoeffInt1, pearsonCoeffInt2);
         database_ptr->_vt_total_pearson_coefficient++;
     }
 

@@ -126,7 +126,7 @@ uint32_t _vt_dsc_flash_write(uint32_t flashAddress, void* wrBuf, uint32_t Nsize)
     EraseInitStruct.Page      = startpage;
     EraseInitStruct.NbPages   = endpage - startpage + 1;
 
-    printf("\n\n Bank = %d, Start = %d, End = %d", (int)EraseInitStruct.Banks, (int)startpage, (int)endpage);
+    VT_DEBUG_PRINT(USER,"\n\n Bank = %d, Start = %d, End = %d", (int)EraseInitStruct.Banks, (int)startpage, (int)endpage);
 
     // Unlock Flash
     HAL_FLASH_Unlock();

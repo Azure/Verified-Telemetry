@@ -27,7 +27,7 @@ static VOID send_reported_property(NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
 
     if (nx_azure_iot_pnp_client_reported_properties_create(iotpnp_client_ptr, &json_writer, NX_WAIT_FOREVER))
     {
-        printf("Failed to build reported response\r\n");
+        VT_DEBUG_PRINT(USER,"Failed to build reported response\r\n");
         return;
     }
 
@@ -46,14 +46,14 @@ static VOID send_reported_property(NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
         nx_azure_iot_pnp_client_reported_property_component_end(iotpnp_client_ptr, &json_writer))
     {
         nx_azure_iot_json_writer_deinit(&json_writer);
-        printf("Failed to build reported response\r\n");
+        VT_DEBUG_PRINT(USER,"Failed to build reported response\r\n");
     }
     else
     {
         if (nx_azure_iot_pnp_client_reported_properties_send(
                 iotpnp_client_ptr, &json_writer, NX_NULL, &response_status, NX_NULL, (5 * NX_IP_PERIODIC_RATE)))
         {
-            printf("Failed to send reported response\r\n");
+            VT_DEBUG_PRINT(USER,"Failed to send reported response\r\n");
         }
 
         nx_azure_iot_json_writer_deinit(&json_writer);
@@ -67,7 +67,7 @@ UINT pnp_vt_deviceStatus_property( VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     NX_AZURE_IOT_JSON_WRITER json_writer;
     if ((status = nx_azure_iot_pnp_client_reported_properties_create(iotpnp_client_ptr, &json_writer, NX_WAIT_FOREVER)))
     {
-        printf("Failed create reported properties: error code = 0x%08x\r\n", status);
+        VT_DEBUG_PRINT(USER,"Failed create reported properties: error code = 0x%08x\r\n", status);
         return (status);
     }
 
@@ -77,7 +77,7 @@ UINT pnp_vt_deviceStatus_property( VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
              &json_writer, (const UCHAR*)deviceStatus_property, sizeof(deviceStatus_property) - 1, deviceStatus)) ||
         (status = nx_azure_iot_pnp_client_reported_property_component_end(iotpnp_client_ptr, &json_writer)))
     {
-        printf("Failed to build reported property!: error code = 0x%08x\r\n", status);
+        VT_DEBUG_PRINT(USER,"Failed to build reported property!: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
         return (status);
     }
@@ -85,7 +85,7 @@ UINT pnp_vt_deviceStatus_property( VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     if ((status = nx_azure_iot_pnp_client_reported_properties_send(
              iotpnp_client_ptr, &json_writer, NX_NULL, &response_status, NX_NULL, (5 * NX_IP_PERIODIC_RATE))))
     {
-        printf("Device twin reported properties failed!: error code = 0x%08x\r\n", status);
+        VT_DEBUG_PRINT(USER,"Device twin reported properties failed!: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
         return (status);
     }
@@ -94,7 +94,7 @@ UINT pnp_vt_deviceStatus_property( VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
 
     if ((response_status < 200) || (response_status >= 300))
     {
-        printf("device twin report properties failed with code : %d\r\n", response_status);
+        VT_DEBUG_PRINT(USER,"device twin report properties failed with code : %d\r\n", response_status);
         return (NX_NOT_SUCCESSFUL);
     }
 
@@ -130,7 +130,7 @@ UINT pnp_vt_process_command(void* verified_telemetry_DB,
                  json_response_ptr,
                  status_code)) == NX_AZURE_IOT_SUCCESS)
         {
-            printf("Successfully executed command %.*s on %.*s component\r\n\n",
+            VT_DEBUG_PRINT(USER,"Successfully executed command %.*s on %.*s component\r\n\n",
                 pnp_command_name_length,
                 pnp_command_name_ptr,
                 component_name_length,
@@ -182,7 +182,7 @@ UINT pnp_vt_process_property_update(void* verified_telemetry_DB,
             description = temp_response_description_success;
 
             ((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->enableVerifiedTelemetry = (bool)parsed_value;
-            printf("Received Enable Verified Telemetry Twin update with value %s\r\n",
+            VT_DEBUG_PRINT(USER,"Received Enable Verified Telemetry Twin update with value %s\r\n",
                 (bool)parsed_value ? "true" : "false");
         }
         send_reported_property(iotpnp_client_ptr,
@@ -241,7 +241,7 @@ UINT pnp_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iot
         if ((status = pnp_fallcurve_telemetryStatus_property(
                  fallcurve_components[i], iotpnp_client_ptr, enableVerifiedTelemetry, &deviceStatus)))
         {
-            printf("Failed pnp_fallcurve_telemetryStatus_property for component %.*s: error code = "
+            VT_DEBUG_PRINT(USER,"Failed pnp_fallcurve_telemetryStatus_property for component %.*s: error code = "
                    "0x%08x\r\n\n",
                 (INT)fallcurve_components[i]->component_name_length,
                 (CHAR*)fallcurve_components[i]->component_name_ptr,
@@ -252,12 +252,12 @@ UINT pnp_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iot
         {
             if ((status = pnp_fallcurve_fingerprintType_property(fallcurve_components[i], iotpnp_client_ptr)))
             {
-                printf("Failed pnp_fingerprintType_property: error code = 0x%08x\r\n", status);
+                VT_DEBUG_PRINT(USER,"Failed pnp_fingerprintType_property: error code = 0x%08x\r\n", status);
             }
             if ((status = pnp_fallcurve_telemetryStatus_property(
                      fallcurve_components[i], iotpnp_client_ptr, enableVerifiedTelemetry, &deviceStatus)))
             {
-                printf("Failed pnp_fallcurve_telemetryStatus_property for component %.*s: error code = "
+                VT_DEBUG_PRINT(USER,"Failed pnp_fallcurve_telemetryStatus_property for component %.*s: error code = "
                        "0x%08x\r\n\n",
                 (INT)fallcurve_components[i]->component_name_length,
                 (CHAR*)fallcurve_components[i]->component_name_ptr,
@@ -276,7 +276,7 @@ UINT pnp_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iot
         if ((status = pnp_vt_deviceStatus_property((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB,
         deviceStatus, iotpnp_client_ptr)))
         {
-            printf("Failed pnp_vt_deviceStatus_property: error code = 0x%08x\r\n", status);
+            VT_DEBUG_PRINT(USER,"Failed pnp_vt_deviceStatus_property: error code = 0x%08x\r\n", status);
         }
         else if (((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->deviceStatusProperty_sent == 0)
         {

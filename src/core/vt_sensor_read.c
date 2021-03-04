@@ -65,7 +65,7 @@ uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr,
             fingerprint, 100, sensor_ptr->vt_sampling_frequency, &fall_time, &pearson_coefficient) == VT_SUCCESS)
     {
         int sensorid_ftpc = _vt_database_evaluate_pearson_falltime(database_ptr, fall_time, pearson_coefficient);
-        // printf("\n%.*s telemetry status = %s \n",
+        // VT_DEBUG_PRINT(USER,"\n%.*s telemetry status = %s \n",
         //     strlen(sensor_ptr->vt_sensor_name),
         //     sensor_ptr->vt_sensor_name,
         //     (sensorid_ftpc > 0) ? "true" : "false");
