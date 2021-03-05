@@ -55,8 +55,7 @@ extern "C"
         const UCHAR* component_name_ptr,
         UINT component_name_length,
         NX_AZURE_IOT_JSON_READER* name_value_reader_ptr,
-        UINT version,
-        UINT message_type);
+        UINT version);
 
     UINT pnp_vt_process_reported_property_sync(void* verified_telemetry_DB,
         NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
@@ -66,6 +65,9 @@ extern "C"
         UINT version);
 
     UINT pnp_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr);
+
+    UINT pnp_vt_send_desired_property_after_boot(void* verified_telemetry_DB,
+    NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr, UINT message_type);
 
     UINT pnp_vt_init(void* verified_telemetry_DB,
         UCHAR* component_name_ptr,
