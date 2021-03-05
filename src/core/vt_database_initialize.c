@@ -55,7 +55,7 @@ void _vt_database_initialize_fingerprintdb(VT_DATABASE* database_ptr)
                 }
             }
             database_ptr->_vt_total_fingerprints = total_fingerprints_of_this_component;
-            VT_DEBUG_PRINT(USER,"\nTotal Fingerprints %d\n", (int)database_ptr->_vt_total_fingerprints);
+            VTLogInfo("\nTotal Fingerprints %d\n", (int)database_ptr->_vt_total_fingerprints);
         }
         else
         {
