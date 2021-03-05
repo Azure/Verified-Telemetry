@@ -90,6 +90,7 @@ uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprin
     status = _vt_dsc_gpio_turn_off(sensor_ptr->vt_gpio_port, sensor_ptr->vt_gpio_pin);
     if (status != VT_SUCCESS)
     {
+        _vt_dsc_gpio_turn_on(sensor_ptr->vt_gpio_port, sensor_ptr->vt_gpio_pin);
         return status;
     }
 

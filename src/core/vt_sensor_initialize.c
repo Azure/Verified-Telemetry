@@ -3,6 +3,7 @@
 
 #include "string.h"
 #include "vt_sensor.h"
+#include "vt_dsc.h"
 
 uint32_t vt_sensor_initialize(VT_SENSOR* sensor_ptr,
     char* Port_Name,
@@ -26,6 +27,8 @@ uint32_t vt_sensor_initialize(VT_SENSOR* sensor_ptr,
     sensor_ptr->vt_adc_channel        = ADC_Channel;
     sensor_ptr->vt_timer              = Timer_Handler;
     sensor_ptr->vt_sampling_frequency = 1;
+
+    _vt_dsc_gpio_turn_on(sensor_ptr->vt_gpio_port, sensor_ptr->vt_gpio_pin);
 
     return (VT_SUCCESS);
 }

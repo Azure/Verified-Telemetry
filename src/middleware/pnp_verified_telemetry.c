@@ -147,7 +147,8 @@ UINT pnp_vt_process_property_update(void* verified_telemetry_DB,
     const UCHAR* component_name_ptr,
     UINT component_name_length,
     NX_AZURE_IOT_JSON_READER* name_value_reader_ptr,
-    UINT version)
+    UINT version,
+    UINT message_type)
 {
     UINT parsed_value = 0;
     INT status_code;
@@ -195,6 +196,19 @@ UINT pnp_vt_process_property_update(void* verified_telemetry_DB,
             (UCHAR*)property_name,
             property_name_length);
         return NX_AZURE_IOT_SUCCESS;
+    }
+
+    if(message_type == NX_AZURE_IOT_PNP_PROPERTIES)
+    {
+        send_reported_property(iotpnp_client_ptr,
+            ((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->component_name_ptr,
+            ((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->component_name_length,
+            (bool)parsed_value,
+            200,
+            1,
+            temp_response_description_success,
+            (UCHAR*)enableVerifiedTelemetry_property,
+            sizeof(enableVerifiedTelemetry_property) - 1);
     }
 
     return NX_NOT_SUCCESSFUL;

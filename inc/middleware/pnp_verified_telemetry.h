@@ -55,7 +55,8 @@ extern "C"
         const UCHAR* component_name_ptr,
         UINT component_name_length,
         NX_AZURE_IOT_JSON_READER* name_value_reader_ptr,
-        UINT version);
+        UINT version,
+        UINT message_type);
 
     UINT pnp_vt_process_reported_property_sync(void* verified_telemetry_DB,
         NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
