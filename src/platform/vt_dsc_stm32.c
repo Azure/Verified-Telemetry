@@ -61,7 +61,7 @@ uint32_t _vt_dsc_adc_read(ADC_CONTROLLER_TYPEDEF* ADC_Controller, ADC_CHANNEL_TY
 
     sConfig.Channel      = ADC_Channel;
     sConfig.Rank         = 1;
-    sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+    sConfig.SamplingTime = ADC_SAMPLETIME_640CYCLES_5;
     HAL_ADC_ConfigChannel(ADC_Controller, &sConfig);
 
     HAL_ADC_Start(ADC_Controller);
