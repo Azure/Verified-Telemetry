@@ -23,9 +23,9 @@ The main interface of Verified Telemetry is defined in [Verified Telemetry Infor
 ## Getting started sample model
 The [Getting started guide](./sample/gsg.json) interface has the following components:
 1. Device Component uses the [Device Sensors](./sample/device.json) interface. This represents the default Device Component from the manufacturers.
-1. vTsoilMoistureExternal Component uses the [Verified Telemetry Information](./vTInfo.json) interface. This represents the verified telemetry component for soilMoistureExternal telemetry.
-1. vTaccelerometerXExternal Component uses the [Verified Telemetry Information](./vTInfo.json) interface. This represents the verified telemetry component for accelerometerXExternal telemetry.
-	> NOTE: Include as many components with [Verified Telemetry Information](./vTInfo.json) as there are telemetries for which verifcation is required. In the above example Verified Telemetry is enabled on two sensors SoilMositure and AccelerometerX.
+1. vTsoilMoistureExternal1 Component uses the [Verified Telemetry Information](./vTInfo.json) interface. This represents the verified telemetry component for soilMoistureExternal1 telemetry.
+1. vTsoilMoistureExternal2 Component uses the [Verified Telemetry Information](./vTInfo.json) interface. This represents the verified telemetry component for soilMoistureExternal2 telemetry.
+	> NOTE: Include as many components with [Verified Telemetry Information](./vTInfo.json) as there are telemetries for which verifcation is required. In the above example Verified Telemetry is enabled on two sensors Soil Moisture 1 and Soil Moisture 2.
 
 1. vTDevice Component uses the [Verified Telemetry Device Information](./vTDevice.json) interface.
 
@@ -33,9 +33,9 @@ The [Getting started guide](./sample/gsg.json) interface has the following compo
 
 The structure of the PnP model for [Getting started guide](./sample/gsg.json) is as follows:
 
-| Type | Name | Description |
-|---|---|---|
-| **Interface** | `sampleDevice` | Default Device Component from the manufacturer. |
-| **Interface** | `vTDevice` | Device Level Verified Telemetry component |
-| **Interface** | `vTsoilMoistureExternal` |  The Verified Telemetry component for soilMoistureExternal telemetry. |
-| **Interface** | `vTaccelerometerXExternal` | The Verified Telemetry component for accelerometerXExternal telemetry. |
+| Type | Name | Description | Interface ID |
+|---|---|---|---|
+| **Component** | `sampleDevice` | Default Device Component from the manufacturer. | dtmi:azure:verifiedtelemetry:sample:GSG;1 |
+| **Component** | `vTDevice` | Device Level Verified Telemetry component | dtmi:azure:verifiedtelemetry:deviceinformation;1 | 
+| **Component** | `vTsoilMoistureExternal1` | The Verified Telemetry component for soilMoistureExternal1 telemetry. | dtmi:azure:verifiedtelemetry:telemetryinformation;1 | 
+| **Component** | `vTsoilMoistureExternal2` | The Verified Telemetry component for soilMoistureExternal2 telemetry. | dtmi:azure:verifiedtelemetry:telemetryinformation;1 | 

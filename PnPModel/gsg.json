@@ -22,16 +22,16 @@
     {
       "@type" : "Component",
       "schema": "dtmi:azure:verifiedtelemetry:telemetryinformation;1",
-      "name": "vTsoilMoistureExternal",
-      "displayName": "Verified Telemetry component for SoilMoistureExternal telemetry",
-      "description": "Verified Telemetry and Fingerprint information of SoilMoistureExternal telemetry"
+      "name": "vTsoilMoistureExternal1",
+      "displayName": "Verified Telemetry component for soilMoistureExternal1 telemetry",
+      "description": "Verified Telemetry and Fingerprint information of soilMoistureExternal1 telemetry"
     },
     {
       "@type" : "Component",
       "schema": "dtmi:azure:verifiedtelemetry:telemetryinformation;1",
-      "name": "vTaccelerometerXExternal",
-      "displayName": "Verified Telemetry component for accelerometerExternal telemetry",
-      "description": "Verified Telemetry and Fingerprint information of accelerometerXExternal telemetry"
+      "name": "vTsoilMoistureExternal2",
+      "displayName": "Verified Telemetry component for soilMoistureExternal2 telemetry",
+      "description": "Verified Telemetry and Fingerprint information of soilMoistureExternal2 telemetry"
     }
   ]
 }
