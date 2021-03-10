@@ -40,7 +40,7 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint32_t* confidenceMetric)
 
     else
     {
-        printf("\tTemplate Fingerprint has some issues. Please check if a working sensor is connected.\n");
+        printf("\tGenerated Fingerprint is not robust and has a low confidence metric. Please check if a working sensor is connected and retrigger the command.\n");
         *confidenceMetric = 0;
     }
     _vt_dsc_delay_usec(sensor_ptr->vt_timer, 1000000);
