@@ -10,4 +10,5 @@
 
 int test_vt_fingerprint()
 {
+    return 0;
 }

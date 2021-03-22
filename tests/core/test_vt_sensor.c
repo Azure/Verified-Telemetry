@@ -10,4 +10,5 @@
 
 int test_vt_sensor()
 {
+    return 0;
 }
