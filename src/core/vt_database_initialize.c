@@ -76,7 +76,7 @@ void _vt_database_initialize_falltimedb(VT_DATABASE* database_ptr)
         int falltime;
         float pearson_coefficient;
 
-        for (int i = 0; i < database_ptr->_vt_total_fingerprints; i++)
+        for (uint32_t i = 0; i < database_ptr->_vt_total_fingerprints; i++)
         {
             if (_vt_fingerprint_calculate_falltime_pearsoncoefficient(&(database_ptr->_vt_fingerprintdb[i][2]),
                     100,
@@ -100,7 +100,7 @@ void _vt_database_initialize_pearsoncoefficientdb(VT_DATABASE* database_ptr)
         int falltime;
         float pearson_coefficient;
 
-        for (int i = 0; i < database_ptr->_vt_total_fingerprints; i++)
+        for (uint32_t i = 0; i < database_ptr->_vt_total_fingerprints; i++)
         {
             if (_vt_fingerprint_calculate_falltime_pearsoncoefficient(&(database_ptr->_vt_fingerprintdb[i][2]),
                     100,

@@ -1,7 +1,7 @@
 ﻿# Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-cmake_minimum_required (VERSION 3.10 FATAL_ERROR)
+cmake_minimum_required (VERSION 3.10)
 set(CMAKE_CXX_STANDARD 99)
 
 option(UNIT_TESTING "Build unit test projects" ON)
@@ -20,9 +20,6 @@ endif()
 
 project(vt LANGUAGES C)
 enable_testing ()
-
-
-
 
 # default for Unit testing with cmocka is OFF, however, this will be ON on CI and tests must
 # pass before committing changes
@@ -47,9 +44,9 @@ if (UNIT_TESTING)
 
   set(VT_DEVICE "CUSTOM_DEVICE")
 
+else ()
+    add_subdirectory(src/middleware)
 endif()
-
 
 add_subdirectory(src/platform)
 add_subdirectory(src/core)
-#add_subdirectory(src/middleware)
