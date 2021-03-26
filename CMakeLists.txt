@@ -7,6 +7,8 @@
 cmake_minimum_required (VERSION 3.10 FATAL_ERROR)
 set(CMAKE_CXX_STANDARD 99)
 
+option(UNIT_TESTING "Build unit test projects" ON)
+
 if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       CACHE STRING "")
@@ -27,7 +29,7 @@ enable_testing ()
 
 # default for Unit testing with cmocka is OFF, however, this will be ON on CI and tests must
 # pass before committing changes
-
+if (UNIT_TESTING)
   # make generate step fail if cmocka dependency is not found
   find_package(cmocka CONFIG REQUIRED)
 
@@ -44,7 +46,12 @@ enable_testing ()
     set(NO_CLOBBERED_WARNING "-Wno-clobbered")
   endif()
 
+  add_subdirectory(tests/core)
+
+  set(VT_DEVICE "CUSTOM_DEVICE")
+
+endif()
+
+
 add_subdirectory(src/platform)
 add_subdirectory(src/core)
-
-add_subdirectory(tests/core)

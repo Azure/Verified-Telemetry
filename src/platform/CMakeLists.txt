@@ -7,7 +7,8 @@ project(vt_platform LANGUAGES C)
 set(CMAKE_C_STANDARD 99)
 
 if(VT_DEVICE STREQUAL "MXCHIP_AZ3166")
-  add_library(vt_mxchip STATIC
+
+  add_library(vt_platform STATIC
     ${CMAKE_CURRENT_LIST_DIR}/vt_dsc_mxchip.c
   )
 
@@ -15,9 +16,12 @@ if(VT_DEVICE STREQUAL "MXCHIP_AZ3166")
     PRIVATE
       stm32cubef4
   )
+
+  target_compile_definitions(vt_platform PUBLIC "STM32F4XX")
+
 elseif(VT_DEVICE STREQUAL "STM_BL475EIOT01A")
 
-  add_library(vt_stm32 STATIC
+  add_library(vt_platform STATIC
       ${CMAKE_CURRENT_LIST_DIR}/vt_dsc_stm32.c
   )
 
@@ -25,17 +29,23 @@ elseif(VT_DEVICE STREQUAL "STM_BL475EIOT01A")
     PRIVATE
       stm32cubel4
   )
+
+    target_compile_definitions(vt_platform PUBLIC "STM32L4XX")
+
 else()
   #CUSTOM_DEVICE
 
-  add_library(vt_custom  STATIC
+  add_library(vt_platform  STATIC
     ${CMAKE_CURRENT_LIST_DIR}/vt_dsc_custom.c
   )
 
-  target_link_libraries(vt_custom
-    PRIVATE
-      vt_core
-  )
+  target_compile_definitions(vt_platform PUBLIC "CUSTOM_DEVICE")
 
   message(WARNING  "<CUSTOM_DEVICE> has been selected as device type, kindly make sure all functions in <src/platform/vt_dsc_custom.c> are implemented to avoid any runtime errors.")
 endif()
+
+target_include_directories (vt_platform
+  PUBLIC
+  $<BUILD_INTERFACE:${vt_SOURCE_DIR}/inc/platform>
+  $<BUILD_INTERFACE:${vt_SOURCE_DIR}/inc/core>
+)
