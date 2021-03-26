@@ -22,3 +22,9 @@ target_include_directories (vt_middleware
 
 # make sure that users can consume the project as a library.
 add_library (vt::middleware ALIAS vt_middleware)
+
+  target_link_libraries(vt_middleware
+    PRIVATE
+      azrtos::netxduo
+      vt_core
+  )

@@ -35,3 +35,9 @@ target_include_directories(vt_core
 
 # make sure that users can consume the project as a library.
 add_library (vt::core ALIAS vt_core)
+
+
+  target_link_libraries(vt_core
+    PRIVATE
+      vt_platform
+  )

@@ -19,7 +19,7 @@ void _vt_database_initialize_falltimedb(VT_DATABASE* database_ptr);
 void _vt_database_initialize_pearsoncoefficientdb(VT_DATABASE* database_ptr);
 
 // Store
-uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, int fall_time, int sensorid);
+uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, uint32_t fall_time, int sensorid);
 
 uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float pearson_coefficient, int sensorid);
 
