@@ -16,6 +16,7 @@
 #endif
 
 #ifdef STM32F4XX
+#undef CUSTOM_DEVICE
 #define GPIO_PORT_TYPEDEF      GPIO_TypeDef
 #define GPION_PIN_TYPEDEF      uint16_t
 #define ADC_CONTROLLER_TYPEDEF ADC_HandleTypeDef
@@ -24,6 +25,7 @@
 #endif
 
 #ifdef STM32L4XX
+#undef CUSTOM_DEVICE
 #define GPIO_PORT_TYPEDEF      GPIO_TypeDef
 #define GPION_PIN_TYPEDEF      uint16_t
 #define ADC_CONTROLLER_TYPEDEF ADC_HandleTypeDef

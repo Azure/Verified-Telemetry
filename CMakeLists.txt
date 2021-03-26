@@ -1,9 +1,6 @@
 ﻿# Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-# CMakeList.txt : CMake project for CMakeProject2, include source and define
-# project specific logic here.
-#
 cmake_minimum_required (VERSION 3.10 FATAL_ERROR)
 set(CMAKE_CXX_STANDARD 99)
 
@@ -55,3 +52,4 @@ endif()
 
 add_subdirectory(src/platform)
 add_subdirectory(src/core)
+#add_subdirectory(src/middleware)

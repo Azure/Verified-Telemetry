@@ -1,5 +1,5 @@
-# Copyright (c) Microsoft Corporation. All rights reserved.
-# SPDX-License-Identifier: MIT
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 
 cmake_minimum_required (VERSION 3.8)
 
@@ -38,8 +38,6 @@ else()
   add_library(vt_platform  STATIC
     ${CMAKE_CURRENT_LIST_DIR}/vt_dsc_custom.c
   )
-
-  target_compile_definitions(vt_platform PUBLIC "CUSTOM_DEVICE")
 
   message(WARNING  "<CUSTOM_DEVICE> has been selected as device type, kindly make sure all functions in <src/platform/vt_dsc_custom.c> are implemented to avoid any runtime errors.")
 endif()
