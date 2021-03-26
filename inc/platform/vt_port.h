@@ -4,6 +4,8 @@
 #ifndef _VT_PORT_H
 #define _VT_PORT_H
 
+#include "stdint.h"
+
 #ifdef STM32F4XX
 #include "stm32f4xx_hal.h"
 #endif

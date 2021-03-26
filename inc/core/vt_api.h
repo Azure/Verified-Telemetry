@@ -52,13 +52,13 @@ typedef struct VT_DATABASE_STRUCT
     uint32_t vt_flash_address;
     uint32_t vt_fallcurve_component_id;
 
-    int _vt_total_fingerprints;
+    uint32_t _vt_total_fingerprints;
     uint32_t _vt_fingerprintdb[10][102];
 
-    int _vt_total_falltime;
-    int _vt_falltimedb[10][2];
+    uint32_t _vt_total_falltime;
+    uint32_t _vt_falltimedb[10][2];
 
-    int _vt_total_pearson_coefficient;
+    uint32_t _vt_total_pearson_coefficient;
     float _vt_pearson_coefficientdb[10][2];
 
 } VT_DATABASE;
