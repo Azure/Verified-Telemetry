@@ -13,7 +13,7 @@
 #define VT_ERROR                              0X01
 #define VT_PTR_ERROR                          0X02
 #define VT_MUTEX_ERROR                        0X03
-#define VT_CUSTOM_IMPLEMENTATION_NOT_PROVIDED 0X04
+
 #define VT_UNIDENTIFIED_SENSOR_NAME           0X05
 #define VT_THREAD_SLEEP_ERROR                 0X06
 #define VT_REPEATABILITY_ERROR                0X11

@@ -4,12 +4,14 @@
 #ifndef _VT_DSC_H
 #define _VT_DSC_H
 
-#include "vt_api.h"
+//#include "vt_api.h"
 #include "vt_port.h"
 
-#define VT_FLASH_ADDRESS_ERROR    0X16
-#define VT_FLASH_WRITE_SIZE_ERROR 0X17
-#define VT_FLASH_ERAZE_SIZE_ERROR 0X18
+#define VT_SUCCESS                            0X00
+#define VT_CUSTOM_IMPLEMENTATION_NOT_PROVIDED 0X04
+#define VT_FLASH_ADDRESS_ERROR                0X16
+#define VT_FLASH_WRITE_SIZE_ERROR             0X17
+#define VT_FLASH_ERAZE_SIZE_ERROR             0X18
 
 uint32_t _vt_dsc_delay_msec(uint32_t delay);
 

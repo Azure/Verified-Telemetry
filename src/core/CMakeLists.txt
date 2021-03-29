@@ -22,9 +22,8 @@ add_library (
 
 target_include_directories (vt_core
   PUBLIC
-  $<BUILD_INTERFACE:${vt_SOURCE_DIR}/inc/core>
-  $<BUILD_INTERFACE:${vt_SOURCE_DIR}/inc/platform>
-  $<INSTALL_INTERFACE:include/vt_core>
+  ${vt_SOURCE_DIR}/inc/core
+  ${vt_SOURCE_DIR}/inc/platform
 )
 
 # include test internal headers

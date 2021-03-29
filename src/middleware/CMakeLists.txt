@@ -15,9 +15,8 @@ add_library (
 
 target_include_directories (vt_middleware
   PUBLIC
-  $<BUILD_INTERFACE:${vt_SOURCE_DIR}/inc/middleware>
-  $<BUILD_INTERFACE:${vt_SOURCE_DIR}/inc/core>
-  $<INSTALL_INTERFACE:include/vt_middleware>
+  ${vt_SOURCE_DIR}/inc/middleware
+  ${vt_SOURCE_DIR}/inc/core
 )
 
 # make sure that users can consume the project as a library.
@@ -26,5 +25,5 @@ add_library (vt::middleware ALIAS vt_middleware)
   target_link_libraries(vt_middleware
     PRIVATE
       azrtos::netxduo
-      vt_core
+      vt::core
   )

@@ -13,7 +13,7 @@ if(VT_DEVICE STREQUAL "MXCHIP_AZ3166")
   )
 
   target_link_libraries(vt_platform
-    PRIVATE
+    PUBLIC
       stm32cubef4
   )
 
@@ -26,7 +26,7 @@ elseif(VT_DEVICE STREQUAL "STM_BL475EIOT01A")
   )
 
   target_link_libraries(vt_platform
-    PRIVATE
+    PUBLIC
       stm32cubel4
   )
 
@@ -44,6 +44,7 @@ endif()
 
 target_include_directories (vt_platform
   PUBLIC
-  $<BUILD_INTERFACE:${vt_SOURCE_DIR}/inc/platform>
-  $<BUILD_INTERFACE:${vt_SOURCE_DIR}/inc/core>
+  ${vt_SOURCE_DIR}/inc/platform
 )
+
+add_library (vt::platform ALIAS vt_platform)
