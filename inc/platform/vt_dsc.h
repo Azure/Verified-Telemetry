@@ -6,8 +6,10 @@
 
 //#include "vt_api.h"
 #include "vt_port.h"
+#include "stdio.h"
 
 #define VT_SUCCESS                            0X00
+#define VT_ERROR                              0X01
 #define VT_CUSTOM_IMPLEMENTATION_NOT_PROVIDED 0X04
 #define VT_FLASH_ADDRESS_ERROR                0X16
 #define VT_FLASH_WRITE_SIZE_ERROR             0X17

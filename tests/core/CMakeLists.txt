@@ -18,7 +18,7 @@ add_cmocka_test(vt_core_test SOURCES
                 test_vt_sensor.c
                 test_vt_database.c
                 COMPILE_OPTIONS ${DEFAULT_C_COMPILE_FLAGS} ${NO_CLOBBERED_WARNING}
-                LINK_LIBRARIES ${CMOCKA_LIBRARIES} vt_core
+                LINK_LIBRARIES ${CMOCKA_LIBRARIES} verified_telemetry
                 # include cmoka headers and private folder headers
                 INCLUDE_DIRECTORIES ${CMOCKA_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/src/core/ ${CMAKE_SOURCE_DIR}/inc/core/ ${CMAKE_SOURCE_DIR}/inc/platform/
                 )
