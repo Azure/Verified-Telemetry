@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.10)
 set(CMAKE_CXX_STANDARD 99)
 
-option(UNIT_TESTING "Build unit test projects" ON)
+option(UNIT_TESTING "Build unit test projects" OFF)
 
 if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
