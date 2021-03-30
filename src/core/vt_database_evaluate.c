@@ -13,7 +13,7 @@ int _vt_database_evaluate_nrmse(VT_DATABASE* database_ptr, uint32_t* fallcurvear
         return -1;
     }
 
-    float nrmse[98];
+    float nrmse[10];
     float min = 65355.00;
     int index;
 

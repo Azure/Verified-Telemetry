@@ -46,7 +46,7 @@ uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerp
         *fall_time = fingerprint_length * sampling_frequency;
 
         // Reconstruct exponential fall for the N points
-        uint32_t fingerprint_reconstructed[98];
+        uint32_t fingerprint_reconstructed[100];
         for (i = 0; i < fingerprint_length; i++)
             fingerprint_reconstructed[i] = fingerprint[0] * (float)exp((-1 * (i / (float)(fingerprint_length - 1))));
 
@@ -62,9 +62,9 @@ uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerp
 
 VT_CURVE_SHAPE _vt_fingerprint_calculate_shape(uint32_t* fingerprint, int fingerprint_length)
 {
-    uint32_t ranked[98];
-    uint32_t arraylinear[98];
-    uint32_t arrayexp[98];
+    uint32_t ranked[100];
+    uint32_t arraylinear[100];
+    uint32_t arrayexp[100];
     int i;
 
     _vt_fingerprint_rankify(fingerprint, fingerprint_length, ranked);
