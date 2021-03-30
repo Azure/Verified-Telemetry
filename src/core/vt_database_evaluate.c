@@ -3,7 +3,7 @@
 
 #include "vt_database.h"
 
-static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, int fall_time);
+static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, uint32_t fall_time);
 static int _vt_database_pearsoncoefficient_falltimeindex_search(VT_DATABASE* database_ptr, int value);
 
 int _vt_database_evaluate_nrmse(VT_DATABASE* database_ptr, uint32_t* fallcurvearray)
@@ -13,14 +13,14 @@ int _vt_database_evaluate_nrmse(VT_DATABASE* database_ptr, uint32_t* fallcurvear
         return -1;
     }
 
-    float nrmse[database_ptr->_vt_total_fingerprints];
+    float nrmse[10];
     float min = 65355.00;
     int index;
 
-    for (int i = 0; i < (database_ptr->_vt_total_fingerprints); i++)
+    for (uint32_t i = 0; i < (database_ptr->_vt_total_fingerprints); i++)
         nrmse[i] = _vt_fingerprint_evaluate_nrmse(&(database_ptr->_vt_fingerprintdb[i][2]), fallcurvearray, 100);
 
-    for (int k = 0; k < (database_ptr->_vt_total_fingerprints); k++)
+    for (uint32_t k = 0; k < (database_ptr->_vt_total_fingerprints); k++)
         if (nrmse[k] < min)
         {
             min = nrmse[k], index = k;
@@ -81,9 +81,9 @@ int _vt_database_evaluate_pearson_falltime(VT_DATABASE* database_ptr, int fall_t
     return 0;
 }
 
-static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, int fall_time)
+static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, uint32_t fall_time)
 {
-    int i;
+    uint32_t i;
 
     for (i = 0; (i < database_ptr->_vt_total_falltime) && (database_ptr->_vt_falltimedb[i][1] <= fall_time); i++)
         ;
@@ -100,7 +100,7 @@ static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, 
 
 static int _vt_database_pearsoncoefficient_falltimeindex_search(VT_DATABASE* database_ptr, int value)
 {
-    int i;
+    uint32_t i;
     for (i = 0;
          (i < database_ptr->_vt_total_pearson_coefficient) && (database_ptr->_vt_pearson_coefficientdb[i][0] != value);
          i++)

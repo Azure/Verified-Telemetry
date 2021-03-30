@@ -13,7 +13,7 @@
 #define VT_ERROR                              0X01
 #define VT_PTR_ERROR                          0X02
 #define VT_MUTEX_ERROR                        0X03
-#define VT_CUSTOM_IMPLEMENTATION_NOT_PROVIDED 0X04
+
 #define VT_UNIDENTIFIED_SENSOR_NAME           0X05
 #define VT_THREAD_SLEEP_ERROR                 0X06
 #define VT_REPEATABILITY_ERROR                0X11
@@ -30,8 +30,8 @@
 #define VT_MINIMUM_FREQUENCY       1
 #define VT_FINGERPRINT_LENGTH      100
 
-#define FALL_TIME_THRESHOLD           5
-#define PEARSON_COEFFICIENT_THRESHOLD 5
+#define FALL_TIME_THRESHOLD           5.0f
+#define PEARSON_COEFFICIENT_THRESHOLD 5.0f
 
 typedef struct VT_SENSOR_STRUCT
 {
@@ -52,13 +52,13 @@ typedef struct VT_DATABASE_STRUCT
     uint32_t vt_flash_address;
     uint32_t vt_fallcurve_component_id;
 
-    int _vt_total_fingerprints;
+    uint32_t _vt_total_fingerprints;
     uint32_t _vt_fingerprintdb[10][102];
 
-    int _vt_total_falltime;
-    int _vt_falltimedb[10][2];
+    uint32_t _vt_total_falltime;
+    uint32_t _vt_falltimedb[10][2];
 
-    int _vt_total_pearson_coefficient;
+    uint32_t _vt_total_pearson_coefficient;
     float _vt_pearson_coefficientdb[10][2];
 
 } VT_DATABASE;

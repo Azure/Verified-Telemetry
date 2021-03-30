@@ -48,9 +48,9 @@ static uint32_t _vt_database_store_fingerprint(
     return VT_SUCCESS;
 }
 
-uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, int fall_time, int sensorid)
+uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, uint32_t fall_time, int sensorid)
 {
-    int i;
+    uint32_t i;
 
     // Find index of the member nearest(smaller) to the new entry
     for (i = 0; ((i < database_ptr->_vt_total_falltime) && (database_ptr->_vt_falltimedb[i][1] < fall_time)); i++)
@@ -58,7 +58,7 @@ uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, int fall_time, i
     database_ptr->_vt_total_falltime++;
 
     // Right Shift the members after the nearest index
-    for (int j = database_ptr->_vt_total_falltime; j > i; j--)
+    for (uint32_t j = database_ptr->_vt_total_falltime; j > i; j--)
     {
         database_ptr->_vt_falltimedb[j][0] = database_ptr->_vt_falltimedb[j - 1][0];
         database_ptr->_vt_falltimedb[j][1] = database_ptr->_vt_falltimedb[j - 1][1];
@@ -67,14 +67,14 @@ uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, int fall_time, i
     // Add new entry
     database_ptr->_vt_falltimedb[i][0] = sensorid;
     database_ptr->_vt_falltimedb[i][1] = fall_time;
-    printf("\tStored FallTime = %d\r\n", database_ptr->_vt_falltimedb[i][1]);
+    printf("\tStored FallTime = %d\r\n", (int)database_ptr->_vt_falltimedb[i][1]);
 
     return VT_SUCCESS;
 }
 
 uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float pearson_coefficient, int sensorid)
 {
-    int i;
+    uint32_t i;
     int pearsonCoeffInt1;
     float pearsonCoeffFrac;
     int pearsonCoeffInt2;
