@@ -31,12 +31,6 @@ static void test_vt_fingerprint_calculate_maximum_index(void** state)
 
 }
 
-static void test_vt_fingerprint_calculate_minimum_index(void** state)
-{
-    (void)state;
-
-    //Static Function
-}
 
 static void test_vt_fingerprint_calculate_37index(void** state)
 {
@@ -52,13 +46,22 @@ static void test_vt_fingerprint_calculate_37index(void** state)
 static void test_vt_fingerprint_calculate_falltime_pearsoncoefficient(void** state)
 {
     (void)state;
-}
 
-static void test_vt_fingerprint_calculate_calculate_rankify(void** state)
-{
-    (void)state;
+    int fall_time;
+    float pearson_coefficient;
 
-    //Static Function
+    assert_int_equal(_vt_fingerprint_calculate_falltime_pearsoncoefficient(curve_constant, TEST_ARRAY_LENGTH, 5, &fall_time,&pearson_coefficient), VT_ERROR);
+
+
+    assert_int_equal(_vt_fingerprint_calculate_falltime_pearsoncoefficient(curve_exponential_fall, TEST_ARRAY_LENGTH, 10, &fall_time,&pearson_coefficient),VT_SUCCESS);
+
+    assert_int_equal(fall_time,520);
+    assert_float_equal(pearson_coefficient,0.998063,0.001);
+
+    assert_int_equal(_vt_fingerprint_calculate_falltime_pearsoncoefficient(curve_triagular, TEST_ARRAY_LENGTH, 5, &fall_time,&pearson_coefficient),VT_SUCCESS);
+
+    assert_int_equal(fall_time,165);
+    assert_float_equal(pearson_coefficient,0.991134,0.001);
 
 }
 
@@ -91,19 +94,17 @@ static void test_vt_fingerprint_evaluate_nrmse(void** state)
     assert_float_equal(_vt_fingerprint_evaluate_nrmse(curve_constant, curve_constant, TEST_ARRAY_LENGTH), 0.00000, 0.001);
     assert_float_equal(_vt_fingerprint_evaluate_nrmse(curve_exponential_rise, curve_exponential_rise, TEST_ARRAY_LENGTH), 0.00000, 0.001);
     assert_float_equal(_vt_fingerprint_evaluate_nrmse(curve_constant, curve_exponential_rise, TEST_ARRAY_LENGTH), 81.089088, 0.001);
-    assert_float_equal(_vt_fingerprint_evaluate_nrmse(curve_constant, curve_exponential_fall, TEST_ARRAY_LENGTH), 130.660934, 0.001);
+    assert_float_equal(_vt_fingerprint_evaluate_nrmse(curve_constant, curve_exponential_fall, TEST_ARRAY_LENGTH), 63.609119, 0.001);
     assert_float_equal(_vt_fingerprint_evaluate_nrmse(curve_constant, curve_triagular, TEST_ARRAY_LENGTH), 4.931531, 0.001);
-    assert_float_equal(_vt_fingerprint_evaluate_nrmse(curve_triagular, curve_exponential_fall, TEST_ARRAY_LENGTH), 25.387461, 0.001);
+    assert_float_equal(_vt_fingerprint_evaluate_nrmse(curve_triagular, curve_exponential_fall, TEST_ARRAY_LENGTH), 12.122904, 0.001);
 }
 
 int test_vt_fingerprint()
 {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_vt_fingerprint_calculate_maximum_index),
-        cmocka_unit_test(test_vt_fingerprint_calculate_minimum_index),
         cmocka_unit_test(test_vt_fingerprint_calculate_37index),
         cmocka_unit_test(test_vt_fingerprint_calculate_falltime_pearsoncoefficient),
-        cmocka_unit_test(test_vt_fingerprint_calculate_calculate_rankify),
         cmocka_unit_test(test_vt_fingerprint_calculate_shape),
         cmocka_unit_test(test_vt_fingerprint_evaluate_correlation_coefficient),
         cmocka_unit_test(test_vt_fingerprint_evaluate_nrmse),
