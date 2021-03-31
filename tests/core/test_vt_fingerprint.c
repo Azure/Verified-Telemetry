@@ -80,7 +80,9 @@ static void test_vt_fingerprint_evaluate_correlation_coefficient(void** state)
     assert_float_equal(_vt_fingerprint_evaluate_correlationCoefficient(curve_exponential_fall, curve_exponential_rise, TEST_ARRAY_LENGTH),-1.0000,0.001);
     assert_float_equal(_vt_fingerprint_evaluate_correlationCoefficient(curve_exponential_fall, curve_exponential_fall, TEST_ARRAY_LENGTH),1.000,0.001);
     assert_float_equal(_vt_fingerprint_evaluate_correlationCoefficient(curve_triagular, curve_exponential_fall, TEST_ARRAY_LENGTH),-0.094277,0.001);
-    }
+    assert_float_equal(_vt_fingerprint_evaluate_correlationCoefficient(curve_triagular, curve_exponential_rise, TEST_ARRAY_LENGTH),0.094277,0.001);
+
+}
 
 static void test_vt_fingerprint_evaluate_nrmse(void** state)
 {
