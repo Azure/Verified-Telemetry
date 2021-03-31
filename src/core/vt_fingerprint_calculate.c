@@ -147,7 +147,7 @@ uint32_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint32_t finge
         }
     }
 
-    return 2000;
+    return VT_ERROR;
 }
 
 static void _vt_fingerprint_rankify(uint32_t* X, int length, uint32_t* Y)
