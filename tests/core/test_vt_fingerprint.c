@@ -54,12 +54,10 @@ static void test_vt_fingerprint_calculate_falltime_pearsoncoefficient(void** sta
 
 
     assert_int_equal(_vt_fingerprint_calculate_falltime_pearsoncoefficient(curve_exponential_fall, TEST_ARRAY_LENGTH, 10, &fall_time,&pearson_coefficient),VT_SUCCESS);
-
     assert_int_equal(fall_time,520);
     assert_float_equal(pearson_coefficient,0.998063,0.001);
 
     assert_int_equal(_vt_fingerprint_calculate_falltime_pearsoncoefficient(curve_triagular, TEST_ARRAY_LENGTH, 5, &fall_time,&pearson_coefficient),VT_SUCCESS);
-
     assert_int_equal(fall_time,165);
     assert_float_equal(pearson_coefficient,0.991134,0.001);
 
