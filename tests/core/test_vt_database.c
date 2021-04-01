@@ -82,28 +82,28 @@ static void test_vt_database_store_falltime(void** state)
     assert_int_equal(test_database_ptr._vt_total_falltime, 0);
     assert_int_equal(test_database_ptr._vt_falltimedb[0][0], 0);
 
-    assert_int_equal(_vt_database_store_falltime(&test_database_ptr, 25000, 1), VT_SUCCESS);
+    assert_int_equal(_vt_database_store_falltime(&test_database_ptr, 25000, 23), VT_SUCCESS);
 
     assert_int_equal(test_database_ptr._vt_total_falltime, 1);
-    assert_int_equal(test_database_ptr._vt_falltimedb[0][0], 1);
+    assert_int_equal(test_database_ptr._vt_falltimedb[0][0], 23);
     assert_int_equal(test_database_ptr._vt_falltimedb[0][1], 25000);
 
-    assert_int_equal(_vt_database_store_falltime(&test_database_ptr, 26000, 1), VT_SUCCESS);
+    assert_int_equal(_vt_database_store_falltime(&test_database_ptr, 26000, 23), VT_SUCCESS);
 
     assert_int_equal(test_database_ptr._vt_total_falltime, 2);
-    assert_int_equal(test_database_ptr._vt_falltimedb[0][0], 1);
+    assert_int_equal(test_database_ptr._vt_falltimedb[0][0], 23);
     assert_int_equal(test_database_ptr._vt_falltimedb[0][1], 25000);
-    assert_int_equal(test_database_ptr._vt_falltimedb[1][0], 1);
+    assert_int_equal(test_database_ptr._vt_falltimedb[1][0], 23);
     assert_int_equal(test_database_ptr._vt_falltimedb[1][1], 26000);
 
-    assert_int_equal(_vt_database_store_falltime(&test_database_ptr, 24000, 2), VT_SUCCESS);
+    assert_int_equal(_vt_database_store_falltime(&test_database_ptr, 24000, 12), VT_SUCCESS);
 
     assert_int_equal(test_database_ptr._vt_total_falltime, 3);
-    assert_int_equal(test_database_ptr._vt_falltimedb[0][0], 2);
+    assert_int_equal(test_database_ptr._vt_falltimedb[0][0], 12);
     assert_int_equal(test_database_ptr._vt_falltimedb[0][1], 24000);
-    assert_int_equal(test_database_ptr._vt_falltimedb[1][0], 1);
+    assert_int_equal(test_database_ptr._vt_falltimedb[1][0], 23);
     assert_int_equal(test_database_ptr._vt_falltimedb[1][1], 25000);
-    assert_int_equal(test_database_ptr._vt_falltimedb[2][0], 1);
+    assert_int_equal(test_database_ptr._vt_falltimedb[2][0], 23);
     assert_int_equal(test_database_ptr._vt_falltimedb[2][1], 26000);
 }
 
@@ -114,24 +114,24 @@ static void test_vt_database_store_pearsoncoefficient(void** state)
     assert_int_equal(test_database_ptr._vt_total_pearson_coefficient, 0);
     assert_float_equal(test_database_ptr._vt_pearson_coefficientdb[0][0], 0, 0.001);
 
-    assert_int_equal(_vt_database_store_pearsoncoefficient(&test_database_ptr, 0.9988, 1), VT_SUCCESS);
+    assert_int_equal(_vt_database_store_pearsoncoefficient(&test_database_ptr, 0.9988, 23), VT_SUCCESS);
 
     assert_int_equal(test_database_ptr._vt_total_pearson_coefficient, 1);
-    assert_int_equal(test_database_ptr._vt_pearson_coefficientdb[0][0], 1);
+    assert_int_equal(test_database_ptr._vt_pearson_coefficientdb[0][0], 23);
     assert_float_equal(test_database_ptr._vt_pearson_coefficientdb[0][1], 0.9988, 0.001);
 
-    assert_int_equal(_vt_database_store_pearsoncoefficient(&test_database_ptr, 0, 1), VT_SUCCESS);
+    assert_int_equal(_vt_database_store_pearsoncoefficient(&test_database_ptr, 0, 23), VT_SUCCESS);
 
     assert_int_equal(test_database_ptr._vt_total_pearson_coefficient, 1);
-    assert_int_equal(test_database_ptr._vt_pearson_coefficientdb[0][0], 1);
+    assert_int_equal(test_database_ptr._vt_pearson_coefficientdb[0][0], 23);
     assert_float_equal(test_database_ptr._vt_pearson_coefficientdb[0][1], 0.9988 / 2, 0.001);
 
-    assert_int_equal(_vt_database_store_pearsoncoefficient(&test_database_ptr, 0.8564, 2), VT_SUCCESS);
+    assert_int_equal(_vt_database_store_pearsoncoefficient(&test_database_ptr, 0.8564, 12), VT_SUCCESS);
 
     assert_int_equal(test_database_ptr._vt_total_pearson_coefficient, 2);
-    assert_int_equal(test_database_ptr._vt_pearson_coefficientdb[0][0], 1);
+    assert_int_equal(test_database_ptr._vt_pearson_coefficientdb[0][0], 23);
     assert_float_equal(test_database_ptr._vt_pearson_coefficientdb[0][1], 0.9988 / 2, 0.001);
-    assert_int_equal(test_database_ptr._vt_pearson_coefficientdb[1][0], 2);
+    assert_int_equal(test_database_ptr._vt_pearson_coefficientdb[1][0], 12);
     assert_float_equal(test_database_ptr._vt_pearson_coefficientdb[1][1], 0.8564, 0.001);
 }
 
