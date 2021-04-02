@@ -300,21 +300,50 @@ static void test_vt_database_evaluate_pearsoncoefficient_falltimeindex_search(vo
 static void test_vt_database_fingerprint_fetch(void** state)
 {
     (void)state;
+
+    // Unused Function
+
 }
 
 static void test_vt_database_falltime_fetch(void** state)
 {
     (void)state;
+
+    int index     = 0;
+    int fall_time = 0;
+    int sensor_id = 0;
+
+    assert_int_equal(vt_database_falltime_fetch(&test_database_ptr, &index, &fall_time, &sensor_id), VT_SUCCESS);
+
+    assert_int_equal(index, 1);
+    assert_int_equal(fall_time, 1650);
+    assert_int_equal(sensor_id, 12);
 }
 
 static void test_vt_database_pearsoncoefficient_fetch(void** state)
 {
     (void)state;
+
+    int index     = 0;
+    float pearson_coefficient = 0;
+    int sensor_id = 0;
+
+    assert_int_equal(vt_database_pearsoncoefficient_fetch(&test_database_ptr, &index, &pearson_coefficient, &sensor_id), VT_SUCCESS);
+
+    assert_int_equal(index, 1);
+    assert_float_equal(pearson_coefficient, 0.998063, 0.001);
+    assert_int_equal(sensor_id, 23);
 }
 
 static void test_vt_database_check_pearson_falltime_availability(void** state)
 {
     (void)state;
+
+    assert_int_equal(_vt_database_check_pearson_falltime_availability(&test_database_ptr), VT_SUCCESS);
+
+    test_database_ptr._vt_total_falltime = 0;
+
+    assert_int_equal(_vt_database_check_pearson_falltime_availability(&test_database_ptr), VT_ERROR);
 }
 
 // Clear
@@ -353,9 +382,9 @@ int test_vt_database()
         cmocka_unit_test_setup_teardown(test_vt_database_evaluate_falltime_nearestindex_search, vt_database_set, vt_database_reset),
         cmocka_unit_test_setup_teardown(test_vt_database_evaluate_pearsoncoefficient_falltimeindex_search, vt_database_set, vt_database_reset),
         cmocka_unit_test(test_vt_database_fingerprint_fetch),
-        cmocka_unit_test(test_vt_database_falltime_fetch),
-        cmocka_unit_test(test_vt_database_pearsoncoefficient_fetch),
-        cmocka_unit_test(test_vt_database_check_pearson_falltime_availability),
+        cmocka_unit_test_setup_teardown(test_vt_database_falltime_fetch, vt_database_set, vt_database_reset),
+        cmocka_unit_test_setup_teardown(test_vt_database_pearsoncoefficient_fetch, vt_database_set, vt_database_reset),
+        cmocka_unit_test_setup_teardown(test_vt_database_check_pearson_falltime_availability, vt_database_set, vt_database_reset),
         cmocka_unit_test_setup(test_vt_database_clear, vt_database_set),
     };
 
