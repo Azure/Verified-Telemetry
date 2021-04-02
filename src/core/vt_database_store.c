@@ -92,7 +92,7 @@ uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float 
         database_ptr->_vt_pearson_coefficientdb[i][1] =
             (database_ptr->_vt_pearson_coefficientdb[i][1] + pearson_coefficient) / 2;
         pearsonCoeffInt1   = database_ptr->_vt_pearson_coefficientdb[i][1];
-        pearsonCoeffFrac = pearson_coefficient - pearsonCoeffInt1;
+        pearsonCoeffFrac   = pearson_coefficient - pearsonCoeffInt1;
         pearsonCoeffInt2   = pearsonCoeffFrac * 10000;
         printf("\tStored Pearson Coefficient = %d.%04d\r\n", pearsonCoeffInt1, pearsonCoeffInt2);
     }
@@ -103,7 +103,7 @@ uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float 
         database_ptr->_vt_pearson_coefficientdb[database_ptr->_vt_total_pearson_coefficient][0] = sensorid;
         database_ptr->_vt_pearson_coefficientdb[database_ptr->_vt_total_pearson_coefficient][1] = pearson_coefficient;
         pearsonCoeffInt1   = database_ptr->_vt_pearson_coefficientdb[database_ptr->_vt_total_pearson_coefficient][1];
-        pearsonCoeffFrac = pearson_coefficient - pearsonCoeffInt1;
+        pearsonCoeffFrac   = pearson_coefficient - pearsonCoeffInt1;
         pearsonCoeffInt2   = pearsonCoeffFrac * 10000;
         printf("\tStored Pearson Coefficient = %d.%04d\r\n", pearsonCoeffInt1, pearsonCoeffInt2);
         database_ptr->_vt_total_pearson_coefficient++;

@@ -62,3 +62,12 @@ uint32_t vt_database_pearsoncoefficient_fetch(
     (*index)++;
     return VT_SUCCESS;
 }
+
+int _vt_database_check_pearson_falltime_availability(VT_DATABASE* database_ptr)
+{
+    if (database_ptr->_vt_total_falltime == 0)
+    {
+        return VT_ERROR;
+    }
+    return VT_SUCCESS;
+}
