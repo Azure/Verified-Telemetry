@@ -6,7 +6,6 @@
 
 #include "stdio.h"
 
-#include "vt_dsc.h"
 #include "vt_port.h"
 
 #define VT_SUCCESS                            0X00

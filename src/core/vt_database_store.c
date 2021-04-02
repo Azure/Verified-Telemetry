@@ -2,6 +2,7 @@
    Licensed under the MIT License. */
 
 #include "vt_database.h"
+#include "vt_dsc.h"
 
 static uint32_t _vt_database_store_fingerprint(
     VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensorid);

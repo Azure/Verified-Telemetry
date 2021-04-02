@@ -2,6 +2,7 @@
    Licensed under the MIT License. */
 
 #include "vt_database.h"
+#include "vt_dsc.h"
 
 uint32_t vt_database_clear(VT_DATABASE* database_ptr)
 {
