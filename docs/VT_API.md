@@ -52,7 +52,7 @@ UINT pnp_fallcurve_init(
     PNP_FALLCURVE_COMPONENT             handle, 
     UCHAR *                     	component_name_ptr,
     GPIO_PORT_TYPEDEF *                 GPIOx,
-    GPION_PIN_TYPEDEF               	GPIO_Pin, 
+    GPIO_PIN_TYPEDEF               	GPIO_Pin, 
     ADC_CONTROLLER_TYPEDEF *            ADC_Controller,
     ADC_CHANNEL_TYPEDEF                 ADC_Channel,
     TIMER_HANDLE_TYPEDEF *              Timer,

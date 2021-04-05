@@ -18,7 +18,7 @@
 #ifdef STM32F4XX
 #undef CUSTOM_DEVICE
 #define GPIO_PORT_TYPEDEF      GPIO_TypeDef
-#define GPION_PIN_TYPEDEF      uint16_t
+#define GPIO_PIN_TYPEDEF      uint16_t
 #define ADC_CONTROLLER_TYPEDEF ADC_HandleTypeDef
 #define ADC_CHANNEL_TYPEDEF    uint32_t
 #define TIMER_HANDLE_TYPEDEF   TIM_HandleTypeDef
@@ -27,7 +27,7 @@
 #ifdef STM32L4XX
 #undef CUSTOM_DEVICE
 #define GPIO_PORT_TYPEDEF      GPIO_TypeDef
-#define GPION_PIN_TYPEDEF      uint16_t
+#define GPIO_PIN_TYPEDEF      uint16_t
 #define ADC_CONTROLLER_TYPEDEF ADC_HandleTypeDef
 #define ADC_CHANNEL_TYPEDEF    uint32_t
 #define TIMER_HANDLE_TYPEDEF   TIM_HandleTypeDef
@@ -35,7 +35,7 @@
 
 #ifdef CUSTOM_DEVICE
 #define GPIO_PORT_TYPEDEF      uint16_t
-#define GPION_PIN_TYPEDEF      uint16_t
+#define GPIO_PIN_TYPEDEF      uint16_t
 #define ADC_CONTROLLER_TYPEDEF uint16_t
 #define ADC_CHANNEL_TYPEDEF    uint16_t
 #define TIMER_HANDLE_TYPEDEF   uint16_t

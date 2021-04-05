@@ -35,7 +35,7 @@ typedef struct VT_SENSOR_STRUCT
 {
     char* vt_sensor_name;
     GPIO_PORT_TYPEDEF* vt_gpio_port;
-    GPION_PIN_TYPEDEF vt_gpio_pin;
+    GPIO_PIN_TYPEDEF vt_gpio_pin;
 
     ADC_CONTROLLER_TYPEDEF* vt_adc_controller;
     ADC_CHANNEL_TYPEDEF vt_adc_channel;
@@ -65,7 +65,7 @@ typedef struct VT_DATABASE_STRUCT
 uint32_t vt_sensor_initialize(VT_SENSOR* sensor_ptr,
     char* Port_Name,
     GPIO_PORT_TYPEDEF* GPIOx,
-    GPION_PIN_TYPEDEF GPIO_Pin,
+    GPIO_PIN_TYPEDEF GPIO_Pin,
     ADC_CONTROLLER_TYPEDEF* ADC_Controller,
     ADC_CHANNEL_TYPEDEF ADC_Channel,
     TIMER_HANDLE_TYPEDEF* Timer_Handler);
