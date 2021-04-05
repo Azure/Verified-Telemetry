@@ -193,7 +193,7 @@ static void test_vt_database_store(void** state)
     assert_int_equal(test_database_ptr._vt_total_fingerprints, 1);
     assert_int_equal(test_database_ptr._vt_fingerprintdb[0][0], 23);
     assert_int_equal(test_database_ptr._vt_fingerprintdb[0][1], 100);
-    for (uint32_t i = 0; i < TEST_ARRAY_LENGTH; i++)
+    for (uint8_t i = 0; i < TEST_ARRAY_LENGTH; i++)
     {
         assert_int_equal(test_database_ptr._vt_fingerprintdb[0][i + 2], curve_exponential_fall[i]);
     }
@@ -211,7 +211,7 @@ static void test_vt_database_store(void** state)
     assert_int_equal(test_database_ptr._vt_fingerprintdb[0][1], 100);
     assert_int_equal(test_database_ptr._vt_fingerprintdb[1][0], 12);
     assert_int_equal(test_database_ptr._vt_fingerprintdb[1][1], 50);
-    for (uint32_t i = 0; i < TEST_ARRAY_LENGTH; i++)
+    for (uint8_t i = 0; i < TEST_ARRAY_LENGTH; i++)
     {
         assert_int_equal(test_database_ptr._vt_fingerprintdb[0][i + 2], curve_exponential_fall[i]);
         assert_int_equal(test_database_ptr._vt_fingerprintdb[1][i + 2], curve_triagular[i]);
@@ -236,7 +236,7 @@ static void test_vt_database_store(void** state)
     assert_int_equal(test_database_ptr._vt_fingerprintdb[1][1], 50);
     assert_int_equal(test_database_ptr._vt_fingerprintdb[2][0], 23);
     assert_int_equal(test_database_ptr._vt_fingerprintdb[2][1], 95);
-    for (uint32_t i = 0; i < TEST_ARRAY_LENGTH; i++)
+    for (uint8_t i = 0; i < TEST_ARRAY_LENGTH; i++)
     {
         assert_int_equal(test_database_ptr._vt_fingerprintdb[0][i + 2], curve_exponential_fall[i]);
         assert_int_equal(test_database_ptr._vt_fingerprintdb[1][i + 2], curve_triagular[i]);

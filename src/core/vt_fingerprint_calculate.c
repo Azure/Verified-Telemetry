@@ -4,7 +4,7 @@
 #include "math.h"
 #include "vt_fingerprint.h"
 
-static uint32_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, uint32_t fingerprint_length);
+static uint8_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, uint32_t fingerprint_length);
 static void _vt_fingerprint_rankify(uint32_t* fingerprint, int fingerprint_length, uint32_t* fingerprint_ranked);
 
 uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerprint,
@@ -15,18 +15,18 @@ uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerp
 {
 
     // Find index of  Maxima
-    uint32_t index_max = _vt_fingerprint_calculate_maximum_index(fingerprint, fingerprint_length);
+    uint8_t index_max = _vt_fingerprint_calculate_maximum_index(fingerprint, fingerprint_length);
 
     // Delete data BEFORE the maxima
     fingerprint        = fingerprint + index_max;
     fingerprint_length = fingerprint_length - index_max;
 
     // Find index of  Minima
-    uint32_t index_min = _vt_fingerprint_calculate_minimum_index(fingerprint, fingerprint_length);
+    uint8_t index_min = _vt_fingerprint_calculate_minimum_index(fingerprint, fingerprint_length);
     uint32_t minima    = fingerprint[index_min];
 
     // Subtract minima from fingerprint
-    uint32_t i = 0;
+    uint8_t i = 0;
     for (i = 0; i < fingerprint_length; i++)
         fingerprint[i] = fingerprint[i] - minima;
 
@@ -105,7 +105,7 @@ VT_CURVE_SHAPE _vt_fingerprint_calculate_shape(uint32_t* fingerprint, int finger
     return VT_SHAPE_NOISE;
 }
 
-uint32_t _vt_fingerprint_calculate_maximum_index(uint32_t* fingerprint, uint32_t fingerprint_length)
+uint8_t _vt_fingerprint_calculate_maximum_index(uint32_t* fingerprint, uint32_t fingerprint_length)
 {
     uint32_t index_max = 0;
 
@@ -120,7 +120,7 @@ uint32_t _vt_fingerprint_calculate_maximum_index(uint32_t* fingerprint, uint32_t
     return index_max;
 }
 
-uint32_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, uint32_t fingerprint_length)
+uint8_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, uint32_t fingerprint_length)
 {
     uint32_t index_min = 0;
 
@@ -135,7 +135,7 @@ uint32_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, uint32_t
     return index_min;
 }
 
-uint32_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint32_t fingerprint_length)
+uint8_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint32_t fingerprint_length)
 {
     uint32_t index_max = _vt_fingerprint_calculate_maximum_index(fingerprint, fingerprint_length);
 
