@@ -2,6 +2,7 @@
    Licensed under the MIT License. */
 
 #include "pnp_verified_telemetry.h"
+#include "pnp_middleware_helper.h"
 #include <stdio.h>
 
 #define DB_Size 110
@@ -11,6 +12,8 @@ static const CHAR deviceStatus_property[]            = "deviceStatus";
 
 static const CHAR temp_response_description_success[] = "success";
 static const CHAR temp_response_description_failed[]  = "failed";
+
+static CHAR scratch_buffer[200];
 
 static VOID send_reported_property(NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
     const UCHAR* component_name_ptr,
@@ -328,3 +331,72 @@ UINT pnp_vt_init(void* verified_telemetry_DB,
 
     return NX_AZURE_IOT_SUCCESS;
 }
+
+UINT pnp_vt_verified_telemetry_message_create_send(NX_AZURE_IOT_PNP_CLIENT *pnp_client_ptr,
+                                                      const UCHAR *component_name_ptr,
+                                                      UINT component_name_length,
+                                                      UINT wait_option,
+                                                      const UCHAR *telemetry_data,
+                                                      UINT data_size,
+                                                      void* verified_telemetry_DB)
+{
+    UINT status;
+    NX_PACKET* packet_ptr;
+    NX_AZURE_IOT_JSON_READER json_reader;
+    NX_AZURE_IOT_JSON_READER json_reader_copy;
+    PNP_FALLCURVE_COMPONENT** fallcurve_components =
+        ((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->fallcurve_components;
+    UINT fallcurve_components_num = ((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->fallcurve_components_num;
+    CHAR vt_property_name[50];
+    memset(vt_property_name,0,sizeof(vt_property_name));
+    memset(scratch_buffer,0,sizeof(scratch_buffer));
+    UINT token_found = 0;
+    UINT tokens = 0;
+
+    nx_azure_iot_json_reader_with_buffer_init(&json_reader,
+                                               telemetry_data, data_size);
+
+    for (UINT i = 0; i < fallcurve_components_num; i++)
+    {
+        json_reader_copy = json_reader;
+        token_found = 0;
+        while(token_found == 0 && nx_azure_iot_json_reader_next_token(&json_reader_copy) == NX_AZURE_IOT_SUCCESS)
+        {
+            if(nx_azure_iot_json_reader_token_is_text_equal(&json_reader_copy, (UCHAR*)fallcurve_components[i]->associatedSensor, 
+                                                            strlen(fallcurve_components[i]->associatedSensor)))
+            {
+                snprintf(vt_property_name, sizeof(vt_property_name), "vT");
+                strcat(vt_property_name, fallcurve_components[i]->associatedSensor);
+                if(tokens > 0)
+                {
+                    strcat(scratch_buffer, "&");
+                }
+                strcat(scratch_buffer, vt_property_name);
+                strcat(scratch_buffer, "=");
+                strcat(scratch_buffer, (fallcurve_components[i]->telemetryStatus > 0) ? "true": "false");
+                token_found = 1;
+                tokens++;
+            }
+        }
+    }
+    /* Create a telemetry message packet. */
+    if ((status = nx_azure_iot_pnp_client_telemetry_message_create_with_message_property(pnp_client_ptr,
+            component_name_ptr,
+            component_name_length,
+            &packet_ptr,
+            wait_option,
+            (UCHAR*)scratch_buffer, 
+            strlen(scratch_buffer))))
+    {
+        printf("Telemetry message with message properties create failed!: error code = 0x%08x\r\n", status);
+        return (status);
+    }
+    if ((status = nx_azure_iot_pnp_client_telemetry_send(
+             pnp_client_ptr, packet_ptr, telemetry_data, data_size, wait_option)))
+    {
+        printf("Telemetry message send failed!: error code = 0x%08x\r\n", status);
+        nx_azure_iot_pnp_client_telemetry_message_delete(packet_ptr);
+        return (status);
+    }
+    return (status);
+}                                                      

@@ -28,6 +28,14 @@ UINT nx_azure_iot_pnp_client_reported_component_property_value_next(NX_AZURE_IOT
                                                                    const UCHAR **component_pptr, UINT *component_len_ptr,
                                                                    NX_AZURE_IOT_JSON_READER *name_value_reader_ptr);
 
+UINT nx_azure_iot_pnp_client_telemetry_message_create_with_message_property(NX_AZURE_IOT_PNP_CLIENT *pnp_client_ptr,
+                                                                            const UCHAR *component_name_ptr,
+                                                                            UINT component_name_length,
+                                                                            NX_PACKET **packet_pptr,
+                                                                            UINT wait_option,
+                                                                            UCHAR* message_properties_buffer,
+                                                                            UINT message_properties_buffer_size);
+
 #ifdef __cplusplus
 }
 #endif

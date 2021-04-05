@@ -308,3 +308,65 @@ az_result core_result;
 
     return(NX_AZURE_IOT_SUCCESS);
 }
+
+UINT nx_azure_iot_pnp_client_telemetry_message_create_with_message_property(NX_AZURE_IOT_PNP_CLIENT *pnp_client_ptr,
+                                                                            const UCHAR *component_name_ptr,
+                                                                            UINT component_name_length,
+                                                                            NX_PACKET **packet_pptr,
+                                                                            UINT wait_option,
+                                                                            UCHAR* message_properties_buffer,
+                                                                            UINT message_properties_buffer_size)
+{
+  NX_PACKET *packet_ptr;
+  UINT topic_length;
+  UINT status;
+  NX_AZURE_IOT_JSON_READER json_reader;
+  az_result core_result;
+  az_span component_name = az_span_create((UCHAR *)component_name_ptr, (INT)component_name_length);
+
+  if ((pnp_client_ptr == NX_NULL) ||
+      (packet_pptr == NX_NULL))
+  {
+      LogError(LogLiteralArgs("IoT PnP telemetry message create fail: INVALID POINTER"));
+      return(NX_AZURE_IOT_INVALID_PARAMETER);
+  }
+
+  status = nx_azure_iot_hub_transport_publish_packet_get(&(pnp_client_ptr -> nx_azure_iot_pnp_client_transport),
+                                                          &packet_ptr, wait_option);
+  if (status)
+  {
+      LogError(LogLiteralArgs("Create telemetry data fail"));
+      return(status);
+  }
+
+  nx_azure_iot_json_reader_with_buffer_init(&json_reader,
+                                               message_properties_buffer, message_properties_buffer_size);
+  
+  az_span message_properties_span_buffer = az_span_create((UCHAR *)message_properties_buffer, message_properties_buffer_size);
+  az_iot_message_properties 	message_properties;
+  core_result = az_iot_message_properties_init(&message_properties, message_properties_span_buffer, az_span_size(message_properties_span_buffer));
+  if (az_result_failed(core_result))
+  {
+      LogError(LogLiteralArgs("Error in initializing Message Property: %d"), core_result);
+      nx_packet_release(packet_ptr);
+      return(NX_AZURE_IOT_SDK_CORE_ERROR);
+  }
+
+  topic_length = (UINT)(packet_ptr -> nx_packet_data_end - packet_ptr -> nx_packet_prepend_ptr);
+  core_result = az_iot_pnp_client_telemetry_get_publish_topic(&(pnp_client_ptr -> iot_pnp_client_core),
+                                                              component_name, &message_properties,
+                                                              (CHAR *)packet_ptr -> nx_packet_prepend_ptr,
+                                                              topic_length, &topic_length);
+  if (az_result_failed(core_result))
+  {
+      LogError(LogLiteralArgs("IoT PnP client telemetry message create fail with error status: %d"), core_result);
+      nx_packet_release(packet_ptr);
+      return(NX_AZURE_IOT_SDK_CORE_ERROR);
+  }
+
+  packet_ptr -> nx_packet_append_ptr = packet_ptr -> nx_packet_prepend_ptr + topic_length;
+  packet_ptr -> nx_packet_length = topic_length;
+  *packet_pptr = packet_ptr;
+
+  return(NX_AZURE_IOT_SUCCESS);
+}
