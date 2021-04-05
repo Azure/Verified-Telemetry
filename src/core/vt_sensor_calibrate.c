@@ -18,7 +18,7 @@ static VT_FALL_STATE _vt_index37_state(int index_37)
         return VT_FALL_STATE_UNDERSHOOT;
     }
 
-    else if (100 - index_37 >= VT_PRECISION_THRESHOLD)
+    else if (VT_FINGERPRINT_LENGTH - index_37 >= VT_PRECISION_THRESHOLD)
     {
         return VT_FALL_STATE_OVERSHOOT;
     }
@@ -51,7 +51,7 @@ static uint32_t _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* stat
                     break;
                 case VT_FALL_STATE_OVERSHOOT:
                     states->current_sampling_frequency =
-                        (index_37 * states->current_sampling_frequency) / (100 - VT_PRECISION_THRESHOLD / 2);
+                        (index_37 * states->current_sampling_frequency) / (VT_FINGERPRINT_LENGTH - VT_PRECISION_THRESHOLD / 2);
                     break;
                 case VT_FALL_STATE_TARGET:
                     break;
@@ -138,7 +138,7 @@ static uint32_t _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* stat
 
     states->previous_sampling_frequency = states->current_sampling_frequency;
     states->previous_shape              = states->current_shape;
-    memcpy(states->previous_fingerprint, states->current_fingerprint, (100 * sizeof(uint32_t)));
+    memcpy(states->previous_fingerprint, states->current_fingerprint, (VT_FINGERPRINT_LENGTH * sizeof(uint32_t)));
 
     return _vt_sensor_calibrate(sensor_ptr, states);
 }
