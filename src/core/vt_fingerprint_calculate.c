@@ -122,7 +122,7 @@ uint8_t _vt_fingerprint_calculate_maximum_index(uint32_t* fingerprint, uint32_t 
     return index_max;
 }
 
-uint8_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, uint32_t fingerprint_length)
+static uint8_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, uint32_t fingerprint_length)
 {
     uint32_t index_min = 0;
 
