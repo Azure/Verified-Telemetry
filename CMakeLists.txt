@@ -1,8 +1,8 @@
 ﻿# Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-cmake_minimum_required (VERSION 3.10)
-set(CMAKE_CXX_STANDARD 99)
+cmake_minimum_required (VERSION 3.14 FATAL_ERROR)
+set(CMAKE_CXX_STANDARD 98)
 
 option(UNIT_TESTING "Build unit test projects" OFF)
 
@@ -20,32 +20,21 @@ endif()
 
 project(vt LANGUAGES C)
 set(TARGET verified_telemetry)
-enable_testing ()
 
 # default for Unit testing with cmocka is OFF, however, this will be ON on CI and tests must
 # pass before committing changes
-if (UNIT_TESTING)
-  # make generate step fail if cmocka dependency is not found
-  find_package(cmocka CONFIG REQUIRED)
-
-  # When using VCPKG, cmocka lib name is set different than when it is globally installed
-  if(DEFINED ENV{VCPKG_ROOT} OR DEFINED ENV{VCPKG_INSTALLATION_ROOT})
-    set(CMOCKA_LIB ${CMOCKA_LIBRARIES})
-  else()
-    set(CMOCKA_LIB cmocka::cmocka)
-  endif()
-
-  # for gcc, we need to add no-clobbered compile opt to avoid warning about set-jump function
-  set(NO_CLOBBERED_WARNING "")
-  if (CMAKE_C_COMPILER_ID MATCHES "GNU")
-    set(NO_CLOBBERED_WARNING "-Wno-clobbered")
-  endif()
-
-  add_subdirectory(tests/core)
+if (VT_UNIT_TESTING)
+  include(cmake/FetchCMocka.cmake)
 
   set(VT_DEVICE "CUSTOM_DEVICE")
 
-else ()
+  enable_testing()
+
+  add_subdirectory(tests/core)
+endif()
+
+# Don't build middleware if unit testing enabled
+if (NOT VT_UNIT_TESTING)
     # Add source to this project's executable.
   list(APPEND VT_SOURCES
     "src/middleware/pnp_verified_telemetry.c" 
@@ -53,10 +42,8 @@ else ()
     "src/middleware/pnp_middleware_helper.c"
   )
   list(APPEND VT_LINK_LIBRARIES "app_common")
-
   list(APPEND VT_LINK_LIBRARIES m)
 endif()
-
 
 if(VT_DEVICE STREQUAL "MXCHIP_AZ3166")
 	list(APPEND VT_LINK_LIBRARIES "stm32cubef4")
