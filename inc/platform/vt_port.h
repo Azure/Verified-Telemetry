@@ -9,14 +9,8 @@
 #define CUSTOM_DEVICE
 
 #ifdef STM32F4XX
-#include "stm32f4xx_hal.h"
-#endif
-#ifdef STM32L4XX
-#include "stm32l4xx_hal.h"
-#endif
-
-#ifdef STM32F4XX
 #undef CUSTOM_DEVICE
+#include "stm32f4xx_hal.h"
 #define GPIO_PORT_TYPEDEF      GPIO_TypeDef
 #define GPIO_PIN_TYPEDEF      uint16_t
 #define ADC_CONTROLLER_TYPEDEF ADC_HandleTypeDef
@@ -26,6 +20,7 @@
 
 #ifdef STM32L4XX
 #undef CUSTOM_DEVICE
+#include "stm32l4xx_hal.h"
 #define GPIO_PORT_TYPEDEF      GPIO_TypeDef
 #define GPIO_PIN_TYPEDEF      uint16_t
 #define ADC_CONTROLLER_TYPEDEF ADC_HandleTypeDef

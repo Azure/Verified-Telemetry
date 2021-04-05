@@ -4,9 +4,9 @@
 #ifndef _VT_DSC_H
 #define _VT_DSC_H
 
-//#include "vt_api.h"
+#include <stdint.h>
+
 #include "vt_port.h"
-#include "stdio.h"
 
 #define VT_SUCCESS                            0X00
 #define VT_ERROR                              0X01
