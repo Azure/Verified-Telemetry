@@ -42,7 +42,7 @@ typedef struct VT_SENSOR_STRUCT
 
     TIMER_HANDLE_TYPEDEF* vt_timer;
 
-    int vt_sampling_frequency;
+    uint16_t vt_sampling_frequency;
 } VT_SENSOR;
 
 typedef struct VT_DATABASE_STRUCT
@@ -63,36 +63,36 @@ typedef struct VT_DATABASE_STRUCT
 
 // Initialize
 uint32_t vt_sensor_initialize(VT_SENSOR* sensor_ptr,
-    char* Port_Name,
-    GPIO_PORT_TYPEDEF* GPIOx,
-    GPIO_PIN_TYPEDEF GPIO_Pin,
-    ADC_CONTROLLER_TYPEDEF* ADC_Controller,
-    ADC_CHANNEL_TYPEDEF ADC_Channel,
-    TIMER_HANDLE_TYPEDEF* Timer_Handler);
+    char* sensor_name,
+    GPIO_PORT_TYPEDEF* gpio_port,
+    GPIO_PIN_TYPEDEF gpio_pin,
+    ADC_CONTROLLER_TYPEDEF* adc_controller,
+    ADC_CHANNEL_TYPEDEF adc_channel,
+    TIMER_HANDLE_TYPEDEF* timer_handler);
 
 // Calibrate
-void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint32_t* confidenceMetric);
+void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint32_t* confidence_metric);
 
 // Read
 uint32_t vt_sensor_read_value(VT_SENSOR* sensor_ptr, uint32_t* sensor_value);
 
 uint32_t vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint_array, char* fingerprint_string);
 
-uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int* sensorid);
+uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int* sensor_id);
 
 // database
 uint32_t vt_database_initialize(VT_DATABASE* database_ptr, uint32_t flash_address, uint32_t fallcurve_component_id);
 
-uint32_t vt_database_store(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensorid);
+uint32_t vt_database_store(VT_DATABASE* database_ptr, uint32_t* fingerprint_array, int sampling_frequency, int sensor_id);
 
 uint32_t vt_database_clear(VT_DATABASE* database_ptr);
 
 // Database Fetch
-uint32_t vt_database_fingerprint_fetch(VT_DATABASE* database_ptr, int* index, uint32_t* fallcurvearray, int* sensorid);
+uint32_t vt_database_fingerprint_fetch(VT_DATABASE* database_ptr, int* index, uint32_t* fingerprint_array, int* sensor_id);
 
-uint32_t vt_database_falltime_fetch(VT_DATABASE* database_ptr, int* index, int* fall_time, int* sensorid);
+uint32_t vt_database_falltime_fetch(VT_DATABASE* database_ptr, int* index, int* fall_time, int* sensor_id);
 
 uint32_t vt_database_pearsoncoefficient_fetch(
-    VT_DATABASE* database_ptr, int* index, float* pearson_coefficient, int* sensorid);
+    VT_DATABASE* database_ptr, int* index, float* pearson_coefficient, int* sensor_id);
 
 #endif

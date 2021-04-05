@@ -48,16 +48,16 @@ uint32_t vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint
     return status;
 }
 
-uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int* sensorid)
+uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int* sensor_id)
 {
     int fall_time;
     float pearson_coefficient;
 
-    *sensorid = 0;
+    *sensor_id = 0;
 
     if(_vt_database_check_pearson_falltime_availability(database_ptr))
     {
-        *sensorid = -1;
+        *sensor_id = -1;
         return VT_SUCCESS;
     }
 
@@ -70,7 +70,7 @@ uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr,
         //     sensor_ptr->vt_sensor_name,
         //     (sensorid_ftpc > 0) ? "true" : "false");
 
-        *sensorid = sensorid_ftpc;
+        *sensor_id = sensorid_ftpc;
 
         return VT_SUCCESS;
     }

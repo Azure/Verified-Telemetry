@@ -13,22 +13,22 @@ uint32_t _vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
     return VT_CUSTOM_IMPLEMENTATION_NOT_PROVIDED;
 }
 
-uint32_t _vt_dsc_gpio_read(GPIO_PORT_TYPEDEF* GPIOx, GPIO_PIN_TYPEDEF GPIO_Pin, int* state)
+uint32_t _vt_dsc_gpio_read(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPEDEF gpio_pin, int* state)
 {
     return VT_CUSTOM_IMPLEMENTATION_NOT_PROVIDED;
 }
 
-uint32_t _vt_dsc_gpio_turn_on(GPIO_PORT_TYPEDEF* GPIOx, GPIO_PIN_TYPEDEF GPIO_Pin)
+uint32_t _vt_dsc_gpio_turn_on(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPEDEF gpio_pin)
 {
     return VT_CUSTOM_IMPLEMENTATION_NOT_PROVIDED;
 }
 
-uint32_t _vt_dsc_gpio_turn_off(GPIO_PORT_TYPEDEF* GPIOx, GPIO_PIN_TYPEDEF GPIO_Pin)
+uint32_t _vt_dsc_gpio_turn_off(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPEDEF gpio_pin)
 {
     return VT_CUSTOM_IMPLEMENTATION_NOT_PROVIDED;
 }
 
-uint32_t _vt_dsc_adc_read(ADC_CONTROLLER_TYPEDEF* ADC_Controller, ADC_CHANNEL_TYPEDEF ADC_Channel, float* value)
+uint32_t _vt_dsc_adc_read(ADC_CONTROLLER_TYPEDEF* adc_controller, ADC_CHANNEL_TYPEDEF adc_channel, float* value)
 {
     return VT_CUSTOM_IMPLEMENTATION_NOT_PROVIDED;
 }

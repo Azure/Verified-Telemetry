@@ -9,7 +9,7 @@ static VT_FALL_STATE _vt_index37_state(int index_37);
 
 static uint32_t _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states);
 
-void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint32_t* confidenceMetric)
+void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint32_t* confidence_metric)
 {
     printf("\tCalibrating Sensor Fingerprint\n");
 
@@ -29,13 +29,13 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint32_t* confidenceMetric)
     if (status != VT_NOISY_FUNCTION_ERROR)
     {
         printf("\tFingerprint successfully generated.\n");
-        *confidenceMetric = 100;
+        *confidence_metric = 100;
 
         if (status != VT_SUCCESS && sensor_ptr->vt_timer == NULL)
         {
             printf("But it is not unique. To improve performance, please provide a dedicated Timer using "
                    "pnp_fallcurve_init()\n");
-            *confidenceMetric = 50;
+            *confidence_metric = 50;
         }
     }
 
@@ -43,7 +43,7 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint32_t* confidenceMetric)
     {
         printf("\tGenerated Fingerprint is not robust and has a low confidence metric. Please check if a working "
                "sensor is connected and retrigger the command.\n");
-        *confidenceMetric = 0;
+        *confidence_metric = 0;
     }
     _vt_dsc_delay_usec(sensor_ptr->vt_timer, 1000000);
 }
