@@ -48,7 +48,7 @@ float _vt_fingerprint_evaluate_nrmse(uint32_t* fingerpint1, uint32_t* fingerpint
     uint32_t aggregatesq = 0;
 
     uint32_t mean;
-    uint32_t meansq;
+    float meansq;
     float rmse;
 
     for (int iter1 = 0; iter1 < length; iter1++)
@@ -58,9 +58,9 @@ float _vt_fingerprint_evaluate_nrmse(uint32_t* fingerpint1, uint32_t* fingerpint
         aggregatesq = aggregatesq + diff * diff;
     }
 
-    mean   = (aggregate) / length;
-    meansq = (aggregatesq) / length;
-    rmse   = sqrt((float)meansq);
+    mean   = aggregate / length;
+    meansq = aggregatesq / length;
+    rmse   = sqrtf(meansq);
     nrmse  = rmse / mean;
 
     return nrmse;

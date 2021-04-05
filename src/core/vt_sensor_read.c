@@ -22,9 +22,7 @@ uint32_t vt_sensor_read_value(VT_SENSOR* sensor_ptr, uint32_t* sensor_value)
         return status;
     }
 
-    // tx_mutex_get(&sensor_ptr->vt_mutex_ptr, TX_WAIT_FOREVER);
     status = _vt_dsc_adc_read(sensor_ptr->vt_adc_controller, sensor_ptr->vt_adc_channel, sensor_value);
-    // tx_mutex_put(&sensor_ptr->vt_mutex_ptr);
 
     return (status);
 }
@@ -67,10 +65,6 @@ uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr,
             fingerprint, 100, sensor_ptr->vt_sampling_frequency, &fall_time, &pearson_coefficient) == VT_SUCCESS)
     {
         int sensorid_ftpc = _vt_database_evaluate_pearson_falltime(database_ptr, fall_time, pearson_coefficient);
-        // printf("\n%.*s telemetry status = %s \n",
-        //     strlen(sensor_ptr->vt_sensor_name),
-        //     sensor_ptr->vt_sensor_name,
-        //     (sensorid_ftpc > 0) ? "true" : "false");
 
         *sensor_id = sensorid_ftpc;
 
@@ -98,9 +92,7 @@ uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprin
 
     for (int i = 0; i < 100; i++)
     {
-        // tx_mutex_get(&sensor_ptr->vt_mutex_ptr, TX_WAIT_FOREVER);
         status = _vt_dsc_adc_read(sensor_ptr->vt_adc_controller, sensor_ptr->vt_adc_channel, &fingerprint_array[i]);
-        // tx_mutex_put(&sensor_ptr->vt_mutex_ptr);
         if (status != VT_SUCCESS)
         {
             return status;

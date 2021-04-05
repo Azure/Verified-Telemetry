@@ -27,7 +27,6 @@ static void test_vt_fingerprint_calculate_maximum_index(void** state)
     assert_int_equal(_vt_fingerprint_calculate_maximum_index(curve_triagular, TEST_ARRAY_LENGTH), 49);
     assert_int_equal(_vt_fingerprint_calculate_maximum_index(curve_exponential_fall, TEST_ARRAY_LENGTH), 0);
     assert_int_equal(_vt_fingerprint_calculate_maximum_index(curve_exponential_rise, TEST_ARRAY_LENGTH), 99);
-
 }
 
 
@@ -36,10 +35,10 @@ static void test_vt_fingerprint_calculate_37index(void** state)
     (void)state;
 
     assert_int_equal(_vt_fingerprint_calculate_37index(curve_zeroes, TEST_ARRAY_LENGTH), 0);
-    assert_int_equal(_vt_fingerprint_calculate_37index(curve_constant, TEST_ARRAY_LENGTH), VT_ERROR);
+    assert_int_equal(_vt_fingerprint_calculate_37index(curve_constant, TEST_ARRAY_LENGTH), 255);
     assert_int_equal(_vt_fingerprint_calculate_37index(curve_triagular, TEST_ARRAY_LENGTH), 81);
     assert_int_equal(_vt_fingerprint_calculate_37index(curve_exponential_fall, TEST_ARRAY_LENGTH), 99);
-    assert_int_equal(_vt_fingerprint_calculate_37index(curve_exponential_rise, TEST_ARRAY_LENGTH), 1);
+    assert_int_equal(_vt_fingerprint_calculate_37index(curve_exponential_rise, TEST_ARRAY_LENGTH), 255);
 }
 
 static void test_vt_fingerprint_calculate_falltime_pearsoncoefficient(void** state)
@@ -59,7 +58,6 @@ static void test_vt_fingerprint_calculate_falltime_pearsoncoefficient(void** sta
     assert_int_equal(_vt_fingerprint_calculate_falltime_pearsoncoefficient(curve_triagular, TEST_ARRAY_LENGTH, 5, &fall_time,&pearson_coefficient),VT_SUCCESS);
     assert_int_equal(fall_time,165);
     assert_float_equal(pearson_coefficient,0.991134,0.001);
-
 }
 
 static void test_vt_fingerprint_calculate_shape(void** state)
