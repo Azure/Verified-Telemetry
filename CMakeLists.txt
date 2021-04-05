@@ -41,7 +41,10 @@ if (NOT VT_UNIT_TESTING)
     "src/middleware/pnp_fallcurve_component.c"
     "src/middleware/pnp_middleware_helper.c"
   )
-  list(APPEND VT_LINK_LIBRARIES app_common m)
+endif()
+
+if(NOT WIN32)
+  list(APPEND VT_LINK_LIBRARIES m)
 endif()
 
 if(VT_DEVICE STREQUAL "MXCHIP_AZ3166")
@@ -54,7 +57,7 @@ elseif(VT_DEVICE STREQUAL "STM_BL475EIOT01A")
 	list(APPEND VT_COMPILE_DEFINITIONS "STM32L4XX")
 elseif(VT_DEVICE STREQUAL "CUSTOM_DEVICE")
 	list(APPEND VT_SOURCES "src/platform/vt_dsc_custom.c")
-	message(WARNING  "<CUSTOM_DEVICE> has been selected as device type, kindly make sure all functions in <src/platform/vt_dsc_custom.c> are implemented to avoid any runtime errors.")
+	message(WARNING "<CUSTOM_DEVICE> has been selected as device type, kindly make sure all functions in <src/platform/vt_dsc_custom.c> are implemented to avoid any runtime errors.")
 else()
 	message(FATAL_ERROR "Hardware for Verified Telemetry has not been appropriately defined. Valid options : <MXCHIP_AZ3166> , <STM_BL475EIOT01A> OR <CUSTOM_DEVICE>")
 endif()
@@ -80,7 +83,6 @@ target_compile_definitions(${TARGET} PUBLIC ${VT_COMPILE_DEFINITIONS})
 
 target_include_directories(${TARGET}
     PUBLIC 
-        .
         inc/core
         inc/middleware
         inc/platform
