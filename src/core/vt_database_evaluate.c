@@ -3,21 +3,21 @@
 
 #include <stdlib.h>
 
-#include "vt_fingerprint.h"
 #include "vt_database.h"
+#include "vt_fingerprint.h"
 
 static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, uint32_t fall_time);
 static int _vt_database_pearsoncoefficient_falltimeindex_search(VT_DATABASE* database_ptr, int value);
 
 int _vt_database_evaluate_nrmse(VT_DATABASE* database_ptr, uint32_t* fallcurvearray)
 {
-    if (!(database_ptr->_vt_total_fingerprints > 0))
+    if (database_ptr->_vt_total_fingerprints <= 0)
     {
         return -1;
     }
 
     float nrmse[10];
-    float min = 65355.00;
+    float min = 65355.00f;
     int index;
 
     for (uint8_t i = 0; i < (database_ptr->_vt_total_fingerprints); i++)
@@ -98,7 +98,7 @@ static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, 
 
 static int _vt_database_pearsoncoefficient_falltimeindex_search(VT_DATABASE* database_ptr, int value)
 {
-    uint32_t i;
+    uint8_t i;
     for (i = 0;
          (i < database_ptr->_vt_total_pearson_coefficient) && (database_ptr->_vt_pearson_coefficientdb[i][0] != value);
          i++)
