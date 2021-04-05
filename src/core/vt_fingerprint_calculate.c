@@ -152,10 +152,10 @@ uint8_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint32_t finger
     return 255;
 }
 
-static void _vt_fingerprint_rankify(uint32_t* X, int length, uint32_t* Y)
+static void _vt_fingerprint_rankify(uint32_t* fingerprint, int fingerprint_length, uint32_t* fingerprint_ranked)
 {
 
-    for (int i = 0; i < length; i++)
+    for (int i = 0; i < fingerprint_length; i++)
     {
         int r = 1, s = 1;
 
@@ -163,12 +163,12 @@ static void _vt_fingerprint_rankify(uint32_t* X, int length, uint32_t* Y)
         // in 0 to i-1
         for (int j = 0; j < i; j++)
         {
-            if (X[j] < X[i])
+            if (fingerprint[j] < fingerprint[i])
             {
                 r++;
             }
 
-            if (X[j] == X[i])
+            if (fingerprint[j] == fingerprint[i])
             {
                 s++;
             }
@@ -176,13 +176,13 @@ static void _vt_fingerprint_rankify(uint32_t* X, int length, uint32_t* Y)
 
         // Count no of smaller elements
         // in i+1 to N-1
-        for (int j = i + 1; j < length; j++)
+        for (int j = i + 1; j < fingerprint_length; j++)
         {
-            if (X[j] < X[i])
+            if (fingerprint[j] < fingerprint[i])
             {
                 r++;
             }
-            if (X[j] == X[i])
+            if (fingerprint[j] == fingerprint[i])
             {
                 s++;
             }
@@ -190,6 +190,6 @@ static void _vt_fingerprint_rankify(uint32_t* X, int length, uint32_t* Y)
 
         // Use Fractional Rank formula
         // fractional_rank = r + (n-1)/2
-        Y[i] = r + (s - 1) * 0.5;
+        fingerprint_ranked[i] = r + (s - 1) * 0.5;
     }
 }
