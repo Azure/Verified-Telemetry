@@ -9,7 +9,6 @@
 
 typedef enum VT_FALL_STATE
 {
-    // VT_FALL_STATE_INIT       = 0,
     VT_FALL_STATE_OVERSHOOT  = 1,
     VT_FALL_STATE_UNDERSHOOT = 2,
     VT_FALL_STATE_TARGET     = 3
@@ -17,7 +16,6 @@ typedef enum VT_FALL_STATE
 
 typedef enum VT_NOISE_STATE
 {
-    // VT_NOISE_STATE_INIT = 0,
     VT_NOISE_STATE_MAX  = 1,
     VT_NOISE_STATE_MID  = 2,
     VT_NOISE_STATE_MIN  = 3,

@@ -4,7 +4,7 @@
 #ifndef _VT_FINGERPRINT_H
 #define _VT_FINGERPRINT_H
 
-#include "vt_api.h"
+#include <stdint.h>
 
 typedef enum VT_CURVE_SHAPE
 {

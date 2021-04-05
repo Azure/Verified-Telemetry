@@ -1,7 +1,9 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-#include "math.h"
+#include <math.h>
+
+#include "vt_api.h"
 #include "vt_fingerprint.h"
 
 static uint8_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, uint32_t fingerprint_length);
