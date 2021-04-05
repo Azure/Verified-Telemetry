@@ -9,7 +9,7 @@
 
 static uint32_t _vt_database_store_fingerprint(
     VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensor_id);
-static void storeinflash(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensor_id);
+static void _vt_database_store_flash(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensor_id);
 
 uint32_t vt_database_store(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensor_id)
 {
@@ -25,7 +25,7 @@ uint32_t vt_database_store(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, 
 
         if (database_ptr->vt_flash_address != 0x00)
         {
-            storeinflash(database_ptr, fallcurvearray, sampling_frequency, sensor_id);
+            _vt_database_store_flash(database_ptr, fallcurvearray, sampling_frequency, sensor_id);
         }
 
         return VT_SUCCESS;
@@ -116,7 +116,7 @@ uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float 
     return VT_SUCCESS;
 }
 
-static void storeinflash(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensor_id)
+static void _vt_database_store_flash(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensor_id)
 {
     uint32_t total_fingerprints;
     uint32_t temp[1012];

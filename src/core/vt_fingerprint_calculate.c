@@ -33,10 +33,10 @@ uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerp
         fingerprint[i] = fingerprint[i] - minima;
 
     // Find data point whose value falls below 37% of maxima
-    uint32_t index_37 = _vt_fingerprint_calculate_37index(fingerprint, fingerprint_length);
+    uint8_t index_37 = _vt_fingerprint_calculate_37index(fingerprint, fingerprint_length);
 
     // fingerprint_length of this new fingerprint
-    if (index_37 != 2000)
+    if (index_37 != 255)
     {
         fingerprint_length = index_37 + 1;
     }
@@ -139,9 +139,9 @@ uint8_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, uint32_t 
 
 uint8_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint32_t fingerprint_length)
 {
-    uint32_t index_max = _vt_fingerprint_calculate_maximum_index(fingerprint, fingerprint_length);
+    uint8_t index_max = _vt_fingerprint_calculate_maximum_index(fingerprint, fingerprint_length);
 
-    for (uint32_t i = index_max; i < fingerprint_length; i++)
+    for (uint8_t i = index_max; i < fingerprint_length; i++)
     {
         if (fingerprint[i] <= (0.37 * fingerprint[index_max]))
         {
@@ -149,7 +149,7 @@ uint8_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint32_t finger
         }
     }
 
-    return VT_ERROR;
+    return 255;
 }
 
 static void _vt_fingerprint_rankify(uint32_t* X, int length, uint32_t* Y)
