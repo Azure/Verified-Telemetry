@@ -1,6 +1,9 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
+#include <stdlib.h>
+
+#include "vt_fingerprint.h"
 #include "vt_database.h"
 
 static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, uint32_t fall_time);

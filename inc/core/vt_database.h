@@ -4,12 +4,9 @@
 #ifndef _VT_DATABASE_H
 #define _VT_DATABASE_H
 
-#include "vt_api.h"
-#include "vt_fingerprint.h"
+#include <stdint.h>
 
-#include "math.h"
-#include "stdlib.h"
-#include "string.h"
+#include "vt_api.h"
 
 // Initialize
 void _vt_database_initialize_fingerprintdb(VT_DATABASE* database_ptr);

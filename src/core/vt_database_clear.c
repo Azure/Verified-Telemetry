@@ -1,6 +1,8 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
+#include <string.h>
+
 #include "vt_database.h"
 #include "vt_dsc.h"
 
