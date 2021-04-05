@@ -80,16 +80,14 @@ uint32_t vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint
 
 uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int* sensor_id);
 
-// database
+// Database
 uint32_t vt_database_initialize(VT_DATABASE* database_ptr, uint32_t flash_address, uint32_t fallcurve_component_id);
 
 uint32_t vt_database_store(VT_DATABASE* database_ptr, uint32_t* fingerprint_array, int sampling_frequency, int sensor_id);
 
 uint32_t vt_database_clear(VT_DATABASE* database_ptr);
 
-// Database Fetch
-uint32_t vt_database_fingerprint_fetch(VT_DATABASE* database_ptr, int* index, uint32_t* fingerprint_array, int* sensor_id);
-
+// Fetch
 uint32_t vt_database_falltime_fetch(VT_DATABASE* database_ptr, int* index, int* fall_time, int* sensor_id);
 
 uint32_t vt_database_pearsoncoefficient_fetch(

@@ -9,6 +9,39 @@
 static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, uint32_t fall_time);
 static int _vt_database_pearsoncoefficient_falltimeindex_search(VT_DATABASE* database_ptr, int value);
 
+static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, uint32_t fall_time)
+{
+    uint8_t i;
+
+    for (i = 0; (i < database_ptr->_vt_total_falltime) && (database_ptr->_vt_falltimedb[i][1] <= fall_time); i++)
+        ;
+
+    if (i == 0)
+    {
+        return i;
+    }
+    else if (abs(fall_time - database_ptr->_vt_falltimedb[i][1]) <=
+             abs(database_ptr->_vt_falltimedb[i - 1][1] - fall_time))
+    {
+        return i;
+    }
+    else
+    {
+        return i - 1;
+    }
+}
+
+static int _vt_database_pearsoncoefficient_falltimeindex_search(VT_DATABASE* database_ptr, int value)
+{
+    uint8_t i;
+    for (i = 0;
+         (i < database_ptr->_vt_total_pearson_coefficient) && (database_ptr->_vt_pearson_coefficientdb[i][0] != value);
+         i++)
+        ;
+
+    return i;
+}
+
 int _vt_database_evaluate_nrmse(VT_DATABASE* database_ptr, uint32_t* fallcurvearray)
 {
     if (database_ptr->_vt_total_fingerprints <= 0)
@@ -73,36 +106,4 @@ int _vt_database_evaluate_pearson_falltime(VT_DATABASE* database_ptr, int fall_t
     }
 
     return 0;
-}
-
-static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, uint32_t fall_time)
-{
-    uint8_t i;
-
-    for (i = 0; (i < database_ptr->_vt_total_falltime) && (database_ptr->_vt_falltimedb[i][1] <= fall_time); i++)
-        ;
-
-    if (i == 0)
-    {
-        return i;
-    }
-    else if (abs(fall_time - database_ptr->_vt_falltimedb[i][1]) <= abs(database_ptr->_vt_falltimedb[i - 1][1] - fall_time))
-    {
-        return i;
-    }
-    else
-    {
-        return i - 1;
-    }
-}
-
-static int _vt_database_pearsoncoefficient_falltimeindex_search(VT_DATABASE* database_ptr, int value)
-{
-    uint8_t i;
-    for (i = 0;
-         (i < database_ptr->_vt_total_pearson_coefficient) && (database_ptr->_vt_pearson_coefficientdb[i][0] != value);
-         i++)
-        ;
-
-    return i;
 }

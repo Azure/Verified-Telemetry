@@ -11,6 +11,53 @@ static uint32_t _vt_database_store_fingerprint(
     VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensor_id);
 static void _vt_database_store_flash(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensor_id);
 
+static uint32_t _vt_database_store_fingerprint(
+    VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensor_id)
+{
+    if (database_ptr == NULL)
+    {
+        return (VT_PTR_ERROR);
+    }
+
+    *(*(database_ptr->_vt_fingerprintdb + database_ptr->_vt_total_fingerprints) + 0) = sensor_id;
+    *(*(database_ptr->_vt_fingerprintdb + database_ptr->_vt_total_fingerprints) + 1) = sampling_frequency;
+    memcpy((*(database_ptr->_vt_fingerprintdb + database_ptr->_vt_total_fingerprints) + 2),
+        fallcurvearray,
+        (100 * sizeof(fallcurvearray)));
+    database_ptr->_vt_total_fingerprints++;
+
+    return VT_SUCCESS;
+}
+
+static void _vt_database_store_flash(
+    VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensor_id)
+{
+    uint32_t total_fingerprints;
+    uint32_t temp[1012];
+
+    _vt_dsc_flash_read(database_ptr->vt_flash_address, temp, 2);
+
+    if (temp[0] == FLASH_DB_START_VALUE)
+    {
+
+        total_fingerprints = temp[1];
+        _vt_dsc_flash_read(database_ptr->vt_flash_address, temp, (2 + total_fingerprints * 103));
+
+        temp[(103 * total_fingerprints + 2)] = database_ptr->vt_fallcurve_component_id;
+        temp[(103 * total_fingerprints + 3)] = sensor_id;
+        temp[(103 * total_fingerprints + 4)] = sampling_frequency;
+        for (uint32_t database_index = 103 * total_fingerprints + 5, fallcurve_index = 0;
+             database_index < 103 * total_fingerprints + 105;
+             database_index++, fallcurve_index++)
+            temp[database_index] = fallcurvearray[fallcurve_index];
+
+        total_fingerprints++;
+        temp[1] = total_fingerprints;
+
+        _vt_dsc_flash_write(database_ptr->vt_flash_address, temp, (total_fingerprints * 103 + 2));
+    }
+}
+
 uint32_t vt_database_store(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensor_id)
 {
     int falltime;
@@ -32,24 +79,6 @@ uint32_t vt_database_store(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, 
     }
 
     return VT_ERROR;
-}
-
-static uint32_t _vt_database_store_fingerprint(
-    VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensor_id)
-{
-    if (database_ptr == NULL)
-    {
-        return (VT_PTR_ERROR);
-    }
-
-    *(*(database_ptr->_vt_fingerprintdb + database_ptr->_vt_total_fingerprints) + 0) = sensor_id;
-    *(*(database_ptr->_vt_fingerprintdb + database_ptr->_vt_total_fingerprints) + 1) = sampling_frequency;
-    memcpy((*(database_ptr->_vt_fingerprintdb + database_ptr->_vt_total_fingerprints) + 2),
-        fallcurvearray,
-        (100 * sizeof(fallcurvearray)));
-    database_ptr->_vt_total_fingerprints++;
-
-    return VT_SUCCESS;
 }
 
 uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, uint32_t fall_time, int sensor_id)
@@ -114,32 +143,4 @@ uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float 
     }
 
     return VT_SUCCESS;
-}
-
-static void _vt_database_store_flash(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensor_id)
-{
-    uint32_t total_fingerprints;
-    uint32_t temp[1012];
-
-    _vt_dsc_flash_read(database_ptr->vt_flash_address, temp, 2);
-
-    if (temp[0] == FLASH_DB_START_VALUE)
-    {
-
-        total_fingerprints = temp[1];
-        _vt_dsc_flash_read(database_ptr->vt_flash_address, temp, (2 + total_fingerprints * 103));
-
-        temp[(103 * total_fingerprints + 2)] = database_ptr->vt_fallcurve_component_id;
-        temp[(103 * total_fingerprints + 3)] = sensor_id;
-        temp[(103 * total_fingerprints + 4)] = sampling_frequency;
-        for (uint32_t database_index = 103 * total_fingerprints + 5, fallcurve_index = 0;
-             database_index < 103 * total_fingerprints + 105;
-             database_index++, fallcurve_index++)
-            temp[database_index] = fallcurvearray[fallcurve_index];
-
-        total_fingerprints++;
-        temp[1] = total_fingerprints;
-
-        _vt_dsc_flash_write(database_ptr->vt_flash_address, temp, (total_fingerprints * 103 + 2));
-    }
 }

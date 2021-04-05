@@ -9,6 +9,63 @@
 static uint8_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, uint32_t fingerprint_length);
 static void _vt_fingerprint_rankify(uint32_t* fingerprint, int fingerprint_length, uint32_t* fingerprint_ranked);
 
+static uint8_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, uint32_t fingerprint_length)
+{
+    uint32_t index_min = 0;
+
+    for (uint32_t i = 0; i < fingerprint_length; i++)
+    {
+        if (fingerprint[i] < fingerprint[index_min])
+        {
+            index_min = i;
+        }
+    }
+
+    return index_min;
+}
+
+static void _vt_fingerprint_rankify(uint32_t* fingerprint, int fingerprint_length, uint32_t* fingerprint_ranked)
+{
+
+    for (int i = 0; i < fingerprint_length; i++)
+    {
+        int r = 1, s = 1;
+
+        // Count no of smaller elements
+        // in 0 to i-1
+        for (int j = 0; j < i; j++)
+        {
+            if (fingerprint[j] < fingerprint[i])
+            {
+                r++;
+            }
+
+            if (fingerprint[j] == fingerprint[i])
+            {
+                s++;
+            }
+        }
+
+        // Count no of smaller elements
+        // in i+1 to N-1
+        for (int j = i + 1; j < fingerprint_length; j++)
+        {
+            if (fingerprint[j] < fingerprint[i])
+            {
+                r++;
+            }
+            if (fingerprint[j] == fingerprint[i])
+            {
+                s++;
+            }
+        }
+
+        // Use Fractional Rank formula
+        // fractional_rank = r + (n-1)/2
+        fingerprint_ranked[i] = r + (s - 1) * 0.5;
+    }
+}
+
 uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerprint,
     uint32_t fingerprint_length,
     uint32_t sampling_frequency,
@@ -25,7 +82,7 @@ uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerp
 
     // Find index of  Minima
     uint8_t index_min = _vt_fingerprint_calculate_minimum_index(fingerprint, fingerprint_length);
-    uint32_t minima    = fingerprint[index_min];
+    uint32_t minima   = fingerprint[index_min];
 
     // Subtract minima from fingerprint
     uint8_t i = 0;
@@ -122,21 +179,6 @@ uint8_t _vt_fingerprint_calculate_maximum_index(uint32_t* fingerprint, uint32_t 
     return index_max;
 }
 
-static uint8_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, uint32_t fingerprint_length)
-{
-    uint32_t index_min = 0;
-
-    for (uint32_t i = 0; i < fingerprint_length; i++)
-    {
-        if (fingerprint[i] < fingerprint[index_min])
-        {
-            index_min = i;
-        }
-    }
-
-    return index_min;
-}
-
 uint8_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint32_t fingerprint_length)
 {
     uint8_t index_max = _vt_fingerprint_calculate_maximum_index(fingerprint, fingerprint_length);
@@ -150,46 +192,4 @@ uint8_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint32_t finger
     }
 
     return 255;
-}
-
-static void _vt_fingerprint_rankify(uint32_t* fingerprint, int fingerprint_length, uint32_t* fingerprint_ranked)
-{
-
-    for (int i = 0; i < fingerprint_length; i++)
-    {
-        int r = 1, s = 1;
-
-        // Count no of smaller elements
-        // in 0 to i-1
-        for (int j = 0; j < i; j++)
-        {
-            if (fingerprint[j] < fingerprint[i])
-            {
-                r++;
-            }
-
-            if (fingerprint[j] == fingerprint[i])
-            {
-                s++;
-            }
-        }
-
-        // Count no of smaller elements
-        // in i+1 to N-1
-        for (int j = i + 1; j < fingerprint_length; j++)
-        {
-            if (fingerprint[j] < fingerprint[i])
-            {
-                r++;
-            }
-            if (fingerprint[j] == fingerprint[i])
-            {
-                s++;
-            }
-        }
-
-        // Use Fractional Rank formula
-        // fractional_rank = r + (n-1)/2
-        fingerprint_ranked[i] = r + (s - 1) * 0.5;
-    }
 }
