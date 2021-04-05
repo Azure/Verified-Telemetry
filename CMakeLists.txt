@@ -41,8 +41,7 @@ if (NOT VT_UNIT_TESTING)
     "src/middleware/pnp_fallcurve_component.c"
     "src/middleware/pnp_middleware_helper.c"
   )
-  list(APPEND VT_LINK_LIBRARIES "app_common")
-  list(APPEND VT_LINK_LIBRARIES m)
+  list(APPEND VT_LINK_LIBRARIES app_common m)
 endif()
 
 if(VT_DEVICE STREQUAL "MXCHIP_AZ3166")

@@ -4,6 +4,7 @@
 #include "vt_test_definitions.h"
 
 #include <setjmp.h>
+#include <stdarg.h>
 #include <stddef.h>
 
 #include "cmocka.h"
