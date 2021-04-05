@@ -1,0 +1,37 @@
+{
+  "@context": "dtmi:dtdl:context;2",
+  "@id": "dtmi:azure:verifiedtelemetry:sample:GSG;1",
+  "@type": "Interface",
+  "displayName": "Verified Telemetry Getting Started Guide",
+  "description": "Verified Telemetry Sample",
+  "contents": [
+    {
+      "@type" : "Component",
+      "schema": "dtmi:azure:verifiedtelemetry:sample:device;1",
+      "name": "sampleDevice",
+      "displayName": "Sample Device",
+      "description": "Sample device model from ODM"
+    },
+    {
+      "@type" : "Component",
+      "schema": "dtmi:azure:verifiedtelemetry:deviceinformation;1",
+      "name": "vTDevice",
+      "displayName": "Verified Telemetry Device Information",
+      "description": "Provides Verified Telemetry information and settings on a device level"
+    },
+    {
+      "@type" : "Component",
+      "schema": "dtmi:azure:verifiedtelemetry:telemetryinformation;1",
+      "name": "vTsoilMoistureExternal1",
+      "displayName": "Verified Telemetry component for soilMoistureExternal1 telemetry",
+      "description": "Verified Telemetry and Fingerprint information of soilMoistureExternal1 telemetry"
+    },
+    {
+      "@type" : "Component",
+      "schema": "dtmi:azure:verifiedtelemetry:telemetryinformation;1",
+      "name": "vTsoilMoistureExternal2",
+      "displayName": "Verified Telemetry component for soilMoistureExternal2 telemetry",
+      "description": "Verified Telemetry and Fingerprint information of soilMoistureExternal2 telemetry"
+    }
+  ]
+}

@@ -1,0 +1,285 @@
+[
+  {
+    "@id": "dtmi:azure:verifiedtelemetry:sample:GSG;1",
+    "@type": "Interface",
+    "contents": [
+      {
+        "@id": "dtmi:azure:verifiedtelemetry:sample:GSG:sampleDevice;1",
+        "@type": "Component",
+        "displayName": {
+          "en": "Sample Device"
+        },
+        "name": "sampleDevice",
+        "schema": "dtmi:azure:verifiedtelemetry:sample:device;1"
+      },
+      {
+        "@id": "dtmi:azure:verifiedtelemetry:sample:GSG:vTDevice;1",
+        "@type": "Component",
+        "displayName": {
+          "en": "Verified Telemetry Device Information"
+        },
+        "name": "vTDevice",
+        "schema": "dtmi:azure:verifiedtelemetry:deviceinformation;1"
+      },
+      {
+        "@id": "dtmi:azure:verifiedtelemetry:sample:GSG:vTsoilMoistureExternal1;1",
+        "@type": "Component",
+        "displayName": {
+          "en": "Verified Telemetry component for soilMoistureExternal1 telemetry"
+        },
+        "name": "vTsoilMoistureExternal1",
+        "schema": "dtmi:azure:verifiedtelemetry:telemetryinformation;1"
+      },
+      {
+        "@id": "dtmi:azure:verifiedtelemetry:sample:GSG:vTsoilMoistureExternal2;1",
+        "@type": "Component",
+        "displayName": {
+          "en": "Verified Telemetry component for soilMoistureExternal2 telemetry"
+        },
+        "name": "vTsoilMoistureExternal2",
+        "schema": "dtmi:azure:verifiedtelemetry:telemetryinformation;1"
+      }
+    ],
+    "description": {
+      "en": "Verified Telemetry Sample"
+    },
+    "displayName": {
+      "en": "Verified Telemetry Getting Started Guide"
+    },
+    "@context": [
+      "dtmi:iotcentral:context;2",
+      "dtmi:dtdl:context;2"
+    ]
+  },
+  {
+    "@context": [
+      "dtmi:iotcentral:context;2",
+      "dtmi:dtdl:context;2"
+    ],
+    "@id": "dtmi:azure:verifiedtelemetry:sample:device;1",
+    "@type": "Interface",
+    "contents": [
+      {
+        "@type": "Telemetry",
+        "displayName": {
+          "en": "Soil Moisture External 1"
+        },
+        "name": "soilMoistureExternal1",
+        "schema": "float"
+      },
+      {
+        "@type": "Telemetry",
+        "displayName": {
+          "en": "Soil Moisture External 2"
+        },
+        "name": "soilMoistureExternal2",
+        "schema": "float"
+      },
+      {
+        "@type": "Telemetry",
+        "displayName": {
+          "en": "Temperature"
+        },
+        "name": "temperature",
+        "schema": "float"
+      },
+      {
+        "@type": "Telemetry",
+        "displayName": {
+          "en": "Pressure"
+        },
+        "name": "pressure",
+        "schema": "float"
+      },
+      {
+        "@type": "Telemetry",
+        "displayName": {
+          "en": "Humidity Percentage"
+        },
+        "name": "humidityPercentage",
+        "schema": "float"
+      },
+      {
+        "@type": "Telemetry",
+        "displayName": {
+          "en": "Acceleration"
+        },
+        "name": "acceleration",
+        "schema": "float"
+      },
+      {
+        "@type": "Telemetry",
+        "displayName": {
+          "en": "Magnetic"
+        },
+        "name": "magnetic",
+        "schema": "float"
+      },
+      {
+        "@type": "Command",
+        "name": "setLedState",
+        "request": {
+          "@type": "CommandPayload",
+          "name": "state",
+          "schema": "boolean"
+        }
+      },
+      {
+        "@type": "Property",
+        "name": "ledState",
+        "schema": "boolean",
+        "writable": false
+      }
+    ],
+    "description": {
+      "en": "Device Sensors"
+    },
+    "displayName": {
+      "en": "Device Sensors"
+    }
+  },
+  {
+    "@context": [
+      "dtmi:iotcentral:context;2",
+      "dtmi:dtdl:context;2"
+    ],
+    "@id": "dtmi:azure:verifiedtelemetry:deviceinformation;1",
+    "@type": "Interface",
+    "contents": [
+      {
+        "@type": "Property",
+        "description": {
+          "en": "A device status is set to Faulty if any of the sensor has a fault."
+        },
+        "displayName": {
+          "en": "Overall device status"
+        },
+        "name": "deviceStatus",
+        "schema": "boolean",
+        "writable": false
+      },
+      {
+        "@type": "Property",
+        "description": {
+          "en": "True enables Verified Telemetry functionalities."
+        },
+        "displayName": {
+          "en": "Enable Verified Telemetry"
+        },
+        "name": "enableVerifiedTelemetry",
+        "schema": "boolean",
+        "writable": true
+      }
+    ],
+    "description": {
+      "en": "Provides Verified Telemetry information and settings on a device level"
+    },
+    "displayName": {
+      "en": "Verified Telemetry Device Information"
+    }
+  },
+  {
+    "@context": [
+      "dtmi:iotcentral:context;2",
+      "dtmi:dtdl:context;2"
+    ],
+    "@id": "dtmi:azure:verifiedtelemetry:telemetryinformation;1",
+    "@type": "Interface",
+    "contents": [
+      {
+        "@type": "Property",
+        "displayName": {
+          "en": "Status of Telemetry to which this fingerprint is associated"
+        },
+        "name": "telemetryStatus",
+        "schema": "boolean",
+        "writable": false
+      },
+      {
+        "@type": "Property",
+        "displayName": {
+          "en": "Type of the fingerprint"
+        },
+        "name": "fingerprintType",
+        "schema": "string",
+        "writable": false
+      },
+      {
+        "@type": "Property",
+        "displayName": {
+          "en": "Fingerprint template for the associated sensor"
+        },
+        "name": "fingerprintTemplate",
+        "writable": false,
+        "schema": {
+          "@type": "Map",
+          "mapKey": {
+            "name": "TemplateProperty",
+            "schema": "string"
+          },
+          "mapValue": {
+            "name": "TemplatePropertyValue",
+            "schema": "string"
+          }
+        }
+      },
+      {
+        "@type": "Property",
+        "displayName": {
+          "en": "Fingerprint Template Confidence Metric"
+        },
+        "name": "fingerprintTemplateConfidenceMetric",
+        "writable": false,
+        "schema": {
+          "@type": "Enum",
+          "enumValues": [
+            {
+              "displayName": {
+                "en": "HIGH"
+              },
+              "enumValue": 100,
+              "name": "high"
+            },
+            {
+              "displayName": {
+                "en": "MEDIUM"
+              },
+              "enumValue": 50,
+              "name": "medium"
+            },
+            {
+              "displayName": {
+                "en": "LOW"
+              },
+              "enumValue": 0,
+              "name": "low"
+            }
+          ],
+          "valueSchema": "integer"
+        }
+      },
+      {
+        "@type": "Command",
+        "comment": "This command will reset the fingerprint template",
+        "displayName": {
+          "en": "Reset fingerprint template"
+        },
+        "name": "setResetFingerprintTemplate"
+      },
+      {
+        "@type": "Command",
+        "comment": "This command will retrain the fingerprint template",
+        "displayName": {
+          "en": "Retrain fingerprint template"
+        },
+        "name": "retrainFingerprintTemplate"
+      }
+    ],
+    "description": {
+      "en": "Provides information about Verified Telemetry for the associated telemetry and supporting Fingerprint Information"
+    },
+    "displayName": {
+      "en": "Verified Telemetry Information"
+    }
+  }
+]

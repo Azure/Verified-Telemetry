@@ -1,4 +1,4 @@
-Getting Started Guides with Azure RTOS
+Verified-Telemetry
 
 Copyright (c) Microsoft Corporation.
 

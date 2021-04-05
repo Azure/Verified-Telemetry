@@ -1,0 +1,24 @@
+{
+  "@context": "dtmi:dtdl:context;2",
+  "@id": "dtmi:azure:verifiedtelemetry:deviceinformation;1",
+  "@type": "Interface",
+  "displayName": "Verified Telemetry Device Information",
+  "description": "Provides Verified Telemetry information and settings on a device level",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "deviceStatus",
+      "displayName" : "Overall device status",
+      "description": "A device status is set to Faulty if any of the sensor has a fault.",
+      "schema": "boolean"
+    },
+    {
+      "@type": "Property",
+      "name": "enableVerifiedTelemetry", 
+      "displayName" : "Enable Verified Telemetry",
+      "description": "True enables Verified Telemetry functionalities.",
+      "schema": "boolean",
+      "writable": true
+    } 
+  ]
+}
