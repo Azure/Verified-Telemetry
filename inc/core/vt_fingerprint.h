@@ -28,7 +28,7 @@ uint8_t _vt_fingerprint_calculate_maximum_index(uint32_t* fingerprint, uint32_t 
 uint8_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint32_t fingerprint_length);
 
 // Evaluate
-float _vt_fingerprint_evaluate_correlationCoefficient(
+float _vt_fingerprint_evaluate_correlation_coefficient(
     uint32_t* fingerprint1, uint32_t* fingerprint2, int fingeprprint_length);
 
 float _vt_fingerprint_evaluate_nrmse(uint32_t* fingerpint1, uint32_t* fingerprint2, int fingerpint_length);

@@ -1,36 +1,40 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-#include "math.h"
+#include <math.h>
+
 #include "vt_fingerprint.h"
 
-float _vt_fingerprint_evaluate_correlationCoefficient(uint32_t* fingerpint1, uint32_t* fingerpint2, int length)
+float _vt_fingerprint_evaluate_correlation_coefficient(
+    uint32_t* fingerpint1, uint32_t* fingerpint2, int fingerprint_length)
 {
-    int n                 = length;
-    float sum_fingerpint1 = 0, sum_fingerpint2 = 0, sum_fingerpint1fingerpint2 = 0;
-    float squareSum_fingerpint1 = 0, squareSum_fingerpint2 = 0;
+    float sum_fingerprint1             = 0;
+    float sum_fingerprint2             = 0;
+    float sum_fingerprint1fingerprint2 = 0;
+    float squareSum_fingerprint1       = 0;
+    float squareSum_fingerprint2       = 0;
 
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < fingerprint_length; i++)
     {
         // sum of elements of array fingerpint1.
-        sum_fingerpint1 = sum_fingerpint1 + fingerpint1[i];
+        sum_fingerprint1 = sum_fingerprint1 + fingerpint1[i];
 
         // sum of elements of array fingerpint2.
-        sum_fingerpint2 = sum_fingerpint2 + fingerpint2[i];
+        sum_fingerprint2 = sum_fingerprint2 + fingerpint2[i];
 
         // sum of fingerpint1[i] * fingerpint2[i].
-        sum_fingerpint1fingerpint2 = sum_fingerpint1fingerpint2 + fingerpint1[i] * fingerpint2[i];
+        sum_fingerprint1fingerprint2 = sum_fingerprint1fingerprint2 + fingerpint1[i] * fingerpint2[i];
 
         // sum of square of array elements.
-        squareSum_fingerpint1 = squareSum_fingerpint1 + fingerpint1[i] * fingerpint1[i];
-        squareSum_fingerpint2 = squareSum_fingerpint2 + fingerpint2[i] * fingerpint2[i];
+        squareSum_fingerprint1 = squareSum_fingerprint1 + fingerpint1[i] * fingerpint1[i];
+        squareSum_fingerprint2 = squareSum_fingerprint2 + fingerpint2[i] * fingerpint2[i];
     }
 
     // use formula for calculating
     // correlation coefficient.
-    float corr = (float)(n * sum_fingerpint1fingerpint2 - sum_fingerpint1 * sum_fingerpint2) /
-                  sqrtf((n * squareSum_fingerpint1 - sum_fingerpint1 * sum_fingerpint1) *
-                       (n * squareSum_fingerpint2 - sum_fingerpint2 * sum_fingerpint2));
+    float corr = (float)(fingerprint_length * sum_fingerprint1fingerprint2 - sum_fingerprint1 * sum_fingerprint2) /
+                 sqrtf((fingerprint_length * squareSum_fingerprint1 - sum_fingerprint1 * sum_fingerprint1) *
+                       (fingerprint_length * squareSum_fingerprint2 - sum_fingerprint2 * sum_fingerprint2));
 
     return corr;
 }

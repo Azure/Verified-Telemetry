@@ -111,7 +111,7 @@ uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerp
 
         // Calculate pearson coefficient
         *pearson_coefficient =
-            _vt_fingerprint_evaluate_correlationCoefficient(fingerprint_reconstructed, fingerprint, fingerprint_length);
+            _vt_fingerprint_evaluate_correlation_coefficient(fingerprint_reconstructed, fingerprint, fingerprint_length);
 
         return VT_SUCCESS;
     }
@@ -134,8 +134,8 @@ VT_CURVE_SHAPE _vt_fingerprint_calculate_shape(uint32_t* fingerprint, int finger
         arrayexp[i]    = (uint32_t)(1000 * (exp((-1 * (i / (float)(fingerprint_length - 1))))));
     }
 
-    if (_vt_fingerprint_evaluate_correlationCoefficient(ranked, arraylinear, fingerprint_length) > VT_SHAPE_THRESHOLD ||
-        _vt_fingerprint_evaluate_correlationCoefficient(fingerprint, arrayexp, fingerprint_length) > VT_SHAPE_THRESHOLD)
+    if (_vt_fingerprint_evaluate_correlation_coefficient(ranked, arraylinear, fingerprint_length) > VT_SHAPE_THRESHOLD ||
+        _vt_fingerprint_evaluate_correlation_coefficient(fingerprint, arrayexp, fingerprint_length) > VT_SHAPE_THRESHOLD)
     {
         return VT_SHAPE_FALL;
     }
@@ -145,8 +145,8 @@ VT_CURVE_SHAPE _vt_fingerprint_calculate_shape(uint32_t* fingerprint, int finger
         arraylinear[i] = i;
         arrayexp[i]    = (uint32_t)(1000 * (1 - exp((-1 * (i / (float)(fingerprint_length - 1))))));
     }
-    if (_vt_fingerprint_evaluate_correlationCoefficient(ranked, arraylinear, fingerprint_length) > VT_SHAPE_THRESHOLD ||
-        _vt_fingerprint_evaluate_correlationCoefficient(fingerprint, arrayexp, fingerprint_length) > VT_SHAPE_THRESHOLD)
+    if (_vt_fingerprint_evaluate_correlation_coefficient(ranked, arraylinear, fingerprint_length) > VT_SHAPE_THRESHOLD ||
+        _vt_fingerprint_evaluate_correlation_coefficient(fingerprint, arrayexp, fingerprint_length) > VT_SHAPE_THRESHOLD)
     {
         return VT_SHAPE_RISE;
     }
@@ -155,7 +155,7 @@ VT_CURVE_SHAPE _vt_fingerprint_calculate_shape(uint32_t* fingerprint, int finger
     for (i = 1; i < fingerprint_length; i++)
         arraylinear[i] = 1;
 
-    if (_vt_fingerprint_evaluate_correlationCoefficient(fingerprint, arraylinear, fingerprint_length) >
+    if (_vt_fingerprint_evaluate_correlation_coefficient(fingerprint, arraylinear, fingerprint_length) >
         VT_SHAPE_THRESHOLD)
     {
         return VT_SHAPE_STEP;
