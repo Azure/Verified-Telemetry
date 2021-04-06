@@ -29,7 +29,7 @@ static uint32_t _vt_database_store_fingerprint(
     return VT_SUCCESS;
 }
 
-uint32_t vt_database_store(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, uint16_t sampling_frequency, uint8_t sensor_id)
+uint32_t vt_database_store(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, uint16_t sampling_frequency, int8_t sensor_id)
 {
     uint32_t falltime;
     float pearson_coefficient;
@@ -67,7 +67,7 @@ uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, uint32_t fall_ti
     database_ptr->_vt_falltimedb[i][0] = sensor_id;
     database_ptr->_vt_falltimedb[i][1] = fall_time;
   
-    VTLogInfo("\tStored FallTime = %d\r\n",(int32_t)database_ptr->_vt_falltimedb[i][1]);
+    VTLogInfo("\tStored FallTime = %d\r\n",(int16_t)database_ptr->_vt_falltimedb[i][1]);
   
     return VT_SUCCESS;
 }
@@ -75,9 +75,9 @@ uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, uint32_t fall_ti
 uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float pearson_coefficient, uint8_t sensor_id)
 {
     uint8_t i;
-    int32_t pearsonCoeffInt1;
+    int16_t pearsonCoeffInt1;
     float pearsonCoeffFrac;
-    int32_t pearsonCoeffInt2;
+    int16_t pearsonCoeffInt2;
 
     // Scan through DB
     for (i = 0; (i < database_ptr->_vt_total_pearson_coefficient) &&

@@ -5,7 +5,7 @@
 
 #include "vt_database.h"
 
-uint32_t vt_database_falltime_fetch(VT_DATABASE* database_ptr, uint8_t* index, uint32_t* fall_time, uint8_t* sensor_id)
+uint32_t vt_database_falltime_fetch(VT_DATABASE* database_ptr, int8_t* index, uint32_t* fall_time, int8_t* sensor_id)
 {
     if (database_ptr == NULL)
     {
@@ -25,7 +25,7 @@ uint32_t vt_database_falltime_fetch(VT_DATABASE* database_ptr, uint8_t* index, u
 }
 
 uint32_t vt_database_pearsoncoefficient_fetch(
-    VT_DATABASE* database_ptr, uint8_t* index, float* pearson_coefficient, uint8_t* sensor_id)
+    VT_DATABASE* database_ptr, int8_t* index, float* pearson_coefficient, int8_t* sensor_id)
 {
     if (database_ptr == NULL)
     {

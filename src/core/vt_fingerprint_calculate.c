@@ -165,7 +165,7 @@ VT_CURVE_SHAPE _vt_fingerprint_calculate_shape(uint32_t* fingerprint, uint8_t fi
     return VT_SHAPE_NOISE;
 }
 
-uint8_t _vt_fingerprint_calculate_maximum_index(uint32_t* fingerprint, uint32_t fingerprint_length)
+uint8_t _vt_fingerprint_calculate_maximum_index(uint32_t* fingerprint, uint8_t fingerprint_length)
 {
     uint32_t index_max = 0;
 
@@ -180,7 +180,7 @@ uint8_t _vt_fingerprint_calculate_maximum_index(uint32_t* fingerprint, uint32_t 
     return index_max;
 }
 
-uint8_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint32_t fingerprint_length)
+uint8_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint8_t fingerprint_length)
 {
     uint8_t index_max = _vt_fingerprint_calculate_maximum_index(fingerprint, fingerprint_length);
 

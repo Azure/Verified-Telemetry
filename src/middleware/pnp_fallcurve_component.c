@@ -21,7 +21,7 @@ static const CHAR telemetry_name_Telemetry_Status[] = "telemetryStatus";
 static const CHAR init_fingerprint[] = "--";
 
 /* Pnp command supported */
-static const CHAR command_reset_fingerprint[] = "setResetFingerprintTemplate";
+static const CHAR command_reset_fingerprint[]   = "setResetFingerprintTemplate";
 static const CHAR command_retrain_fingerprint[] = "retrainFingerprintTemplate";
 
 /* Default Telemetry Values */
@@ -103,7 +103,7 @@ bool addSensorNameToDB(CHAR** connected_sensors, UCHAR* associatedSensor, UINT n
 static UINT identify_ground_truth_label(UCHAR* ground_truth_label_str,
     INT ground_truth_label_str_len,
     PNP_FALLCURVE_COMPONENT* fallcurve_component,
-    INT* ground_truth_label)
+    int8_t* ground_truth_label)
 {
     UINT iter = 0;
     for (iter = 0; iter < fallcurve_component->connected_sensors_num; iter++)
@@ -137,27 +137,27 @@ UINT pnp_fallcurve_init(PNP_FALLCURVE_COMPONENT* handle,
         return (NX_NOT_SUCCESSFUL);
     }
 
-    handle->component_name_ptr    = component_name_ptr;
-    handle->component_name_length = strlen((const char*)component_name_ptr);
-    handle->fallcurveString       = (CHAR*)init_fingerprint;
-    handle->sensorConnected       = (CHAR*)classification_status_default;
-    handle->vTInfo_property_sent  = 0;
-    handle->associatedSensor      = (CHAR*)associatedTelemetry;
-    handle->connected_sensors     = connected_sensors;
-    handle->connected_sensors_num = numberVerifiedTelemetries;
+    handle->component_name_ptr       = component_name_ptr;
+    handle->component_name_length    = strlen((const char*)component_name_ptr);
+    handle->fallcurveString          = (CHAR*)init_fingerprint;
+    handle->sensorConnected          = (CHAR*)classification_status_default;
+    handle->vTInfo_property_sent     = 0;
+    handle->associatedSensor         = (CHAR*)associatedTelemetry;
+    handle->connected_sensors        = connected_sensors;
+    handle->connected_sensors_num    = numberVerifiedTelemetries;
     handle->templateConfidenceMetric = 0;
     // vt_database_initialize(&(handle->fingerprintdb));
 
     if (addFallcurveToDB(fallcurve_components, handle, numberVerifiedTelemetries))
     {
         VTLogError("Fingerprint Registration Error, number of fingerprints registered "
-               "exceeding number defined by user\r\n");
+                   "exceeding number defined by user\r\n");
     }
 
     if (addSensorNameToDB(connected_sensors, associatedTelemetry, numberVerifiedTelemetries))
     {
         VTLogError("Verified Telemetry Registration Error, number of telemetries "
-               "registered exceeding number defined by user\r\n");
+                   "registered exceeding number defined by user\r\n");
     }
 
     /* VT Library calls */
@@ -165,7 +165,7 @@ UINT pnp_fallcurve_init(PNP_FALLCURVE_COMPONENT* handle,
             &handle->portInfo, (CHAR*)component_name_ptr, gpio_port, gpio_pin, adc_controller, adc_channel, Timer))
     {
         VTLogError("Port Registration Error, kindly check if all the pins are "
-               "initialized\r\n");
+                   "initialized\r\n");
         return (NX_NOT_SUCCESSFUL);
     }
 
@@ -181,7 +181,7 @@ UINT get_fallcurve(PNP_FALLCURVE_COMPONENT* handle, VT_DATABASE* fingerprintdb, 
 
     /* VT Library calls */
     uint32_t fallcurvearray[100];
-    int sensor_id;
+    int8_t sensor_id;
     if (toggleVerifiedTelemetry)
     {
         if (vt_sensor_read_fingerprint(&handle->portInfo, fallcurvearray, fallcurvestring))
@@ -197,8 +197,9 @@ UINT get_fallcurve(PNP_FALLCURVE_COMPONENT* handle, VT_DATABASE* fingerprintdb, 
 
         if (vt_sensor_read_status(&handle->portInfo, fingerprintdb, fallcurvearray, &sensor_id))
         {
-            VTLogInfo("Invalid Fingerprint collected, ensure you have connected sensor %.*s correctly \r\n\n",strlen(handle->associatedSensor),
-                        (UCHAR*)handle->associatedSensor);
+            VTLogInfo("Invalid Fingerprint collected, ensure you have connected sensor %.*s correctly \r\n\n",
+                strlen(handle->associatedSensor),
+                (UCHAR*)handle->associatedSensor);
             handle->sensorConnected = (CHAR*)classification_status_fail;
             handle->telemetryStatus = 0;
             return (NX_NOT_SUCCESSFUL);
@@ -222,9 +223,9 @@ UINT get_fallcurve(PNP_FALLCURVE_COMPONENT* handle, VT_DATABASE* fingerprintdb, 
                     handle->telemetryStatus = 0;
                 }
                 VTLogInfo("Telemetry %.*s %s\r\n\n",
-                        strlen(handle->associatedSensor),
-                        (UCHAR*)handle->associatedSensor,
-                        (handle->telemetryStatus) ? "is VERIFIED" : "has a FAULT!");
+                    strlen(handle->associatedSensor),
+                    (UCHAR*)handle->associatedSensor,
+                    (handle->telemetryStatus) ? "is VERIFIED" : "has a FAULT!");
             }
             else if (sensor_id == 0)
             {
@@ -232,9 +233,9 @@ UINT get_fallcurve(PNP_FALLCURVE_COMPONENT* handle, VT_DATABASE* fingerprintdb, 
                 handle->sensorConnected = (CHAR*)classification_status_unidentified;
                 handle->telemetryStatus = 0;
                 VTLogInfo("Telemetry %.*s %s\r\n\n",
-                        strlen(handle->associatedSensor),
-                        (UCHAR*)handle->associatedSensor,
-                        (handle->telemetryStatus) ? "is VERIFIED" : "has a FAULT!");
+                    strlen(handle->associatedSensor),
+                    (UCHAR*)handle->associatedSensor,
+                    (handle->telemetryStatus) ? "is VERIFIED" : "has a FAULT!");
             }
             else
             {
@@ -242,20 +243,21 @@ UINT get_fallcurve(PNP_FALLCURVE_COMPONENT* handle, VT_DATABASE* fingerprintdb, 
                 handle->sensorConnected = (CHAR*)classification_status_dbempty;
                 handle->telemetryStatus = 0;
                 VTLogInfo("Telemetry %.*s cannot be verified as a Fingerprint Template is not available!\r\n\n",
-                        strlen(handle->associatedSensor),
-                        (UCHAR*)handle->associatedSensor);
+                    strlen(handle->associatedSensor),
+                    (UCHAR*)handle->associatedSensor);
             }
         }
     }
     else
     {
-        VTLogInfo("Verified Telemetry is DISABLED! Please set Root Component property enableVerifiedTelemetry to TRUE\r\n");
+        VTLogInfo(
+            "Verified Telemetry is DISABLED! Please set Root Component property enableVerifiedTelemetry to TRUE\r\n");
         handle->fallcurveString = (CHAR*)collection_off_fingerprint;
         handle->sensorConnected = (CHAR*)classification_status_no_eval;
         handle->telemetryStatus = 0;
         VTLogInfo("Telemetry %.*s cannot be verified as Verified Telemetry is disabled!\r\n\n",
-                        strlen(handle->associatedSensor),
-                        (UCHAR*)handle->associatedSensor);
+            strlen(handle->associatedSensor),
+            (UCHAR*)handle->associatedSensor);
     }
 
     return (NX_AZURE_IOT_SUCCESS);
@@ -265,9 +267,9 @@ UINT get_fallcurve(PNP_FALLCURVE_COMPONENT* handle, VT_DATABASE* fingerprintdb, 
 static UINT reset_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_JSON_READER* json_reader_ptr)
 {
     UINT status = 0;
-    INT ground_truth_label;
+    int8_t ground_truth_label;
     uint32_t fallcurvearray[100];
-    uint32_t templateConfidenceMetric;
+    uint8_t templateConfidenceMetric;
 
     vt_database_clear(&(handle->fingerprintdb));
     VTLogInfo("\tCleared DB\r\n");
@@ -291,7 +293,7 @@ static UINT reset_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT
         // &falltime, &pearson_coefficient);
 
         if ((status = vt_database_store(
-                &(handle->fingerprintdb), fallcurvearray, handle->portInfo.vt_sampling_frequency, ground_truth_label)))
+                 &(handle->fingerprintdb), fallcurvearray, handle->portInfo.vt_sampling_frequency, ground_truth_label)))
         {
             VTLogError("\tFailed to collect and store Golden Fingerprint\r\n");
         }
@@ -304,10 +306,10 @@ static UINT reset_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT
 static UINT retrain_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_JSON_READER* json_reader_ptr)
 {
     UINT status = 0;
-    INT ground_truth_label;
+    int8_t ground_truth_label;
     uint32_t fallcurvearray[100];
 
-    if((&(handle->fingerprintdb))->_vt_total_falltime == 0)
+    if ((&(handle->fingerprintdb))->_vt_total_falltime == 0)
     {
         return (NX_NOT_SUCCESSFUL);
     }
@@ -344,19 +346,19 @@ static UINT hub_store_all_db(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_C
     UINT response_status = 0;
     NX_AZURE_IOT_JSON_WRITER json_writer;
 
-    INT iter     = 0;
-    int sensor_id = 0;
+    int8_t iter      = 0;
+    int8_t sensor_id = 0;
     CHAR sensorIDStr[3];
     CHAR samplingFreqStr[6];
-    int fallTime = 0;
+    uint32_t fallTime = 0;
     CHAR fallTimeDB[60];
     CHAR fallTimeStr[10];
     float pearsonCoeff = 0;
     CHAR pearsonCoeffStr[7];
 
-    memset(fallTimeDB,0,sizeof(fallTimeDB));
-    memset(fallTimeStr,0,sizeof(fallTimeStr));
-    memset(samplingFreqStr,0,sizeof(samplingFreqStr));
+    memset(fallTimeDB, 0, sizeof(fallTimeDB));
+    memset(fallTimeStr, 0, sizeof(fallTimeStr));
+    memset(samplingFreqStr, 0, sizeof(samplingFreqStr));
 
     if ((status = nx_azure_iot_pnp_client_reported_properties_create(iotpnp_client_ptr, &json_writer, NX_WAIT_FOREVER)))
     {
@@ -390,16 +392,17 @@ static UINT hub_store_all_db(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_C
         return (status);
     }
 
-    if ((status = nx_azure_iot_json_writer_append_property_name(
-             &json_writer, (UCHAR*)samplingFrequency_json_property, strlen((const char*)samplingFrequency_json_property))))
+    if ((status = nx_azure_iot_json_writer_append_property_name(&json_writer,
+             (UCHAR*)samplingFrequency_json_property,
+             strlen((const char*)samplingFrequency_json_property))))
     {
         VTLogError("Failed to append samplingFrequency DB data: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
         return (status);
     }
     snprintf(samplingFreqStr, sizeof(samplingFreqStr), "%d", (&(handle->portInfo))->vt_sampling_frequency);
-    if ((status = nx_azure_iot_json_writer_append_string(
-             &json_writer, (UCHAR*)samplingFreqStr, strlen(samplingFreqStr))))
+    if ((status =
+                nx_azure_iot_json_writer_append_string(&json_writer, (UCHAR*)samplingFreqStr, strlen(samplingFreqStr))))
     {
         VTLogError("Failed to append samplingFrequency DB data: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
@@ -447,20 +450,19 @@ static UINT hub_store_all_db(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_C
     }
     else
     {
-        snprintf(fallTimeStr, sizeof(fallTimeStr), "%04d", fallTime);
+        snprintf(fallTimeStr, sizeof(fallTimeStr), "%04d", (int16_t)fallTime);
         strcat(fallTimeDB, fallTimeStr);
         vt_database_falltime_fetch(&(handle->fingerprintdb), &iter, &fallTime, &sensor_id);
 
-        while(!(iter < 0))
+        while (!(iter < 0))
         {
-            snprintf(fallTimeStr, sizeof(fallTimeStr), "%04d", fallTime);
+            snprintf(fallTimeStr, sizeof(fallTimeStr), "%04d", (int16_t)fallTime);
             strcat(fallTimeDB, ",");
             strcat(fallTimeDB, fallTimeStr);
             vt_database_falltime_fetch(&(handle->fingerprintdb), &iter, &fallTime, &sensor_id);
         }
 
-        if ((status =
-                    nx_azure_iot_json_writer_append_string(&json_writer, (UCHAR*)fallTimeDB, strlen(fallTimeDB))))
+        if ((status = nx_azure_iot_json_writer_append_string(&json_writer, (UCHAR*)fallTimeDB, strlen(fallTimeDB))))
         {
             VTLogError("Failed to append FallTime DB data: error code = 0x%08x\r\n", status);
             nx_azure_iot_json_writer_deinit(&json_writer);
@@ -486,7 +488,7 @@ static UINT hub_store_all_db(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_C
         if ((status = nx_azure_iot_json_writer_append_null(&json_writer)))
         {
             VTLogError("Failed to append Pearson Coefficient DB data: error code = "
-                   "0x%08x\r\n",
+                       "0x%08x\r\n",
                 status);
             nx_azure_iot_json_writer_deinit(&json_writer);
             return (status);
@@ -498,7 +500,7 @@ static UINT hub_store_all_db(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_C
                  &json_writer, (UCHAR*)pearsonCoeffStr, sizeof(pearsonCoeffStr) - 1)))
         {
             VTLogError("Failed to append Pearson Coefficient DB data: error code = "
-                   "0x%08x\r\n",
+                       "0x%08x\r\n",
                 status);
             nx_azure_iot_json_writer_deinit(&json_writer);
             return (status);
@@ -538,10 +540,10 @@ static UINT sync_fingerprintTemplate(
     int sensor_id = 0;
     CHAR jsonKey[50];
     CHAR jsonValue[50];
-    UINT bytes_copied   = 0;
-    int32_t fallTime    = 0;
+    UINT bytes_copied  = 0;
+    int32_t fallTime   = 0;
     float pearsonCoeff = 0;
-    CHAR* token; 
+    CHAR* token;
     CHAR* saveptr;
     CHAR* csvString;
 
@@ -567,7 +569,7 @@ static UINT sync_fingerprintTemplate(
         return NX_NOT_SUCCESSFUL;
     }
     // If required use sensorName string
-    
+
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(
             property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
@@ -610,7 +612,7 @@ static UINT sync_fingerprintTemplate(
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(
-        property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+            property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
     {
         return NX_NOT_SUCCESSFUL;
     }
@@ -626,11 +628,11 @@ static UINT sync_fingerprintTemplate(
     {
         return NX_NOT_SUCCESSFUL;
     }
-    for (csvString = jsonValue; ; csvString = NULL) 
+    for (csvString = jsonValue;; csvString = NULL)
     {
         token = strtok_r(csvString, ",", &saveptr);
         if (token == NULL)
-        {   
+        {
             break;
         }
         fallTime = atoi((CHAR*)token);
@@ -639,7 +641,7 @@ static UINT sync_fingerprintTemplate(
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(
-        property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+            property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
     {
         return NX_NOT_SUCCESSFUL;
     }
@@ -649,7 +651,7 @@ static UINT sync_fingerprintTemplate(
     {
         return NX_NOT_SUCCESSFUL;
     }
-    VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue); 
+    VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
     if (((strlen(jsonKey) == (sizeof(pearsonCoeff_json_property) - 1)) &&
             (!(strncmp((CHAR*)jsonKey, (CHAR*)pearsonCoeff_json_property, strlen(jsonKey))))) == 0)
     {
@@ -657,8 +659,6 @@ static UINT sync_fingerprintTemplate(
     }
     pearsonCoeff = atof((CHAR*)jsonValue);
     _vt_database_store_pearsoncoefficient(&(handle->fingerprintdb), pearsonCoeff, sensor_id);
-    
-    
 
     return NX_SUCCESS;
 }
@@ -668,7 +668,7 @@ UINT pnp_fallcurve_telemetryStatus_property(PNP_FALLCURVE_COMPONENT* handle,
     bool toggleVerifiedTelemetry,
     bool* deviceStatus)
 {
-    UINT status = 0;
+    UINT status          = 0;
     UINT response_status = 0;
     NX_AZURE_IOT_JSON_WRITER json_writer;
     bool oldTelemetryStatus = handle->telemetryStatus;
@@ -765,7 +765,8 @@ UINT pnp_fallcurve_fingerprintType_property(PNP_FALLCURVE_COMPONENT* handle, NX_
     return (status);
 }
 
-UINT pnp_fallcurve_fingerprintTemplateConfidenceMetric_property(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
+UINT pnp_fallcurve_fingerprintTemplateConfidenceMetric_property(
+    PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
 {
     UINT status;
     UINT response_status = 0;
@@ -777,7 +778,7 @@ UINT pnp_fallcurve_fingerprintTemplateConfidenceMetric_property(PNP_FALLCURVE_CO
     }
     // CHAR *templateConfidenceMetricValue = ((double)handle->templateConfidenceMetric > 0.75) ? "HIGH"
     //                                     : ((double)handle->templateConfidenceMetric > 0.25) ? "MEDIUM"
-    //                                     : "LOW"; 
+    //                                     : "LOW";
     if ((status = nx_azure_iot_pnp_client_reported_property_component_begin(
              iotpnp_client_ptr, &json_writer, handle->component_name_ptr, handle->component_name_length)) ||
         (status = nx_azure_iot_json_writer_append_property_with_int32_value(&json_writer,
@@ -853,7 +854,8 @@ UINT pnp_fallcurve_process_command(PNP_FALLCURVE_COMPONENT* handle,
 
     // Command 2 : Retrain Fingerprint
     else if (((pnp_command_name_length == (sizeof(command_retrain_fingerprint) - 1)) &&
-            (!(strncmp((CHAR*)pnp_command_name_ptr, (CHAR*)command_retrain_fingerprint, pnp_command_name_length)))) == 1)
+                 (!(strncmp(
+                     (CHAR*)pnp_command_name_ptr, (CHAR*)command_retrain_fingerprint, pnp_command_name_length)))) == 1)
     {
         dm_status = (retrain_golden_fallcurve(handle, json_reader_ptr) != NX_AZURE_IOT_SUCCESS)
                         ? SAMPLE_COMMAND_ERROR_STATUS
@@ -912,12 +914,17 @@ UINT pnp_fallcurve_process_reported_property_sync(PNP_FALLCURVE_COMPONENT* handl
         if (nx_azure_iot_json_reader_next_token(name_value_reader_ptr) ||
             sync_fingerprintTemplate(name_value_reader_ptr, handle))
         {
-            VTLogError("Could not sync fingerprint template for component %.*s, invoke command setResetFingerprintTemplate to collect new fingerprint template \r\n\n", component_name_length, component_name_ptr);
+            VTLogError("Could not sync fingerprint template for component %.*s, invoke command "
+                       "setResetFingerprintTemplate to collect new fingerprint template \r\n\n",
+                component_name_length,
+                component_name_ptr);
             return (NX_AZURE_IOT_FAILURE);
         }
         else
         {
-            VTLogInfo("Successfully synced fingerprint template for component %.*s \r\n\n", component_name_length, component_name_ptr);
+            VTLogInfo("Successfully synced fingerprint template for component %.*s \r\n\n",
+                component_name_length,
+                component_name_ptr);
             return (NX_AZURE_IOT_SUCCESS);
         }
     }

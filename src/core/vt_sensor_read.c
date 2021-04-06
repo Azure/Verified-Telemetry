@@ -36,7 +36,7 @@ uint32_t vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint
 
     for (uint8_t i = 0; i < VT_FINGERPRINT_LENGTH; i++)
     {
-        snprintf(buffer, sizeof(buffer), "%d", (int32_t)fingerprint_array[i]);
+        snprintf(buffer, sizeof(buffer), "%d", (int16_t)fingerprint_array[i]);
         strcat(fingerprint_string, buffer);
 
         if (i < VT_FINGERPRINT_LENGTH-1)
