@@ -226,6 +226,24 @@ UINT pnp_vt_process_reported_property_sync(void* verified_telemetry_DB,
     return NX_NOT_SUCCESSFUL;
 }
 
+UINT pnp_vt_send_desired_property_after_boot(void* verified_telemetry_DB,
+    NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr, UINT message_type)
+{
+    if(message_type == NX_AZURE_IOT_PNP_PROPERTIES)
+    {
+        send_reported_property(iotpnp_client_ptr,
+            ((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->component_name_ptr,
+            ((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->component_name_length,
+            ((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->enableVerifiedTelemetry,
+            200,
+            1,
+            temp_response_description_success,
+            (UCHAR*)enableVerifiedTelemetry_property,
+            sizeof(enableVerifiedTelemetry_property) - 1);
+    }
+    return NX_AZURE_IOT_SUCCESS;
+}
+
 UINT pnp_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
 {
     UINT status = 0;

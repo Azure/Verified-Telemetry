@@ -7,14 +7,14 @@
   "contents": [
     {
       "@type": "Telemetry",
-      "name": "soilMoistureExternal",
-      "displayName" : "Soil Moisture External",
+      "name": "soilMoistureExternal1",
+      "displayName" : "Soil Moisture External 1",
       "schema": "float"
     },
     {
       "@type": "Telemetry",
-      "name": "accelerometerXExternal",
-      "displayName" : "Accelerometer X Axis External",
+      "name": "soilMoistureExternal2",
+      "displayName" : "Soil Moisture External 2",
       "schema": "float"
     },
     {

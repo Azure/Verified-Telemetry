@@ -1,26 +1,62 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-#include "vt_database.h"
+#include <stdlib.h>
 
-static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, int fall_time);
+#include "vt_database.h"
+#include "vt_fingerprint.h"
+
+static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, uint32_t fall_time);
 static int _vt_database_pearsoncoefficient_falltimeindex_search(VT_DATABASE* database_ptr, int value);
+
+static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, uint32_t fall_time)
+{
+    uint8_t i;
+
+    for (i = 0; (i < database_ptr->_vt_total_falltime) && (database_ptr->_vt_falltimedb[i][1] <= fall_time); i++)
+        ;
+
+    if (i == 0)
+    {
+        return i;
+    }
+    else if (abs(fall_time - database_ptr->_vt_falltimedb[i][1]) <=
+             abs(database_ptr->_vt_falltimedb[i - 1][1] - fall_time))
+    {
+        return i;
+    }
+    else
+    {
+        return i - 1;
+    }
+}
+
+static int _vt_database_pearsoncoefficient_falltimeindex_search(VT_DATABASE* database_ptr, int value)
+{
+    uint8_t i;
+    for (i = 0;
+         (i < database_ptr->_vt_total_pearson_coefficient) && (database_ptr->_vt_pearson_coefficientdb[i][0] != value);
+         i++)
+        ;
+
+    return i;
+}
 
 int _vt_database_evaluate_nrmse(VT_DATABASE* database_ptr, uint32_t* fallcurvearray)
 {
-    if (!(database_ptr->_vt_total_fingerprints > 0))
+    if (database_ptr->_vt_total_fingerprints <= 0)
     {
         return -1;
     }
 
-    float nrmse[database_ptr->_vt_total_fingerprints];
-    float min = 65355.00;
+    float nrmse[10];
+    float min = 65355.00f;
     int index;
 
-    for (int i = 0; i < (database_ptr->_vt_total_fingerprints); i++)
-        nrmse[i] = _vt_fingerprint_evaluate_nrmse(&(database_ptr->_vt_fingerprintdb[i][2]), fallcurvearray, 100);
+    for (uint8_t i = 0; i < (database_ptr->_vt_total_fingerprints); i++)
+        nrmse[i] = _vt_fingerprint_evaluate_nrmse(&(database_ptr->_vt_fingerprintdb[i][2]), fallcurvearray, VT_FINGERPRINT_LENGTH);
 
-    for (int k = 0; k < (database_ptr->_vt_total_fingerprints); k++)
+    for (uint8_t k = 0; k < (database_ptr->_vt_total_fingerprints); k++)
         if (nrmse[k] < min)
         {
             min = nrmse[k], index = k;
@@ -34,15 +70,6 @@ int _vt_database_evaluate_nrmse(VT_DATABASE* database_ptr, uint32_t* fallcurvear
     {
         return 0;
     }
-}
-
-int _vt_database_check_pearson_falltime_availability(VT_DATABASE* database_ptr)
-{
-    if (database_ptr->_vt_total_falltime == 0)
-    {
-        return VT_ERROR;
-    }
-    return VT_SUCCESS;
 }
 
 int _vt_database_evaluate_pearson_falltime(VT_DATABASE* database_ptr, int fall_time, float pearson_coefficient)
@@ -79,32 +106,4 @@ int _vt_database_evaluate_pearson_falltime(VT_DATABASE* database_ptr, int fall_t
     }
 
     return 0;
-}
-
-static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, int fall_time)
-{
-    int i;
-
-    for (i = 0; (i < database_ptr->_vt_total_falltime) && (database_ptr->_vt_falltimedb[i][1] <= fall_time); i++)
-        ;
-
-    if (abs(fall_time - database_ptr->_vt_falltimedb[i][1]) <= abs(database_ptr->_vt_falltimedb[i - 1][1] - fall_time))
-    {
-        return i;
-    }
-    else
-    {
-        return i - 1;
-    }
-}
-
-static int _vt_database_pearsoncoefficient_falltimeindex_search(VT_DATABASE* database_ptr, int value)
-{
-    int i;
-    for (i = 0;
-         (i < database_ptr->_vt_total_pearson_coefficient) && (database_ptr->_vt_pearson_coefficientdb[i][0] != value);
-         i++)
-        ;
-
-    return i;
 }

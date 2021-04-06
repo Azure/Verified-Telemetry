@@ -4,7 +4,7 @@
 #ifndef _VT_FINGERPRINT_H
 #define _VT_FINGERPRINT_H
 
-#include "vt_api.h"
+#include <stdint.h>
 
 typedef enum VT_CURVE_SHAPE
 {
@@ -23,12 +23,12 @@ uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerp
 
 VT_CURVE_SHAPE _vt_fingerprint_calculate_shape(uint32_t* fingerprint, int fingerprint_length);
 
-uint32_t _vt_fingerprint_calculate_maximum_index(uint32_t* fingerprint, uint32_t fingerprint_length);
+uint8_t _vt_fingerprint_calculate_maximum_index(uint32_t* fingerprint, uint32_t fingerprint_length);
 
-uint32_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint32_t fingerprint_length);
+uint8_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint32_t fingerprint_length);
 
 // Evaluate
-float _vt_fingerprint_evaluate_correlationCoefficient(
+float _vt_fingerprint_evaluate_correlation_coefficient(
     uint32_t* fingerprint1, uint32_t* fingerprint2, int fingeprprint_length);
 
 float _vt_fingerprint_evaluate_nrmse(uint32_t* fingerpint1, uint32_t* fingerprint2, int fingerpint_length);

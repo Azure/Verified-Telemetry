@@ -66,6 +66,9 @@ extern "C"
 
     UINT pnp_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr);
 
+    UINT pnp_vt_send_desired_property_after_boot(void* verified_telemetry_DB,
+    NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr, UINT message_type);
+
     UINT pnp_vt_init(void* verified_telemetry_DB,
         UCHAR* component_name_ptr,
         PNP_FALLCURVE_COMPONENT** fallcurve_components,

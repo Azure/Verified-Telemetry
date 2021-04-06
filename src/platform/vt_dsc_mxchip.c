@@ -25,14 +25,14 @@ uint32_t _vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
     return VT_SUCCESS;
 }
 
-uint32_t _vt_dsc_gpio_read(GPIO_PORT_TYPEDEF* GPIOx, GPION_PIN_TYPEDEF GPIO_Pin, int* state)
+uint32_t _vt_dsc_gpio_read(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPEDEF gpio_pin, int* state)
 {
-    if (HAL_GPIO_ReadPin(GPIOx, GPIO_Pin) == GPIO_PIN_SET)
+    if (HAL_GPIO_ReadPin(gpio_port, gpio_pin) == GPIO_PIN_SET)
     {
         *state = 1;
     }
 
-    else if (HAL_GPIO_ReadPin(GPIOx, GPIO_Pin) == GPIO_PIN_RESET)
+    else if (HAL_GPIO_ReadPin(gpio_port, gpio_pin) == GPIO_PIN_RESET)
     {
         *state = 0;
     }
@@ -40,34 +40,36 @@ uint32_t _vt_dsc_gpio_read(GPIO_PORT_TYPEDEF* GPIOx, GPION_PIN_TYPEDEF GPIO_Pin,
     return VT_SUCCESS;
 }
 
-uint32_t _vt_dsc_gpio_turn_on(GPIO_PORT_TYPEDEF* GPIOx, GPION_PIN_TYPEDEF GPIO_Pin)
+uint32_t _vt_dsc_gpio_turn_on(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPEDEF gpio_pin)
 {
-    HAL_GPIO_WritePin(GPIOx, GPIO_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(gpio_port, gpio_pin, GPIO_PIN_SET);
 
     return VT_SUCCESS;
 }
 
-uint32_t _vt_dsc_gpio_turn_off(GPIO_PORT_TYPEDEF* GPIOx, GPION_PIN_TYPEDEF GPIO_Pin)
+uint32_t _vt_dsc_gpio_turn_off(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPEDEF gpio_pin)
 {
-    HAL_GPIO_WritePin(GPIOx, GPIO_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(gpio_port, gpio_pin, GPIO_PIN_RESET);
 
     return VT_SUCCESS;
 }
 
-uint32_t _vt_dsc_adc_read(ADC_CONTROLLER_TYPEDEF* ADC_Controller, ADC_CHANNEL_TYPEDEF ADC_Channel, uint32_t* value)
+uint32_t _vt_dsc_adc_read(ADC_CONTROLLER_TYPEDEF* adc_controller, ADC_CHANNEL_TYPEDEF adc_channel, uint32_t* value)
 {
     ADC_ChannelConfTypeDef sConfig = {0};
 
-    sConfig.Channel      = ADC_Channel;
+    sConfig.Channel      = adc_channel;
     sConfig.Rank         = 1;
-    sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
-    HAL_ADC_ConfigChannel(ADC_Controller, &sConfig);
+    sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
 
-    HAL_ADC_Start(ADC_Controller);
-    if (HAL_ADC_PollForConversion(ADC_Controller, 10) == HAL_OK)
+    HAL_ADC_ConfigChannel(adc_controller, &sConfig);
+
+    HAL_ADC_Start(adc_controller);
+    if (HAL_ADC_PollForConversion(adc_controller, 10) == HAL_OK)
     {
-        *value = (HAL_ADC_GetValue(ADC_Controller));
+        *value = (HAL_ADC_GetValue(adc_controller));
     }
+    HAL_ADC_Stop(adc_controller);
 
     return VT_SUCCESS;
 }
