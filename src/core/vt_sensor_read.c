@@ -55,7 +55,7 @@ uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr,
 
     *sensor_id = 0;
 
-    if(_vt_database_check_pearson_falltime_availability(database_ptr))
+    if (_vt_database_check_pearson_falltime_availability(database_ptr))
     {
         *sensor_id = -1;
         return VT_SUCCESS;
@@ -65,7 +65,7 @@ uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr,
             fingerprint, 100, sensor_ptr->vt_sampling_frequency, &fall_time, &pearson_coefficient) == VT_SUCCESS)
     {
         int sensorid_ftpc = _vt_database_evaluate_pearson_falltime(database_ptr, fall_time, pearson_coefficient);
-        *sensor_id = sensorid_ftpc;
+        *sensor_id        = sensorid_ftpc;
 
         return VT_SUCCESS;
     }
@@ -97,15 +97,7 @@ uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprin
             return status;
         }
 
-        if (sensor_ptr->vt_timer != NULL)
-        {
-            _vt_dsc_delay_usec(sensor_ptr->vt_timer, sampling_frequency);
-        }
-        else
-        {
-            _vt_dsc_delay_msec(sampling_frequency);
-        }
-
+        status = _vt_dsc_delay_usec(sensor_ptr->vt_timer, sampling_frequency);
         if (status != VT_SUCCESS)
         {
             return status;

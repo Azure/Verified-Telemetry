@@ -3,11 +3,6 @@
 
 #include "vt_dsc.h"
 
-uint32_t _vt_dsc_delay_msec(uint32_t delay)
-{
-    return VT_CUSTOM_IMPLEMENTATION_NOT_PROVIDED;
-}
-
 uint32_t _vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
 {
     return VT_CUSTOM_IMPLEMENTATION_NOT_PROVIDED;

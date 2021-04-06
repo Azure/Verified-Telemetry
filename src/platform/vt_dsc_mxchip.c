@@ -5,22 +5,114 @@
 
 static uint32_t _vt_dsc_flash_get_sector(uint32_t Address);
 
-uint32_t _vt_dsc_delay_msec(uint32_t delay)
-{
-    HAL_Delay(delay);
+/*
 
-    return VT_SUCCESS;
+Sector 0    0x0800 0000 - 0x0800 3FFF 16 Kbyte
+Sector 1    0x0800 4000 - 0x0800 7FFF 16 Kbyte
+Sector 2    0x0800 8000 - 0x0800 BFFF 16 Kbyte
+Sector 3    0x0800 C000 - 0x0800 FFFF 16 Kbyte
+Sector 4    0x0801 0000 - 0x0801 FFFF 64 Kbyte
+Sector 5    0x0802 0000 - 0x0803 FFFF 128 Kbyte
+Sector 6    0x0804 0000 - 0x0805 FFFF 128 Kbyte
+Sector 7    0x0806 0000 - 0x0807 FFFF 128 Kbyte
+Sector 8    0x0808 0000 - 0x0809 FFFF 128 Kbyte
+Sector 9    0x080A 0000 - 0x080B FFFF 128 Kbyte
+Sector 10   0x080C 0000 - 0x080D FFFF 128 Kbyte
+Sector 11   0x080E 0000 - 0x080F FFFF 128 Kbyte
+
+*/
+
+static uint32_t _vt_dsc_flash_get_sector(uint32_t Address)
+{
+
+    if ((Address >= 0x08000000) && (Address < 0x08003FFF))
+    {
+        return FLASH_SECTOR_0;
+    }
+
+    else if ((Address >= 0x08004000) && (Address < 0x08007FFF))
+    {
+        return FLASH_SECTOR_1;
+    }
+
+    else if ((Address >= 0x08008000) && (Address < 0x0800BFFF))
+    {
+        return FLASH_SECTOR_2;
+    }
+
+    else if ((Address >= 0x0800C000) && (Address < 0x0800FFFF))
+    {
+        return FLASH_SECTOR_3;
+    }
+
+    else if ((Address >= 0x08010000) && (Address < 0x0801FFFF))
+    {
+        return FLASH_SECTOR_4;
+    }
+
+    else if ((Address >= 0x08020000) && (Address < 0x0803FFFF))
+    {
+        return FLASH_SECTOR_5;
+    }
+
+    else if ((Address >= 0x08040000) && (Address < 0x0805FFFF))
+    {
+        return FLASH_SECTOR_6;
+    }
+
+    else if ((Address >= 0x08060000) && (Address < 0x0807FFFF))
+    {
+        return FLASH_SECTOR_7;
+    }
+
+    else if ((Address >= 0x08080000) && (Address < 0x0809FFFF))
+    {
+        return FLASH_SECTOR_8;
+    }
+
+    else if ((Address >= 0x080A0000) && (Address < 0x080BFFFF))
+    {
+        return FLASH_SECTOR_9;
+    }
+
+    else if ((Address >= 0x080C0000) && (Address < 0x080DFFFF))
+    {
+        return FLASH_SECTOR_10;
+    }
+
+    else if ((Address >= 0x080E0000) && (Address < 0x080FFFFF))
+    {
+        return FLASH_SECTOR_11;
+    }
+
+    return VT_ERROR;
 }
 
 uint32_t _vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
 {
-    uint32_t start_time;
+    if (timer == NULL)
+    {
+        if (delay > 1000)
+        {
+            uint32_t msec_delay = delay / 1000;
+            HAL_Delay(msec_delay);
+        }
+        else
+        {
+            HAL_Delay(1);
+        }
+    }
+    
+    else
+    {
+        uint32_t start_time;
 
-    HAL_TIM_Base_Start(timer);
-    start_time = __HAL_TIM_GET_COUNTER(timer);
-    while (__HAL_TIM_GET_COUNTER(timer) - start_time < delay)
-        ;
-    HAL_TIM_Base_Stop(timer);
+        HAL_TIM_Base_Start(timer);
+        start_time = __HAL_TIM_GET_COUNTER(timer);
+        while (__HAL_TIM_GET_COUNTER(timer) - start_time < delay)
+            ;
+        HAL_TIM_Base_Stop(timer);
+    }
 
     return VT_SUCCESS;
 }
@@ -145,87 +237,4 @@ uint32_t _vt_dsc_flash_read(uint32_t flashAddress, void* rdBuf, uint32_t Nsize)
         *((uint32_t*)rdBuf + i) = *(uint32_t*)flashAddress;
 
     return VT_SUCCESS;
-}
-
-/*
-
-Sector 0    0x0800 0000 - 0x0800 3FFF 16 Kbyte
-Sector 1    0x0800 4000 - 0x0800 7FFF 16 Kbyte
-Sector 2    0x0800 8000 - 0x0800 BFFF 16 Kbyte
-Sector 3    0x0800 C000 - 0x0800 FFFF 16 Kbyte
-Sector 4    0x0801 0000 - 0x0801 FFFF 64 Kbyte
-Sector 5    0x0802 0000 - 0x0803 FFFF 128 Kbyte
-Sector 6    0x0804 0000 - 0x0805 FFFF 128 Kbyte
-Sector 7    0x0806 0000 - 0x0807 FFFF 128 Kbyte
-Sector 8    0x0808 0000 - 0x0809 FFFF 128 Kbyte
-Sector 9    0x080A 0000 - 0x080B FFFF 128 Kbyte
-Sector 10   0x080C 0000 - 0x080D FFFF 128 Kbyte
-Sector 11   0x080E 0000 - 0x080F FFFF 128 Kbyte
-
-*/
-
-static uint32_t _vt_dsc_flash_get_sector(uint32_t Address)
-{
-
-    if ((Address >= 0x08000000) && (Address < 0x08003FFF))
-    {
-        return FLASH_SECTOR_0;
-    }
-
-    else if ((Address >= 0x08004000) && (Address < 0x08007FFF))
-    {
-        return FLASH_SECTOR_1;
-    }
-
-    else if ((Address >= 0x08008000) && (Address < 0x0800BFFF))
-    {
-        return FLASH_SECTOR_2;
-    }
-
-    else if ((Address >= 0x0800C000) && (Address < 0x0800FFFF))
-    {
-        return FLASH_SECTOR_3;
-    }
-
-    else if ((Address >= 0x08010000) && (Address < 0x0801FFFF))
-    {
-        return FLASH_SECTOR_4;
-    }
-
-    else if ((Address >= 0x08020000) && (Address < 0x0803FFFF))
-    {
-        return FLASH_SECTOR_5;
-    }
-
-    else if ((Address >= 0x08040000) && (Address < 0x0805FFFF))
-    {
-        return FLASH_SECTOR_6;
-    }
-
-    else if ((Address >= 0x08060000) && (Address < 0x0807FFFF))
-    {
-        return FLASH_SECTOR_7;
-    }
-
-    else if ((Address >= 0x08080000) && (Address < 0x0809FFFF))
-    {
-        return FLASH_SECTOR_8;
-    }
-
-    else if ((Address >= 0x080A0000) && (Address < 0x080BFFFF))
-    {
-        return FLASH_SECTOR_9;
-    }
-
-    else if ((Address >= 0x080C0000) && (Address < 0x080DFFFF))
-    {
-        return FLASH_SECTOR_10;
-    }
-
-    else if ((Address >= 0x080E0000) && (Address < 0x080FFFFF))
-    {
-        return FLASH_SECTOR_11;
-    }
-
-    return VT_ERROR;
 }
