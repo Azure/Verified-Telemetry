@@ -159,7 +159,7 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint32_t* confidence_metric)
     status                            = _vt_sensor_calibrate(sensor_ptr, &states);
     sensor_ptr->vt_sampling_frequency = states.current_sampling_frequency;
 
-    printf("\tBest Possible Sampling Frequency = %d\n", states.current_sampling_frequency);
+    VTLogInfo("\tBest Possible Sampling Frequency = %d\n", states.current_sampling_frequency);
     if (status != VT_NOISY_FUNCTION_ERROR)
     {
         printf("\tFingerprint successfully generated.\n");
@@ -175,7 +175,7 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint32_t* confidence_metric)
 
     else
     {
-        printf("\tGenerated Fingerprint is not robust and has a low confidence metric. Please check if a working "
+        VTLogInfo("\tGenerated Fingerprint is not robust and has a low confidence metric. Please check if a working "
                "sensor is connected and retrigger the command.\n");
         *confidence_metric = 0;
     }

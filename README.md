@@ -168,7 +168,7 @@ Make the following additions to the [/getting-started/blob/master/MXChip/AZ3166/
 						    connected_sensors, (UCHAR *) "Telemetry1", 
 						    NUMBER_OF_VT_ENABLED_TELEMETRIES)))
 	    {
-		printf("Failed to initialize vTTelemetry1 component: error code = 0x%08x\r\n", status);
+		VTLogError("Failed to initialize vTTelemetry1 component: error code = 0x%08x\r\n", status);
 	    }
 	    
     	//  else if ((status = pnp_fallcurve_init(&sample_fallcurve_2, (UCHAR *)"vTTelemetry2", GPIOB,
@@ -176,7 +176,7 @@ Make the following additions to the [/getting-started/blob/master/MXChip/AZ3166/
 		// 					    connected_sensors, (UCHAR *) "Telemetry2", 
 		// 					    NUMBER_OF_VT_ENABLED_TELEMETRIES)))
     	// {
-    	//     printf("Failed to initialize vTTelemetry2 component: error code = 0x%08x\r\n", status);
+    	//     VTLogError("Failed to initialize vTTelemetry2 component: error code = 0x%08x\r\n", status);
     	// }
 		
 	    else if ((status = pnp_fallcurve_init(&sample_fallcurve_N, (UCHAR *) "vTTelemetryN", GPIOB,
@@ -184,12 +184,12 @@ Make the following additions to the [/getting-started/blob/master/MXChip/AZ3166/
 						    connected_sensors, (UCHAR *) "TelemetryN", 
 						    NUMBER_OF_VT_ENABLED_TELEMETRIES )))
 	    {
-		printf("Failed to initialize vTTelemetryN component: error code = 0x%08x\r\n", status);
+		VTLogError("Failed to initialize vTTelemetryN component: error code = 0x%08x\r\n", status);
 	    }
 	    else if ((status = pnp_vt_init(&verified_telemetry_DB, fallcurve_components, NUMBER_OF_VT_ENABLED_TELEMETRIES, 
 							true, 0x080E0000 )))
 	    {
-		printf("Failed to initialize Verified Telemetry: error code = 0x%08x\r\n", status);
+		VTLogError("Failed to initialize Verified Telemetry: error code = 0x%08x\r\n", status);
 	    }
 	    return (void*)(&verified_telemetry_DB);
 	}
