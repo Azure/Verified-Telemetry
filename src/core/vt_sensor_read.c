@@ -32,14 +32,14 @@ uint32_t vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint
     char buffer[10] = "";
     strcpy(fingerprint_string, "");
 
-    int status = _vt_sensor_read_fingerprint(sensor_ptr, fingerprint_array, sensor_ptr->vt_sampling_frequency);
+    uint32_t status = _vt_sensor_read_fingerprint(sensor_ptr, fingerprint_array, sensor_ptr->vt_sampling_frequency);
 
-    for (int i = 0; i < 100; i++)
+    for (uint8_t i = 0; i < VT_FINGERPRINT_LENGTH; i++)
     {
-        snprintf(buffer, sizeof(buffer), "%d", (int)fingerprint_array[i]);
+        snprintf(buffer, sizeof(buffer), "%d", (int32_t)fingerprint_array[i]);
         strcat(fingerprint_string, buffer);
 
-        if (i < 99)
+        if (i < VT_FINGERPRINT_LENGTH-1)
         {
             strcat(fingerprint_string, ",");
         }
@@ -48,9 +48,9 @@ uint32_t vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint
     return status;
 }
 
-uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int* sensor_id)
+uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int8_t* sensor_id)
 {
-    int fall_time;
+    uint32_t fall_time;
     float pearson_coefficient;
 
     *sensor_id = 0;
@@ -64,8 +64,8 @@ uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr,
     if (_vt_fingerprint_calculate_falltime_pearsoncoefficient(
             fingerprint, 100, sensor_ptr->vt_sampling_frequency, &fall_time, &pearson_coefficient) == VT_SUCCESS)
     {
-        int sensorid_ftpc = _vt_database_evaluate_pearson_falltime(database_ptr, fall_time, pearson_coefficient);
-        *sensor_id        = sensorid_ftpc;
+        int8_t sensorid_ftpc = _vt_database_evaluate_pearson_falltime(database_ptr, fall_time, pearson_coefficient);
+        *sensor_id           = sensorid_ftpc;
 
         return VT_SUCCESS;
     }
@@ -73,7 +73,7 @@ uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr,
     return VT_ERROR;
 }
 
-uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint_array, int sampling_frequency)
+uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint_array, uint16_t sampling_frequency)
 {
     if (sensor_ptr == NULL)
     {
@@ -89,7 +89,7 @@ uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprin
         return status;
     }
 
-    for (int i = 0; i < 100; i++)
+    for (uint8_t i = 0; i < VT_FINGERPRINT_LENGTH; i++)
     {
         status = _vt_dsc_adc_read(sensor_ptr->vt_adc_controller, sensor_ptr->vt_adc_channel, &fingerprint_array[i]);
         if (status != VT_SUCCESS)

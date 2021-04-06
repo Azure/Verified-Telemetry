@@ -9,10 +9,10 @@
 #include "vt_sensor.h"
 #include "vt_debug.h"
 
-static VT_FALL_STATE _vt_index37_state(int index_37);
+static VT_FALL_STATE _vt_index37_state(int8_t index_37);
 static uint32_t _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states);
 
-static VT_FALL_STATE _vt_index37_state(int index_37)
+static VT_FALL_STATE _vt_index37_state(int8_t index_37)
 {
     if (index_37 == -1)
     {
@@ -29,8 +29,8 @@ static VT_FALL_STATE _vt_index37_state(int index_37)
 
 static uint32_t _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states)
 {
-    int index_max;
-    int index_37;
+    uint8_t index_max;
+    int8_t index_37;
 
     _vt_sensor_read_fingerprint(sensor_ptr, states->current_fingerprint, states->current_sampling_frequency);
     states->current_shape = _vt_fingerprint_calculate_shape(states->current_fingerprint, VT_FINGERPRINT_LENGTH);
@@ -144,12 +144,12 @@ static uint32_t _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* stat
     return _vt_sensor_calibrate(sensor_ptr, states);
 }
 
-void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint32_t* confidence_metric)
+void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint8_t* confidence_metric)
 {
     printf("\tCalibrating Sensor Fingerprint\n");
 
     VT_STATE_BLOCK states;
-    int status;
+    uint32_t status;
 
     states.previous_sampling_frequency = -1;
     states.previous_shape              = -1;

@@ -24,17 +24,17 @@ typedef enum VT_NOISE_STATE
 
 typedef struct VT_STATE_BLOCK
 {
-    int previous_sampling_frequency;
+    uint16_t previous_sampling_frequency;
     VT_CURVE_SHAPE previous_shape;
     uint32_t previous_fingerprint[VT_FINGERPRINT_LENGTH];
 
-    int current_sampling_frequency;
+    uint16_t current_sampling_frequency;
     VT_CURVE_SHAPE current_shape;
     uint32_t current_fingerprint[VT_FINGERPRINT_LENGTH];
 
     VT_NOISE_STATE noise_state;
 } VT_STATE_BLOCK;
 
-uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint_array, int sampling_frequency);
+uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint_array, uint16_t sampling_frequency);
 
 #endif

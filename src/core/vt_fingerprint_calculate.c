@@ -7,13 +7,13 @@
 #include "vt_fingerprint.h"
 
 static uint8_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, uint32_t fingerprint_length);
-static void _vt_fingerprint_rankify(uint32_t* fingerprint, int fingerprint_length, uint32_t* fingerprint_ranked);
+static void _vt_fingerprint_rankify(uint32_t* fingerprint, uint8_t fingerprint_length, uint32_t* fingerprint_ranked);
 
 static uint8_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, uint32_t fingerprint_length)
 {
-    uint32_t index_min = 0;
+    uint8_t index_min = 0;
 
-    for (uint32_t i = 0; i < fingerprint_length; i++)
+    for (uint8_t i = 0; i < fingerprint_length; i++)
     {
         if (fingerprint[i] < fingerprint[index_min])
         {
@@ -24,16 +24,17 @@ static uint8_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, ui
     return index_min;
 }
 
-static void _vt_fingerprint_rankify(uint32_t* fingerprint, int fingerprint_length, uint32_t* fingerprint_ranked)
+static void _vt_fingerprint_rankify(uint32_t* fingerprint, uint8_t fingerprint_length, uint32_t* fingerprint_ranked)
 {
 
-    for (int i = 0; i < fingerprint_length; i++)
+    for (uint8_t i = 0; i < fingerprint_length; i++)
     {
-        int r = 1, s = 1;
+        uint8_t r = 1;
+        uint8_t s = 1;
 
         // Count no of smaller elements
         // in 0 to i-1
-        for (int j = 0; j < i; j++)
+        for (uint8_t j = 0; j < i; j++)
         {
             if (fingerprint[j] < fingerprint[i])
             {
@@ -48,7 +49,7 @@ static void _vt_fingerprint_rankify(uint32_t* fingerprint, int fingerprint_lengt
 
         // Count no of smaller elements
         // in i+1 to N-1
-        for (int j = i + 1; j < fingerprint_length; j++)
+        for (uint8_t j = i + 1; j < fingerprint_length; j++)
         {
             if (fingerprint[j] < fingerprint[i])
             {
@@ -69,7 +70,7 @@ static void _vt_fingerprint_rankify(uint32_t* fingerprint, int fingerprint_lengt
 uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerprint,
     uint32_t fingerprint_length,
     uint32_t sampling_frequency,
-    int* fall_time,
+    uint32_t* fall_time,
     float* pearson_coefficient)
 {
 
@@ -119,12 +120,12 @@ uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerp
     return VT_ERROR;
 }
 
-VT_CURVE_SHAPE _vt_fingerprint_calculate_shape(uint32_t* fingerprint, int fingerprint_length)
+VT_CURVE_SHAPE _vt_fingerprint_calculate_shape(uint32_t* fingerprint, uint8_t fingerprint_length)
 {
     uint32_t ranked[VT_FINGERPRINT_LENGTH];
     uint32_t arraylinear[VT_FINGERPRINT_LENGTH];
     uint32_t arrayexp[VT_FINGERPRINT_LENGTH];
-    int i;
+    uint8_t i;
 
     _vt_fingerprint_rankify(fingerprint, fingerprint_length, ranked);
 

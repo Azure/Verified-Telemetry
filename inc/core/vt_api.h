@@ -70,27 +70,27 @@ uint32_t vt_sensor_initialize(VT_SENSOR* sensor_ptr,
     TIMER_HANDLE_TYPEDEF* timer_handler);
 
 // Calibrate
-void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint32_t* confidence_metric);
+void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint8_t* confidence_metric);
 
 // Read
 uint32_t vt_sensor_read_value(VT_SENSOR* sensor_ptr, uint32_t* sensor_value);
 
 uint32_t vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint_array, char* fingerprint_string);
 
-uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int* sensor_id);
+uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int8_t* sensor_id);
 
 // Database
 uint32_t vt_database_initialize(VT_DATABASE* database_ptr);
 
 uint32_t vt_database_store(
-    VT_DATABASE* database_ptr, uint32_t* fingerprint_array, int sampling_frequency, int sensor_id);
+    VT_DATABASE* database_ptr, uint32_t* fingerprint_array, uint16_t sampling_frequency, uint8_t sensor_id);
 
 uint32_t vt_database_clear(VT_DATABASE* database_ptr);
 
 // Fetch
-uint32_t vt_database_falltime_fetch(VT_DATABASE* database_ptr, int* index, int* fall_time, int* sensor_id);
+uint32_t vt_database_falltime_fetch(VT_DATABASE* database_ptr, uint8_t* index, uint32_t* fall_time, uint8_t* sensor_id);
 
 uint32_t vt_database_pearsoncoefficient_fetch(
-    VT_DATABASE* database_ptr, int* index, float* pearson_coefficient, int* sensor_id);
+    VT_DATABASE* database_ptr, uint8_t* index, float* pearson_coefficient, uint8_t* sensor_id);
 
 #endif

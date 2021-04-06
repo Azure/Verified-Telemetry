@@ -6,10 +6,10 @@
 #include "vt_database.h"
 #include "vt_fingerprint.h"
 
-static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, uint32_t fall_time);
-static int _vt_database_pearsoncoefficient_falltimeindex_search(VT_DATABASE* database_ptr, int value);
+static uint8_t _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, uint32_t fall_time);
+static uint8_t _vt_database_pearsoncoefficient_falltimeindex_search(VT_DATABASE* database_ptr, uint8_t value);
 
-static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, uint32_t fall_time)
+static uint8_t _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, uint32_t fall_time)
 {
     uint8_t i;
 
@@ -31,7 +31,7 @@ static int _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, 
     }
 }
 
-static int _vt_database_pearsoncoefficient_falltimeindex_search(VT_DATABASE* database_ptr, int value)
+static uint8_t _vt_database_pearsoncoefficient_falltimeindex_search(VT_DATABASE* database_ptr, uint8_t value)
 {
     uint8_t i;
     for (i = 0;
@@ -42,7 +42,7 @@ static int _vt_database_pearsoncoefficient_falltimeindex_search(VT_DATABASE* dat
     return i;
 }
 
-int _vt_database_evaluate_nrmse(VT_DATABASE* database_ptr, uint32_t* fallcurvearray)
+int8_t _vt_database_evaluate_nrmse(VT_DATABASE* database_ptr, uint32_t* fallcurvearray)
 {
     if (database_ptr->_vt_total_fingerprints <= 0)
     {
@@ -51,7 +51,7 @@ int _vt_database_evaluate_nrmse(VT_DATABASE* database_ptr, uint32_t* fallcurvear
 
     float nrmse[10];
     float min = 65355.00f;
-    int index;
+    int8_t index;
 
     for (uint8_t i = 0; i < (database_ptr->_vt_total_fingerprints); i++)
         nrmse[i] = _vt_fingerprint_evaluate_nrmse(&(database_ptr->_vt_fingerprintdb[i][2]), fallcurvearray, VT_FINGERPRINT_LENGTH);
@@ -72,7 +72,7 @@ int _vt_database_evaluate_nrmse(VT_DATABASE* database_ptr, uint32_t* fallcurvear
     }
 }
 
-int _vt_database_evaluate_pearson_falltime(VT_DATABASE* database_ptr, int fall_time, float pearson_coefficient)
+int8_t _vt_database_evaluate_pearson_falltime(VT_DATABASE* database_ptr, uint32_t fall_time, float pearson_coefficient)
 {
     if (database_ptr->_vt_total_falltime == 0)
     {
@@ -80,7 +80,7 @@ int _vt_database_evaluate_pearson_falltime(VT_DATABASE* database_ptr, int fall_t
     }
 
     // Find index of the member nearest to the recieved Fall Time
-    int nearest_index = _vt_database_falltime_nearestindex_search(database_ptr, fall_time);
+    uint8_t nearest_index = _vt_database_falltime_nearestindex_search(database_ptr, fall_time);
 
     // Check if the variation from the nearest fall time is less than the
     // threshold
@@ -90,7 +90,7 @@ int _vt_database_evaluate_pearson_falltime(VT_DATABASE* database_ptr, int fall_t
     {
 
         // Find index of the existing label
-        int index = _vt_database_pearsoncoefficient_falltimeindex_search(
+        uint8_t index = _vt_database_pearsoncoefficient_falltimeindex_search(
             database_ptr, database_ptr->_vt_falltimedb[nearest_index][0]);
 
         // Check if the variation from the nearest Pearsdon Coefficient is less than

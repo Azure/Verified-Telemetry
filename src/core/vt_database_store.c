@@ -9,10 +9,10 @@
 #include "vt_debug.h"
 
 static uint32_t _vt_database_store_fingerprint(
-    VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensor_id);
+    VT_DATABASE* database_ptr, uint32_t* fallcurvearray, uint16_t sampling_frequency, uint8_t sensor_id);
 
 static uint32_t _vt_database_store_fingerprint(
-    VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensor_id)
+    VT_DATABASE* database_ptr, uint32_t* fallcurvearray, uint16_t sampling_frequency, uint8_t sensor_id)
 {
     if (database_ptr == NULL)
     {
@@ -29,9 +29,9 @@ static uint32_t _vt_database_store_fingerprint(
     return VT_SUCCESS;
 }
 
-uint32_t vt_database_store(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensor_id)
+uint32_t vt_database_store(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, uint16_t sampling_frequency, uint8_t sensor_id)
 {
-    int falltime;
+    uint32_t falltime;
     float pearson_coefficient;
 
     if (_vt_fingerprint_calculate_falltime_pearsoncoefficient(
@@ -47,7 +47,7 @@ uint32_t vt_database_store(VT_DATABASE* database_ptr, uint32_t* fallcurvearray, 
     return VT_ERROR;
 }
 
-uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, uint32_t fall_time, int sensor_id)
+uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, uint32_t fall_time, uint8_t sensor_id)
 {
     uint8_t i;
 
@@ -67,17 +67,17 @@ uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, uint32_t fall_ti
     database_ptr->_vt_falltimedb[i][0] = sensor_id;
     database_ptr->_vt_falltimedb[i][1] = fall_time;
   
-    VTLogInfo("\tStored FallTime = %d\r\n",(int)database_ptr->_vt_falltimedb[i][1]);
+    VTLogInfo("\tStored FallTime = %d\r\n",(int32_t)database_ptr->_vt_falltimedb[i][1]);
   
     return VT_SUCCESS;
 }
 
-uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float pearson_coefficient, int sensor_id)
+uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float pearson_coefficient, uint8_t sensor_id)
 {
     uint8_t i;
-    int pearsonCoeffInt1;
+    int32_t pearsonCoeffInt1;
     float pearsonCoeffFrac;
-    int pearsonCoeffInt2;
+    int32_t pearsonCoeffInt2;
 
     // Scan through DB
     for (i = 0; (i < database_ptr->_vt_total_pearson_coefficient) &&

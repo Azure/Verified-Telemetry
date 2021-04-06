@@ -32,21 +32,6 @@ uint32_t _vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
     return VT_SUCCESS;
 }
 
-uint32_t _vt_dsc_gpio_read(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPEDEF gpio_pin, int* state)
-{
-    if (HAL_GPIO_ReadPin(gpio_port, gpio_pin) == GPIO_PIN_SET)
-    {
-        *state = 1;
-    }
-
-    else if (HAL_GPIO_ReadPin(gpio_port, gpio_pin) == GPIO_PIN_RESET)
-    {
-        *state = 0;
-    }
-
-    return VT_SUCCESS;
-}
-
 uint32_t _vt_dsc_gpio_turn_on(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPEDEF gpio_pin)
 {
     HAL_GPIO_WritePin(gpio_port, gpio_pin, GPIO_PIN_SET);

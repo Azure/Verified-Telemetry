@@ -6,7 +6,7 @@
 #include "vt_fingerprint.h"
 
 float _vt_fingerprint_evaluate_correlation_coefficient(
-    uint32_t* fingerpint1, uint32_t* fingerpint2, int fingerprint_length)
+    uint32_t* fingerpint1, uint32_t* fingerpint2, uint8_t fingerprint_length)
 {
     float sum_fingerprint1             = 0;
     float sum_fingerprint2             = 0;
@@ -14,7 +14,7 @@ float _vt_fingerprint_evaluate_correlation_coefficient(
     float squareSum_fingerprint1       = 0;
     float squareSum_fingerprint2       = 0;
 
-    for (int i = 0; i < fingerprint_length; i++)
+    for (uint8_t i = 0; i < fingerprint_length; i++)
     {
         // sum of elements of array fingerpint1.
         sum_fingerprint1 = sum_fingerprint1 + fingerpint1[i];
@@ -39,7 +39,7 @@ float _vt_fingerprint_evaluate_correlation_coefficient(
     return corr;
 }
 
-float _vt_fingerprint_evaluate_nrmse(uint32_t* fingerpint1, uint32_t* fingerpint2, int length)
+float _vt_fingerprint_evaluate_nrmse(uint32_t* fingerpint1, uint32_t* fingerpint2, uint8_t length)
 {
     float nrmse;
     uint32_t diff;
@@ -51,7 +51,7 @@ float _vt_fingerprint_evaluate_nrmse(uint32_t* fingerpint1, uint32_t* fingerpint
     float meansq;
     float rmse;
 
-    for (int iter1 = 0; iter1 < length; iter1++)
+    for (uint8_t iter1 = 0; iter1 < length; iter1++)
     {
         diff        = fingerpint1[iter1] - fingerpint2[iter1];
         aggregate   = aggregate + fingerpint1[iter1];
