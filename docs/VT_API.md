@@ -51,10 +51,10 @@ Initializes an instance of Verified Telemetry Information Interface
 UINT pnp_fallcurve_init(
     PNP_FALLCURVE_COMPONENT             handle, 
     UCHAR *                     	component_name_ptr,
-    GPIO_PORT_TYPEDEF *                 GPIOx,
-    GPION_PIN_TYPEDEF               	GPIO_Pin, 
-    ADC_CONTROLLER_TYPEDEF *            ADC_Controller,
-    ADC_CHANNEL_TYPEDEF                 ADC_Channel,
+    GPIO_PORT_TYPEDEF *                 gpio_port,
+    GPIO_PIN_TYPEDEF               	gpio_pin, 
+    ADC_CONTROLLER_TYPEDEF *            adc_controller,
+    ADC_CHANNEL_TYPEDEF                 adc_channel,
     TIMER_HANDLE_TYPEDEF *              Timer,
     PNP_FALLCURVE_COMPONENT **          fallcurve_components,
     CHAR **                     	connected_sensors,
@@ -68,13 +68,13 @@ UINT pnp_fallcurve_init(
 
 * `component_name_ptr` Name of the component. 
 
-* `GPIOx` GPIO Port to which the corresponding sensor is connected.
+* `gpio_port` GPIO Port to which the corresponding sensor is connected.
 
-* `GPIO_Pin` GPIO Pin to which the corresponding sensor is connected.
+* `gpio_pin` GPIO Pin to which the corresponding sensor is connected.
 
-* `ADC_Controller` ADC Controller to which the corresponding sensor is connected.
+* `adc_controller` ADC Controller to which the corresponding sensor is connected.
 
-* `ADC_Channel` ADC Channel to which the corresponding sensor is connected.
+* `adc_channel` ADC Channel to which the corresponding sensor is connected.
 
 * `Timer` Provide initialized timer for better performance of vT Library, if not available pass NULL.
 

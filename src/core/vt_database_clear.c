@@ -1,7 +1,10 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
+#include <string.h>
+
 #include "vt_database.h"
+#include "vt_dsc.h"
 
 uint32_t vt_database_clear(VT_DATABASE* database_ptr)
 {
@@ -19,26 +22,26 @@ uint32_t vt_database_clear(VT_DATABASE* database_ptr)
         if (temp[0] == FLASH_DB_START_VALUE)
         {
             total_fingerprints = temp[1];
-            _vt_dsc_flash_read(database_ptr->vt_flash_address, temp, 2 + total_fingerprints * 103);
-            for (uint32_t index = 2; index < (2 + total_fingerprints * 103); index += 103)
+            _vt_dsc_flash_read(database_ptr->vt_flash_address, temp, 2 + total_fingerprints * VT_FLASH_FINGERPRINT_LENGTH);
+            for (uint32_t index = 2; index < (2 + total_fingerprints * VT_FLASH_FINGERPRINT_LENGTH); index += VT_FLASH_FINGERPRINT_LENGTH)
             {
-                while (temp[index] == database_ptr->vt_fallcurve_component_id && index < (total_fingerprints * 103 + 2))
+                while (temp[index] == database_ptr->vt_fallcurve_component_id && index < (total_fingerprints * VT_FLASH_FINGERPRINT_LENGTH + 2))
                 {
-                    index += 103;
+                    index += VT_FLASH_FINGERPRINT_LENGTH;
                     total_fingerprints_of_this_component++;
                 }
-                if (index >= (total_fingerprints * 103 + 2))
+                if (index >= (total_fingerprints * VT_FLASH_FINGERPRINT_LENGTH + 2))
                 {
                     break;
                 }
-                for (int iter = 0; iter < 103; iter++)
+                for (int iter = 0; iter < VT_FLASH_FINGERPRINT_LENGTH; iter++)
                 {
-                    temp[(index - 103 * total_fingerprints_of_this_component) + iter] = temp[index + iter];
+                    temp[(index - VT_FLASH_FINGERPRINT_LENGTH * total_fingerprints_of_this_component) + iter] = temp[index + iter];
                 }
             }
             total_fingerprints -= total_fingerprints_of_this_component;
             temp[1] = total_fingerprints;
-            _vt_dsc_flash_write(database_ptr->vt_flash_address, temp, (total_fingerprints * 103 + 2));
+            _vt_dsc_flash_write(database_ptr->vt_flash_address, temp, (total_fingerprints * VT_FLASH_FINGERPRINT_LENGTH + 2));
         }
     }
 

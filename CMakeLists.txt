@@ -96,6 +96,7 @@ target_include_directories(${TARGET}
     PUBLIC 
         .
         inc/core
+	inc/core/internal
         inc/middleware
         inc/platform
 )

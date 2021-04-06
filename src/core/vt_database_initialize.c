@@ -1,7 +1,12 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
+#include <string.h>
+
 #include "vt_database.h"
+#include "vt_fingerprint.h"
+#include "vt_dsc.h"
+#include "vt_debug.h"
 
 uint32_t vt_database_initialize(VT_DATABASE* database_ptr, uint32_t flash_address, uint32_t fallcurve_component_id)
 {
@@ -32,30 +37,30 @@ void _vt_database_initialize_fingerprintdb(VT_DATABASE* database_ptr)
         if (temp[0] == FLASH_DB_START_VALUE)
         {
             total_fingerprints = temp[1];
-            _vt_dsc_flash_read(database_ptr->vt_flash_address, temp, 2 + total_fingerprints * 103);
+            _vt_dsc_flash_read(database_ptr->vt_flash_address, temp, 2 + total_fingerprints * VT_FLASH_FINGERPRINT_LENGTH);
 
             uint32_t row, column, index;
 
-            for (row = 0, index = 2; index < (total_fingerprints * 103 + 2); row++)
+            for (row = 0, index = 2; index < (total_fingerprints * VT_FLASH_FINGERPRINT_LENGTH + 2); row++)
             {
-                while (temp[index] != database_ptr->vt_fallcurve_component_id && index < (total_fingerprints * 103 + 2))
+                while (temp[index] != database_ptr->vt_fallcurve_component_id && index < (total_fingerprints * VT_FLASH_FINGERPRINT_LENGTH + 2))
                 {
-                    index += 103;
+                    index += VT_FLASH_FINGERPRINT_LENGTH;
                 }
-                if (index >= (total_fingerprints * 103 + 2))
+                if (index >= (total_fingerprints * VT_FLASH_FINGERPRINT_LENGTH + 2))
                 {
                     break;
                 }
 
                 index++;
                 total_fingerprints_of_this_component++;
-                for (column = 0; column < 102; column++, index++)
+                for (column = 0; column < VT_FINGERPRINT_DB_LENGTH; column++, index++)
                 {
                     database_ptr->_vt_fingerprintdb[row][column] = (uint32_t)temp[index];
                 }
             }
             database_ptr->_vt_total_fingerprints = total_fingerprints_of_this_component;
-            printf("\nTotal Fingerprints %d\n", (int)database_ptr->_vt_total_fingerprints);
+            VTLogInfo("\nTotal Fingerprints %d\n", (int)database_ptr->_vt_total_fingerprints);
         }
         else
         {
@@ -76,7 +81,7 @@ void _vt_database_initialize_falltimedb(VT_DATABASE* database_ptr)
         int falltime;
         float pearson_coefficient;
 
-        for (uint32_t i = 0; i < database_ptr->_vt_total_fingerprints; i++)
+        for (uint8_t i = 0; i < database_ptr->_vt_total_fingerprints; i++)
         {
             if (_vt_fingerprint_calculate_falltime_pearsoncoefficient(&(database_ptr->_vt_fingerprintdb[i][2]),
                     100,

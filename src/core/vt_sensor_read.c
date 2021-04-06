@@ -1,6 +1,8 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
+#include <string.h>
+
 #include "vt_database.h"
 #include "vt_dsc.h"
 #include "vt_sensor.h"
@@ -20,9 +22,7 @@ uint32_t vt_sensor_read_value(VT_SENSOR* sensor_ptr, uint32_t* sensor_value)
         return status;
     }
 
-    // tx_mutex_get(&sensor_ptr->vt_mutex_ptr, TX_WAIT_FOREVER);
     status = _vt_dsc_adc_read(sensor_ptr->vt_adc_controller, sensor_ptr->vt_adc_channel, sensor_value);
-    // tx_mutex_put(&sensor_ptr->vt_mutex_ptr);
 
     return (status);
 }
@@ -48,16 +48,16 @@ uint32_t vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint
     return status;
 }
 
-uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int* sensorid)
+uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int* sensor_id)
 {
     int fall_time;
     float pearson_coefficient;
 
-    *sensorid = 0;
+    *sensor_id = 0;
 
-    if(_vt_database_check_pearson_falltime_availability(database_ptr))
+    if (_vt_database_check_pearson_falltime_availability(database_ptr))
     {
-        *sensorid = -1;
+        *sensor_id = -1;
         return VT_SUCCESS;
     }
 
@@ -65,12 +65,7 @@ uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr,
             fingerprint, 100, sensor_ptr->vt_sampling_frequency, &fall_time, &pearson_coefficient) == VT_SUCCESS)
     {
         int sensorid_ftpc = _vt_database_evaluate_pearson_falltime(database_ptr, fall_time, pearson_coefficient);
-        // printf("\n%.*s telemetry status = %s \n",
-        //     strlen(sensor_ptr->vt_sensor_name),
-        //     sensor_ptr->vt_sensor_name,
-        //     (sensorid_ftpc > 0) ? "true" : "false");
-
-        *sensorid = sensorid_ftpc;
+        *sensor_id        = sensorid_ftpc;
 
         return VT_SUCCESS;
     }
@@ -96,23 +91,13 @@ uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprin
 
     for (int i = 0; i < 100; i++)
     {
-        // tx_mutex_get(&sensor_ptr->vt_mutex_ptr, TX_WAIT_FOREVER);
         status = _vt_dsc_adc_read(sensor_ptr->vt_adc_controller, sensor_ptr->vt_adc_channel, &fingerprint_array[i]);
-        // tx_mutex_put(&sensor_ptr->vt_mutex_ptr);
         if (status != VT_SUCCESS)
         {
             return status;
         }
 
-        if (sensor_ptr->vt_timer != NULL)
-        {
-            _vt_dsc_delay_usec(sensor_ptr->vt_timer, sampling_frequency);
-        }
-        else
-        {
-            _vt_dsc_delay_msec(sampling_frequency);
-        }
-
+        status = _vt_dsc_delay_usec(sensor_ptr->vt_timer, sampling_frequency);
         if (status != VT_SUCCESS)
         {
             return status;
