@@ -6,6 +6,7 @@
 #include "vt_fingerprint.h"
 #include "vt_database.h"
 #include "vt_dsc.h"
+#include "vt_debug.h"
 
 static uint32_t _vt_database_store_fingerprint(
     VT_DATABASE* database_ptr, uint32_t* fallcurvearray, int sampling_frequency, int sensor_id);
@@ -101,7 +102,7 @@ uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, uint32_t fall_ti
     database_ptr->_vt_falltimedb[i][0] = sensor_id;
     database_ptr->_vt_falltimedb[i][1] = fall_time;
   
-    VTLogInfo("\tStored FallTime = %d\r\n", database_ptr->_vt_falltimedb[i][1]);
+    VTLogInfo("\tStored FallTime = %d\r\n",(int)database_ptr->_vt_falltimedb[i][1]);
   
     return VT_SUCCESS;
 }

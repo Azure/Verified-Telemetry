@@ -1,8 +1,10 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-#include "pnp_verified_telemetry.h"
 #include <stdio.h>
+
+#include "pnp_verified_telemetry.h"
+#include "vt_debug.h"
 
 #define DB_Size 110
 

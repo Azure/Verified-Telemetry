@@ -7,7 +7,6 @@
 #include <stdio.h>
 
 #include "vt_port.h"
-#include "vt_debug.h"
 
 #define VT_SUCCESS                  0X00
 #define VT_ERROR                    0X01

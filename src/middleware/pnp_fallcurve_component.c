@@ -3,8 +3,8 @@
 
 #include "pnp_fallcurve_component.h"
 
-// Update exposed function, quick fix for now
 #include "vt_database.h"
+#include "vt_debug.h"
 
 #define DOUBLE_DECIMAL_PLACE_DIGITS   (2)
 #define SAMPLE_COMMAND_SUCCESS_STATUS (200)
@@ -206,7 +206,7 @@ UINT get_fallcurve(PNP_FALLCURVE_COMPONENT* handle, VT_DATABASE* fingerprintdb, 
         else
         {
             // VTLogInfo("Fingerprint Evaluation Successful\r\n");
-            if (sensorid > 0)
+            if (sensor_id > 0)
             {
                 handle->sensorConnected = (CHAR*)handle->connected_sensors[sensor_id - 1];
                 if (((strlen(handle->sensorConnected) == strlen(handle->associatedSensor)) &&
