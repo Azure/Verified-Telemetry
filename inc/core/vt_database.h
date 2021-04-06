@@ -8,8 +8,6 @@
 
 #include "vt_api.h"
 
-#define VT_FLASH_FINGERPRINT_LENGTH           103
-
 // Initialize
 void _vt_database_initialize_fingerprintdb(VT_DATABASE* database_ptr);
 

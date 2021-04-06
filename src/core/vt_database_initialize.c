@@ -54,7 +54,7 @@ void _vt_database_initialize_fingerprintdb(VT_DATABASE* database_ptr)
 
                 index++;
                 total_fingerprints_of_this_component++;
-                for (column = 0; column < 102; column++, index++)
+                for (column = 0; column < VT_FINGERPRINT_DB_LENGTH; column++, index++)
                 {
                     database_ptr->_vt_fingerprintdb[row][column] = (uint32_t)temp[index];
                 }
