@@ -21,8 +21,7 @@ UINT pnp_vt_init(
 	void * 				verified_telemetry_DB, 
 	PNP_FALLCURVE_COMPONENT ** 	fallcurve_components,
 	UINT 				numberVerifiedTelemetries,
-	bool 				enableVerifiedTelemetry, 
-	UINT 				flash_address
+	bool 				enableVerifiedTelemetry
 	);
 ```
 
@@ -34,8 +33,6 @@ UINT pnp_vt_init(
 * `numberVerifiedTelemetries` Number of telemetries which would be supporting verified telemetry feature.
 
 * `enableVerifiedTelemetry` User specified value to set Verified Telemetry active or inactive, can also be configured during runtime from a writable Digital Twin property.
-
-* `flash_address` Starting address of FLASH memory where runtime configuration settings of Verified Telemetry can be stored. This can be NULL if user does not want to use FLASH to store Verified Telemetry runtime configuration settings.
 
 ## Return Value
 NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
