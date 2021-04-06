@@ -76,6 +76,14 @@ extern "C"
         bool enableVerifiedTelemetry,
         UINT flash_address);
 
+    UINT pnp_vt_verified_telemetry_message_create_send(NX_AZURE_IOT_PNP_CLIENT *pnp_client_ptr,
+                                                      const UCHAR *component_name_ptr,
+                                                      UINT component_name_length,
+                                                      UINT wait_option,
+                                                      const UCHAR *telemetry_data,
+                                                      UINT data_size,
+                                                      void* verified_telemetry_DB);
+
 #ifdef __cplusplus
 }
 #endif
