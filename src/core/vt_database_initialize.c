@@ -37,17 +37,17 @@ void _vt_database_initialize_fingerprintdb(VT_DATABASE* database_ptr)
         if (temp[0] == FLASH_DB_START_VALUE)
         {
             total_fingerprints = temp[1];
-            _vt_dsc_flash_read(database_ptr->vt_flash_address, temp, 2 + total_fingerprints * 103);
+            _vt_dsc_flash_read(database_ptr->vt_flash_address, temp, 2 + total_fingerprints * VT_FLASH_FINGERPRINT_LENGTH);
 
             uint32_t row, column, index;
 
-            for (row = 0, index = 2; index < (total_fingerprints * 103 + 2); row++)
+            for (row = 0, index = 2; index < (total_fingerprints * VT_FLASH_FINGERPRINT_LENGTH + 2); row++)
             {
-                while (temp[index] != database_ptr->vt_fallcurve_component_id && index < (total_fingerprints * 103 + 2))
+                while (temp[index] != database_ptr->vt_fallcurve_component_id && index < (total_fingerprints * VT_FLASH_FINGERPRINT_LENGTH + 2))
                 {
-                    index += 103;
+                    index += VT_FLASH_FINGERPRINT_LENGTH;
                 }
-                if (index >= (total_fingerprints * 103 + 2))
+                if (index >= (total_fingerprints * VT_FLASH_FINGERPRINT_LENGTH + 2))
                 {
                     break;
                 }
