@@ -73,8 +73,7 @@ extern "C"
         UCHAR* component_name_ptr,
         PNP_FALLCURVE_COMPONENT** fallcurve_components,
         UINT numberVerifiedTelemetries,
-        bool enableVerifiedTelemetry,
-        UINT flash_address);
+        bool enableVerifiedTelemetry);
 
     UINT pnp_vt_verified_telemetry_message_create_send(NX_AZURE_IOT_PNP_CLIENT *pnp_client_ptr,
                                                       const UCHAR *component_name_ptr,

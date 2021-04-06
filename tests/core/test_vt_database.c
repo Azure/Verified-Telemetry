@@ -177,13 +177,6 @@ static void test_vt_database_store_pearsoncoefficient(void** state)
     assert_float_equal(test_database_ptr._vt_pearson_coefficientdb[1][1], 0.8564, 0.001);
 }
 
-static void test_vt_database_store_flash(void** state)
-{
-    (void)state;
-
-    // Static Function
-}
-
 static void test_vt_database_store(void** state)
 {
     (void)state;
@@ -369,7 +362,6 @@ int test_vt_database()
         cmocka_unit_test(test_vt_database_store_fingerprint),
         cmocka_unit_test_setup_teardown(test_vt_database_store_falltime, vt_database_reset, vt_database_reset),
         cmocka_unit_test_setup_teardown(test_vt_database_store_pearsoncoefficient, vt_database_reset, vt_database_reset),
-        cmocka_unit_test(test_vt_database_store_flash),
         cmocka_unit_test_setup_teardown(test_vt_database_store, vt_database_reset, vt_database_reset),
         cmocka_unit_test_setup_teardown(test_vt_database_evaluate_nrmse, vt_database_set, vt_database_reset),
         cmocka_unit_test_setup_teardown(test_vt_database_evaluate_pearson_falltime, vt_database_set, vt_database_reset),

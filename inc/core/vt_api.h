@@ -19,7 +19,6 @@
 #define VT_STEP_FUNCTION_ERROR      0X13
 #define VT_NOISY_FUNCTION_ERROR     0X14
 
-#define FLASH_DB_START_VALUE          0x42
 #define VT_SHAPE_THRESHOLD            0.85f
 #define VT_PRECISION_THRESHOLD        20
 #define VT_REPEATABILITY_THRESHOLD    0.3f
@@ -34,7 +33,6 @@
 #define VT_FINGERPRINT_DB_LENGTH        VT_FINGERPRINT_LENGTH + 2
 #define VT_FALLTIME_DB_LENGTH           2
 #define VT_PEARSONCOEFFICIENT_DB_LENGTH 2
-#define VT_FLASH_FINGERPRINT_LENGTH     103
 
 typedef struct VT_SENSOR_STRUCT
 {
@@ -52,9 +50,6 @@ typedef struct VT_SENSOR_STRUCT
 
 typedef struct VT_DATABASE_STRUCT
 {
-    uint32_t vt_flash_address;
-    uint32_t vt_fallcurve_component_id;
-
     uint8_t _vt_total_fingerprints;
     uint32_t _vt_fingerprintdb[VT_DB_SIZE][VT_FINGERPRINT_DB_LENGTH];
 
@@ -63,7 +58,6 @@ typedef struct VT_DATABASE_STRUCT
 
     uint8_t _vt_total_pearson_coefficient;
     float _vt_pearson_coefficientdb[VT_DB_SIZE][VT_PEARSONCOEFFICIENT_DB_LENGTH];
-
 } VT_DATABASE;
 
 // Initialize
@@ -86,7 +80,7 @@ uint32_t vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint
 uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int* sensor_id);
 
 // Database
-uint32_t vt_database_initialize(VT_DATABASE* database_ptr, uint32_t flash_address, uint32_t fallcurve_component_id);
+uint32_t vt_database_initialize(VT_DATABASE* database_ptr);
 
 uint32_t vt_database_store(
     VT_DATABASE* database_ptr, uint32_t* fingerprint_array, int sampling_frequency, int sensor_id);

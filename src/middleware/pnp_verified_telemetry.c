@@ -314,8 +314,7 @@ UINT pnp_vt_init(void* verified_telemetry_DB,
     UCHAR* component_name_ptr,
     PNP_FALLCURVE_COMPONENT** fallcurve_components,
     UINT numberVerifiedTelemetries,
-    bool enableVerifiedTelemetry,
-    UINT flash_address)
+    bool enableVerifiedTelemetry)
 {
     VERIFIED_TELEMETRY_DB* VT_DB     = ((VERIFIED_TELEMETRY_DB*)verified_telemetry_DB);
     VT_DB->component_name_ptr    = component_name_ptr;
@@ -324,12 +323,6 @@ UINT pnp_vt_init(void* verified_telemetry_DB,
     VT_DB->fallcurve_components_num  = numberVerifiedTelemetries;
     VT_DB->enableVerifiedTelemetry   = enableVerifiedTelemetry;
     VT_DB->deviceStatusProperty_sent = false;
-
-    for (UINT i = 0; i < VT_DB->fallcurve_components_num; i++)
-    {
-        vt_database_initialize(&(fallcurve_components[i]->fingerprintdb), flash_address, (i + 1));
-        fallcurve_components[i]->flash_address = flash_address;
-    }
 
     return NX_AZURE_IOT_SUCCESS;
 }

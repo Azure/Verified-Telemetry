@@ -27,18 +27,3 @@ uint32_t _vt_dsc_adc_read(ADC_CONTROLLER_TYPEDEF* adc_controller, ADC_CHANNEL_TY
 {
     return VT_CUSTOM_IMPLEMENTATION_NOT_PROVIDED;
 }
-
-uint32_t _vt_dsc_flash_erase(uint32_t flashAddress, uint32_t Nsize)
-{
-    return VT_CUSTOM_IMPLEMENTATION_NOT_PROVIDED;
-}
-
-uint32_t _vt_dsc_flash_write(uint32_t flashAddress, void* wrBuf, uint32_t Nsize)
-{
-    return VT_CUSTOM_IMPLEMENTATION_NOT_PROVIDED;
-}
-
-uint32_t _vt_dsc_flash_read(uint32_t flashAddress, void* rdBuf, uint32_t Nsize)
-{
-    return VT_CUSTOM_IMPLEMENTATION_NOT_PROVIDED;
-}

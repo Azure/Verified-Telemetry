@@ -146,7 +146,7 @@ UINT pnp_fallcurve_init(PNP_FALLCURVE_COMPONENT* handle,
     handle->connected_sensors     = connected_sensors;
     handle->connected_sensors_num = numberVerifiedTelemetries;
     handle->templateConfidenceMetric = 0;
-    // vt_database_initialize(&(handle->fingerprintdb), 0x080E0000);
+    // vt_database_initialize(&(handle->fingerprintdb));
 
     if (addFallcurveToDB(fallcurve_components, handle, numberVerifiedTelemetries))
     {
@@ -544,11 +544,6 @@ static UINT sync_fingerprintTemplate(
     CHAR* token; 
     CHAR* saveptr;
     CHAR* csvString;
-
-    if (handle->flash_address != 0x00)
-    {
-        return NX_SUCCESS;
-    }
 
     vt_database_clear(&(handle->fingerprintdb));
     // VTLogInfo("Cleared DB\r\n");
