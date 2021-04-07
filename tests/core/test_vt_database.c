@@ -1,8 +1,8 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-#include "vt_test_definitions.h"
 #include "vt_test_curves.h"
+#include "vt_test_definitions.h"
 
 #include "vt_api.h"
 #include "vt_database.h"
@@ -10,6 +10,7 @@
 #include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <string.h>
 
 #include "cmocka.h"
 
@@ -94,7 +95,7 @@ static void test_vt_database_initialize(void** state)
 {
     (void)state;
 
-    vt_database_initialize(&test_database_ptr, 0x00, 1);
+    vt_database_initialize(&test_database_ptr);
 
     assert_int_equal(test_database_ptr._vt_total_fingerprints, 0);
     assert_int_equal(test_database_ptr._vt_fingerprintdb[0][0], 0);
@@ -256,8 +257,8 @@ static void test_vt_database_evaluate_nrmse(void** state)
 {
     (void)state;
 
-   assert_int_equal(_vt_database_evaluate_nrmse(&test_database_ptr,curve_exponential_fall),23);
-   assert_int_equal(_vt_database_evaluate_nrmse(&test_database_ptr,curve_triagular),12);
+    assert_int_equal(_vt_database_evaluate_nrmse(&test_database_ptr, curve_exponential_fall), 23);
+    assert_int_equal(_vt_database_evaluate_nrmse(&test_database_ptr, curve_triagular), 12);
 }
 
 static void test_vt_database_evaluate_pearson_falltime(void** state)
@@ -290,16 +291,15 @@ static void test_vt_database_fingerprint_fetch(void** state)
     (void)state;
 
     // Unused Function
-
 }
 
 static void test_vt_database_falltime_fetch(void** state)
 {
     (void)state;
 
-    int index     = 0;
-    int fall_time = 0;
-    int sensor_id = 0;
+    int8_t index      = 0;
+    int32_t fall_time = 0;
+    int8_t sensor_id  = 0;
 
     assert_int_equal(vt_database_falltime_fetch(&test_database_ptr, &index, &fall_time, &sensor_id), VT_SUCCESS);
 
@@ -312,11 +312,12 @@ static void test_vt_database_pearsoncoefficient_fetch(void** state)
 {
     (void)state;
 
-    int index     = 0;
+    int8_t index              = 0;
     float pearson_coefficient = 0;
-    int sensor_id = 0;
+    int8_t sensor_id          = 0;
 
-    assert_int_equal(vt_database_pearsoncoefficient_fetch(&test_database_ptr, &index, &pearson_coefficient, &sensor_id), VT_SUCCESS);
+    assert_int_equal(
+        vt_database_pearsoncoefficient_fetch(&test_database_ptr, &index, &pearson_coefficient, &sensor_id), VT_SUCCESS);
 
     assert_int_equal(index, 1);
     assert_float_equal(pearson_coefficient, 0.998063, 0.001);
