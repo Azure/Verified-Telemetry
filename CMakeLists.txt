@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.14 FATAL_ERROR)
 set(CMAKE_CXX_STANDARD 98)
 
-option(UNIT_TESTING "Build unit test projects" OFF)
+option(VT_UNIT_TESTING "Build unit test projects" OFF)
 
 if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
@@ -41,10 +41,11 @@ if (NOT VT_UNIT_TESTING)
     "src/middleware/pnp_fallcurve_component.c"
     "src/middleware/pnp_middleware_helper.c"
   )
+  list(APPEND VT_LINK_LIBRARIES m)
 endif()
 
 if(NOT WIN32)
-  list(APPEND VT_LINK_LIBRARIES m)
+  list(APPEND VT_LINK_LIBRARIES "app_common")
 endif()
 
 if(VT_DEVICE STREQUAL "MXCHIP_AZ3166")
