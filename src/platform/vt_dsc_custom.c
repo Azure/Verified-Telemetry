@@ -20,5 +20,10 @@ uint32_t _vt_dsc_gpio_turn_off(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPEDEF gp
 
 uint32_t _vt_dsc_adc_read(ADC_CONTROLLER_TYPEDEF* adc_controller, ADC_CHANNEL_TYPEDEF adc_channel, uint32_t* value)
 {
+    printf("\nIn Custom");
+    printf("\nIn Custom");
+    printf("\nIn Custom");
+    printf("\nIn Custom");
+
     return VT_PLATFORM_IMPLEMENTATION_NOT_PROVIDED;
 }

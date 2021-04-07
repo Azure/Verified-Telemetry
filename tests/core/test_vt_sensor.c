@@ -3,6 +3,9 @@
 
 #include "vt_test_definitions.h"
 
+#include "vt_api.h"
+#include "vt_sensor.h"
+
 #include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
@@ -18,6 +21,11 @@ static void test_vt_sensor_initialize(void** state)
 static void test_vt_sensor_read_value(void** state)
 {
     (void)state;
+
+    VT_SENSOR x;
+    uint32_t y;
+
+    vt_sensor_read_value(&x,&y);
 
 }
 
@@ -41,6 +49,10 @@ static void test_vt_sensor_calibrate(void** state)
 
 int __wrap__vt_dsc_adc_read(int* adc_controller, int adc_channel, int* value)
 {
+    printf("\nIn Wrap");
+    printf("\nIn Wrap");
+    printf("\nIn Wrap");
+    printf("\nIn Wrap");
     return 0;
 }
 
