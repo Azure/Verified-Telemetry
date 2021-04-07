@@ -49,9 +49,6 @@ extern "C"
         /* Fingerprint DB */
         VT_DATABASE fingerprintdb;
 
-        /* Flash Address for storage of verified telemetry properties */
-        UINT flash_address;
-
         /* Stores on the scale of 0-1 how much Fingerprint Template can be trusted */
         UINT templateConfidenceMetric;
 
@@ -59,10 +56,10 @@ extern "C"
 
     UINT pnp_fallcurve_init(PNP_FALLCURVE_COMPONENT* handle,
         UCHAR* component_name_ptr,
-        GPIO_PORT_TYPEDEF* GPIOx,
-        GPION_PIN_TYPEDEF GPIO_Pin,
-        ADC_CONTROLLER_TYPEDEF* ADC_Controller,
-        ADC_CHANNEL_TYPEDEF ADC_Channel,
+        GPIO_PORT_TYPEDEF* gpio_port,
+        GPIO_PIN_TYPEDEF gpio_pin,
+        ADC_CONTROLLER_TYPEDEF* adc_controller,
+        ADC_CHANNEL_TYPEDEF adc_channel,
         TIMER_HANDLE_TYPEDEF* Timer,
         PNP_FALLCURVE_COMPONENT** fallcurve_components,
         CHAR** connected_sensors,
