@@ -5,9 +5,9 @@
 #include <string.h>
 
 #include "vt_database.h"
+#include "vt_debug.h"
 #include "vt_dsc.h"
 #include "vt_sensor.h"
-#include "vt_debug.h"
 
 static VT_FALL_STATE _vt_index37_state(int8_t index_37);
 static uint32_t _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* states);
@@ -51,8 +51,8 @@ static uint32_t _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* stat
                                       states->current_fingerprint[VT_FINGERPRINT_LENGTH - 1]))));
                     break;
                 case VT_FALL_STATE_OVERSHOOT:
-                    states->current_sampling_frequency =
-                        (index_37 * states->current_sampling_frequency) / (VT_FINGERPRINT_LENGTH - VT_PRECISION_THRESHOLD / 2);
+                    states->current_sampling_frequency = (index_37 * states->current_sampling_frequency) /
+                                                         (VT_FINGERPRINT_LENGTH - VT_PRECISION_THRESHOLD / 2);
                     break;
                 case VT_FALL_STATE_TARGET:
                     break;
@@ -177,7 +177,7 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint8_t* confidence_metric)
     else
     {
         VTLogInfo("\tGenerated Fingerprint is not robust and has a low confidence metric. Please check if a working "
-               "sensor is connected and retrigger the command.\n");
+                  "sensor is connected and retrigger the command.\n");
         *confidence_metric = 0;
     }
     _vt_dsc_delay_usec(sensor_ptr->vt_timer, 1000000);

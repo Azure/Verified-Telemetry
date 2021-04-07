@@ -18,7 +18,7 @@ uint32_t vt_database_falltime_fetch(VT_DATABASE* database_ptr, int8_t* index, ui
         return (VT_SUCCESS);
     }
 
-    *sensor_id  = database_ptr->_vt_falltimedb[*index][0];
+    *sensor_id = database_ptr->_vt_falltimedb[*index][0];
     *fall_time = database_ptr->_vt_falltimedb[*index][1];
     (*index)++;
     return VT_SUCCESS;
@@ -38,8 +38,8 @@ uint32_t vt_database_pearsoncoefficient_fetch(
         return (VT_SUCCESS);
     }
 
-    *sensor_id            = database_ptr->_vt_pearson_coefficientdb[*index][0];
-    *pearson_coefficient  = database_ptr->_vt_pearson_coefficientdb[*index][1];
+    *sensor_id           = database_ptr->_vt_pearson_coefficientdb[*index][0];
+    *pearson_coefficient = database_ptr->_vt_pearson_coefficientdb[*index][1];
     (*index)++;
     return VT_SUCCESS;
 }

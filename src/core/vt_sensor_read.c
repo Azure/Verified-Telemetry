@@ -29,7 +29,7 @@ uint32_t vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint
         snprintf(buffer, sizeof(buffer), "%d", (int16_t)fingerprint_array[i]);
         strcat(fingerprint_string, buffer);
 
-        if (i < VT_FINGERPRINT_LENGTH-1)
+        if (i < VT_FINGERPRINT_LENGTH - 1)
         {
             strcat(fingerprint_string, ",");
         }
@@ -38,7 +38,8 @@ uint32_t vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint
     return status;
 }
 
-uint32_t vt_sensor_read_status(VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int8_t* sensor_id)
+uint32_t vt_sensor_read_status(
+    VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int8_t* sensor_id)
 {
     uint32_t fall_time;
     float pearson_coefficient;

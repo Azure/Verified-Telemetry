@@ -7,5 +7,5 @@
 
 uint32_t vt_database_clear(VT_DATABASE* database_ptr)
 {
-    return vt_database_initialize(database_ptr);;
+    return vt_database_initialize(database_ptr);
 }

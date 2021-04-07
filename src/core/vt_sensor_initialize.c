@@ -2,8 +2,8 @@
    Licensed under the MIT License. */
 
 #include "string.h"
-#include "vt_sensor.h"
 #include "vt_dsc.h"
+#include "vt_sensor.h"
 
 uint32_t vt_sensor_initialize(VT_SENSOR* sensor_ptr,
     char* sensor_name,
@@ -28,5 +28,6 @@ uint32_t vt_sensor_initialize(VT_SENSOR* sensor_ptr,
     sensor_ptr->vt_timer              = timer_handler;
     sensor_ptr->vt_sampling_frequency = 1;
 
-    return _vt_dsc_gpio_turn_on(sensor_ptr->vt_gpio_port, sensor_ptr->vt_gpio_pin);;
+    return _vt_dsc_gpio_turn_on(sensor_ptr->vt_gpio_port, sensor_ptr->vt_gpio_pin);
+    ;
 }
