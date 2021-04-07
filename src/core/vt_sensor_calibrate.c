@@ -146,7 +146,7 @@ static uint32_t _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* stat
 
 void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint8_t* confidence_metric)
 {
-    printf("\tCalibrating Sensor Fingerprint\n");
+    VTLogInfo("\tCalibrating Sensor Fingerprint\n");
 
     VT_STATE_BLOCK states;
     uint32_t status;
@@ -168,8 +168,8 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint8_t* confidence_metric)
 
         if (status != VT_SUCCESS && sensor_ptr->vt_timer == NULL)
         {
-            printf("But it is not unique. To improve performance, please provide a dedicated Timer using "
-                   "pnp_fallcurve_init()\n");
+            VTLogInfo("But it is not unique. To improve performance, please provide a dedicated Timer using "
+                      "pnp_fallcurve_init()\n");
             *confidence_metric = 50;
         }
     }
