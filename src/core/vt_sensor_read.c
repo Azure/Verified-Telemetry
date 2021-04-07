@@ -53,7 +53,8 @@ uint32_t vt_sensor_read_status(
     }
 
     if (_vt_fingerprint_calculate_falltime_pearsoncoefficient(
-            fingerprint, 100, sensor_ptr->vt_sampling_frequency, &fall_time, &pearson_coefficient) == VT_SUCCESS)
+            fingerprint, VT_FINGERPRINT_LENGTH, sensor_ptr->vt_sampling_frequency, &fall_time, &pearson_coefficient) ==
+        VT_SUCCESS)
     {
         int8_t sensorid_ftpc = _vt_database_evaluate_pearson_falltime(database_ptr, fall_time, pearson_coefficient);
         *sensor_id           = sensorid_ftpc;

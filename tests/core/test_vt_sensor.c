@@ -9,7 +9,45 @@
 
 #include "cmocka.h"
 
+static void test_vt_sensor_initialize(void** state)
+{
+    (void)state;
+
+}
+
+static void test_vt_sensor_read_value(void** state)
+{
+    (void)state;
+
+}
+
+static void test_vt_sensor_read_fingerprint(void** state)
+{
+    (void)state;
+
+}
+
+static void test_vt_sensor_read_status(void** state)
+{
+    (void)state;
+
+}
+
+static void test_vt_sensor_calibrate(void** state)
+{
+    (void)state;
+
+}
+
 int test_vt_sensor()
 {
-    return 0;
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(test_vt_sensor_initialize),
+        cmocka_unit_test(test_vt_sensor_read_value),
+        cmocka_unit_test(test_vt_sensor_read_fingerprint),
+        cmocka_unit_test(test_vt_sensor_read_status),
+        cmocka_unit_test(test_vt_sensor_calibrate),
+    };
+
+    return cmocka_run_group_tests_name("vt_core_sensor", tests, NULL, NULL);
 }
