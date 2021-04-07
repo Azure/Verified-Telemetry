@@ -29,21 +29,21 @@ uint32_t _vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
         HAL_TIM_Base_Stop(timer);
     }
 
-    return VT_SUCCESS;
+    return VT_PLATFORM_SUCCESS;
 }
 
 uint32_t _vt_dsc_gpio_turn_on(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPEDEF gpio_pin)
 {
     HAL_GPIO_WritePin(gpio_port, gpio_pin, GPIO_PIN_SET);
 
-    return VT_SUCCESS;
+    return VT_PLATFORM_SUCCESS;
 }
 
 uint32_t _vt_dsc_gpio_turn_off(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPEDEF gpio_pin)
 {
     HAL_GPIO_WritePin(gpio_port, gpio_pin, GPIO_PIN_RESET);
 
-    return VT_SUCCESS;
+    return VT_PLATFORM_SUCCESS;
 }
 
 uint32_t _vt_dsc_adc_read(ADC_CONTROLLER_TYPEDEF* adc_controller, ADC_CHANNEL_TYPEDEF adc_channel, uint32_t* value)
@@ -66,5 +66,5 @@ uint32_t _vt_dsc_adc_read(ADC_CONTROLLER_TYPEDEF* adc_controller, ADC_CHANNEL_TY
     }
     HAL_ADC_Stop(adc_controller);
 
-    return VT_SUCCESS;
+    return VT_PLATFORM_SUCCESS;
 }

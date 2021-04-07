@@ -14,17 +14,7 @@ uint32_t vt_sensor_read_value(VT_SENSOR* sensor_ptr, uint32_t* sensor_value)
         return (VT_PTR_ERROR);
     }
 
-    uint32_t status;
-
-    status = _vt_dsc_gpio_turn_on(sensor_ptr->vt_gpio_port, sensor_ptr->vt_gpio_pin);
-    if (status != VT_SUCCESS)
-    {
-        return status;
-    }
-
-    status = _vt_dsc_adc_read(sensor_ptr->vt_adc_controller, sensor_ptr->vt_adc_channel, sensor_value);
-
-    return (status);
+    return _vt_dsc_adc_read(sensor_ptr->vt_adc_controller, sensor_ptr->vt_adc_channel, sensor_value);
 }
 
 uint32_t vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint_array, char* fingerprint_string)
@@ -83,32 +73,31 @@ uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprin
     uint32_t status;
 
     status = _vt_dsc_gpio_turn_off(sensor_ptr->vt_gpio_port, sensor_ptr->vt_gpio_pin);
-    if (status != VT_SUCCESS)
+    if (status != VT_PLATFORM_SUCCESS)
     {
-        _vt_dsc_gpio_turn_on(sensor_ptr->vt_gpio_port, sensor_ptr->vt_gpio_pin);
         return status;
     }
 
     for (uint8_t i = 0; i < VT_FINGERPRINT_LENGTH; i++)
     {
         status = _vt_dsc_adc_read(sensor_ptr->vt_adc_controller, sensor_ptr->vt_adc_channel, &fingerprint_array[i]);
-        if (status != VT_SUCCESS)
+        if (status != VT_PLATFORM_SUCCESS)
         {
             return status;
         }
 
         status = _vt_dsc_delay_usec(sensor_ptr->vt_timer, sampling_frequency);
-        if (status != VT_SUCCESS)
+        if (status != VT_PLATFORM_SUCCESS)
         {
             return status;
         }
     }
 
     status = _vt_dsc_gpio_turn_on(sensor_ptr->vt_gpio_port, sensor_ptr->vt_gpio_pin);
-    if (status != VT_SUCCESS)
+    if (status != VT_PLATFORM_SUCCESS)
     {
         return status;
     }
 
-    return (status);
+    return status;
 }
