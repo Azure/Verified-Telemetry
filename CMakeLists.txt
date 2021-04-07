@@ -41,11 +41,11 @@ if (NOT VT_UNIT_TESTING)
     "src/middleware/pnp_fallcurve_component.c"
     "src/middleware/pnp_middleware_helper.c"
   )
-  list(APPEND VT_LINK_LIBRARIES m)
+  list(APPEND VT_LINK_LIBRARIES "app_common")
 endif()
 
 if(NOT WIN32)
-  list(APPEND VT_LINK_LIBRARIES "app_common")
+  list(APPEND VT_LINK_LIBRARIES m)
 endif()
 
 if(VT_DEVICE STREQUAL "MXCHIP_AZ3166")
@@ -85,7 +85,7 @@ target_compile_definitions(${TARGET} PUBLIC ${VT_COMPILE_DEFINITIONS})
 target_include_directories(${TARGET}
     PUBLIC 
         inc/core
-	inc/core/internal
+		inc/core/internal
         inc/middleware
         inc/platform
 )
