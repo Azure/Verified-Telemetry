@@ -39,6 +39,11 @@ static void test_vt_sensor_calibrate(void** state)
 
 }
 
+int __wrap__vt_dsc_adc_read(int* adc_controller, int adc_channel, int* value)
+{
+    return 0;
+}
+
 int test_vt_sensor()
 {
     const struct CMUnitTest tests[] = {

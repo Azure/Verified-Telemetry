@@ -14,6 +14,7 @@ target_link_libraries(vt_core_test
     PRIVATE
         verified_telemetry
         cmocka-static
+        -Wl,--wrap=_vt_dsc_adc_read
 )
 
 add_test(NAME vt_core_test COMMAND vt_core_test)
