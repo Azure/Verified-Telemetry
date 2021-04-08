@@ -11,23 +11,47 @@
 #include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <string.h>
 
 #include "cmocka.h"
+
+VT_SENSOR sensor;
+
+static int vt_sensor_set(void** state)
+{
+    sensor.vt_sensor_name        = strdup("set_sensor");
+    sensor.vt_gpio_port          = NULL;
+    sensor.vt_gpio_pin           = 9;
+    sensor.vt_adc_controller     = NULL;
+    sensor.vt_adc_channel        = 3;
+    sensor.vt_timer              = NULL;
+    sensor.vt_sampling_frequency = 1;
+
+    return 0;
+}
 
 static void test_vt_sensor_initialize(void** state)
 {
     (void)state;
+
+    vt_sensor_initialize(&sensor, "test_sensor", NULL, 7, NULL, 2, NULL);
+
+    assert_string_equal(sensor.vt_sensor_name, "test_sensor");
+    assert_ptr_equal(sensor.vt_gpio_port, NULL);
+    assert_int_equal(sensor.vt_gpio_pin, 7);
+    assert_ptr_equal(sensor.vt_adc_controller, NULL);
+    assert_int_equal(sensor.vt_adc_channel, 2);
+    assert_ptr_equal(sensor.vt_timer, NULL);
 }
 
 static void test_vt_sensor_read_value(void** state)
 {
     (void)state;
 
-    VT_SENSOR sensor;
     uint32_t value;
 
-    expect_value(__wrap__vt_dsc_adc_read, adc_controller, 0);
-    expect_value(__wrap__vt_dsc_adc_read, adc_channel, 0);
+    expect_value(__wrap__vt_dsc_adc_read, adc_controller, NULL);
+    expect_value(__wrap__vt_dsc_adc_read, adc_channel, 3);
 
     will_return(__wrap__vt_dsc_adc_read, 23);
 
@@ -63,9 +87,9 @@ int __wrap__vt_dsc_adc_read(ADC_CONTROLLER_TYPEDEF* adc_controller, ADC_CHANNEL_
 int test_vt_sensor()
 {
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test(test_vt_sensor_initialize),
-        cmocka_unit_test(test_vt_sensor_read_value),
-        cmocka_unit_test(test_vt_sensor_read_fingerprint),
+        cmocka_unit_test_setup_teardown(test_vt_sensor_initialize, vt_sensor_set, vt_sensor_set),
+        cmocka_unit_test_setup(test_vt_sensor_read_value, vt_sensor_set),
+        cmocka_unit_test_setup(test_vt_sensor_read_fingerprint, vt_sensor_set),
         cmocka_unit_test(test_vt_sensor_read_status),
         cmocka_unit_test(test_vt_sensor_calibrate),
     };
