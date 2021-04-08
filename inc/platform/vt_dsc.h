@@ -8,8 +8,8 @@
 
 #include "vt_port.h"
 
-#define VT_PLATFORM_SUCCESS                            0X00
-#define VT_PLATFORM_IMPLEMENTATION_NOT_PROVIDED        0X01
+#define VT_PLATFORM_SUCCESS                     0X00
+#define VT_PLATFORM_IMPLEMENTATION_NOT_PROVIDED 0X01
 
 uint32_t _vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay);
 

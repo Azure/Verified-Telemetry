@@ -12,7 +12,7 @@
 #undef CUSTOM_DEVICE
 #include "stm32f4xx_hal.h"
 #define GPIO_PORT_TYPEDEF      GPIO_TypeDef
-#define GPIO_PIN_TYPEDEF      uint16_t
+#define GPIO_PIN_TYPEDEF       uint16_t
 #define ADC_CONTROLLER_TYPEDEF ADC_HandleTypeDef
 #define ADC_CHANNEL_TYPEDEF    uint32_t
 #define TIMER_HANDLE_TYPEDEF   TIM_HandleTypeDef
@@ -22,7 +22,7 @@
 #undef CUSTOM_DEVICE
 #include "stm32l4xx_hal.h"
 #define GPIO_PORT_TYPEDEF      GPIO_TypeDef
-#define GPIO_PIN_TYPEDEF      uint16_t
+#define GPIO_PIN_TYPEDEF       uint16_t
 #define ADC_CONTROLLER_TYPEDEF ADC_HandleTypeDef
 #define ADC_CHANNEL_TYPEDEF    uint32_t
 #define TIMER_HANDLE_TYPEDEF   TIM_HandleTypeDef
@@ -30,11 +30,10 @@
 
 #ifdef CUSTOM_DEVICE
 #define GPIO_PORT_TYPEDEF      uint16_t
-#define GPIO_PIN_TYPEDEF      uint16_t
+#define GPIO_PIN_TYPEDEF       uint16_t
 #define ADC_CONTROLLER_TYPEDEF uint16_t
 #define ADC_CHANNEL_TYPEDEF    uint16_t
 #define TIMER_HANDLE_TYPEDEF   uint16_t
 #endif
-
 
 #endif

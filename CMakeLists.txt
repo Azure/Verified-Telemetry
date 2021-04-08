@@ -84,7 +84,7 @@ target_compile_definitions(${TARGET} PUBLIC ${VT_COMPILE_DEFINITIONS})
 target_include_directories(${TARGET}
     PUBLIC 
         inc/core
-		inc/core/internal
+	inc/core/internal
         inc/middleware
         inc/platform
 )

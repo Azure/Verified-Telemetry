@@ -17,7 +17,7 @@ uint32_t _vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
             HAL_Delay(1);
         }
     }
-    
+
     else
     {
         uint32_t start_time;

@@ -54,7 +54,8 @@ int8_t _vt_database_evaluate_nrmse(VT_DATABASE* database_ptr, uint32_t* fallcurv
     int8_t index;
 
     for (uint8_t i = 0; i < (database_ptr->_vt_total_fingerprints); i++)
-        nrmse[i] = _vt_fingerprint_evaluate_nrmse(&(database_ptr->_vt_fingerprintdb[i][2]), fallcurvearray, VT_FINGERPRINT_LENGTH);
+        nrmse[i] = _vt_fingerprint_evaluate_nrmse(
+            &(database_ptr->_vt_fingerprintdb[i][2]), fallcurvearray, VT_FINGERPRINT_LENGTH);
 
     for (uint8_t k = 0; k < (database_ptr->_vt_total_fingerprints); k++)
         if (nrmse[k] < min)

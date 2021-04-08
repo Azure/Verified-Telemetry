@@ -4,9 +4,9 @@
 #include <string.h>
 
 #include "vt_database.h"
-#include "vt_fingerprint.h"
-#include "vt_dsc.h"
 #include "vt_debug.h"
+#include "vt_dsc.h"
+#include "vt_fingerprint.h"
 
 uint32_t vt_database_initialize(VT_DATABASE* database_ptr)
 {
