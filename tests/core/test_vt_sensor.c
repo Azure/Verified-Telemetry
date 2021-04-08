@@ -23,18 +23,16 @@ static void test_vt_sensor_read_value(void** state)
 {
     (void)state;
 
-    VT_SENSOR x;
-    uint32_t y;
+    VT_SENSOR sensor;
+    uint32_t value;
+
+    expect_value(__wrap__vt_dsc_adc_read, adc_controller, 0);
+    expect_value(__wrap__vt_dsc_adc_read, adc_channel, 0);
 
     will_return(__wrap__vt_dsc_adc_read, 23);
-    will_return(__wrap__vt_dsc_adc_read, 12);
-    
-    vt_sensor_read_value(&x, &y);
-    assert_int_equal(y,23);
 
-    vt_sensor_read_value(&x, &y);
-    assert_int_equal(y,7);
-
+    vt_sensor_read_value(&sensor, &value);
+    assert_int_equal(value, 23);
 }
 
 static void test_vt_sensor_read_fingerprint(void** state)
@@ -54,7 +52,11 @@ static void test_vt_sensor_calibrate(void** state)
 
 int __wrap__vt_dsc_adc_read(ADC_CONTROLLER_TYPEDEF* adc_controller, ADC_CHANNEL_TYPEDEF adc_channel, uint32_t* value)
 {
+    check_expected(adc_controller);
+    check_expected(adc_channel);
+
     *value = (uint32_t)mock();
+
     return VT_PLATFORM_SUCCESS;
 }
 
