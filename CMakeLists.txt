@@ -74,7 +74,6 @@ list(APPEND VT_SOURCES
 	"src/core/vt_database_initialize.c"
 	"src/core/vt_database_store.c"
 	"src/core/vt_database_evaluate.c"
-	"src/core/vt_database_clear.c"
 	"src/core/vt_database_fetch.c"
 	)
 
