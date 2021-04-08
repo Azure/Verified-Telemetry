@@ -86,8 +86,6 @@ uint32_t vt_database_initialize(VT_DATABASE* database_ptr);
 uint32_t vt_database_store(
     VT_DATABASE* database_ptr, uint32_t* fingerprint_array, uint16_t sampling_frequency, int8_t sensor_id);
 
-uint32_t vt_database_clear(VT_DATABASE* database_ptr);
-
 // Fetch
 uint32_t vt_database_falltime_fetch(VT_DATABASE* database_ptr, int8_t* index, uint32_t* fall_time, int8_t* sensor_id);
 
