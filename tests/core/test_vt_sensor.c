@@ -84,7 +84,7 @@ static void test_vt_sensor_calibrate(void** state)
     (void)state;
 }
 
-uint32_t __wrap_vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
+uint32_t __wrap__vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
 {
     check_expected(timer);
     check_expected(delay);
