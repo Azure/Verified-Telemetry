@@ -62,6 +62,16 @@ static void test_vt_sensor_read_value(void** state)
 static void test_vt_sensor_read_fingerprint(void** state)
 {
     (void)state;
+
+    uint32_t array[100];
+    char str[100];
+
+    expect_function_call(__wrap__vt_dsc_gpio_turn_off);
+    expect_function_calls(__wrap__vt_dsc_adc_read, VT_FINGERPRINT_LENGTH);
+    expect_function_calls(__wrap_vt_dsc_delay_usec, VT_FINGERPRINT_LENGTH);
+    expect_function_call(__wrap__vt_dsc_gpio_turn_on);
+
+    vt_sensor_read_fingerprint(&sensor,array,str);
 }
 
 static void test_vt_sensor_read_status(void** state)
@@ -79,6 +89,8 @@ uint32_t __wrap_vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
     check_expected(timer);
     check_expected(delay);
 
+    function_called();
+
     return VT_PLATFORM_SUCCESS;
 }
 
@@ -86,6 +98,8 @@ uint32_t __wrap__vt_dsc_gpio_turn_on(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPE
 {
     check_expected(gpio_port);
     check_expected(gpio_pin);
+
+    function_called();
 
     return VT_PLATFORM_SUCCESS;
 }
@@ -95,6 +109,8 @@ uint32_t __wrap__vt_dsc_gpio_turn_off(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYP
     check_expected(gpio_port);
     check_expected(gpio_pin);
 
+    function_called();
+
     return VT_PLATFORM_SUCCESS;
 }
 
@@ -103,6 +119,8 @@ uint32_t __wrap__vt_dsc_adc_read(
 {
     check_expected(adc_controller);
     check_expected(adc_channel);
+
+    function_called();
 
     *value = (uint32_t)mock();
 
