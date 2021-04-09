@@ -76,8 +76,8 @@ static void test_vt_sensor_read_fingerprint(void** state)
     expect_value(__wrap__vt_dsc_adc_read, adc_channel, 3);
 
     expect_function_calls(__wrap__vt_dsc_delay_usec, VT_FINGERPRINT_LENGTH);
-    expect_value(__wrap_vt_dsc_delay_usec, timer, NULL);
-    expect_value(__wrap_vt_dsc_delay_usec, delay, 1);
+    expect_value(__wrap__vt_dsc_delay_usec, timer, NULL);
+    expect_value(__wrap__vt_dsc_delay_usec, delay, 1);
 
     expect_function_call(__wrap__vt_dsc_gpio_turn_on);
     expect_value(__wrap__vt_dsc_gpio_turn_on, gpio_port, NULL);
