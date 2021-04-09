@@ -55,7 +55,7 @@ static void test_vt_sensor_read_value(void** state)
 
     will_return(__wrap__vt_dsc_adc_read, 23);
 
-    vt_sensor_read_value(&sensor, &value);
+    assert_int_equal(vt_sensor_read_value(&sensor, &value), VT_PLATFORM_SUCCESS);
     assert_int_equal(value, 23);
 }
 
@@ -74,7 +74,32 @@ static void test_vt_sensor_calibrate(void** state)
     (void)state;
 }
 
-int __wrap__vt_dsc_adc_read(ADC_CONTROLLER_TYPEDEF* adc_controller, ADC_CHANNEL_TYPEDEF adc_channel, uint32_t* value)
+uint32_t __wrap_vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
+{
+    check_expected(timer);
+    check_expected(delay);
+
+    return VT_PLATFORM_SUCCESS;
+}
+
+uint32_t __wrap__vt_dsc_gpio_turn_on(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPEDEF gpio_pin)
+{
+    check_expected(gpio_port);
+    check_expected(gpio_pin);
+
+    return VT_PLATFORM_SUCCESS;
+}
+
+uint32_t __wrap__vt_dsc_gpio_turn_off(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPEDEF gpio_pin)
+{
+    check_expected(gpio_port);
+    check_expected(gpio_pin);
+
+    return VT_PLATFORM_SUCCESS;
+}
+
+uint32_t __wrap__vt_dsc_adc_read(
+    ADC_CONTROLLER_TYPEDEF* adc_controller, ADC_CHANNEL_TYPEDEF adc_channel, uint32_t* value)
 {
     check_expected(adc_controller);
     check_expected(adc_channel);

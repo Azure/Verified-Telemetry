@@ -14,6 +14,9 @@ target_link_libraries(vt_core_test
     PRIVATE
         verified_telemetry
         cmocka-static
+        -Wl,--wrap=_vt_dsc_delay_usec
+        -Wl,--wrap=_vt_dsc_gpio_turn_on
+        -Wl,--wrap=_vt_dsc_gpio_turn_off
         -Wl,--wrap=_vt_dsc_adc_read
 )
 
