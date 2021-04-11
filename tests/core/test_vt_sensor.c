@@ -17,6 +17,9 @@
 
 VT_SENSOR sensor;
 
+uint32_t array[VT_FINGERPRINT_LENGTH];
+char str[VT_FINGERPRINT_LENGTH];
+
 static int vt_sensor_set(void** state)
 {
     sensor.vt_sensor_name        = strdup("set_sensor");
@@ -63,9 +66,6 @@ static void test_vt_sensor_read_value(void** state)
 static void test_vt_sensor_read_fingerprint(void** state)
 {
     (void)state;
-
-    uint32_t array[VT_FINGERPRINT_LENGTH];
-    char str[VT_FINGERPRINT_LENGTH];
 
     expect_function_call(__wrap__vt_dsc_gpio_turn_off);
     expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_port, NULL);
