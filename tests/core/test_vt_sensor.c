@@ -71,19 +71,19 @@ static void test_vt_sensor_read_fingerprint(void** state)
     expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_port, NULL);
     expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_pin, 9);
 
-    for (uint8_t i = 0; i < VT_FINGERPRINT_LENGTH; i++)
-    {
-        expect_function_call(__wrap__vt_dsc_adc_read);
-        will_return(__wrap__vt_dsc_adc_read, 23);
-    }
-
-    // expect_value_count(__wrap__vt_dsc_adc_read, adc_controller, NULL, -1);
-    // expect_value_count(__wrap__vt_dsc_adc_read, adc_channel, 3, -1);
+    expect_function_calls(__wrap__vt_dsc_adc_read, 10);
+    expect_value_count(__wrap__vt_dsc_adc_read, adc_controller, NULL,10);
+    expect_value_count(__wrap__vt_dsc_adc_read, adc_channel, 3, 10);
 
     expect_function_call(__wrap__vt_dsc_gpio_turn_on);
     expect_value(__wrap__vt_dsc_gpio_turn_on, gpio_port, NULL);
     expect_value(__wrap__vt_dsc_gpio_turn_on, gpio_pin, 9);
 
+    for (uint8_t i = 0; i < VT_FINGERPRINT_LENGTH; i++)
+    {
+        will_return(__wrap__vt_dsc_adc_read, 23);
+    }
+    
     assert_int_equal(vt_sensor_read_fingerprint(&sensor, array, str), VT_PLATFORM_SUCCESS);
 
     for (uint8_t i = 0; i < VT_FINGERPRINT_LENGTH; i++)
@@ -104,6 +104,11 @@ static void test_vt_sensor_calibrate(void** state)
 
 uint32_t __wrap__vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
 {
+    check_expected(timer);
+    check_expected(delay);
+
+    function_called();
+
     return VT_PLATFORM_SUCCESS;
 }
 
@@ -130,8 +135,8 @@ uint32_t __wrap__vt_dsc_gpio_turn_off(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYP
 uint32_t __wrap__vt_dsc_adc_read(
     ADC_CONTROLLER_TYPEDEF* adc_controller, ADC_CHANNEL_TYPEDEF adc_channel, uint32_t* value)
 {
-    // check_expected(adc_controller);
-    // check_expected(adc_channel);
+    check_expected(adc_controller);
+    check_expected(adc_channel);
 
     function_called();
 
