@@ -122,9 +122,9 @@ uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerp
 
 VT_CURVE_SHAPE _vt_fingerprint_calculate_shape(uint32_t* fingerprint, uint8_t fingerprint_length)
 {
-    uint32_t ranked[VT_FINGERPRINT_LENGTH];
-    uint32_t arraylinear[VT_FINGERPRINT_LENGTH];
-    uint32_t arrayexp[VT_FINGERPRINT_LENGTH];
+    uint32_t ranked[100];
+    uint32_t arraylinear[100];
+    uint32_t arrayexp[100];
     uint8_t i;
 
     _vt_fingerprint_rankify(fingerprint, fingerprint_length, ranked);
