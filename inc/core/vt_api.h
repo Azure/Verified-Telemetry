@@ -28,7 +28,7 @@
 #define FALL_TIME_THRESHOLD           5.0f
 #define PEARSON_COEFFICIENT_THRESHOLD 5.0f
 
-#define VT_FINGERPRINT_LENGTH           25
+#define VT_FINGERPRINT_LENGTH           40
 #define VT_DB_SIZE                      10
 #define VT_FINGERPRINT_DB_LENGTH        VT_FINGERPRINT_LENGTH + 2
 #define VT_FALLTIME_DB_LENGTH           2
