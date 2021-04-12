@@ -24,6 +24,7 @@ fingerprint_array[2][VT_FINGERPRINT_LENGTH] = {3008,3055,3035,3013,2991,2971,295
                                                2140,2148,2093,2052,1999,1957,1911,1897,1855,1810,1769,1759,1718,1682,1647,1635,1587,1569,1537,1527,1502,1468,1436,1427,1398,1369,991,992,959,936,935,902,899,882,863,846,842,839,807,794,780,771,758,740,737,722,694,694,692,677,663,651,647,631,621,607,608,595,580,569,567,555,545,515,530,519,508,498,491,503,474,464,468,453,443,435,434,430,414,399,403,394,386,378,378,367,360,259,253,246,243,239,233,225,229,223,217,210,211,205};
 
 
+
 static int vt_sensor_set(void** state)
 {
     sensor.vt_sensor_name        = strdup("set_sensor");
@@ -153,6 +154,26 @@ uint32_t __wrap__vt_dsc_gpio_turn_off(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYP
     return VT_PLATFORM_SUCCESS;
 }
 
+
+uint32_t __wrap__vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
+{
+    return VT_PLATFORM_SUCCESS;
+}
+
+uint32_t __wrap__vt_dsc_gpio_turn_on(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPEDEF gpio_pin)
+{
+
+
+    return VT_PLATFORM_SUCCESS;
+}
+
+uint32_t __wrap__vt_dsc_gpio_turn_off(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPEDEF gpio_pin)
+{
+
+    return VT_PLATFORM_SUCCESS;
+}
+
+
 uint32_t __wrap__vt_dsc_adc_read(
     ADC_CONTROLLER_TYPEDEF* adc_controller, ADC_CHANNEL_TYPEDEF adc_channel, uint32_t* value)
 {
@@ -160,6 +181,8 @@ uint32_t __wrap__vt_dsc_adc_read(
     check_expected(adc_channel);
 
     function_called();
+
+
 
     *value = (uint32_t)mock();
 
