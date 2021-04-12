@@ -111,7 +111,7 @@ static void test_vt_sensor_calibrate(void** state)
         expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_port, NULL);
         expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_pin, 9);
 
-        expect_function_call(__wrap__vt_dsc_adc_read);
+        expect_function_calls(__wrap__vt_dsc_adc_read, VT_FINGERPRINT_LENGTH);
         expect_value_count(__wrap__vt_dsc_adc_read, adc_controller, NULL, VT_FINGERPRINT_LENGTH);
         expect_value_count(__wrap__vt_dsc_adc_read, adc_channel, 3, VT_FINGERPRINT_LENGTH);
 
