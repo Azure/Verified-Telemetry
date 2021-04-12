@@ -23,13 +23,13 @@ jobs:
 
       - name: Build project
         run: |
-          cmake -Bbuild -GNinja -DVT_UNIT_TESTING=ON
+          cmake -Bbuild -GNinja -DVT_UNIT_TESTING=ON -DVT_CODE_COVERAGE=ON
           cmake --build build
 
       - name: Run unit tests
         run: |
           cd build/tests
-          ctest -V
+          ctest -V -S ctest_coverage
 
 #      - name: Output code coverage
 #        run: |
