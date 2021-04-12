@@ -75,6 +75,8 @@ static void test_vt_sensor_read_fingerprint(void** state)
 {
     (void)state;
 
+    int i;
+
     expect_function_call(__wrap__vt_dsc_gpio_turn_off);
     expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_port, NULL);
     expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_pin, 9);
@@ -83,7 +85,7 @@ static void test_vt_sensor_read_fingerprint(void** state)
     expect_value_count(__wrap__vt_dsc_adc_read, adc_controller, NULL, VT_FINGERPRINT_LENGTH);
     expect_value_count(__wrap__vt_dsc_adc_read, adc_channel, 3, VT_FINGERPRINT_LENGTH);
     
-    for (int i = 0; i < VT_FINGERPRINT_LENGTH; i++)
+    for (i = 0; i < VT_FINGERPRINT_LENGTH; i++)
     {
         will_return(__wrap__vt_dsc_adc_read, curve_exponential_fall[i]);
     }
