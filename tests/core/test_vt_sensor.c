@@ -107,7 +107,7 @@ static void test_vt_sensor_calibrate(void** state)
 
     for (int j = 0; j < 2; j++)
     {
-        expect_function_call(__wrap__vt_dsc_gpio_turn_on);
+        expect_function_call(__wrap__vt_dsc_gpio_turn_off);
         expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_port, NULL);
         expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_pin, 9);
 
@@ -120,13 +120,13 @@ static void test_vt_sensor_calibrate(void** state)
             will_return(__wrap__vt_dsc_adc_read, fingerprint_array[j][i]);
         }
 
-        expect_function_call(__wrap__vt_dsc_gpio_turn_off);
-        expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_port, NULL);
-        expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_pin, 9);
+        expect_function_call(__wrap__vt_dsc_gpio_turn_on);
+        expect_value(__wrap__vt_dsc_gpio_turn_on, gpio_port, NULL);
+        expect_value(__wrap__vt_dsc_gpio_turn_on, gpio_pin, 9);
     }
 
     vt_sensor_calibrate(&sensor, &confidence_metric);
-    assert_int_equal(sensor.vt_sampling_frequency,100);
+    assert_int_equal(sensor.vt_sampling_frequency,8666);
 }
 
 uint32_t __wrap__vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
