@@ -174,7 +174,7 @@ uint32_t __wrap__vt_dsc_adc_read(
 
     *value = (uint32_t)mock();
 
-    printf("%d", (int)value);
+    printf("%d", (int)(*value));
 
     return VT_PLATFORM_SUCCESS;
 }
