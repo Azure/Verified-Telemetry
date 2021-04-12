@@ -127,6 +127,7 @@ static void test_vt_sensor_calibrate(void** state)
         for (i = 0; i < VT_FINGERPRINT_LENGTH; i++)
         {
             will_return(__wrap__vt_dsc_adc_read, fingerprint_array[j][i]);
+          
         }
 
         expect_function_call(__wrap__vt_dsc_gpio_turn_on);
@@ -174,7 +175,7 @@ uint32_t __wrap__vt_dsc_adc_read(
 
     *value = (uint32_t)mock();
 
-    printf("%d", (int)(*value));
+     printf("%d", (int)(*value));
 
     return VT_PLATFORM_SUCCESS;
 }
