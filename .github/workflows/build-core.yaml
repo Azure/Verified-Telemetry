@@ -28,10 +28,10 @@ jobs:
 
       - name: Run unit tests
         run: |
-          cd build
+          cd build/tests
           ctest -V
 
-      - name: Output code coverage
-        run: |
-          ctest -V -S ctest_coverage
-
+#      - name: Output code coverage
+#        run: |
+#          cd build/tests
+#          ctest -V -S ctest_coverage
