@@ -126,7 +126,7 @@ static void test_vt_sensor_calibrate(void** state)
     }
 
     vt_sensor_calibrate(&sensor, &confidence_metric);
-    assert_int_equal(sensor.vt_sampling_frequency,8666);
+    assert_int_equal(sensor.vt_sampling_frequency,1);
 }
 
 uint32_t __wrap__vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
