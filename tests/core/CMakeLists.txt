@@ -1,16 +1,18 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-project(vt_core_test LANGUAGES C)
+set(PROJECT_NAME vt_core_test)
 
-add_executable(vt_core_test 
+project(${PROJECT_NAME} LANGUAGES C)
+
+add_executable(${PROJECT_NAME} 
     main.c
     test_vt_fingerprint.c
     test_vt_sensor.c
     test_vt_database.c
 )
 
-target_link_libraries(vt_core_test
+target_link_libraries(${PROJECT_NAME}
     PRIVATE
         verified_telemetry
         cmocka-static
@@ -20,4 +22,13 @@ target_link_libraries(vt_core_test
         -Wl,--wrap=_vt_dsc_adc_read
 )
 
-add_test(NAME vt_core_test COMMAND vt_core_test)
+# setup code coverage
+append_coverage_compiler_flags()
+setup_target_for_coverage_lcov(
+    NAME ${PROJECT_NAME}_coverage
+    EXECUTABLE ${PROJECT_NAME}
+#    EXCLUDE ${COV_EXCLUDE}
+#    LCOV_ARGS --rc lcov_branch_coverage=1
+)
+
+add_test(NAME ${PROJECT_NAME} COMMAND vt_core_test)

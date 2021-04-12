@@ -30,3 +30,8 @@ jobs:
         run: |
           cd build
           ctest -V
+
+      - name: Output code coverage
+        run: |
+          ctest -V -S ctest_coverage
+
