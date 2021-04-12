@@ -174,7 +174,7 @@ int test_vt_sensor()
         cmocka_unit_test_setup(test_vt_sensor_read_value, vt_sensor_set),
         cmocka_unit_test_setup(test_vt_sensor_read_fingerprint, vt_sensor_set),
         cmocka_unit_test(test_vt_sensor_read_status),
-        cmocka_unit_test(test_vt_sensor_calibrate),
+        cmocka_unit_test_setup(test_vt_sensor_calibrate, vt_sensor_set),
     };
 
     return cmocka_run_group_tests_name("vt_core_sensor", tests, NULL, NULL);
