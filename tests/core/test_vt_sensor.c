@@ -2,6 +2,7 @@
    Licensed under the MIT License. */
 
 #include "vt_test_definitions.h"
+#include "vt_test_curves.h"
 
 #include "vt_api.h"
 #include "vt_dsc.h"
@@ -81,7 +82,11 @@ static void test_vt_sensor_read_fingerprint(void** state)
     expect_function_calls(__wrap__vt_dsc_adc_read, VT_FINGERPRINT_LENGTH);
     expect_value_count(__wrap__vt_dsc_adc_read, adc_controller, NULL, VT_FINGERPRINT_LENGTH);
     expect_value_count(__wrap__vt_dsc_adc_read, adc_channel, 3, VT_FINGERPRINT_LENGTH);
-    will_return_count(__wrap__vt_dsc_adc_read, 23, VT_FINGERPRINT_LENGTH);
+    
+    for (int i = 0; i < VT_FINGERPRINT_LENGTH; i++)
+    {
+        will_return(__wrap__vt_dsc_adc_read, curve_exponential_fall[i]);
+    }
 
     expect_function_call(__wrap__vt_dsc_gpio_turn_on);
     expect_value(__wrap__vt_dsc_gpio_turn_on, gpio_port, NULL);
@@ -89,9 +94,9 @@ static void test_vt_sensor_read_fingerprint(void** state)
 
     assert_int_equal(vt_sensor_read_fingerprint(&sensor, array, str), VT_PLATFORM_SUCCESS);
 
-    for (uint8_t i = 0; i < VT_FINGERPRINT_LENGTH; i++)
+    for (i = 0; i < VT_FINGERPRINT_LENGTH; i++)
     {
-        assert_int_equal(array[i], 23);
+        assert_int_equal(array[i], curve_exponential_fall[i]);
     }
 }
 
@@ -166,6 +171,8 @@ uint32_t __wrap__vt_dsc_adc_read(
     function_called();
 
     *value = (uint32_t)mock();
+
+    printf("%d", (int)value);
 
     return VT_PLATFORM_SUCCESS;
 }
