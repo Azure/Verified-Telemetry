@@ -271,7 +271,7 @@ static UINT reset_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT
     uint32_t fallcurvearray[100];
     uint8_t templateConfidenceMetric;
 
-    vt_database_clear(&(handle->fingerprintdb));
+    vt_database_initialize(&(handle->fingerprintdb));
     VTLogInfo("\tCleared DB\r\n");
     vt_sensor_calibrate(&(handle->portInfo), &templateConfidenceMetric);
     handle->templateConfidenceMetric = templateConfidenceMetric;
@@ -547,7 +547,7 @@ static UINT sync_fingerprintTemplate(
     CHAR* saveptr;
     CHAR* csvString;
 
-    vt_database_clear(&(handle->fingerprintdb));
+    vt_database_initialize(&(handle->fingerprintdb));
     // VTLogInfo("Cleared DB\r\n");
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
