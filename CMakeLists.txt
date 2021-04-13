@@ -8,27 +8,18 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 option(VT_UNIT_TESTING "Build unit test projects" OFF)
 option(VT_CODE_COVERAGE "Run code coverage" OFF)
 
-# if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-#   set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-#       CACHE STRING "")
-# elseif(DEFINED ENV{VCPKG_INSTALLATION_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-#   set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake"
-#       CACHE STRING "")
-# endif()
-
-# if(DEFINED ENV{VCPKG_DEFAULT_TRIPLET} AND NOT DEFINED VCPKG_TARGET_TRIPLET)
-#   set(VCPKG_TARGET_TRIPLET "$ENV{VCPKG_DEFAULT_TRIPLET}" CACHE STRING "")
-# endif()
-
 project(vt LANGUAGES C)
-
-set(TARGET verified_telemetry)
 
 # default for Unit testing with cmocka is OFF, however, this will be ON on CI and tests must
 # pass before committing changes
 if (VT_UNIT_TESTING)
   add_subdirectory(tests)
   set(VT_DEVICE "CUSTOM_DEVICE")
+endif()
+
+if(VT_CODE_COVERAGE)
+  include(CodeCoverageTarget)
+  add_code_coverage_target(vt_core_test)
 endif()
 
 if(NOT WIN32)
@@ -72,6 +63,7 @@ if (NOT VT_UNIT_TESTING)
   )
 endif()
 
+set(TARGET verified_telemetry)
 add_library(${TARGET} OBJECT ${VT_SOURCES})
 target_link_libraries(${TARGET} PUBLIC ${VT_LINK_LIBRARIES})
 target_compile_definitions(${TARGET} PUBLIC ${VT_COMPILE_DEFINITIONS})
@@ -85,3 +77,4 @@ target_include_directories(${TARGET}
     PRIVATE_HEADER
       inc/core/internal
 )
+

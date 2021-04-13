@@ -1,5 +1,4 @@
 include(FetchCMocka)
-include(CodeCoverageTarget)
 
 enable_testing()
 

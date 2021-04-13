@@ -1,18 +1,16 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-set(PROJECT_NAME vt_core_test)
+set(TARGET vt_core_test)
 
-project(${PROJECT_NAME} LANGUAGES C)
-
-add_executable(${PROJECT_NAME} 
+add_executable(${TARGET} 
     main.c
     test_vt_fingerprint.c
     test_vt_sensor.c
     test_vt_database.c
 )
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${TARGET}
     PRIVATE
         verified_telemetry
         cmocka-static
@@ -23,8 +21,6 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 add_test(
-    NAME ${PROJECT_NAME} 
-    COMMAND ${PROJECT_NAME}
+    NAME ${TARGET} 
+    COMMAND ${TARGET}
 )
-
-add_code_coverage_target(PROJECT_NAME)
