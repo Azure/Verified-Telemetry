@@ -16,15 +16,15 @@
 
 #include "cmocka.h"
 
-VT_SENSOR sensor;
+static VT_SENSOR sensor;
+static VT_DATABASE test_database;
 
-uint32_t array[VT_FINGERPRINT_LENGTH];
-char str[VT_FINGERPRINT_LENGTH];
+static uint32_t array[VT_FINGERPRINT_LENGTH];
+static char str[VT_FINGERPRINT_LENGTH];
 
-uint32_t fingerprint_array[4][VT_FINGERPRINT_LENGTH] = {{2535,2584,2563,2547,2533,2518,2499,2481,2467,2449,2434,2418,2399,2388,2371,2359,2343,2342,2326,2313,2298,2285,2270,2255,2242,2229,2214,2201,2188,2176,2165,2161,2138,2135,2122,2109,2098,2086,2073,2057,2047,2034,2025,2012,1999,1998,1987,1977,1965,1952,1947,1931,1916,1909,1899,1888,1877,1865,1856,1853,1844,1832,1825,1812,1803,1791,1780,1771,1762,1752,1743,1732,1723,1721,1711,1702,1693,1683,1673,1665,1657,1647,1632,1628,1619,1611,1602,1599,1595,1584,1573,1566,1558,1550,1540,1532,1526,1514,1506,1499}, 
-                                                        {2059,2129,2069,1416,1385,1369,1343,1314,1287,1262,1253,1228,1201,1177,1170,1146,1121,1099,1105,1068,1045,1025,1019,997,977,957,953,932,914,895,888,871,853,836,832,815,799,788,779,771,748,734,729,714,700,682,682,667,669,642,635,625,613,601,597,585,574,563,557,549,536,525,522,512,371,365,352,346,345,337,329,323,322,314,307,301,300,293,287,281,278,268,265,261,258,252,243,240,239,233,228,224,221,217,211,205,203,196,194,189}, 
-                                                        {1363,1405,1388,1370,1356,1338,1324,1309,1299,1286,1271,1258,1239,1231,1215,1207,1196,1185,1175,1160,1149,1137,1125,1114,1103,1093,1083,1071,1062,1140,1046,1030,1021,1013,998,992,983,972,964,958,947,938,928,653,650,644,639,631,626,619,614,608,603,597,595,586,579,577,569,562,560,530,546,543,538,534,527,521,518,512,507,502,498,494,487,484,479,476,470,466,462,455,452,447,445,440,435,388,427,423,420,414,411,406,404,399,395,392,391,383}, 
-                                                        {1469,1518,1502,1488,1465,1462,1449,1437,1424,1413,1402,1396,1387,1375,1363,1354,1342,1332,1321,1299,1300,1290,1289,1278,1267,1258,1249,1241,1229,1221,1211,1201,1195,1190,1181,1171,1162,1153,1151,1136,1127,1119,1111,1103,1100,1091,1043,1075,1067,1060,1051,1044,1024,1029,1021,1015,1011,1002,996,990,981,974,967,960,951,947,945,936,930,924,917,910,903,896,890,884,877,875,869,612,607,604,603,599,594,590,586,579,578,574,568,564,560,552,574,551,548,544,550,536}};
+uint32_t fingerprint_array[3][VT_FINGERPRINT_LENGTH] = {{0,10,19,29,39,49,58,68,77,86,96,105,114,123,131,140,149,157,166,174,182,191,199,207,215,223,230,238,246,253,261,268,276,283,290,297,304,311,318,325,332,339,345,352,358,365,371,377,384,390,396,402,408,414,420,426,432,437,443,448,454,459,465,470,476,481,486,491,496,501,506,511,516,521,526,531,535,540,545,549,554,558,563,567,571,576,580,584,588,593,597,601,605,609,613,616,620,624,628,632},
+                                                        {1000,989,980,970,960,950,941,931,922,913,903,894,885,876,868,859,850,842,833,825,817,808,800,792,784,776,769,761,753,746,738,731,723,716,709,702,695,688,681,674,667,660,654,647,641,634,628,622,615,609,603,597,591,585,579,573,567,562,556,551,545,540,534,529,523,518,513,508,503,498,493,488,483,478,473,468,464,459,454,450,445,441,436,432,428,423,419,415,411,406,402,398,394,390,386,383,379,375,371,367},
+                                                        {1000,989,980,970,960,950,941,931,922,913,903,894,885,876,868,859,850,842,833,825,817,808,800,792,784,776,769,761,753,746,738,731,723,716,709,702,695,688,681,674,667,660,654,647,641,634,628,622,615,609,603,597,591,585,579,573,567,562,556,551,545,540,534,529,523,518,513,508,503,498,493,488,483,478,473,468,464,459,454,450,445,441,436,432,428,423,419,415,411,406,402,398,394,390,386,383,379,375,371,367}};
 
 
 
@@ -36,9 +36,25 @@ static int vt_sensor_set(void** state)
     sensor.vt_adc_controller     = NULL;
     sensor.vt_adc_channel        = 3;
     sensor.vt_timer              = NULL;
-    sensor.vt_sampling_frequency = 1;
+    sensor.vt_sampling_frequency = 10;
 
     return 0;
+}
+
+static int vt_database_set(void** state)
+{
+    test_database._vt_total_fingerprints  = 1;
+    test_database._vt_fingerprintdb[0][0] = 23;
+    test_database._vt_fingerprintdb[0][1] = 10;
+    memcpy(&(test_database._vt_fingerprintdb[0][2]), curve_exponential_fall, (sizeof(curve_exponential_fall)));
+    test_database._vt_total_falltime              = 1;
+    test_database._vt_falltimedb[0][0]            = 23;
+    test_database._vt_falltimedb[0][1]            = 520;
+    test_database._vt_total_pearson_coefficient   = 1;
+    test_database._vt_pearson_coefficientdb[0][0] = 23;
+    test_database._vt_pearson_coefficientdb[0][1] = 0.998063;
+
+    return vt_sensor_set(state);
 }
 
 static void test_vt_sensor_initialize(void** state)
@@ -105,6 +121,17 @@ static void test_vt_sensor_read_fingerprint(void** state)
 static void test_vt_sensor_read_status(void** state)
 {
     (void)state;
+
+    int8_t sensor_id;
+
+    assert_int_equal(vt_sensor_read_status(&sensor, &test_database, curve_constant, &sensor_id), VT_ERROR);
+
+    assert_int_equal(vt_sensor_read_status(&sensor, &test_database, curve_exponential_fall, &sensor_id), VT_SUCCESS);
+    assert_int_equal(sensor_id,23);
+
+    sensor.vt_sampling_frequency = 50;
+    assert_int_equal(vt_sensor_read_status(&sensor, &test_database, curve_triagular, &sensor_id), VT_SUCCESS);
+    assert_int_equal(sensor_id,0);
 }
 
 static void test_vt_sensor_calibrate(void** state)
@@ -114,7 +141,7 @@ static void test_vt_sensor_calibrate(void** state)
     uint8_t confidence_metric = 0;
     int i;
 
-    for (int j = 0; j < 4; j++)
+    for (int j = 0; j < 3; j++)
     {
         expect_function_call(__wrap__vt_dsc_gpio_turn_off);
         expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_port, NULL);
@@ -127,7 +154,6 @@ static void test_vt_sensor_calibrate(void** state)
         for (i = 0; i < VT_FINGERPRINT_LENGTH; i++)
         {
             will_return(__wrap__vt_dsc_adc_read, fingerprint_array[j][i]);
-          
         }
 
         expect_function_call(__wrap__vt_dsc_gpio_turn_on);
@@ -136,7 +162,7 @@ static void test_vt_sensor_calibrate(void** state)
     }
 
     vt_sensor_calibrate(&sensor, &confidence_metric);
-    assert_int_equal(sensor.vt_sampling_frequency,6379);
+    assert_int_equal(sensor.vt_sampling_frequency,VT_MAXIMUM_FREQUENCY);
     assert_int_equal(confidence_metric, 100);
 }
 
@@ -186,7 +212,7 @@ int test_vt_sensor()
         cmocka_unit_test_setup_teardown(test_vt_sensor_initialize, vt_sensor_set, vt_sensor_set),
         cmocka_unit_test_setup(test_vt_sensor_read_value, vt_sensor_set),
         cmocka_unit_test_setup(test_vt_sensor_read_fingerprint, vt_sensor_set),
-        cmocka_unit_test(test_vt_sensor_read_status),
+        cmocka_unit_test_setup(test_vt_sensor_read_status, vt_database_set),
         cmocka_unit_test_setup(test_vt_sensor_calibrate, vt_sensor_set),
     };
 
