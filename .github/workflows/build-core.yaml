@@ -33,7 +33,7 @@ jobs:
         run: |
           cmake --build build --target vt_core_test_coverage
 
-          - name: Run unit tests
+      - name: Run unit tests
         run: |
           cd build/tests
           ctest -V
