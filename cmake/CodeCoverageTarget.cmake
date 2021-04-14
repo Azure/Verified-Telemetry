@@ -22,8 +22,5 @@ macro(add_code_coverage_target code_cov_target)
             EXCLUDE ${COV_EXCLUDE}
             EXECUTABLE ${code_cov_target}
         )
-
-        # add project to coverage projects for printing
-        file(APPEND ${CMAKE_BINARY_DIR}/coverage_targets.txt " ${code_cov_target}_coverage")
     endif()
 endmacro()
