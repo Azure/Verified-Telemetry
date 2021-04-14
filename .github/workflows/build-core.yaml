@@ -29,12 +29,21 @@ jobs:
           cmake -Bbuild -GNinja -DCMAKE_BUILD_TYPE=Debug -DVT_UNIT_TESTING=ON -DVT_CODE_COVERAGE=ON
           cmake --build build
 
-      - name: Output code coverage
-        run: |
-          cmake --build build --target vt_core_test_coverage
-
       - name: Run unit tests
         run: |
           cd build/tests
           ctest -V
 
+      - name: Generate code coverage
+        run: |
+          cmake --build build --target vt_core_test_coverage
+
+      - name: Upload code coverage
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+          files: ./build/vt_core_test_coverage.xml
+          flags: unittests # optional
+          name: codecov-umbrella # optional
+          fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)      
