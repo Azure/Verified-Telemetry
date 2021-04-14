@@ -1,4 +1,6 @@
-![](https://github.com/Azure/Verified-Telemetry/workflows/Build%20Core/badge.svg)
+
+[![build](https://github.com/Azure/Verified-Telemetry/workflows/Build%20Core/badge.svg)](https://github.com/Azure/Verified-Telemetry/actions/workflows/build-core.yaml)
+[![codecov](https://codecov.io/gh/Azure/verified-telemetry/branch/main/graph/badge.svg?token=7JFQ2EX3BV)](https://codecov.io/gh/Azure/verified-telemetry)
 
 # Verified Telemetry Overview
 The quality of sensor data is fundamental for driving IoT adoption. Since IoT sensors are made of low-cost components, deployed in-the-wild and in harsh environments, they are prone to failures leading to faulty or dirty data. The effect of bad data will lead to the well-known garbage-in garbage-out process, leading to cascading ill-effects upstream and at times catastrophic decisions.  
