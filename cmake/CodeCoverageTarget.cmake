@@ -14,10 +14,12 @@ macro(add_code_coverage_target code_cov_target)
 
         setup_target_for_coverage_gcovr_xml(
             NAME ${code_cov_target}_coverage
+            EXCLUDE ${COV_EXCLUDE}
             EXECUTABLE ${code_cov_target}
         )
         setup_target_for_coverage_gcovr_html(
             NAME ${code_cov_target}_coverage_html 
+            EXCLUDE ${COV_EXCLUDE}
             EXECUTABLE ${code_cov_target}
         )
 
