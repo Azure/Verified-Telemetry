@@ -16,25 +16,25 @@
 
 #include "cmocka.h"
 
-static VT_SENSOR sensor;
+static VT_SENSOR test_sensor;
 static VT_DATABASE test_database;
 
 static uint32_t array[VT_FINGERPRINT_LENGTH];
 static char str[VT_FINGERPRINT_LENGTH];
 
-uint32_t fingerprint_array[2][VT_FINGERPRINT_LENGTH] = {{0,10,19,29,39,49,58,68,77,86,96,105,114,123,131,140,149,157,166,174,182,191,199,207,215,223,230,238,246,253,261,268,276,283,290,297,304,311,318,325,332,339,345,352,358,365,371,377,384,390,396,402,408,414,420,426,432,437,443,448,454,459,465,470,476,481,486,491,496,501,506,511,516,521,526,531,535,540,545,549,554,558,563,567,571,576,580,584,588,593,597,601,605,609,613,616,620,624,628,632},
-                                                        {1000,989,980,970,960,950,941,931,922,913,903,894,885,876,868,859,850,842,833,825,817,808,800,792,784,776,769,761,753,746,738,731,723,716,709,702,695,688,681,674,667,660,654,647,641,634,628,622,615,609,603,597,591,585,579,573,567,562,556,551,545,540,534,529,523,518,513,508,503,498,493,488,483,478,473,468,464,459,454,450,445,441,436,432,428,423,419,415,411,406,402,398,394,390,386,383,379,375,371,367}};
+static uint32_t fingerprint_array[2][VT_FINGERPRINT_LENGTH] = {{0,10,19,29,39,49,58,68,77,86,96,105,114,123,131,140,149,157,166,174,182,191,199,207,215,223,230,238,246,253,261,268,276,283,290,297,304,311,318,325,332,339,345,352,358,365,371,377,384,390,396,402,408,414,420,426,432,437,443,448,454,459,465,470,476,481,486,491,496,501,506,511,516,521,526,531,535,540,545,549,554,558,563,567,571,576,580,584,588,593,597,601,605,609,613,616,620,624,628,632},
+                                                               {1000,989,980,970,960,950,941,931,922,913,903,894,885,876,868,859,850,842,833,825,817,808,800,792,784,776,769,761,753,746,738,731,723,716,709,702,695,688,681,674,667,660,654,647,641,634,628,622,615,609,603,597,591,585,579,573,567,562,556,551,545,540,534,529,523,518,513,508,503,498,493,488,483,478,473,468,464,459,454,450,445,441,436,432,428,423,419,415,411,406,402,398,394,390,386,383,379,375,371,367}};
 
 // Test Fixtures
 static int vt_sensor_set(void** state)
 {
-    sensor.vt_sensor_name        = strdup("set_sensor");
-    sensor.vt_gpio_port          = NULL;
-    sensor.vt_gpio_pin           = 9;
-    sensor.vt_adc_controller     = NULL;
-    sensor.vt_adc_channel        = 3;
-    sensor.vt_timer              = NULL;
-    sensor.vt_sampling_frequency = 10;
+    test_sensor.vt_sensor_name        = strdup("set_sensor");
+    test_sensor.vt_gpio_port          = NULL;
+    test_sensor.vt_gpio_pin           = 9;
+    test_sensor.vt_adc_controller     = NULL;
+    test_sensor.vt_adc_channel        = 3;
+    test_sensor.vt_timer              = NULL;
+    test_sensor.vt_sampling_frequency = 10;
 
     return 0;
 }
@@ -60,14 +60,14 @@ static void test_vt_sensor_initialize(void** state)
 {
     (void)state;
 
-    assert_int_equal(vt_sensor_initialize(&sensor, "test_sensor", NULL, 7, NULL, 2, NULL), VT_SUCCESS);
+    assert_int_equal(vt_sensor_initialize(&test_sensor, "test_sensor", NULL, 7, NULL, 2, NULL), VT_SUCCESS);
 
-    assert_string_equal(sensor.vt_sensor_name, "test_sensor");
-    assert_ptr_equal(sensor.vt_gpio_port, NULL);
-    assert_int_equal(sensor.vt_gpio_pin, 7);
-    assert_ptr_equal(sensor.vt_adc_controller, NULL);
-    assert_int_equal(sensor.vt_adc_channel, 2);
-    assert_ptr_equal(sensor.vt_timer, NULL);
+    assert_string_equal(test_sensor.vt_sensor_name, "test_sensor");
+    assert_ptr_equal(test_sensor.vt_gpio_port, NULL);
+    assert_int_equal(test_sensor.vt_gpio_pin, 7);
+    assert_ptr_equal(test_sensor.vt_adc_controller, NULL);
+    assert_int_equal(test_sensor.vt_adc_channel, 2);
+    assert_ptr_equal(test_sensor.vt_timer, NULL);
 }
 
 // Read
@@ -83,7 +83,7 @@ static void test_vt_sensor_read_value(void** state)
     expect_function_call(__wrap__vt_dsc_adc_read);
     will_return(__wrap__vt_dsc_adc_read, 23);
 
-    assert_int_equal(vt_sensor_read_value(&sensor, &value), VT_PLATFORM_SUCCESS);
+    assert_int_equal(vt_sensor_read_value(&test_sensor, &value), VT_PLATFORM_SUCCESS);
     assert_int_equal(value, 23);
 }
 
@@ -91,7 +91,7 @@ static void test_vt_sensor_read_fingerprint(void** state)
 {
     (void)state;
 
-    int i;
+    uint8_t i;
 
     expect_function_call(__wrap__vt_dsc_gpio_turn_off);
     expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_port, NULL);
@@ -110,7 +110,7 @@ static void test_vt_sensor_read_fingerprint(void** state)
     expect_value(__wrap__vt_dsc_gpio_turn_on, gpio_port, NULL);
     expect_value(__wrap__vt_dsc_gpio_turn_on, gpio_pin, 9);
 
-    assert_int_equal(vt_sensor_read_fingerprint(&sensor, array, str), VT_PLATFORM_SUCCESS);
+    assert_int_equal(vt_sensor_read_fingerprint(&test_sensor, array, str), VT_PLATFORM_SUCCESS);
 
     for (i = 0; i < VT_FINGERPRINT_LENGTH; i++)
     {
@@ -124,13 +124,13 @@ static void test_vt_sensor_read_status(void** state)
 
     int8_t sensor_id;
 
-    assert_int_equal(vt_sensor_read_status(&sensor, &test_database, curve_constant, &sensor_id), VT_ERROR);
+    assert_int_equal(vt_sensor_read_status(&test_sensor, &test_database, curve_constant, &sensor_id), VT_ERROR);
 
-    assert_int_equal(vt_sensor_read_status(&sensor, &test_database, curve_exponential_fall, &sensor_id), VT_SUCCESS);
+    assert_int_equal(vt_sensor_read_status(&test_sensor, &test_database, curve_exponential_fall, &sensor_id), VT_SUCCESS);
     assert_int_equal(sensor_id,23);
 
-    sensor.vt_sampling_frequency = 50;
-    assert_int_equal(vt_sensor_read_status(&sensor, &test_database, curve_triagular, &sensor_id), VT_SUCCESS);
+    test_sensor.vt_sampling_frequency = 50;
+    assert_int_equal(vt_sensor_read_status(&test_sensor, &test_database, curve_triagular, &sensor_id), VT_SUCCESS);
     assert_int_equal(sensor_id,0);
 }
 
@@ -163,8 +163,8 @@ static void test_vt_sensor_calibrate(void** state)
         expect_value(__wrap__vt_dsc_gpio_turn_on, gpio_pin, 9);
     }
 
-    vt_sensor_calibrate(&sensor, &confidence_metric);
-    assert_int_equal(sensor.vt_sampling_frequency,VT_MAXIMUM_FREQUENCY);
+    vt_sensor_calibrate(&test_sensor, &confidence_metric);
+    assert_int_equal(test_sensor.vt_sampling_frequency,VT_MAXIMUM_FREQUENCY);
     assert_int_equal(confidence_metric, 50);
 }
 
