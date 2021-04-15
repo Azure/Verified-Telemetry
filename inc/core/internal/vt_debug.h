@@ -1,6 +1,8 @@
 #ifndef _VT_DEBUG_H
 #define _VT_DEBUG_H
 
+#include <stdio.h>
+
 /* Define the VT_LOG_LEVEL.  */
 #ifndef VT_LOG_LEVEL
 #define VT_LOG_LEVEL    2
