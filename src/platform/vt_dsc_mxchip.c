@@ -2,6 +2,7 @@
    Licensed under the MIT License. */
 
 #include "vt_dsc.h"
+#include "vt_debug.h"
 
 static uint32_t _vt_dsc_flash_get_sector(uint32_t Address);
 
