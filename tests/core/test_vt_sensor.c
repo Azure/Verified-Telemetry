@@ -78,6 +78,8 @@ static void test_vt_sensor_read_value(void** state)
 
     uint32_t value;
 
+    assert_int_equal(vt_sensor_read_value(NULL, &value), VT_PTR_ERROR);
+
     expect_value(__wrap__vt_dsc_adc_read, adc_controller, NULL);
     expect_value(__wrap__vt_dsc_adc_read, adc_channel, 3);
 
@@ -93,6 +95,8 @@ static void test_vt_sensor_read_fingerprint(void** state)
     (void)state;
 
     uint8_t i;
+
+    assert_int_equal(vt_sensor_read_fingerprint(NULL, array, str), VT_PTR_ERROR);
 
     expect_function_call(__wrap__vt_dsc_gpio_turn_off);
     expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_port, NULL);

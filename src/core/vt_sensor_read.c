@@ -11,7 +11,7 @@ uint32_t vt_sensor_read_value(VT_SENSOR* sensor_ptr, uint32_t* sensor_value)
 {
     if (sensor_ptr == NULL)
     {
-        return (VT_PTR_ERROR);
+        return VT_PTR_ERROR;
     }
 
     return _vt_dsc_adc_read(sensor_ptr->vt_adc_controller, sensor_ptr->vt_adc_channel, sensor_value);
@@ -68,7 +68,7 @@ uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprin
 {
     if (sensor_ptr == NULL)
     {
-        return (VT_PTR_ERROR);
+        return VT_PTR_ERROR;
     }
 
     uint32_t status;
