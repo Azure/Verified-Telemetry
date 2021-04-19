@@ -60,8 +60,9 @@ static void test_vt_sensor_initialize(void** state)
 {
     (void)state;
 
-    assert_int_equal(vt_sensor_initialize(&test_sensor, "test_sensor", NULL, 7, NULL, 2, NULL), VT_SUCCESS);
+    assert_int_equal(vt_sensor_initialize(NULL, "test_sensor", NULL, 7, NULL, 2, NULL), VT_PTR_ERROR);
 
+    assert_int_equal(vt_sensor_initialize(&test_sensor, "test_sensor", NULL, 7, NULL, 2, NULL), VT_SUCCESS);
     assert_string_equal(test_sensor.vt_sensor_name, "test_sensor");
     assert_ptr_equal(test_sensor.vt_gpio_port, NULL);
     assert_int_equal(test_sensor.vt_gpio_pin, 7);
