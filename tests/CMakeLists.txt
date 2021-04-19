@@ -1,4 +1,5 @@
 include(FetchCMocka)
+include(CTest)
 
 enable_testing()
 
