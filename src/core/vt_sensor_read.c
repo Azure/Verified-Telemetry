@@ -19,6 +19,11 @@ uint32_t vt_sensor_read_value(VT_SENSOR* sensor_ptr, uint32_t* sensor_value)
 
 uint32_t vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint_array, char* fingerprint_string)
 {
+    if (sensor_ptr == NULL)
+    {
+        return VT_PTR_ERROR;
+    }
+
     char buffer[10] = "";
     strcpy(fingerprint_string, "");
 
@@ -66,11 +71,6 @@ uint32_t vt_sensor_read_status(
 
 uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint_array, uint16_t sampling_frequency)
 {
-    if (sensor_ptr == NULL)
-    {
-        return VT_PTR_ERROR;
-    }
-
     uint32_t status;
 
     status = _vt_dsc_gpio_turn_off(sensor_ptr->vt_gpio_port, sensor_ptr->vt_gpio_pin);
