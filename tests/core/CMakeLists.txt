@@ -1,6 +1,8 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+include(CTest)
+
 set(TARGET vt_core_test)
 
 add_executable(${TARGET} 
