@@ -259,6 +259,10 @@ static void test_vt_database_evaluate_nrmse(void** state)
 
     assert_int_equal(_vt_database_evaluate_nrmse(&test_database, curve_exponential_fall), 23);
     assert_int_equal(_vt_database_evaluate_nrmse(&test_database, curve_triagular), 12);
+    assert_int_equal(_vt_database_evaluate_nrmse(&test_database, curve_constant), 0);
+
+    vt_database_reset(state);
+    assert_int_equal(_vt_database_evaluate_nrmse(&test_database, curve_constant), -1);
 }
 
 static void test_vt_database_evaluate_pearson_falltime(void** state)
@@ -268,6 +272,10 @@ static void test_vt_database_evaluate_pearson_falltime(void** state)
     assert_int_equal(_vt_database_evaluate_pearson_falltime(&test_database, 5200, 0.998063), 23);
     assert_int_equal(_vt_database_evaluate_pearson_falltime(&test_database, 4940, 0.998063), 23);
     assert_int_equal(_vt_database_evaluate_pearson_falltime(&test_database, 1650, 0.991134), 12);
+    assert_int_equal(_vt_database_evaluate_pearson_falltime(&test_database, 1650, -0.991134), 0);
+
+    vt_database_reset(state);
+    assert_int_equal(_vt_database_evaluate_pearson_falltime(&test_database, 5200, 0.998063), -1);
 }
 
 static void test_vt_database_evaluate_falltime_nearestindex_search(void** state)
