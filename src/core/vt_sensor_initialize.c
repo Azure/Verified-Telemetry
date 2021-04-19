@@ -15,7 +15,7 @@ uint32_t vt_sensor_initialize(VT_SENSOR* sensor_ptr,
 {
     if (sensor_ptr == NULL)
     {
-        return (VT_PTR_ERROR);
+        return VT_PTR_ERROR;
     }
 
     memset((void*)sensor_ptr, 0, sizeof(VT_SENSOR));
