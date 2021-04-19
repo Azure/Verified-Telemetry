@@ -1,6 +1,8 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+include (CTest)
+
 project(vt_core_test LANGUAGES C)
 
 add_executable(vt_core_test 
