@@ -11,7 +11,6 @@
 #include <stdarg.h>
 #include <stddef.h>
 
-
 #include "cmocka.h"
 
 uint32_t curve_zeroes[TEST_ARRAY_LENGTH]               = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -20,6 +19,7 @@ uint32_t curve_triagular[TEST_ARRAY_LENGTH]            = {1,2,3,4,5,6,7,8,9,10,1
 uint32_t curve_exponential_fall[TEST_ARRAY_LENGTH]     = {1000,989,980,970,960,950,941,931,922,913,903,894,885,876,868,859,850,842,833,825,817,808,800,792,784,776,769,761,753,746,738,731,723,716,709,702,695,688,681,674,667,660,654,647,641,634,628,622,615,609,603,597,591,585,579,573,567,562,556,551,545,540,534,529,523,518,513,508,503,498,493,488,483,478,473,468,464,459,454,450,445,441,436,432,428,423,419,415,411,406,402,398,394,390,386,383,379,375,371,367};
 uint32_t curve_exponential_rise[TEST_ARRAY_LENGTH]     = {0,10,19,29,39,49,58,68,77,86,96,105,114,123,131,140,149,157,166,174,182,191,199,207,215,223,230,238,246,253,261,268,276,283,290,297,304,311,318,325,332,339,345,352,358,365,371,377,384,390,396,402,408,414,420,426,432,437,443,448,454,459,465,470,476,481,486,491,496,501,506,511,516,521,526,531,535,540,545,549,554,558,563,567,571,576,580,584,588,593,597,601,605,609,613,616,620,624,628,632};
 
+// Calculate
 static void test_vt_fingerprint_calculate_maximum_index(void** state)
 {
     (void)state;
@@ -30,7 +30,6 @@ static void test_vt_fingerprint_calculate_maximum_index(void** state)
     assert_int_equal(_vt_fingerprint_calculate_maximum_index(curve_exponential_fall, TEST_ARRAY_LENGTH), 0);
     assert_int_equal(_vt_fingerprint_calculate_maximum_index(curve_exponential_rise, TEST_ARRAY_LENGTH), 99);
 }
-
 
 static void test_vt_fingerprint_calculate_37index(void** state)
 {
@@ -73,6 +72,7 @@ static void test_vt_fingerprint_calculate_shape(void** state)
     assert_int_equal(_vt_fingerprint_calculate_shape(curve_exponential_rise, TEST_ARRAY_LENGTH), VT_SHAPE_RISE);
 }
 
+// Evaluate
 static void test_vt_fingerprint_evaluate_correlation_coefficient(void** state)
 {
     (void)state;
@@ -81,7 +81,6 @@ static void test_vt_fingerprint_evaluate_correlation_coefficient(void** state)
     assert_float_equal(_vt_fingerprint_evaluate_correlation_coefficient(curve_exponential_fall, curve_exponential_fall, TEST_ARRAY_LENGTH),1.000,0.001);
     assert_float_equal(_vt_fingerprint_evaluate_correlation_coefficient(curve_triagular, curve_exponential_fall, TEST_ARRAY_LENGTH),-0.094277,0.001);
     assert_float_equal(_vt_fingerprint_evaluate_correlation_coefficient(curve_triagular, curve_exponential_rise, TEST_ARRAY_LENGTH),0.094277,0.001);
-
 }
 
 static void test_vt_fingerprint_evaluate_nrmse(void** state)

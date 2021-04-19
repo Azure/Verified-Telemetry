@@ -44,7 +44,7 @@ static uint8_t _vt_database_pearsoncoefficient_falltimeindex_search(VT_DATABASE*
 
 int8_t _vt_database_evaluate_nrmse(VT_DATABASE* database_ptr, uint32_t* fallcurvearray)
 {
-    if (database_ptr->_vt_total_fingerprints <= 0)
+    if (database_ptr->_vt_total_fingerprints == 0)
     {
         return -1;
     }

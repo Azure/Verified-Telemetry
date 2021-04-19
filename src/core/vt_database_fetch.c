@@ -12,7 +12,7 @@ uint32_t vt_database_falltime_fetch(VT_DATABASE* database_ptr, int8_t* index, ui
         return (VT_PTR_ERROR);
     }
 
-    if (!(*index < database_ptr->_vt_total_falltime))
+    if (*index > database_ptr->_vt_total_falltime)
     {
         *index = -1;
         return (VT_SUCCESS);
@@ -32,7 +32,7 @@ uint32_t vt_database_pearsoncoefficient_fetch(
         return (VT_PTR_ERROR);
     }
 
-    if (!(*index < database_ptr->_vt_total_pearson_coefficient))
+    if (*index > database_ptr->_vt_total_pearson_coefficient)
     {
         *index = -1;
         return (VT_SUCCESS);
