@@ -259,6 +259,10 @@ static void test_vt_database_evaluate_nrmse(void** state)
 
     assert_int_equal(_vt_database_evaluate_nrmse(&test_database, curve_exponential_fall), 23);
     assert_int_equal(_vt_database_evaluate_nrmse(&test_database, curve_triagular), 12);
+    assert_int_equal(_vt_database_evaluate_nrmse(&test_database, curve_constant), 0);
+
+    vt_database_reset(state);
+    assert_int_equal(_vt_database_evaluate_nrmse(&test_database, curve_constant), -1);
 }
 
 static void test_vt_database_evaluate_pearson_falltime(void** state)
@@ -268,6 +272,10 @@ static void test_vt_database_evaluate_pearson_falltime(void** state)
     assert_int_equal(_vt_database_evaluate_pearson_falltime(&test_database, 5200, 0.998063), 23);
     assert_int_equal(_vt_database_evaluate_pearson_falltime(&test_database, 4940, 0.998063), 23);
     assert_int_equal(_vt_database_evaluate_pearson_falltime(&test_database, 1650, 0.991134), 12);
+    assert_int_equal(_vt_database_evaluate_pearson_falltime(&test_database, 1650, -0.991134), 0);
+
+    vt_database_reset(state);
+    assert_int_equal(_vt_database_evaluate_pearson_falltime(&test_database, 5200, 0.998063), -1);
 }
 
 static void test_vt_database_evaluate_falltime_nearestindex_search(void** state)
@@ -302,10 +310,16 @@ static void test_vt_database_falltime_fetch(void** state)
     int8_t sensor_id  = 0;
 
     assert_int_equal(vt_database_falltime_fetch(&test_database, &index, &fall_time, &sensor_id), VT_SUCCESS);
-
     assert_int_equal(index, 1);
     assert_int_equal(fall_time, 1650);
     assert_int_equal(sensor_id, 12);
+
+    index = 4;
+
+    assert_int_equal(vt_database_falltime_fetch(&test_database, &index, &fall_time, &sensor_id), VT_SUCCESS);
+    assert_int_equal(index, -1);
+
+    assert_int_equal(vt_database_falltime_fetch(NULL, &index, &fall_time, &sensor_id), VT_PTR_ERROR);
 }
 
 static void test_vt_database_pearsoncoefficient_fetch(void** state)
@@ -318,10 +332,18 @@ static void test_vt_database_pearsoncoefficient_fetch(void** state)
 
     assert_int_equal(
         vt_database_pearsoncoefficient_fetch(&test_database, &index, &pearson_coefficient, &sensor_id), VT_SUCCESS);
-
     assert_int_equal(index, 1);
     assert_float_equal(pearson_coefficient, 0.998063, 0.001);
     assert_int_equal(sensor_id, 23);
+
+    index = 4;
+
+    assert_int_equal(
+        vt_database_pearsoncoefficient_fetch(&test_database, &index, &pearson_coefficient, &sensor_id), VT_SUCCESS);
+    assert_int_equal(index, -1);
+
+    assert_int_equal(
+        vt_database_pearsoncoefficient_fetch(NULL, &index, &pearson_coefficient, &sensor_id), VT_PTR_ERROR);
 }
 
 static void test_vt_database_check_pearson_falltime_availability(void** state)
