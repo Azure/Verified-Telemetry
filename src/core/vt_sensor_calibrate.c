@@ -32,8 +32,6 @@ static uint32_t _vt_sensor_calibrate(VT_SENSOR* sensor_ptr, VT_STATE_BLOCK* stat
     uint8_t index_max;
     int8_t index_37;
 
-    printf("\n\n\n Freq = %d \n\n\n", (int)states->current_sampling_frequency);
-
     _vt_sensor_read_fingerprint(sensor_ptr, states->current_fingerprint, states->current_sampling_frequency);
     states->current_shape = _vt_fingerprint_calculate_shape(states->current_fingerprint, VT_FINGERPRINT_LENGTH);
 
