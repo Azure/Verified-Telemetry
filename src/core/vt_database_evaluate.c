@@ -16,12 +16,7 @@ static uint8_t _vt_database_falltime_nearestindex_search(VT_DATABASE* database_p
     for (i = 0; (i < database_ptr->_vt_total_falltime) && (database_ptr->_vt_falltimedb[i][1] <= fall_time); i++)
         ;
 
-    if (i == 0)
-    {
-        return i;
-    }
-    else if (abs(fall_time - database_ptr->_vt_falltimedb[i][1]) <=
-             abs(database_ptr->_vt_falltimedb[i - 1][1] - fall_time))
+    if (abs(fall_time - database_ptr->_vt_falltimedb[i][1]) <= abs(database_ptr->_vt_falltimedb[i - 1][1] - fall_time))
     {
         return i;
     }
