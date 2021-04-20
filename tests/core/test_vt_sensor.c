@@ -176,7 +176,7 @@ static void test_vt_sensor_calibrate(void** state)
     assert_int_equal(test_sensor.vt_sampling_frequency,VT_MAXIMUM_FREQUENCY);
     assert_int_equal(confidence_metric, 50);
 
-    for (j = 0; j < 3; j++)
+    for (j = 0; j < 4; j++)
     {
         expect_function_call(__wrap__vt_dsc_gpio_turn_off);
         expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_port, NULL);
