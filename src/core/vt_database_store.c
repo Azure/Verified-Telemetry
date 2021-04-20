@@ -8,30 +8,28 @@
 #include "vt_dsc.h"
 #include "vt_fingerprint.h"
 
-static uint32_t _vt_database_store_fingerprint(
+static void _vt_database_store_fingerprint(
     VT_DATABASE* database_ptr, uint32_t* fallcurvearray, uint16_t sampling_frequency, uint8_t sensor_id);
 
-static uint32_t _vt_database_store_fingerprint(
+static void _vt_database_store_fingerprint(
     VT_DATABASE* database_ptr, uint32_t* fallcurvearray, uint16_t sampling_frequency, uint8_t sensor_id)
 {
-    if (database_ptr == NULL)
-    {
-        return (VT_PTR_ERROR);
-    }
-
     *(*(database_ptr->_vt_fingerprintdb + database_ptr->_vt_total_fingerprints) + 0) = sensor_id;
     *(*(database_ptr->_vt_fingerprintdb + database_ptr->_vt_total_fingerprints) + 1) = sampling_frequency;
     memcpy((*(database_ptr->_vt_fingerprintdb + database_ptr->_vt_total_fingerprints) + 2),
         fallcurvearray,
         (100 * sizeof(fallcurvearray)));
     database_ptr->_vt_total_fingerprints++;
-
-    return VT_SUCCESS;
 }
 
 uint32_t vt_database_store(
     VT_DATABASE* database_ptr, uint32_t* fallcurvearray, uint16_t sampling_frequency, int8_t sensor_id)
 {
+    if (database_ptr == NULL)
+    {
+        return VT_PTR_ERROR;
+    }
+
     uint32_t falltime;
     float pearson_coefficient;
 
@@ -48,7 +46,7 @@ uint32_t vt_database_store(
     return VT_ERROR;
 }
 
-uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, uint32_t fall_time, uint8_t sensor_id)
+void _vt_database_store_falltime(VT_DATABASE* database_ptr, uint32_t fall_time, uint8_t sensor_id)
 {
     uint8_t i;
 
@@ -69,11 +67,9 @@ uint32_t _vt_database_store_falltime(VT_DATABASE* database_ptr, uint32_t fall_ti
     database_ptr->_vt_falltimedb[i][1] = fall_time;
 
     VTLogInfo("\tStored FallTime = %d\r\n", (int16_t)database_ptr->_vt_falltimedb[i][1]);
-
-    return VT_SUCCESS;
 }
 
-uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float pearson_coefficient, uint8_t sensor_id)
+void _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float pearson_coefficient, uint8_t sensor_id)
 {
     uint8_t i;
     int16_t pearsonCoeffInt1;
@@ -109,6 +105,4 @@ uint32_t _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float 
         VTLogInfo("\tStored Pearson Coefficient = %d.%04d\r\n", pearsonCoeffInt1, pearsonCoeffInt2);
         database_ptr->_vt_total_pearson_coefficient++;
     }
-
-    return VT_SUCCESS;
 }
