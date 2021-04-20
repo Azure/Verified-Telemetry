@@ -137,6 +137,10 @@ static void test_vt_sensor_read_status(void** state)
     test_sensor.vt_sampling_frequency = 50;
     assert_int_equal(vt_sensor_read_status(&test_sensor, &test_database, curve_triagular, &sensor_id), VT_SUCCESS);
     assert_int_equal(sensor_id,0);
+
+    test_database._vt_total_falltime = 0;
+    assert_int_equal(vt_sensor_read_status(&test_sensor, &test_database, curve_triagular, &sensor_id), VT_SUCCESS);
+    assert_int_equal(sensor_id, -1);
 }
 
 // Calibrate
@@ -171,6 +175,30 @@ static void test_vt_sensor_calibrate(void** state)
     vt_sensor_calibrate(&test_sensor, &confidence_metric);
     assert_int_equal(test_sensor.vt_sampling_frequency,VT_MAXIMUM_FREQUENCY);
     assert_int_equal(confidence_metric, 50);
+
+    for (j = 0; j < 4; j++)
+    {
+        expect_function_call(__wrap__vt_dsc_gpio_turn_off);
+        expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_port, NULL);
+        expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_pin, 9);
+
+        expect_function_calls(__wrap__vt_dsc_adc_read, VT_FINGERPRINT_LENGTH);
+        expect_value_count(__wrap__vt_dsc_adc_read, adc_controller, NULL, VT_FINGERPRINT_LENGTH);
+        expect_value_count(__wrap__vt_dsc_adc_read, adc_channel, 3, VT_FINGERPRINT_LENGTH);
+
+        for (i = 0; i < VT_FINGERPRINT_LENGTH; i++)
+        {
+            will_return(__wrap__vt_dsc_adc_read, curve_constant[i]);
+        }
+
+        expect_function_call(__wrap__vt_dsc_gpio_turn_on);
+        expect_value(__wrap__vt_dsc_gpio_turn_on, gpio_port, NULL);
+        expect_value(__wrap__vt_dsc_gpio_turn_on, gpio_pin, 9);
+    }
+
+    vt_sensor_calibrate(&test_sensor, &confidence_metric);
+    assert_int_equal(test_sensor.vt_sampling_frequency, VT_MINIMUM_FREQUENCY);
+    assert_int_equal(confidence_metric, 0);
 }
 
 uint32_t __wrap__vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
