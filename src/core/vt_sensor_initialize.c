@@ -20,7 +20,7 @@ uint32_t vt_sensor_initialize(VT_SENSOR* sensor_ptr,
 
     memset((void*)sensor_ptr, 0, sizeof(VT_SENSOR));
 
-    sensor_ptr->vt_sensor_name        = strdup(sensor_name);
+    strcpy(sensor_ptr->vt_sensor_name,sensor_name);
     sensor_ptr->vt_gpio_port          = gpio_port;
     sensor_ptr->vt_gpio_pin           = gpio_pin;
     sensor_ptr->vt_adc_controller     = adc_controller;

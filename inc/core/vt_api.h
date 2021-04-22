@@ -28,6 +28,7 @@
 #define FALL_TIME_THRESHOLD           5.0f
 #define PEARSON_COEFFICIENT_THRESHOLD 5.0f
 
+#define VT_SENOSR_NAME_LENGTH           50
 #define VT_FINGERPRINT_LENGTH           100
 #define VT_DB_SIZE                      10
 #define VT_FINGERPRINT_DB_LENGTH        VT_FINGERPRINT_LENGTH + 2
@@ -36,7 +37,7 @@
 
 typedef struct VT_SENSOR_STRUCT
 {
-    char* vt_sensor_name;
+    char vt_sensor_name[VT_SENOSR_NAME_LENGTH];
     GPIO_PORT_TYPEDEF* vt_gpio_port;
     GPIO_PIN_TYPEDEF vt_gpio_pin;
 

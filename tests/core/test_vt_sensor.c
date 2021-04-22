@@ -28,7 +28,7 @@ static uint32_t fingerprint_array[2][VT_FINGERPRINT_LENGTH] = {{0,10,19,29,39,49
 // Test Fixtures
 static int vt_sensor_set(void** state)
 {
-    test_sensor.vt_sensor_name        = strdup("set_sensor");
+    strcpy(test_sensor.vt_sensor_name, "set_sensor");
     test_sensor.vt_gpio_port          = NULL;
     test_sensor.vt_gpio_pin           = 9;
     test_sensor.vt_adc_controller     = NULL;
