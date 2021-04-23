@@ -66,7 +66,7 @@ void _vt_database_store_falltime(VT_DATABASE* database_ptr, uint32_t fall_time, 
     database_ptr->_vt_falltimedb[i][0] = sensor_id;
     database_ptr->_vt_falltimedb[i][1] = fall_time;
 
-    VTLogInfo("\tStored FallTime = %d\r\n", (int16_t)database_ptr->_vt_falltimedb[i][1]);
+    VTLogInfo("\tStored FallTime = %lu\r\n", database_ptr->_vt_falltimedb[i][1]);
 }
 
 void _vt_database_store_pearsoncoefficient(VT_DATABASE* database_ptr, float pearson_coefficient, uint8_t sensor_id)
