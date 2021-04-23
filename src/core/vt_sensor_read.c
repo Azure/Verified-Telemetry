@@ -17,11 +17,17 @@ uint32_t vt_sensor_read_value(VT_SENSOR* sensor_ptr, uint32_t* sensor_value)
     return _vt_dsc_adc_read(sensor_ptr->vt_adc_controller, sensor_ptr->vt_adc_channel, sensor_value);
 }
 
-uint32_t vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint_array, char* fingerprint_string)
+uint32_t vt_sensor_read_fingerprint(
+    VT_SENSOR* sensor_ptr, uint32_t* fingerprint_array, char* fingerprint_string, uint32_t fingerprint_string_lenth)
 {
     if (sensor_ptr == NULL)
     {
         return VT_PTR_ERROR;
+    }    
+    
+    if (fingerprint_string_lenth < 3 * VT_FINGERPRINT_LENGTH)
+    {
+        return VT_ERROR;
     }
 
     char buffer[10] = "";

@@ -184,7 +184,7 @@ UINT get_fallcurve(PNP_FALLCURVE_COMPONENT* handle, VT_DATABASE* fingerprintdb, 
     int8_t sensor_id;
     if (toggleVerifiedTelemetry)
     {
-        if (vt_sensor_read_fingerprint(&handle->portInfo, fallcurvearray, fallcurvestring))
+        if (vt_sensor_read_fingerprint(&handle->portInfo, fallcurvearray, fallcurvestring, 1500))
         {
             VTLogError("Failed to measure Fall Curve\r\n\n");
             handle->fallcurveString = (CHAR*)fail_fingerprint;
@@ -281,7 +281,7 @@ static UINT reset_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT
         VTLogInfo("\tSensor Name does not match with any registered sensors\r\n");
         return (NX_NOT_SUCCESSFUL);
     }
-    else if (vt_sensor_read_fingerprint(&(handle->portInfo), fallcurvearray, fallcurvestring))
+    else if (vt_sensor_read_fingerprint(&(handle->portInfo), fallcurvearray, fallcurvestring, 1500))
     {
         VTLogInfo("\tError in collecting requested Fall Curve\r\n");
         return (NX_NOT_SUCCESSFUL);
@@ -320,7 +320,7 @@ static UINT retrain_golden_fallcurve(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_I
         VTLogInfo("\tSensor Name does not match with any registered sensors\r\n");
         return (NX_NOT_SUCCESSFUL);
     }
-    else if (vt_sensor_read_fingerprint(&(handle->portInfo), fallcurvearray, fallcurvestring))
+    else if (vt_sensor_read_fingerprint(&(handle->portInfo), fallcurvearray, fallcurvestring, 1500))
     {
         VTLogError("\tError in collecting requested Fall Curve\r\n");
         return (NX_NOT_SUCCESSFUL);

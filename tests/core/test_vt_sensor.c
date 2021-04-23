@@ -98,7 +98,9 @@ static void test_vt_sensor_read_fingerprint(void** state)
 
     uint8_t i;
 
-    assert_int_equal(vt_sensor_read_fingerprint(NULL, array, str), VT_PTR_ERROR);
+    assert_int_equal(vt_sensor_read_fingerprint(NULL, array, str, 300), VT_PTR_ERROR);
+
+    assert_int_equal(vt_sensor_read_fingerprint(&test_sensor, array, str, 50), VT_ERROR);
 
     expect_function_call(__wrap__vt_dsc_gpio_turn_off);
     expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_port, NULL);
@@ -117,7 +119,7 @@ static void test_vt_sensor_read_fingerprint(void** state)
     expect_value(__wrap__vt_dsc_gpio_turn_on, gpio_port, NULL);
     expect_value(__wrap__vt_dsc_gpio_turn_on, gpio_pin, 9);
 
-    assert_int_equal(vt_sensor_read_fingerprint(&test_sensor, array, str), VT_PLATFORM_SUCCESS);
+    assert_int_equal(vt_sensor_read_fingerprint(&test_sensor, array, str, 300), VT_PLATFORM_SUCCESS);
 
     for (i = 0; i < VT_FINGERPRINT_LENGTH; i++)
     {
