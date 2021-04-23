@@ -28,7 +28,7 @@ static uint32_t fingerprint_array[2][VT_FINGERPRINT_LENGTH] = {{0,10,19,29,39,49
 // Test Fixtures
 static int vt_sensor_set(void** state)
 {
-    test_sensor.vt_sensor_name        = strdup("set_sensor");
+    strncpy(test_sensor.vt_sensor_name, "set_sensor",10);
     test_sensor.vt_gpio_port          = NULL;
     test_sensor.vt_gpio_pin           = 9;
     test_sensor.vt_adc_controller     = NULL;
@@ -61,6 +61,8 @@ static void test_vt_sensor_initialize(void** state)
     (void)state;
 
     assert_int_equal(vt_sensor_initialize(NULL, "test_sensor", NULL, 7, NULL, 2, NULL), VT_PTR_ERROR);
+
+    assert_int_equal(vt_sensor_initialize(&test_sensor, "this_is_a_very_long_sensor_name_which_should_be_greater_than_max_sensor_name_length", NULL, 7, NULL, 2, NULL), VT_ERROR);
 
     assert_int_equal(vt_sensor_initialize(&test_sensor, "test_sensor", NULL, 7, NULL, 2, NULL), VT_SUCCESS);
     assert_string_equal(test_sensor.vt_sensor_name, "test_sensor");
@@ -96,7 +98,9 @@ static void test_vt_sensor_read_fingerprint(void** state)
 
     uint8_t i;
 
-    assert_int_equal(vt_sensor_read_fingerprint(NULL, array, str), VT_PTR_ERROR);
+    assert_int_equal(vt_sensor_read_fingerprint(NULL, array, str, 300), VT_PTR_ERROR);
+
+    assert_int_equal(vt_sensor_read_fingerprint(&test_sensor, array, str, 50), VT_ERROR);
 
     expect_function_call(__wrap__vt_dsc_gpio_turn_off);
     expect_value(__wrap__vt_dsc_gpio_turn_off, gpio_port, NULL);
@@ -115,7 +119,7 @@ static void test_vt_sensor_read_fingerprint(void** state)
     expect_value(__wrap__vt_dsc_gpio_turn_on, gpio_port, NULL);
     expect_value(__wrap__vt_dsc_gpio_turn_on, gpio_pin, 9);
 
-    assert_int_equal(vt_sensor_read_fingerprint(&test_sensor, array, str), VT_PLATFORM_SUCCESS);
+    assert_int_equal(vt_sensor_read_fingerprint(&test_sensor, array, str, 300), VT_PLATFORM_SUCCESS);
 
     for (i = 0; i < VT_FINGERPRINT_LENGTH; i++)
     {

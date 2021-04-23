@@ -28,6 +28,7 @@
 #define FALL_TIME_THRESHOLD           5.0f
 #define PEARSON_COEFFICIENT_THRESHOLD 5.0f
 
+#define VT_SENOSR_NAME_LENGTH           50
 #define VT_FINGERPRINT_LENGTH           100
 #define VT_DB_SIZE                      10
 #define VT_FINGERPRINT_DB_LENGTH        VT_FINGERPRINT_LENGTH + 2
@@ -36,7 +37,7 @@
 
 typedef struct VT_SENSOR_STRUCT
 {
-    char* vt_sensor_name;
+    char vt_sensor_name[VT_SENOSR_NAME_LENGTH];
     GPIO_PORT_TYPEDEF* vt_gpio_port;
     GPIO_PIN_TYPEDEF vt_gpio_pin;
 
@@ -75,7 +76,8 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint8_t* confidence_metric);
 // Read
 uint32_t vt_sensor_read_value(VT_SENSOR* sensor_ptr, uint32_t* sensor_value);
 
-uint32_t vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint_array, char* fingerprint_string);
+uint32_t vt_sensor_read_fingerprint(
+    VT_SENSOR* sensor_ptr, uint32_t* fingerprint_array, char* fingerprint_string, uint32_t fingerprint_string_length);
 
 uint32_t vt_sensor_read_status(
     VT_SENSOR* sensor_ptr, VT_DATABASE* database_ptr, uint32_t* fingerprint, int8_t* sensor_id);
