@@ -96,7 +96,7 @@ uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerp
     // fingerprint_length of this new fingerprint
     if (index_37 != 255)
     {
-        fingerprint_length = index_37 + 1;
+        fingerprint_length = (uint32_t)index_37 + 1;
     }
 
     // N > 2 ?
@@ -186,11 +186,11 @@ uint8_t _vt_fingerprint_calculate_maximum_index(uint32_t* fingerprint, uint8_t f
 
 uint8_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint8_t fingerprint_length)
 {
-    uint8_t index_max = _vt_fingerprint_calculate_maximum_index(fingerprint, fingerprint_length);
+    // uint8_t index_max = _vt_fingerprint_calculate_maximum_index(fingerprint, fingerprint_length);
 
-    for (uint8_t i = index_max; i < fingerprint_length; i++)
+    for (uint8_t i = 1; i < fingerprint_length; i++)
     {
-        if (fingerprint[i] <= (0.37 * fingerprint[index_max]))
+        if ((float)fingerprint[i] <= (0.37f * (float)fingerprint[0]))
         {
             return i;
         }

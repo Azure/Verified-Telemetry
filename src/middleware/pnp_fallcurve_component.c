@@ -450,13 +450,13 @@ static UINT hub_store_all_db(PNP_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_C
     }
     else
     {
-        snprintf(fallTimeStr, sizeof(fallTimeStr), "%04d", (int16_t)fallTime);
+        snprintf(fallTimeStr, sizeof(fallTimeStr), "%04lu", fallTime);
         strcat(fallTimeDB, fallTimeStr);
         vt_database_falltime_fetch(&(handle->fingerprintdb), &iter, &fallTime, &sensor_id);
 
         while (!(iter < 0))
         {
-            snprintf(fallTimeStr, sizeof(fallTimeStr), "%04d", (int16_t)fallTime);
+            snprintf(fallTimeStr, sizeof(fallTimeStr), "%04lu", fallTime);
             strcat(fallTimeDB, ",");
             strcat(fallTimeDB, fallTimeStr);
             vt_database_falltime_fetch(&(handle->fingerprintdb), &iter, &fallTime, &sensor_id);
