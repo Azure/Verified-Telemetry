@@ -36,7 +36,7 @@ static void test_vt_fingerprint_calculate_37index(void** state)
 {
     (void)state;
 
-    assert_int_equal(_vt_fingerprint_calculate_37index(curve_zeroes, TEST_ARRAY_LENGTH), 0);
+    assert_int_equal(_vt_fingerprint_calculate_37index(curve_zeroes, TEST_ARRAY_LENGTH), 1);
     assert_int_equal(_vt_fingerprint_calculate_37index(curve_constant, TEST_ARRAY_LENGTH), 255);
     assert_int_equal(_vt_fingerprint_calculate_37index(curve_triagular, TEST_ARRAY_LENGTH), 81);
     assert_int_equal(_vt_fingerprint_calculate_37index(curve_exponential_fall, TEST_ARRAY_LENGTH), 99);
