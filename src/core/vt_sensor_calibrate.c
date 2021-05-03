@@ -180,5 +180,8 @@ void vt_sensor_calibrate(VT_SENSOR* sensor_ptr, uint8_t* confidence_metric)
                   "sensor is connected and retrigger the command.\n");
         *confidence_metric = 0;
     }
-    _vt_dsc_delay_usec(sensor_ptr->vt_timer, 1000000);
+    for(uint16_t iter = 0; iter < 1000; iter++)
+    {
+        _vt_dsc_delay_usec(sensor_ptr->vt_timer, 1000);
+    }
 }
