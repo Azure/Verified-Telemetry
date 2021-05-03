@@ -21,7 +21,7 @@ uint32_t _vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
     else
     {
         uint32_t start_time;
-
+        HAL_TIM_Base_Init(timer);
         HAL_TIM_Base_Start(timer);
         start_time = __HAL_TIM_GET_COUNTER(timer);
         while (__HAL_TIM_GET_COUNTER(timer) - start_time < delay)

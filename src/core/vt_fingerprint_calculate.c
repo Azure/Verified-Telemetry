@@ -5,6 +5,7 @@
 
 #include "vt_api.h"
 #include "vt_fingerprint.h"
+#include "vt_debug.h"
 
 static uint8_t _vt_fingerprint_calculate_minimum_index(uint32_t* fingerprint, uint32_t fingerprint_length);
 static void _vt_fingerprint_rankify(uint32_t* fingerprint, uint8_t fingerprint_length, uint32_t* fingerprint_ranked);
@@ -73,7 +74,13 @@ uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerp
     uint32_t* fall_time,
     float* pearson_coefficient)
 {
-
+    VTLogDebug("FallCurve Raw: \r\n");
+    VTLogDebug("FallCurve Length: %lu\r\n", fingerprint_length);
+    for(uint8_t iter = 0; iter < fingerprint_length; iter++)
+    {
+        VTLogDebugNoTag("%lu, ", fingerprint[iter]);
+    }
+    VTLogDebugNoTag("\r\n");
     // Find index of  Maxima
     uint8_t index_max = _vt_fingerprint_calculate_maximum_index(fingerprint, fingerprint_length);
 
@@ -81,6 +88,13 @@ uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerp
     fingerprint        = fingerprint + index_max;
     fingerprint_length = fingerprint_length - index_max;
 
+    VTLogDebug("FallCurve rise removed: \r\n");
+    VTLogDebug("FallCurve Length: %lu\r\n", fingerprint_length);
+    for(uint8_t iter = 0; iter < fingerprint_length; iter++)
+    {
+        VTLogDebugNoTag("%lu, ", fingerprint[iter]);
+    }
+    VTLogDebugNoTag("\r\n");
     // Find index of  Minima
     uint8_t index_min = _vt_fingerprint_calculate_minimum_index(fingerprint, fingerprint_length);
     uint32_t minima   = fingerprint[index_min];
@@ -89,7 +103,14 @@ uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerp
     uint8_t i = 0;
     for (i = 0; i < fingerprint_length; i++)
         fingerprint[i] = fingerprint[i] - minima;
-
+    
+    VTLogDebug("FallCurve minima removed: \r\n");
+    VTLogDebug("FallCurve Length: %lu\r\n", fingerprint_length);
+    for(uint8_t iter = 0; iter < fingerprint_length; iter++)
+    {
+        VTLogDebugNoTag("%lu, ", fingerprint[iter]);
+    }
+    VTLogDebugNoTag("\r\n");
     // Find data point whose value falls below 37% of maxima
     uint8_t index_37 = _vt_fingerprint_calculate_37index(fingerprint, fingerprint_length);
 
@@ -99,6 +120,13 @@ uint32_t _vt_fingerprint_calculate_falltime_pearsoncoefficient(uint32_t* fingerp
         fingerprint_length = (uint32_t)index_37 + 1;
     }
 
+    VTLogDebug("FallCurve 100 - 37: \r\n");
+    VTLogDebug("FallCurve Length: %lu\r\n", fingerprint_length);
+    for(uint8_t iter = 0; iter < fingerprint_length; iter++)
+    {
+       VTLogDebugNoTag("%lu, ", fingerprint[iter]);
+    }
+    VTLogDebugNoTag("\r\n");
     // N > 2 ?
     if (fingerprint_length > 2)
     {

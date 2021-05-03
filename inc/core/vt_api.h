@@ -25,8 +25,8 @@
 #define VT_STARTING_FREQUENCY         5000
 #define VT_MAXIMUM_FREQUENCY          20000
 #define VT_MINIMUM_FREQUENCY          1
-#define FALL_TIME_THRESHOLD           5.0f
-#define PEARSON_COEFFICIENT_THRESHOLD 5.0f
+#define FALL_TIME_THRESHOLD           10.0f
+#define PEARSON_COEFFICIENT_THRESHOLD 10.0f
 
 #define VT_SENOSR_NAME_LENGTH           50
 #define VT_FINGERPRINT_LENGTH           100
@@ -34,6 +34,8 @@
 #define VT_FINGERPRINT_DB_LENGTH        VT_FINGERPRINT_LENGTH + 2
 #define VT_FALLTIME_DB_LENGTH           2
 #define VT_PEARSONCOEFFICIENT_DB_LENGTH 2
+
+#define abs_custom(x) ((x)>0?(x):-(x))
 
 typedef struct VT_SENSOR_STRUCT
 {

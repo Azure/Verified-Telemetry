@@ -5,6 +5,7 @@
 
 #include "vt_database.h"
 #include "vt_fingerprint.h"
+#include "vt_debug.h"
 
 static uint8_t _vt_database_falltime_nearestindex_search(VT_DATABASE* database_ptr, uint32_t fall_time);
 static uint8_t _vt_database_pearsoncoefficient_falltimeindex_search(VT_DATABASE* database_ptr, uint8_t value);
@@ -80,21 +81,22 @@ int8_t _vt_database_evaluate_pearson_falltime(VT_DATABASE* database_ptr, uint32_
 
     // Check if the variation from the nearest fall time is less than the
     // threshold
-    if ((((abs((float)(database_ptr->_vt_falltimedb[nearest_index][1] - fall_time))) /
-             database_ptr->_vt_falltimedb[nearest_index][1]) *
-            100) < FALL_TIME_THRESHOLD)
+    if ((((abs_custom((float)(database_ptr->_vt_falltimedb[nearest_index][1] - (float)fall_time))) /
+             (float)database_ptr->_vt_falltimedb[nearest_index][1]) *
+            100.0f) < FALL_TIME_THRESHOLD)
     {
-
+        VTLogDebug("FallTime evaluation successful! \r\n");
         // Find index of the existing label
         uint8_t index = _vt_database_pearsoncoefficient_falltimeindex_search(
             database_ptr, database_ptr->_vt_falltimedb[nearest_index][0]);
 
         // Check if the variation from the nearest Pearsdon Coefficient is less than
         // the threshold
-        if (((abs(database_ptr->_vt_pearson_coefficientdb[index][1] - pearson_coefficient) /
+        if (((abs_custom(database_ptr->_vt_pearson_coefficientdb[index][1] - pearson_coefficient) /
                  database_ptr->_vt_pearson_coefficientdb[index][1]) *
-                100) < PEARSON_COEFFICIENT_THRESHOLD)
+                100.0f) < PEARSON_COEFFICIENT_THRESHOLD)
         {
+            VTLogDebug("Pearson Coeff evaluation successful! \r\n");
             return database_ptr->_vt_pearson_coefficientdb[index][0];
         }
 

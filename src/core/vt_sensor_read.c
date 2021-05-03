@@ -6,6 +6,7 @@
 #include "vt_database.h"
 #include "vt_dsc.h"
 #include "vt_sensor.h"
+#include "vt_debug.h"
 
 uint32_t vt_sensor_read_value(VT_SENSOR* sensor_ptr, uint32_t* sensor_value)
 {
@@ -56,6 +57,11 @@ uint32_t vt_sensor_read_status(
     float pearson_coefficient;
 
     *sensor_id = 0;
+    #if VT_LOG_LEVEL > 2
+        int32_t decimal;
+        float frac_float;
+        int32_t frac;
+    #endif /* VT_LOG_LEVEL > 2 */
 
     if (_vt_database_check_pearson_falltime_availability(database_ptr))
     {
@@ -67,6 +73,13 @@ uint32_t vt_sensor_read_status(
             fingerprint, VT_FINGERPRINT_LENGTH, sensor_ptr->vt_sampling_frequency, &fall_time, &pearson_coefficient) ==
         VT_SUCCESS)
     {
+        VTLogDebug("FallTime: %lu \r\n", fall_time);
+        #if VT_LOG_LEVEL > 2
+            decimal = pearson_coefficient;
+            frac_float = pearson_coefficient - (float)decimal;
+            frac = frac_float * 10000; 
+        #endif /* VT_LOG_LEVEL > 2 */
+        VTLogDebug("Pearson Coeff: %lu.%lu \r\n", decimal, frac);
         *sensor_id = _vt_database_evaluate_pearson_falltime(database_ptr, fall_time, pearson_coefficient);
 
         return VT_SUCCESS;
