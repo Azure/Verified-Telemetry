@@ -32,6 +32,47 @@ uint32_t _vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
     return VT_PLATFORM_SUCCESS;
 }
 
+uint32_t _vt_dsc_tick_init(TIMER_HANDLE_TYPEDEF* timer, uint16_t* max_value, uint16_t* resolution_usec)
+{
+    uint16_t default_max_tick = 65535;
+    uint16_t default_tick_resolution = 1;
+    if(*max_value)
+    {
+        default_max_tick = *max_value;
+    }
+    else
+    {
+        *max_value = default_max_tick;
+    }
+    if(*resolution_usec)
+    {
+        default_tick_resolution = *resolution_usec;
+    }
+    else
+    {
+        *resolution_usec = default_tick_resolution;
+    }
+
+    __disable_irq();
+    if (HAL_TIM_Base_Init((TIM_HandleTypeDef *)timer) != HAL_OK) {
+        // add error handling
+    }
+    HAL_TIM_Base_Start((TIM_HandleTypeDef *)timer);
+    return 0; 
+}
+
+uint32_t _vt_dsc_tick_deinit(TIMER_HANDLE_TYPEDEF* timer)
+{
+    HAL_TIM_Base_Stop((TIM_HandleTypeDef *)timer);
+    __enable_irq();
+    return 0;
+}
+
+uint32_t _vt_dsc_tick(TIMER_HANDLE_TYPEDEF* timer)
+{
+    return __HAL_TIM_GET_COUNTER((TIM_HandleTypeDef *)timer);
+}
+
 uint32_t _vt_dsc_gpio_turn_on(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPEDEF gpio_pin)
 {
     HAL_GPIO_WritePin(gpio_port, gpio_pin, GPIO_PIN_SET);

@@ -2,6 +2,8 @@
    Licensed under the MIT License. */
 
 #include <string.h>
+#include <math.h>
+#include <stdbool.h>
 
 #include "vt_database.h"
 #include "vt_dsc.h"
@@ -88,6 +90,25 @@ uint32_t vt_sensor_read_status(
     return VT_ERROR;
 }
 
+static uint32_t _calculate_required_tick_resolution(uint16_t sampling_frequency, uint16_t* tick_resolution_usec, uint16_t max_tick_value)
+{
+   float sampling_period_ticks;
+   if(sampling_frequency == 0)
+    {
+        return 1;
+    }
+   while(true)
+    {
+        sampling_period_ticks = ((float)sampling_frequency)/((float)*tick_resolution_usec);
+        if(sampling_period_ticks < (float)max_tick_value)
+        {
+            break;
+        }
+        *tick_resolution_usec = *tick_resolution_usec + 1;
+    }
+    return 0;
+}
+
 uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprint_array, uint16_t sampling_frequency)
 {
     uint32_t status;
@@ -98,6 +119,14 @@ uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprin
         return status;
     }
 
+    uint16_t max_tick_value = 0;
+    uint16_t tick_resolution_usec = 0;
+    _vt_dsc_tick_init(sensor_ptr->vt_timer, &max_tick_value, &tick_resolution_usec);
+    _calculate_required_tick_resolution(sampling_frequency, &tick_resolution_usec, max_tick_value);
+    _vt_dsc_tick_init(sensor_ptr->vt_timer, &max_tick_value, &tick_resolution_usec);
+    unsigned long sampling_period_ticks = round((float)sampling_frequency/(float)tick_resolution_usec);
+    unsigned long start_tick_count = _vt_dsc_tick(sensor_ptr->vt_timer);
+    unsigned long current_tick_count = _vt_dsc_tick(sensor_ptr->vt_timer);
     for (uint8_t i = 0; i < VT_FINGERPRINT_LENGTH; i++)
     {
         status = _vt_dsc_adc_read(sensor_ptr->vt_adc_controller, sensor_ptr->vt_adc_channel, &fingerprint_array[i]);
@@ -105,14 +134,14 @@ uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprin
         {
             return status;
         }
-
-        status = _vt_dsc_delay_usec(sensor_ptr->vt_timer, sampling_frequency);
-        if (status != VT_PLATFORM_SUCCESS)
-        {
-            return status;
+        current_tick_count = _vt_dsc_tick(sensor_ptr->vt_timer);
+        while(current_tick_count - start_tick_count < sampling_period_ticks){
+        current_tick_count = _vt_dsc_tick(sensor_ptr->vt_timer);
         }
+        start_tick_count = _vt_dsc_tick(sensor_ptr->vt_timer);
     }
-
+    _vt_dsc_tick_deinit(sensor_ptr->vt_timer);
+    
     status = _vt_dsc_gpio_turn_on(sensor_ptr->vt_gpio_port, sensor_ptr->vt_gpio_pin);
     if (status != VT_PLATFORM_SUCCESS)
     {
