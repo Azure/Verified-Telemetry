@@ -75,6 +75,12 @@ target_link_libraries(${TARGET}
   PUBLIC 
     ${VT_LINK_LIBRARIES}
 )
+if (NOT VT_UNIT_TESTING)
+  target_link_libraries(${TARGET} 
+  PUBLIC 
+    azrtos::netxduo
+  )  
+endif()
 
 target_compile_definitions(${TARGET} 
   PUBLIC 
