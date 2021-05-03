@@ -190,7 +190,7 @@ uint8_t _vt_fingerprint_calculate_37index(uint32_t* fingerprint, uint8_t fingerp
 
     for (uint8_t i = 1; i < fingerprint_length; i++)
     {
-        if ((float)fingerprint[i] <= (0.37f * (float)fingerprint[0]))
+        if ((float)fingerprint[i] <= (float)(0.37f * (float)fingerprint[0]))
         {
             return i;
         }
