@@ -119,9 +119,8 @@ uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprin
         return status;
     }
 
-    uint16_t max_tick_value = 0;
-    uint16_t tick_resolution_usec = 0;
-    _vt_dsc_tick_init(sensor_ptr->vt_timer, &max_tick_value, &tick_resolution_usec);
+    uint16_t max_tick_value = 65535;
+    uint16_t tick_resolution_usec = 1;
     _calculate_required_tick_resolution(sampling_frequency, &tick_resolution_usec, max_tick_value);
     _vt_dsc_tick_init(sensor_ptr->vt_timer, &max_tick_value, &tick_resolution_usec);
     unsigned long sampling_period_ticks = round((float)sampling_frequency/(float)tick_resolution_usec);

@@ -52,7 +52,7 @@ uint32_t _vt_dsc_tick_init(TIMER_HANDLE_TYPEDEF* timer, uint16_t* max_value, uin
     {
         *resolution_usec = default_tick_resolution;
     }
-
+    (*(TIM_HandleTypeDef *)timer).Init.Prescaler = (96*default_tick_resolution) - 1;
     __disable_irq();
     if (HAL_TIM_Base_Init((TIM_HandleTypeDef *)timer) != HAL_OK) {
         // add error handling
@@ -64,6 +64,7 @@ uint32_t _vt_dsc_tick_init(TIMER_HANDLE_TYPEDEF* timer, uint16_t* max_value, uin
 uint32_t _vt_dsc_tick_deinit(TIMER_HANDLE_TYPEDEF* timer)
 {
     HAL_TIM_Base_Stop((TIM_HandleTypeDef *)timer);
+    HAL_TIM_Base_DeInit((TIM_HandleTypeDef *)timer);
     __enable_irq();
     return 0;
 }
