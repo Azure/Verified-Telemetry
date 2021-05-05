@@ -27,6 +27,7 @@ uint32_t _vt_dsc_delay_usec(TIMER_HANDLE_TYPEDEF* timer, uint32_t delay)
         while (__HAL_TIM_GET_COUNTER(timer) - start_time < delay)
             ;
         HAL_TIM_Base_Stop(timer);
+        HAL_TIM_Base_DeInit(timer);
     }
 
     return VT_PLATFORM_SUCCESS;
@@ -69,7 +70,7 @@ uint32_t _vt_dsc_tick_deinit(TIMER_HANDLE_TYPEDEF* timer)
     return 0;
 }
 
-uint32_t _vt_dsc_tick(TIMER_HANDLE_TYPEDEF* timer)
+uint16_t _vt_dsc_tick(TIMER_HANDLE_TYPEDEF* timer)
 {
     return __HAL_TIM_GET_COUNTER((TIM_HandleTypeDef *)timer);
 }

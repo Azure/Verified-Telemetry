@@ -18,7 +18,7 @@ uint32_t _vt_dsc_tick_deinit(TIMER_HANDLE_TYPEDEF* timer)
     return VT_PLATFORM_IMPLEMENTATION_NOT_PROVIDED;
 }
 
-uint32_t _vt_dsc_tick(TIMER_HANDLE_TYPEDEF* timer)
+uint16_t _vt_dsc_tick(TIMER_HANDLE_TYPEDEF* timer)
 {
     return VT_PLATFORM_IMPLEMENTATION_NOT_PROVIDED;
 }

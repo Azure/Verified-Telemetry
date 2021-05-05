@@ -17,7 +17,7 @@ uint32_t _vt_dsc_tick_init(TIMER_HANDLE_TYPEDEF* timer, uint16_t* max_value, uin
 
 uint32_t _vt_dsc_tick_deinit(TIMER_HANDLE_TYPEDEF* timer);
 
-uint32_t _vt_dsc_tick(TIMER_HANDLE_TYPEDEF* timer);
+uint16_t _vt_dsc_tick(TIMER_HANDLE_TYPEDEF* timer);
 
 uint32_t _vt_dsc_gpio_turn_on(GPIO_PORT_TYPEDEF* gpio_port, GPIO_PIN_TYPEDEF gpio_pin);
 

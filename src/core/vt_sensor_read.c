@@ -113,19 +113,19 @@ uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprin
 {
     uint32_t status;
 
+    uint16_t max_tick_value = 65535;
+    uint16_t tick_resolution_usec = 1;
+    _calculate_required_tick_resolution(sampling_frequency, &tick_resolution_usec, max_tick_value);
+    _vt_dsc_tick_init(sensor_ptr->vt_timer, &max_tick_value, &tick_resolution_usec);
+    uint16_t sampling_period_ticks = round((float)sampling_frequency/(float)tick_resolution_usec);
+    VTLogDebug("Sampling Period Ticks: %d \r\n", sampling_period_ticks);
     status = _vt_dsc_gpio_turn_off(sensor_ptr->vt_gpio_port, sensor_ptr->vt_gpio_pin);
     if (status != VT_PLATFORM_SUCCESS)
     {
         return status;
     }
-
-    uint16_t max_tick_value = 65535;
-    uint16_t tick_resolution_usec = 1;
-    _calculate_required_tick_resolution(sampling_frequency, &tick_resolution_usec, max_tick_value);
-    _vt_dsc_tick_init(sensor_ptr->vt_timer, &max_tick_value, &tick_resolution_usec);
-    unsigned long sampling_period_ticks = round((float)sampling_frequency/(float)tick_resolution_usec);
-    unsigned long start_tick_count = _vt_dsc_tick(sensor_ptr->vt_timer);
-    unsigned long current_tick_count = _vt_dsc_tick(sensor_ptr->vt_timer);
+    uint16_t start_tick_count = _vt_dsc_tick(sensor_ptr->vt_timer);
+    
     for (uint8_t i = 0; i < VT_FINGERPRINT_LENGTH; i++)
     {
         status = _vt_dsc_adc_read(sensor_ptr->vt_adc_controller, sensor_ptr->vt_adc_channel, &fingerprint_array[i]);
@@ -133,9 +133,7 @@ uint32_t _vt_sensor_read_fingerprint(VT_SENSOR* sensor_ptr, uint32_t* fingerprin
         {
             return status;
         }
-        current_tick_count = _vt_dsc_tick(sensor_ptr->vt_timer);
-        while(current_tick_count - start_tick_count < sampling_period_ticks){
-        current_tick_count = _vt_dsc_tick(sensor_ptr->vt_timer);
+        while((uint16_t)(_vt_dsc_tick(sensor_ptr->vt_timer) - start_tick_count) < sampling_period_ticks){
         }
         start_tick_count = _vt_dsc_tick(sensor_ptr->vt_timer);
     }
