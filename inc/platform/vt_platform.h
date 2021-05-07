@@ -27,4 +27,14 @@ typedef struct VT_DEVICE_DRIVER_STRUCT
    VT_INTERRUPT_CTRL interrupt_disable;
 } VT_DEVICE_DRIVER;
 
+typedef struct VT_SENSOR_HANDLE_STRUCT
+{
+   VT_GPIO_ID gpio_id; 
+   VT_GPIO_PORT* gpio_port;
+   VT_GPIO_PIN* gpio_pin;
+   VT_ADC_ID adc_id;
+   VT_ADC_CONTROLLER* adc_controller;
+   VT_ADC_CHANNEL* adc_channel;
+} VT_SENSOR_HANDLE;
+
 #endif

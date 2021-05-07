@@ -11,7 +11,7 @@
 
 typedef struct VT_FALLCURVE_OBJECT_STRUCT
 {
-   VT_FALLCURVE_SENSOR sensor;
+   VT_SENSOR_HANDLE* sensor_handle;
    VT_FALLCURVE_DATABASE fingerprintdb;
    VT_DEVICE_DRIVER* device_driver;
 } VT_FALLCURVE_OBJECT;
@@ -25,8 +25,7 @@ typedef struct VT_FALLCURVE_DATABASE_FLATTENED_STRUCT
 } VT_FALLCURVE_DATABASE_FLATTENED;
 
 // Initialize
-VT_VOID vt_fallcurve_object_initialize(
-    VT_FALLCURVE_OBJECT* fc_object, VT_DEVICE_DRIVER* device_driver);
+VT_VOID vt_fallcurve_object_initialize(VT_FALLCURVE_OBJECT* fc_object, VT_DEVICE_DRIVER* device_driver, VT_SENSOR_HANDLE* sensor_handle);
 
 // Calibrate
 VT_UINT vt_fallcurve_object_sensor_calibrate(VT_FALLCURVE_OBJECT* fc_object, VT_UINT8* confidence_metric);

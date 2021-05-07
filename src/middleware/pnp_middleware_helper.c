@@ -1,7 +1,7 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-#include "pnp_middleware_helper.h"
+#include "nx_vt_middleware_helper.h"
 
 static const az_span iot_hub_property_reported        = AZ_SPAN_LITERAL_FROM_STR("reported");
 static const az_span iot_hub_property_desired_version = AZ_SPAN_LITERAL_FROM_STR("$version");

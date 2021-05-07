@@ -24,21 +24,21 @@ VT_UINT fc_signature_compute_collection_settings(VT_FALLCURVE_OBJECT* fc_object,
   VT_UINT falltime_datapoints = 0;
 
   fc_object->device_driver->adc_init(
-      fc_object->sensor.adc_id, fc_object->sensor.adc_controller, fc_object->sensor.adc_channel, &adc_resolution, &adc_ref_volt);
+      fc_object->sensor_handle->adc_id, fc_object->sensor_handle->adc_controller, fc_object->sensor_handle->adc_channel, &adc_resolution, &adc_ref_volt);
   adc_value_start = fc_object->device_driver->adc_read(
-      fc_object->sensor.adc_id, fc_object->sensor.adc_controller, fc_object->sensor.adc_channel);
+      fc_object->sensor_handle->adc_id, fc_object->sensor_handle->adc_controller, fc_object->sensor_handle->adc_channel);
   VTLogDebug("FallCurve first value: %lu \r\n", adc_value_start);
   adc_value_start = round((float)adc_value_start * (float)(37.0f/100.0f));
 
   fc_object->device_driver->interrupt_disable();
   fc_object->device_driver->tick_init(&max_tick_value, &tick_resolution_usec);
-  fc_object->device_driver->gpio_off(fc_object->sensor.gpio_id, fc_object->sensor.gpio_port, fc_object->sensor.gpio_pin);
+  fc_object->device_driver->gpio_off(fc_object->sensor_handle->gpio_id, fc_object->sensor_handle->gpio_port, fc_object->sensor_handle->gpio_pin);
   start_tick_count = (VT_UINT)fc_object->device_driver->tick();
 
   while(time_to_fall < max_time_allowed)
   {
     adc_value = fc_object->device_driver->adc_read(
-      fc_object->sensor.adc_id, fc_object->sensor.adc_controller, fc_object->sensor.adc_channel);
+      fc_object->sensor_handle->adc_id, fc_object->sensor_handle->adc_controller, fc_object->sensor_handle->adc_channel);
     if(adc_value <= adc_value_start)
     {
       break;
@@ -49,7 +49,7 @@ VT_UINT fc_signature_compute_collection_settings(VT_FALLCURVE_OBJECT* fc_object,
 
   fc_object->device_driver->tick_deinit();
   fc_object->device_driver->interrupt_enable();
-  fc_object->device_driver->gpio_on(fc_object->sensor.gpio_id, fc_object->sensor.gpio_port, fc_object->sensor.gpio_pin);
+  fc_object->device_driver->gpio_on(fc_object->sensor_handle->gpio_id, fc_object->sensor_handle->gpio_port, fc_object->sensor_handle->gpio_pin);
 
   VTLogDebug("FallCurve expected last value: %lu \r\n", adc_value_start);
   VTLogDebug("FallCurve last value: %lu \r\n", adc_value);

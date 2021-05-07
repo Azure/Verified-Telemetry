@@ -33,16 +33,16 @@ VT_VOID fc_adc_read(VT_FALLCURVE_OBJECT* fc_object, VT_UINT *raw_signature, VT_U
    VTLogDebug("Sampling Period Ticks: %d \r\n", sampling_period_ticks);
 
    fc_object->device_driver->adc_init(
-      fc_object->sensor.adc_id, fc_object->sensor.adc_controller, fc_object->sensor.adc_channel, &adc_resolution, &adc_ref_volt);
+      fc_object->sensor_handle->adc_id, fc_object->sensor_handle->adc_controller, fc_object->sensor_handle->adc_channel, &adc_resolution, &adc_ref_volt);
    fc_object->device_driver->interrupt_disable();
    fc_object->device_driver->tick_init(&max_tick_value, &tick_resolution_usec);
-   fc_object->device_driver->gpio_off(fc_object->sensor.gpio_id, fc_object->sensor.gpio_port, fc_object->sensor.gpio_pin);
+   fc_object->device_driver->gpio_off(fc_object->sensor_handle->gpio_id, fc_object->sensor_handle->gpio_port, fc_object->sensor_handle->gpio_pin);
    start_tick_count = (VT_UINT)fc_object->device_driver->tick();
    
    for (VT_UINT iter = 0; iter < sample_length; iter++)
    {
       raw_signature[iter] = fc_object->device_driver->adc_read(
-         fc_object->sensor.adc_id, fc_object->sensor.adc_controller, fc_object->sensor.adc_channel);
+         fc_object->sensor_handle->adc_id, fc_object->sensor_handle->adc_controller, fc_object->sensor_handle->adc_channel);
       while((uint16_t)((VT_UINT)fc_object->device_driver->tick() - start_tick_count) < sampling_period_ticks){
       }
       start_tick_count = (VT_UINT)fc_object->device_driver->tick();
@@ -50,5 +50,5 @@ VT_VOID fc_adc_read(VT_FALLCURVE_OBJECT* fc_object, VT_UINT *raw_signature, VT_U
 
    fc_object->device_driver->tick_deinit();
    fc_object->device_driver->interrupt_enable();
-   fc_object->device_driver->gpio_on(fc_object->sensor.gpio_id, fc_object->sensor.gpio_port, fc_object->sensor.gpio_pin);
+   fc_object->device_driver->gpio_on(fc_object->sensor_handle->gpio_id, fc_object->sensor_handle->gpio_port, fc_object->sensor_handle->gpio_pin);
 }

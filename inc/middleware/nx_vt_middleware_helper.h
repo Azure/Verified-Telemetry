@@ -1,8 +1,8 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-#ifndef PNP_MIDDLEWARE_HELPER_H
-#define PNP_MIDDLEWARE_HELPER_H
+#ifndef NX_VT_MIDDLEWARE_HELPER_H
+#define NX_VT_MIDDLEWARE_HELPER_H
 
 #ifdef __cplusplus
 extern "C"
@@ -42,4 +42,4 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-#endif /* PNP_MIDDLEWARE_HELPER_H */
+#endif /* NX_VT_MIDDLEWARE_HELPER_H */
