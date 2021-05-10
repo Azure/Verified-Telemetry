@@ -56,7 +56,7 @@ static VT_FLOAT fc_signature_calculate_correlation_coefficient(
 
     // sum of square of array elements.
     square_sum_signature1 += (signature1[iter] * signature1[iter]);
-    square_sum_signature1 += (signature2[iter] * signature2[iter]);
+    square_sum_signature2 += (signature2[iter] * signature2[iter]);
   }
 
   // use formula for calculating correlation coefficient.
@@ -81,6 +81,7 @@ VT_UINT fc_signature_compute(VT_FALLCURVE_OBJECT* fc_object, VT_ULONG sampling_i
   {
     VTLogDebugNoTag("%d, ", raw_signature[iter]);
   }
+  VTLogDebugNoTag("\r\n");
 
   // Find index of Maxima
   VT_UINT index_max = fc_signature_calculate_maximum_index(raw_signature, VT_FC_SAMPLE_LENGTH);
@@ -91,7 +92,7 @@ VT_UINT fc_signature_compute(VT_FALLCURVE_OBJECT* fc_object, VT_ULONG sampling_i
     raw_signature[iter] = raw_signature[iter + index_max];
   }
   // Find datapoint which reaches 37% of the starting value
-  VT_INT index_37 = fc_signature_calculate_37index(raw_signature, VT_FC_SAMPLE_LENGTH);
+  VT_INT index_37 = fc_signature_calculate_37index(raw_signature, sample_length);
   // fingerprint_length of this new fingerprint
   if (index_37 > 0)
   {
@@ -102,10 +103,10 @@ VT_UINT fc_signature_compute(VT_FALLCURVE_OBJECT* fc_object, VT_ULONG sampling_i
   VTLogDebug("FallTime computed: %lu\r\n", falltime_computed);
 
   // Reconstruct exponential fall for the N points
-  VT_UINT perfect_exponential_raw_siganture[100];
+  VT_UINT perfect_exponential_raw_siganture[VT_FC_SAMPLE_LENGTH];
   for (VT_UINT iter = 0; iter < sample_length; iter++)
   {
-    perfect_exponential_raw_siganture[iter] = round((VT_FLOAT)raw_signature[0] * (VT_FLOAT)exp(-1 * (iter / (VT_FLOAT)(sample_length - 1))));
+    perfect_exponential_raw_siganture[iter] = round((VT_FLOAT)raw_signature[0] * (VT_FLOAT)exp(-1.0f * ((VT_FLOAT)iter / (VT_FLOAT)(sample_length - 1))));
   }
   // Calculate pearson coefficient
   pearson_coeff_computed = fc_signature_calculate_correlation_coefficient(

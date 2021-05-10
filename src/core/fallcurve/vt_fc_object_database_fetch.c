@@ -12,21 +12,14 @@ VT_VOID vt_fallcurve_object_database_fetch(VT_FALLCURVE_OBJECT* fc_object, VT_FA
   VT_FLOAT frac_float;
   VT_INT frac;
 
-  decimal = fc_object->fingerprintdb.num_signatures;
-  frac_float = fc_object->fingerprintdb.num_signatures - (VT_FLOAT)decimal;
-  frac = frac_float * 10000; 
   memset(string_buffer, 0, sizeof(string_buffer));
-  snprintf(string_buffer, sizeof(string_buffer), "%d.%04d", decimal, frac);
+  snprintf(string_buffer, sizeof(string_buffer), "%03d", fc_object->fingerprintdb.num_signatures);
   strcpy((VT_CHAR*)flattened_db->num_signatures, string_buffer);
 
   memset(string_buffer, 0, sizeof(string_buffer));
   for(VT_UINT iter = 0; iter < fc_object->fingerprintdb.num_signatures; iter++)
   {
-    decimal = fc_object->fingerprintdb.db[iter].sampling_interval_us;
-    frac_float = fc_object->fingerprintdb.db[iter].sampling_interval_us - (VT_FLOAT)decimal;
-    frac = frac_float * 10000; 
-    memset(string_element, 0, sizeof(string_element));
-    snprintf(string_element, sizeof(string_element), "%d.%04d", decimal, frac);
+    snprintf(string_element, sizeof(string_element), "%lu", fc_object->fingerprintdb.db[iter].sampling_interval_us);
     if(iter > 0)
     {
       strcat(string_buffer, ",");
@@ -38,11 +31,7 @@ VT_VOID vt_fallcurve_object_database_fetch(VT_FALLCURVE_OBJECT* fc_object, VT_FA
   memset(string_buffer, 0, sizeof(string_buffer));
   for(VT_UINT iter = 0; iter < fc_object->fingerprintdb.num_signatures; iter++)
   {
-    decimal = fc_object->fingerprintdb.db[iter].falltime;
-    frac_float = fc_object->fingerprintdb.db[iter].falltime - (VT_FLOAT)decimal;
-    frac = frac_float * 10000; 
-    memset(string_element, 0, sizeof(string_element));
-    snprintf(string_element, sizeof(string_element), "%d.%04d", decimal, frac);
+    snprintf(string_element, sizeof(string_element), "%lu", fc_object->fingerprintdb.db[iter].falltime);
     if(iter > 0)
     {
       strcat(string_buffer, ",");

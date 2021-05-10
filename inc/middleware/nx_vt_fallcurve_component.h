@@ -51,7 +51,7 @@ UINT nx_vt_fallcurve_init(NX_VT_FALLCURVE_COMPONENT* handle,
     bool telemetry_status_auto_update);
 
 UINT nx_vt_fallcurve_telemetry_status_property(NX_VT_FALLCURVE_COMPONENT* handle, 
-    NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr, bool toggleVerifiedTelemetry,
+    NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
     bool* device_status);
 
 UINT nx_vt_fallcurve_fingerprint_type_property(
@@ -75,7 +75,7 @@ UINT nx_vt_fallcurve_process_reported_property_sync(NX_VT_FALLCURVE_COMPONENT* h
     UINT version);
 
 
-UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* handle);
+UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* handle, bool toggleVerifiedTelemetry);
 
 // UINT nx_vt_fallcurve_compute_sensor_status(NX_VT_FALLCURVE_COMPONENT* handle);
 

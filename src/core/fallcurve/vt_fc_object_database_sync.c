@@ -13,7 +13,7 @@ VT_VOID vt_fallcurve_object_database_sync(VT_FALLCURVE_OBJECT* fc_object, VT_FAL
   VT_CHAR* csvString;
   VT_UINT iter;
 
-  fc_object->fingerprintdb.num_signatures = (VT_FLOAT)atof((VT_CHAR*)flattened_db.num_signatures);
+  fc_object->fingerprintdb.num_signatures = atof((VT_CHAR*)flattened_db.num_signatures);
 
   iter = 0;
   for (csvString = (VT_CHAR*)flattened_db.sampling_interval_us;; csvString = NULL)

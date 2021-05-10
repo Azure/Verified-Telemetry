@@ -19,7 +19,7 @@ VT_UINT vt_fallcurve_object_sensor_calibrate(VT_FALLCURVE_OBJECT* fc_object, VT_
   {
     return VT_ERROR;
   }
-
+  
   fc_reset_db(fc_object);
   if(fc_store_signature(fc_object, sampling_interval_us, falltime, pearson_coeff))
   {

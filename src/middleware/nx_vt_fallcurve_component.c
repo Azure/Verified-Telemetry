@@ -33,7 +33,6 @@ UINT nx_vt_fallcurve_init(NX_VT_FALLCURVE_COMPONENT* handle,
     bool telemetry_status_auto_update)
 {
     CHAR vt_component_name[50];
-    printf("[VT CS] Entered vt_fallcurve_init()\r\n");
     if (handle == NX_NULL)
     {
         return (NX_NOT_SUCCESSFUL);
@@ -49,12 +48,10 @@ UINT nx_vt_fallcurve_init(NX_VT_FALLCURVE_COMPONENT* handle,
     handle->property_sent               = 0;
     handle->template_confidence_metric  = 0;
     handle->telemetry_status_auto_update = telemetry_status_auto_update;
-    printf("[VT CS] Entering vt_fallcurve_object_init()\r\n");
 
     vt_fallcurve_object_initialize(&(handle->fc_object),
         device_driver,
         sensor_handle);
-    printf("[VT CS] Left vt_fallcurve_object_init()\r\n");
 
     return (NX_AZURE_IOT_SUCCESS);
 }
@@ -261,34 +258,11 @@ static UINT sync_fingerprint_template(
 
 UINT nx_vt_fallcurve_telemetry_status_property(NX_VT_FALLCURVE_COMPONENT* handle,
     NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
-    bool toggleVerifiedTelemetry,
     bool* deviceStatus)
 {
     UINT status          = 0;
     UINT response_status = 0;
     NX_AZURE_IOT_JSON_WRITER json_writer;
-    bool oldTelemetryStatus = handle->telemetry_status;
-
-    /* Get fallcurve classification */
-    VT_UINT sensor_status = 0;
-    VT_UINT sensor_drift = 100;
-    if(toggleVerifiedTelemetry)
-    {
-        handle->telemetry_status = false;
-    }
-    else
-    {
-        vt_fallcurve_object_sensor_status(&(handle->fc_object), &sensor_status, &sensor_drift);
-        handle->telemetry_status =  (sensor_status > 0) ? false : true;
-    }
-
-    *deviceStatus &= handle->telemetry_status;
-
-    if (oldTelemetryStatus == handle->telemetry_status && handle->property_sent != 0)
-    {
-        // VTLogInfo("Telemetry Status is the same, not updating digitalTwin!\r\n");
-        return (status);
-    }
 
     if ((status = nx_azure_iot_pnp_client_reported_properties_create(iotpnp_client_ptr, &json_writer, NX_WAIT_FOREVER)))
     {
@@ -432,14 +406,12 @@ UINT nx_vt_fallcurve_process_command(NX_VT_FALLCURVE_COMPONENT* handle,
 
     if (handle == NX_NULL)
     {
-        printf("[VT CS] Command exit scenario 1)\r\n");
         return (NX_NOT_SUCCESSFUL);
     }
 
     if (handle->component_name_length != component_name_length ||
         strncmp((CHAR*)handle->component_name_ptr, (CHAR*)component_name_ptr, component_name_length) != 0)
     {
-        printf("[VT CS] Command exit scenario 2)\r\n");
         return (NX_NOT_SUCCESSFUL);
     }
 
@@ -545,12 +517,18 @@ UINT nx_vt_fallcurve_process_reported_property_sync(NX_VT_FALLCURVE_COMPONENT* h
     return (NX_AZURE_IOT_SUCCESS);
 }
 
-UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* handle)
+UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* handle, bool toggleVerifiedTelemetry)
 {
+    if(!toggleVerifiedTelemetry)
+    {
+        handle->telemetry_status = false;
+        return (NX_AZURE_IOT_SUCCESS);
+    }
     if(handle->telemetry_status_auto_update == false)
     {
         return (NX_AZURE_IOT_SUCCESS);
     }
+
     /* Compute fallcurve classification */
     VT_UINT sensor_status = 0;
     VT_UINT sensor_drift = 100;
@@ -558,7 +536,7 @@ UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* han
     {
         return (NX_AZURE_IOT_FAILURE);
     }
-    handle->telemetry_status = (bool)sensor_status;
+    handle->telemetry_status =  (sensor_status > 0) ? false : true;
     return (NX_AZURE_IOT_SUCCESS);
 }
 
