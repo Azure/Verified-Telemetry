@@ -4,7 +4,7 @@
 #include "vt_fc_signature.h"
 #include "vt_debug.h"
 
-VT_UINT fc_signature_compute_collection_settings(VT_FALLCURVE_OBJECT* fc_object, VT_ULONG* sampling_interval_us, VT_UINT* confidence_metric)
+VT_UINT fc_signature_compute_collection_settings(VT_FALLCURVE_OBJECT* fc_object, VT_ULONG* sampling_interval_us, VT_UINT8* confidence_metric)
 {
   VTLogInfo("\tComputing FallCurve Collection Settings\n");
 
@@ -17,8 +17,7 @@ VT_UINT fc_signature_compute_collection_settings(VT_FALLCURVE_OBJECT* fc_object,
   VT_UINT adc_value = 0;
   VT_UINT start_tick_count = 0;
   VT_UINT adc_resolution = 0;
-  VT_UINT adc_ref_volt = 0;
-  VT_UINT raw_signature[VT_FC_SAMPLE_LENGTH] = {0}; 
+  VT_FLOAT adc_ref_volt = 0;
   VT_ULONG falltime_calib_test = 0;
   VT_FLOAT pearson_coeff_calib_test = 0;
   VT_UINT falltime_datapoints = 0;
@@ -27,7 +26,7 @@ VT_UINT fc_signature_compute_collection_settings(VT_FALLCURVE_OBJECT* fc_object,
       fc_object->sensor_handle->adc_id, fc_object->sensor_handle->adc_controller, fc_object->sensor_handle->adc_channel, &adc_resolution, &adc_ref_volt);
   adc_value_start = fc_object->device_driver->adc_read(
       fc_object->sensor_handle->adc_id, fc_object->sensor_handle->adc_controller, fc_object->sensor_handle->adc_channel);
-  VTLogDebug("FallCurve first value: %lu \r\n", adc_value_start);
+  VTLogDebug("FallCurve first value: %d \r\n", adc_value_start);
   adc_value_start = round((float)adc_value_start * (float)(37.0f/100.0f));
 
   fc_object->device_driver->interrupt_disable();
@@ -51,8 +50,8 @@ VT_UINT fc_signature_compute_collection_settings(VT_FALLCURVE_OBJECT* fc_object,
   fc_object->device_driver->interrupt_enable();
   fc_object->device_driver->gpio_on(fc_object->sensor_handle->gpio_id, fc_object->sensor_handle->gpio_port, fc_object->sensor_handle->gpio_pin);
 
-  VTLogDebug("FallCurve expected last value: %lu \r\n", adc_value_start);
-  VTLogDebug("FallCurve last value: %lu \r\n", adc_value);
+  VTLogDebug("FallCurve expected last value: %d \r\n", adc_value_start);
+  VTLogDebug("FallCurve last value: %d \r\n", adc_value);
   VTLogDebug("FallCurve time to reach 0.37: %lu \r\n", time_to_fall);
   VTLogDebug("Maximum time allowed: %lu \r\n", max_time_allowed);
 
@@ -75,7 +74,7 @@ VT_UINT fc_signature_compute_collection_settings(VT_FALLCURVE_OBJECT* fc_object,
   {
     *sampling_interval_us = VT_FC_MIN_SAMPLING_INTERVAL_US;
   }
-  VTLogDebug("Sampling Interval: %d \r\n", *sampling_interval_us);
+  VTLogDebug("Sampling Interval: %lu \r\n", *sampling_interval_us);
 
   fc_object->device_driver->interrupt_disable();
   fc_object->device_driver->tick_init(&max_tick_value, &tick_resolution_usec);

@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include "vt_fc_read.h"
+#include "vt_debug.h"
 
 static VT_VOID fc_calculate_required_tick_resolution(VT_ULONG sampling_interval_us, VT_UINT* tick_resolution_us, VT_UINT max_tick_value)
 {
@@ -23,7 +24,7 @@ VT_VOID fc_adc_read(VT_FALLCURVE_OBJECT* fc_object, VT_UINT *raw_signature, VT_U
    VT_UINT max_tick_value = 0;
    VT_UINT tick_resolution_usec = 0;
    VT_UINT adc_resolution = 0;
-   VT_UINT adc_ref_volt = 0;
+   VT_FLOAT adc_ref_volt = 0;
    VT_UINT start_tick_count = 0;
    VT_UINT sampling_period_ticks = 0;
 

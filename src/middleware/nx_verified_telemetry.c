@@ -318,13 +318,12 @@ UINT nx_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotp
 
 UINT nx_vt_init(void* verified_telemetry_DB,
     UCHAR* component_name_ptr,
-    UINT component_name_length,
     bool enable_verified_telemetry,
     VT_DEVICE_DRIVER* device_driver)
 {
     printf("[VT CS] Entered vt_init()\r\n");
     NX_VERIFIED_TELEMETRY_DB* VT_DB     = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB);
-    VT_DB->component_name_ptr        = component_name_ptr;
+    strncpy((CHAR*)VT_DB->component_name_ptr, (CHAR*)component_name_ptr, sizeof(VT_DB->component_name_ptr));
     VT_DB->component_name_length     = strlen((const char*)component_name_ptr);
     VT_DB->enable_verified_telemetry   = enable_verified_telemetry;
     VT_DB->device_status_property_sent = false;
@@ -341,7 +340,6 @@ UINT nx_vt_init(void* verified_telemetry_DB,
 UINT nx_vt_signature_init(void* verified_telemetry_DB,
     NX_VT_OBJECT* handle,
     UCHAR* component_name_ptr,
-    UINT component_name_length,
     UINT signature_type,
     UCHAR* associated_telemetry,
     bool telemetry_status_auto_update,
@@ -373,7 +371,6 @@ UINT nx_vt_signature_init(void* verified_telemetry_DB,
         printf("[VT CS] Entering vt_currentsense_init()\r\n");
         nx_vt_fallcurve_init(&(handle->component.fc),
             component_name_ptr,
-            component_name_length,
             VT_DB->device_driver,
             sensor_handle,
             associated_telemetry,
@@ -388,13 +385,13 @@ UINT nx_vt_signature_init(void* verified_telemetry_DB,
     return NX_AZURE_IOT_SUCCESS;
 }
 
-UINT nx_vt_verified_telemetry_message_create_send(NX_AZURE_IOT_PNP_CLIENT* pnp_client_ptr,
+UINT nx_vt_verified_telemetry_message_create_send(void* verified_telemetry_DB,
+    NX_AZURE_IOT_PNP_CLIENT* pnp_client_ptr,
     const UCHAR* component_name_ptr,
     UINT component_name_length,
     UINT wait_option,
     const UCHAR* telemetry_data,
-    UINT data_size,
-    void* verified_telemetry_DB)
+    UINT data_size)
 {
     UINT status;
     NX_PACKET* packet_ptr;
@@ -462,4 +459,21 @@ UINT nx_vt_verified_telemetry_message_create_send(NX_AZURE_IOT_PNP_CLIENT* pnp_c
         return (status);
     }
     return (status);
+}
+
+UINT nx_vt_compute_evaluate_fingerprint_all_sensors(void* verified_telemetry_DB)
+{
+    UINT status = 0;
+    UINT iter = 0;
+    UINT components_num = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->components_num;
+    void* component_pointer = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->first_component;
+    for (iter = 0; iter < components_num; iter++)
+    {
+        if(((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
+        {
+            status |= nx_vt_fallcurve_compute_sensor_status_global(&(((NX_VT_OBJECT*)component_pointer)->component.fc));
+        }
+        component_pointer = (((NX_VT_OBJECT*)component_pointer)->next_component);
+    }
+    return status;
 }

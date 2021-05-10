@@ -1,5 +1,6 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
+#include <string.h>
 #include "vt_fc_api.h"
 #include "vt_fc_database.h"
 

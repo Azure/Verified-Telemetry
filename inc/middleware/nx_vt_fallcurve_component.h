@@ -18,7 +18,7 @@ extern "C"
 typedef struct NX_VT_FALLCURVE_COMPONENT_TAG
 {
     /* Name of this component */
-    UCHAR component_name_ptr[20];
+    UCHAR component_name_ptr[30];
 
     /* Component Name Length */
     UINT component_name_length;
@@ -45,7 +45,6 @@ typedef struct NX_VT_FALLCURVE_COMPONENT_TAG
 
 UINT nx_vt_fallcurve_init(NX_VT_FALLCURVE_COMPONENT* handle,
     UCHAR* component_name_ptr,
-    UINT component_name_length,
     VT_DEVICE_DRIVER* device_driver,
     VT_SENSOR_HANDLE* sensor_handle,
     UCHAR* associated_telemetry,
@@ -76,7 +75,7 @@ UINT nx_vt_fallcurve_process_reported_property_sync(NX_VT_FALLCURVE_COMPONENT* h
     UINT version);
 
 
-// UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* handle);
+UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* handle);
 
 // UINT nx_vt_fallcurve_compute_sensor_status(NX_VT_FALLCURVE_COMPONENT* handle);
 

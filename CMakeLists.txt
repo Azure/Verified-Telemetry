@@ -13,28 +13,11 @@ project(vt LANGUAGES C)
 # default for Unit testing with cmocka is OFF, however, this will be ON on CI and tests must pass before committing changes
 if (VT_UNIT_TESTING)
   add_subdirectory(tests)
-  set(VT_DEVICE "CUSTOM_DEVICE")
 endif()
 
 if(VT_CODE_COVERAGE)
   include(CodeCoverageTarget)
-  set(COV_EXCLUDE ${CMAKE_CURRENT_LIST_DIR}/src/platform/*)
   add_code_coverage_target(vt_core_test)
-endif()
-
-if(VT_DEVICE STREQUAL "MXCHIP_AZ3166")
-	list(APPEND VT_LINK_LIBRARIES "stm32cubef4")
-	list(APPEND VT_SOURCES "src/platform/vt_dsc_mxchip.c")
-	list(APPEND VT_COMPILE_DEFINITIONS "STM32F4XX")
-elseif(VT_DEVICE STREQUAL "STM_BL475EIOT01A")
-	list(APPEND VT_LINK_LIBRARIES "stm32cubel4")
-	list(APPEND VT_SOURCES "src/platform/vt_dsc_stm32.c")
-	list(APPEND VT_COMPILE_DEFINITIONS "STM32L4XX")
-elseif(VT_DEVICE STREQUAL "CUSTOM_DEVICE")
-	list(APPEND VT_SOURCES "src/platform/vt_dsc_custom.c")
-	message(WARNING "<CUSTOM_DEVICE> has been selected as device type, kindly make sure all functions in <src/platform/vt_dsc_custom.c> are implemented to avoid any runtime errors.")
-else()
-	message(FATAL_ERROR "Hardware for Verified Telemetry has not been appropriately defined. Valid options : <MXCHIP_AZ3166>, <STM_BL475EIOT01A> OR <CUSTOM_DEVICE>")
 endif()
 
 if(NOT WIN32)
@@ -43,23 +26,26 @@ endif()
 
 # Add source to this project's executable.
 list(APPEND VT_SOURCES
-	"src/core/vt_sensor_initialize.c" 
-	"src/core/vt_sensor_calibrate.c" 
-	"src/core/vt_sensor_read.c" 
-	"src/core/vt_fingerprint_calculate.c"
-	"src/core/vt_fingerprint_evaluate.c"
-	"src/core/vt_database_initialize.c"
-	"src/core/vt_database_store.c"
-	"src/core/vt_database_evaluate.c"
-	"src/core/vt_database_fetch.c"
+  "src/core/fallcurve/vt_fc_object_database_fetch.c"
+  "src/core/fallcurve/vt_fc_object_database_sync.c"
+  "src/core/fallcurve/vt_fc_object_initialize.c"
+  "src/core/fallcurve/vt_fc_object_sensor_calibrate.c"
+  "src/core/fallcurve/vt_fc_object_sensor_status.c"
+  "src/core/fallcurve/internal/vt_fc_database_fetch.c"
+  "src/core/fallcurve/internal/vt_fc_database_reset.c"
+  "src/core/fallcurve/internal/vt_fc_database_store.c"
+  "src/core/fallcurve/internal/vt_fc_read.c"
+  "src/core/fallcurve/internal/vt_fc_signature_collection_settings.c"
+  "src/core/fallcurve/internal/vt_fc_signature_compute.c"
+  "src/core/fallcurve/internal/vt_fc_signature_evaluate.c"
 )
 
 # Don't build middleware if unit testing enabled
 if (NOT VT_UNIT_TESTING)
   list(APPEND VT_SOURCES
-    "src/middleware/pnp_verified_telemetry.c" 
-    "src/middleware/pnp_fallcurve_component.c"
-    "src/middleware/pnp_middleware_helper.c"
+    "src/middleware/nx_verified_telemetry.c" 
+    "src/middleware/nx_vt_fallcurve_component.c"
+    "src/middleware/nx_vt_middleware_helper.c"
   )
 endif()
 
@@ -92,6 +78,8 @@ target_include_directories(${TARGET}
     inc/core
     inc/middleware
     inc/platform
-    inc/core/internal
+    inc/core/fallcurve
+    inc/core/fallcurve/internal
+    inc/core/fallcurve/config
 )
 

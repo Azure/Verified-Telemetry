@@ -3,9 +3,11 @@
 #include "vt_fc_api.h"
 #include "vt_fc_signature.h"
 #include "vt_fc_database.h"
+#include "vt_debug.h"
 
 VT_UINT vt_fallcurve_object_sensor_status(VT_FALLCURVE_OBJECT* fc_object, VT_UINT* sensor_status, VT_UINT* sensor_drift)
 {
+  VTLogDebug("Entered vt_fallcurve_object_sensor_status() \r\n");
   VT_ULONG falltime = 0;
   VT_FLOAT pearson_coeff = 0;
   VT_ULONG sampling_interval_us_saved = 0;

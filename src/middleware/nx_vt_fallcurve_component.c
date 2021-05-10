@@ -27,7 +27,6 @@ static const CHAR pearson_coeff_property[]             = "pearsonCoeff";
 
 UINT nx_vt_fallcurve_init(NX_VT_FALLCURVE_COMPONENT* handle,
     UCHAR* component_name_ptr,
-    UINT component_name_length,
     VT_DEVICE_DRIVER* device_driver,
     VT_SENSOR_HANDLE* sensor_handle,
     UCHAR* associated_telemetry,
@@ -49,6 +48,7 @@ UINT nx_vt_fallcurve_init(NX_VT_FALLCURVE_COMPONENT* handle,
     handle->telemetry_status            = false;
     handle->property_sent               = 0;
     handle->template_confidence_metric  = 0;
+    handle->telemetry_status_auto_update = telemetry_status_auto_update;
     printf("[VT CS] Entering vt_fallcurve_object_init()\r\n");
 
     vt_fallcurve_object_initialize(&(handle->fc_object),
@@ -542,6 +542,23 @@ UINT nx_vt_fallcurve_process_reported_property_sync(NX_VT_FALLCURVE_COMPONENT* h
         }
     }
 
+    return (NX_AZURE_IOT_SUCCESS);
+}
+
+UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* handle)
+{
+    if(handle->telemetry_status_auto_update == false)
+    {
+        return (NX_AZURE_IOT_SUCCESS);
+    }
+    /* Compute fallcurve classification */
+    VT_UINT sensor_status = 0;
+    VT_UINT sensor_drift = 100;
+    if(vt_fallcurve_object_sensor_status(&(handle->fc_object), &sensor_status, &sensor_drift))
+    {
+        return (NX_AZURE_IOT_FAILURE);
+    }
+    handle->telemetry_status = (bool)sensor_status;
     return (NX_AZURE_IOT_SUCCESS);
 }
 

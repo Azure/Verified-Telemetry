@@ -14,4 +14,5 @@ VT_UINT fc_store_signature(VT_FALLCURVE_OBJECT* fc_object, VT_ULONG sampling_int
   fc_object->fingerprintdb.db[num_signatures].sampling_interval_us = sampling_interval_us;
   fc_object->fingerprintdb.db[num_signatures].falltime = falltime;
   fc_object->fingerprintdb.db[num_signatures].pearson_coeff = pearson_coeff;
+  return VT_SUCCESS;
 }

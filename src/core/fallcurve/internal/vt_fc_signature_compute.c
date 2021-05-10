@@ -79,7 +79,7 @@ VT_UINT fc_signature_compute(VT_FALLCURVE_OBJECT* fc_object, VT_ULONG sampling_i
   VTLogDebug("FallCurve Raw: \r\n");
   for(VT_UINT iter = 0; iter < sample_length; iter++)
   {
-    VTLogDebugNoTag("%lu, ", raw_signature[iter]);
+    VTLogDebugNoTag("%d, ", raw_signature[iter]);
   }
 
   // Find index of Maxima
@@ -105,10 +105,10 @@ VT_UINT fc_signature_compute(VT_FALLCURVE_OBJECT* fc_object, VT_ULONG sampling_i
   VT_UINT perfect_exponential_raw_siganture[100];
   for (VT_UINT iter = 0; iter < sample_length; iter++)
   {
-    perfect_exponential_raw_siganture[iter] = round((VT_FLOAT)raw_signature[0] * exp(-1 * (iter / (float)(sample_length - 1))));
+    perfect_exponential_raw_siganture[iter] = round((VT_FLOAT)raw_signature[0] * (VT_FLOAT)exp(-1 * (iter / (VT_FLOAT)(sample_length - 1))));
   }
   // Calculate pearson coefficient
-  pearson_coeff_computed = fc_signature_evaluate_correlation_coefficient(
+  pearson_coeff_computed = fc_signature_calculate_correlation_coefficient(
       perfect_exponential_raw_siganture, raw_signature, sample_length);
   #if VT_LOG_LEVEL > 2
     int32_t decimal = pearson_coeff_computed;
