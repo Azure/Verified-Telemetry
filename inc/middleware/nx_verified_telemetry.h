@@ -15,6 +15,7 @@ extern "C"
 
 /* Verified Telemetry Components */
 #include "nx_vt_fallcurve_component.h"
+#include "nx_vt_currentsense_component.h"
 
 #define VT_SIGNATURE_TYPE_FALLCURVE 0x01
 #define VT_SIGNATURE_TYPE_CURRENTSENSE 0x02
@@ -26,7 +27,7 @@ union NX_VT_SIGNATURE_COMPONENT_UNION_TAG
     NX_VT_FALLCURVE_COMPONENT fc;
 
     /* CurrentSense Component */
-    // NX_VT_CURRENTSENSE_COMPONENT cs;
+    NX_VT_CURRENTSENSE_COMPONENT cs;
 
 };
 

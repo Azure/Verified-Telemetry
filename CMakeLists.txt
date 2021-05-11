@@ -38,6 +38,19 @@ list(APPEND VT_SOURCES
   "src/core/fallcurve/internal/vt_fc_signature_collection_settings.c"
   "src/core/fallcurve/internal/vt_fc_signature_compute.c"
   "src/core/fallcurve/internal/vt_fc_signature_evaluate.c"
+  "src/core/currentsense/vt_cs_object_database_fetch.c"
+  "src/core/currentsense/vt_cs_object_database_sync.c"
+  "src/core/currentsense/vt_cs_object_initialize.c"
+  "src/core/currentsense/vt_cs_object_sensor_calibrate.c"
+  "src/core/currentsense/vt_cs_object_sensor_status.c"
+  "src/core/currentsense/internal/vt_cs_database_fetch.c"
+  "src/core/currentsense/internal/vt_cs_database_reset.c"
+  "src/core/currentsense/internal/vt_cs_database_store.c"
+  "src/core/currentsense/internal/vt_cs_fft.c"
+  "src/core/currentsense/internal/vt_cs_read.c"
+  "src/core/currentsense/internal/vt_cs_signature_collection_settings.c"
+  "src/core/currentsense/internal/vt_cs_signature_compute.c"
+  "src/core/currentsense/internal/vt_cs_signature_evaluate.c"
 )
 
 # Don't build middleware if unit testing enabled
@@ -45,6 +58,7 @@ if (NOT VT_UNIT_TESTING)
   list(APPEND VT_SOURCES
     "src/middleware/nx_verified_telemetry.c" 
     "src/middleware/nx_vt_fallcurve_component.c"
+    "src/middleware/nx_vt_currentsense_component.c"
     "src/middleware/nx_vt_middleware_helper.c"
   )
 endif()
@@ -81,5 +95,8 @@ target_include_directories(${TARGET}
     inc/core/fallcurve
     inc/core/fallcurve/internal
     inc/core/fallcurve/config
+    nc/core/currentsense
+    inc/core/currentsense/internal
+    inc/core/currentsense/config
 )
 

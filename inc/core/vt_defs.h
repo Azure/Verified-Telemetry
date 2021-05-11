@@ -18,6 +18,8 @@
 #define VT_SIGNATURE_COMPUTE_FAIL   0X02
 #define VT_SIGNATURE_DB_EMPTY       0X03
 
+#define VT_CS_AVG_CURR_NOT_AVAILABLE 0xFF
+
 #define VT_UINT                 uint16_t
 #define VT_INT                  int16_t
 #define VT_UINT8                uint8_t

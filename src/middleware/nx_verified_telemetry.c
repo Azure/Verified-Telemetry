@@ -145,6 +145,26 @@ UINT nx_vt_process_command(void* verified_telemetry_DB,
                 return NX_AZURE_IOT_SUCCESS;
             }
         }
+        else if(((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_CURRENTSENSE)
+        {
+            if ((status = nx_vt_currentsense_process_command(&(((NX_VT_OBJECT*)component_pointer)->component.cs),
+                 iotpnp_client_ptr,
+                 component_name_ptr,
+                 component_name_length,
+                 pnp_command_name_ptr,
+                 pnp_command_name_length,
+                 json_reader_ptr,
+                 json_response_ptr,
+                 status_code)) == NX_AZURE_IOT_SUCCESS)
+            {
+                VTLogInfo("Successfully executed command %.*s on %.*s component\r\n\n",
+                    pnp_command_name_length,
+                    pnp_command_name_ptr,
+                    component_name_length,
+                    component_name_ptr);
+                return NX_AZURE_IOT_SUCCESS;
+            }
+        }
         component_pointer = (((NX_VT_OBJECT*)component_pointer)->next_component);
     }
 
@@ -235,6 +255,18 @@ UINT nx_vt_process_reported_property_sync(void* verified_telemetry_DB,
                 return NX_AZURE_IOT_SUCCESS;
             }
         }
+        else if(((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_CURRENTSENSE)
+        {
+            if (nx_vt_currentsense_process_reported_property_sync(&(((NX_VT_OBJECT*)component_pointer)->component.cs),
+                    iotpnp_client_ptr,
+                    component_name_ptr,
+                    component_name_length,
+                    name_value_reader_ptr,
+                    version) == NX_AZURE_IOT_SUCCESS)
+            {
+                return NX_AZURE_IOT_SUCCESS;
+            }
+        }
         component_pointer = (((NX_VT_OBJECT*)component_pointer)->next_component);
     }
     return NX_NOT_SUCCESSFUL;
@@ -288,6 +320,28 @@ UINT nx_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotp
                 }
 
                 ((NX_VT_OBJECT*)component_pointer)->component.fc.property_sent = 1;
+            }
+        }
+        else if(((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_CURRENTSENSE)
+        {
+            if ((status = nx_vt_currentsense_telemetry_status_property(
+                &(((NX_VT_OBJECT*)component_pointer)->component.cs), iotpnp_client_ptr, &device_status)))
+            {
+                VTLogError("Failed nx_vt_currentsense_telemetry_status_property for component %.*s: error code = "
+                        "0x%08x\r\n\n",
+                    (INT)((NX_VT_OBJECT*)component_pointer)->component.cs.component_name_length,
+                    (CHAR*)((NX_VT_OBJECT*)component_pointer)->component.cs.component_name_ptr,
+                    status);
+            }
+
+            if (((NX_VT_OBJECT*)component_pointer)->component.cs.property_sent == 0)
+            {
+                if ((status = nx_vt_currentsense_fingerprint_type_property(&(((NX_VT_OBJECT*)component_pointer)->component.cs), iotpnp_client_ptr)))
+                {
+                    VTLogError("Failed nx_vt_currentsense_fingerprint_type_property: error code = 0x%08x\r\n", status);
+                }
+
+                ((NX_VT_OBJECT*)component_pointer)->component.cs.property_sent = 1;
             }
         }
         component_pointer = (((NX_VT_OBJECT*)component_pointer)->next_component);
@@ -367,10 +421,15 @@ UINT nx_vt_signature_init(void* verified_telemetry_DB,
             associated_telemetry,
             telemetry_status_auto_update);
     }
-    // else if(signature_type == VT_SIGNATURE_TYPE_CURRENTSENSE)
-    // {
-    //     //implement code
-    // }
+    else if(signature_type == VT_SIGNATURE_TYPE_CURRENTSENSE)
+    {
+        nx_vt_currentsense_init(&(handle->component.cs),
+            component_name_ptr,
+            VT_DB->device_driver,
+            sensor_handle,
+            associated_telemetry,
+            telemetry_status_auto_update);
+    }
     return NX_AZURE_IOT_SUCCESS;
 }
 
@@ -425,6 +484,23 @@ UINT nx_vt_verified_telemetry_message_create_send(void* verified_telemetry_DB,
                     tokens++;
                 }
             }
+            else if(((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_CURRENTSENSE)
+            {
+                if((token_pointer = (UCHAR*)strstr((CHAR*)(((NX_VT_OBJECT*)component_pointer)->component.cs.associated_telemetry), (CHAR*)property_name)))
+                {
+                    snprintf(vt_property_name, sizeof(vt_property_name), "vT");
+                    strcat(vt_property_name, (CHAR*)token_pointer);
+                    if (tokens > 0)
+                    {
+                        strcat(scratch_buffer, "&");
+                    }
+                    strcat(scratch_buffer, vt_property_name);
+                    strcat(scratch_buffer, "=");
+                    strcat(scratch_buffer, (((NX_VT_OBJECT*)component_pointer)->component.cs.telemetry_status > 0) ? "true" : "false");
+                    token_found = 1;
+                    tokens++;
+                }
+            }
             
         }
         component_pointer = (((NX_VT_OBJECT*)component_pointer)->next_component);
@@ -464,6 +540,10 @@ UINT nx_vt_compute_evaluate_fingerprint_all_sensors(void* verified_telemetry_DB)
         if(((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
         {
             status |= nx_vt_fallcurve_compute_sensor_status_global(&(((NX_VT_OBJECT*)component_pointer)->component.fc), enable_verified_telemetry);
+        }
+        else if(((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_CURRENTSENSE)
+        {
+            status |= nx_vt_currentsense_compute_sensor_status_global(&(((NX_VT_OBJECT*)component_pointer)->component.cs), enable_verified_telemetry);
         }
         component_pointer = (((NX_VT_OBJECT*)component_pointer)->next_component);
     }

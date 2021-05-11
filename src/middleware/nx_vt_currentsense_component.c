@@ -1,9 +1,9 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-#include "nx_vt_fallcurve_component.h"
+#include "nx_vt_currentsense_component.h"
 
-#include "vt_fc_api.h"
+#include "vt_cs_api.h"
 #include "vt_debug.h"
 
 #define SAMPLE_COMMAND_SUCCESS_STATUS (200)
@@ -18,14 +18,17 @@ static const CHAR command_retrain_fingerprint[] = "retrainFingerprintTemplate";
 static const CHAR telemetry_name_telemetry_status[] = "telemetryStatus";
 static const CHAR fingerprint_type_property[]           = "fingerprintType";
 static const CHAR template_confidence_metric_property[]  = "fingerprintTemplateConfidenceMetric";
-static const CHAR fingerprint_type_value[]              = "FallCurve";
+static const CHAR fingerprint_type_value[]              = "CurrentSense";
 static const CHAR fingerprint_template_property[]       = "fingerprintTemplate";
 static const CHAR num_signatures_json_property[]       = "numSignatures";
-static const CHAR sampling_interval_us_property[]             = "samplingIntervalus";
-static const CHAR falltime_property[]             = "falltime";
-static const CHAR pearson_coeff_property[]             = "pearsonCoeff";
+static const CHAR avg_curr_json_property[]             = "avgCurr";
+static const CHAR lowest_sample_freq_json_property[]   = "lowestSampleFreq";
+static const CHAR sampling_freq_json_property[]        = "samplingFreq";
+static const CHAR signal_freq_json_property[]          = "signalFreq";
+static const CHAR curr_diff_json_property[]            = "currDiff";
+static const CHAR duty_cycle_json_property[]           = "dutyCycle";
 
-UINT nx_vt_fallcurve_init(NX_VT_FALLCURVE_COMPONENT* handle,
+UINT nx_vt_currentsense_init(NX_VT_CURRENTSENSE_COMPONENT* handle,
     UCHAR* component_name_ptr,
     VT_DEVICE_DRIVER* device_driver,
     VT_SENSOR_HANDLE* sensor_handle,
@@ -49,7 +52,7 @@ UINT nx_vt_fallcurve_init(NX_VT_FALLCURVE_COMPONENT* handle,
     handle->template_confidence_metric  = 0;
     handle->telemetry_status_auto_update = telemetry_status_auto_update;
 
-    vt_fallcurve_object_initialize(&(handle->fc_object),
+    vt_currentsense_object_initialize(&(handle->cs_object),
         device_driver,
         sensor_handle);
 
@@ -57,31 +60,31 @@ UINT nx_vt_fallcurve_init(NX_VT_FALLCURVE_COMPONENT* handle,
 }
 
 /* reset fingerprint method implementation */
-static UINT reset_refernce_fallcurve(NX_VT_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_JSON_READER* json_reader_ptr)
+static UINT reset_refernce_currentsense(NX_VT_CURRENTSENSE_COMPONENT* handle, NX_AZURE_IOT_JSON_READER* json_reader_ptr)
 {
     uint8_t confidence_metric;
-    UINT status  = vt_fallcurve_object_sensor_calibrate(&(handle->fc_object), &confidence_metric);
+    UINT status  = vt_currentsense_sensor_calibrate(&(handle->cs_object), &confidence_metric);
     handle->template_confidence_metric = confidence_metric;
     return (status);
 }
 
 /* retrain fingerprint method implementation */
-static UINT retrain_refernce_fallcurve(NX_VT_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_JSON_READER* json_reader_ptr)
+static UINT retrain_refernce_currentsense(NX_VT_CURRENTSENSE_COMPONENT* handle, NX_AZURE_IOT_JSON_READER* json_reader_ptr)
 {
     uint8_t confidence_metric;
-    UINT status  = vt_fallcurve_object_sensor_recalibrate(&(handle->fc_object), &confidence_metric);
+    UINT status  = vt_currentsense_sensor_recalibrate(&(handle->cs_object), &confidence_metric);
     handle->template_confidence_metric = confidence_metric;
     return (status);
 }
 
-static UINT hub_store_all_db(NX_VT_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
+static UINT hub_store_all_db(NX_VT_CURRENTSENSE_COMPONENT* handle, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
 {
     UINT status;
     UINT response_status = 0;
     NX_AZURE_IOT_JSON_WRITER json_writer;
 
-    VT_FALLCURVE_DATABASE_FLATTENED flattened_db;
-    vt_fallcurve_object_database_fetch(&(handle->fc_object), &flattened_db);
+    VT_CURRENTSENSE_DATABASE_FLATTENED flattened_db;
+    vt_currentsense_database_fetch(&(handle->cs_object), &flattened_db);
 
     if ((status = nx_azure_iot_pnp_client_reported_properties_create(iotpnp_client_ptr, &json_writer, NX_WAIT_FOREVER)))
     {
@@ -103,31 +106,55 @@ static UINT hub_store_all_db(NX_VT_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP
     if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer, (UCHAR*)num_signatures_json_property, 
         strlen((const char*)num_signatures_json_property), flattened_db.num_signatures, strlen((CHAR*)flattened_db.num_signatures))))
     {
-        VTLogError("Failed to append fallcurve DB data: error code = 0x%08x\r\n", status);
+        VTLogError("Failed to append currentsense DB data: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
         return (status);
     }
 
-    if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer, (UCHAR*)sampling_interval_us_property, 
-        strlen((const char*)sampling_interval_us_property), flattened_db.sampling_interval_us, strlen((CHAR*)flattened_db.sampling_interval_us))))
+    if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer, (UCHAR*)avg_curr_json_property, 
+        strlen((const char*)avg_curr_json_property), flattened_db.avg_curr, strlen((CHAR*)flattened_db.avg_curr))))
     {
-        VTLogError("Failed to append fallcurve DB data: error code = 0x%08x\r\n", status);
+        VTLogError("Failed to append currentsense DB data: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
         return (status);
     }
 
-    if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer, (UCHAR*)falltime_property, 
-        strlen((const char*)falltime_property), flattened_db.falltime, strlen((CHAR*)flattened_db.falltime))))
+    if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer, (UCHAR*)lowest_sample_freq_json_property, 
+        strlen((const char*)lowest_sample_freq_json_property), flattened_db.lowest_sample_freq, strlen((CHAR*)flattened_db.lowest_sample_freq))))
     {
-        VTLogError("Failed to append fallcurve DB data: error code = 0x%08x\r\n", status);
+        VTLogError("Failed to append currentsense DB data: error code = 0x%08x\r\n", status);
+        nx_azure_iot_json_writer_deinit(&json_writer);
+        return (status);
+    }
+
+    if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer, (UCHAR*)sampling_freq_json_property, 
+        strlen((const char*)sampling_freq_json_property), flattened_db.sampling_freq, strlen((CHAR*)flattened_db.sampling_freq))))
+    {
+        VTLogError("Failed to append currentsense DB data: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
         return (status);
     }
     
-    if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer, (UCHAR*)pearson_coeff_property, 
-        strlen((const char*)pearson_coeff_property), flattened_db.pearson_coeff, strlen((CHAR*)flattened_db.pearson_coeff))))
+    if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer, (UCHAR*)signal_freq_json_property, 
+        strlen((const char*)signal_freq_json_property), flattened_db.signal_freq, strlen((CHAR*)flattened_db.signal_freq))))
     {
-        VTLogError("Failed to append fallcurve DB data: error code = 0x%08x\r\n", status);
+        VTLogError("Failed to append currentsense DB data: error code = 0x%08x\r\n", status);
+        nx_azure_iot_json_writer_deinit(&json_writer);
+        return (status);
+    }
+
+    if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer, (UCHAR*)curr_diff_json_property, 
+        strlen((const char*)curr_diff_json_property), flattened_db.curr_diff, strlen((CHAR*)flattened_db.curr_diff))))
+    {
+        VTLogError("Failed to append currentsense DB data: error code = 0x%08x\r\n", status);
+        nx_azure_iot_json_writer_deinit(&json_writer);
+        return (status);
+    }
+
+    if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer, (UCHAR*)duty_cycle_json_property, 
+        strlen((const char*)duty_cycle_json_property), flattened_db.duty_cycle, strlen((CHAR*)flattened_db.duty_cycle))))
+    {
+        VTLogError("Failed to append currentsense DB data: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
         return (status);
     }
@@ -160,9 +187,9 @@ static UINT hub_store_all_db(NX_VT_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP
 }
 
 static UINT sync_fingerprint_template(
-    NX_AZURE_IOT_JSON_READER* property_value_reader_ptr, NX_VT_FALLCURVE_COMPONENT* handle)
+    NX_AZURE_IOT_JSON_READER* property_value_reader_ptr, NX_VT_CURRENTSENSE_COMPONENT* handle)
 {
-    VT_FALLCURVE_DATABASE_FLATTENED flattened_db;
+    VT_CURRENTSENSE_DATABASE_FLATTENED flattened_db;
     CHAR jsonKey[20];
     CHAR jsonValue[40];
     UINT bytes_copied  = 0;
@@ -201,13 +228,13 @@ static UINT sync_fingerprint_template(
         return NX_NOT_SUCCESSFUL;
     }
     VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
-    if (((strlen(jsonKey) == (sizeof(sampling_interval_us_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)sampling_interval_us_property, strlen(jsonKey))))) == 0)
+    if (((strlen(jsonKey) == (sizeof(avg_curr_json_property) - 1)) &&
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)avg_curr_json_property, strlen(jsonKey))))) == 0)
     {
         return NX_NOT_SUCCESSFUL;
     }
-    memset(flattened_db.sampling_interval_us, 0, sizeof(flattened_db.sampling_interval_us)); 
-    strncpy((VT_CHAR*)flattened_db.sampling_interval_us, jsonValue, sizeof(flattened_db.sampling_interval_us));
+    memset(flattened_db.avg_curr, 0, sizeof(flattened_db.avg_curr)); 
+    strncpy((VT_CHAR*)flattened_db.avg_curr, jsonValue, sizeof(flattened_db.avg_curr));
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(
@@ -222,13 +249,34 @@ static UINT sync_fingerprint_template(
         return NX_NOT_SUCCESSFUL;
     }
     VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
-    if (((strlen(jsonKey) == (sizeof(falltime_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)falltime_property, strlen(jsonKey))))) == 0)
+    if (((strlen(jsonKey) == (sizeof(lowest_sample_freq_json_property) - 1)) &&
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)lowest_sample_freq_json_property, strlen(jsonKey))))) == 0)
     {
         return NX_NOT_SUCCESSFUL;
     }
-    memset(flattened_db.falltime, 0, sizeof(flattened_db.falltime)); 
-    strncpy((VT_CHAR*)flattened_db.falltime, jsonValue, sizeof(flattened_db.falltime));
+    memset(flattened_db.lowest_sample_freq, 0, sizeof(flattened_db.lowest_sample_freq)); 
+    strncpy((VT_CHAR*)flattened_db.lowest_sample_freq, jsonValue, sizeof(flattened_db.lowest_sample_freq));
+    
+    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        nx_azure_iot_json_reader_token_string_get(
+            property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+    {
+        return NX_SUCCESS;
+    }
+    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        nx_azure_iot_json_reader_token_string_get(
+            property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+    if (((strlen(jsonKey) == (sizeof(sampling_freq_json_property) - 1)) &&
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)sampling_freq_json_property, strlen(jsonKey))))) == 0)
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    memset(flattened_db.sampling_freq, 0, sizeof(flattened_db.sampling_freq)); 
+    strncpy((VT_CHAR*)flattened_db.sampling_freq, jsonValue, sizeof(flattened_db.sampling_freq));
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(
@@ -243,20 +291,62 @@ static UINT sync_fingerprint_template(
         return NX_NOT_SUCCESSFUL;
     }
     VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
-    if (((strlen(jsonKey) == (sizeof(pearson_coeff_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)pearson_coeff_property, strlen(jsonKey))))) == 0)
+    if (((strlen(jsonKey) == (sizeof(signal_freq_json_property) - 1)) &&
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)signal_freq_json_property, strlen(jsonKey))))) == 0)
     {
         return NX_NOT_SUCCESSFUL;
     }
-    memset(flattened_db.pearson_coeff, 0, sizeof(flattened_db.pearson_coeff)); 
-    strncpy((VT_CHAR*)flattened_db.pearson_coeff, jsonValue, sizeof(flattened_db.pearson_coeff));
+    memset(flattened_db.signal_freq, 0, sizeof(flattened_db.signal_freq)); 
+    strncpy((VT_CHAR*)flattened_db.signal_freq, jsonValue, sizeof(flattened_db.signal_freq));
 
-    vt_fallcurve_object_database_sync(&(handle->fc_object), flattened_db);
+    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        nx_azure_iot_json_reader_token_string_get(
+            property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+    {
+        return NX_SUCCESS;
+    }
+    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        nx_azure_iot_json_reader_token_string_get(
+            property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+    if (((strlen(jsonKey) == (sizeof(curr_diff_json_property) - 1)) &&
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)curr_diff_json_property, strlen(jsonKey))))) == 0)
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    memset(flattened_db.curr_diff, 0, sizeof(flattened_db.curr_diff)); 
+    strncpy((VT_CHAR*)flattened_db.curr_diff, jsonValue, sizeof(flattened_db.curr_diff));
+
+    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        nx_azure_iot_json_reader_token_string_get(
+            property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+    {
+        return NX_SUCCESS;
+    }
+    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        nx_azure_iot_json_reader_token_string_get(
+            property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+    if (((strlen(jsonKey) == (sizeof(duty_cycle_json_property) - 1)) &&
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)duty_cycle_json_property, strlen(jsonKey))))) == 0)
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    memset(flattened_db.duty_cycle, 0, sizeof(flattened_db.duty_cycle)); 
+    strncpy((VT_CHAR*)flattened_db.duty_cycle, jsonValue, sizeof(flattened_db.duty_cycle));
+
+    vt_currentsense_database_sync(&(handle->cs_object), flattened_db);
 
     return NX_SUCCESS;
 }
 
-UINT nx_vt_fallcurve_telemetry_status_property(NX_VT_FALLCURVE_COMPONENT* handle,
+UINT nx_vt_currentsense_telemetry_status_property(NX_VT_CURRENTSENSE_COMPONENT* handle,
     NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
     bool* deviceStatus)
 {
@@ -302,7 +392,7 @@ UINT nx_vt_fallcurve_telemetry_status_property(NX_VT_FALLCURVE_COMPONENT* handle
     return (status);
 }
 
-UINT nx_vt_fallcurve_fingerprint_type_property(NX_VT_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
+UINT nx_vt_currentsense_fingerprint_type_property(NX_VT_CURRENTSENSE_COMPONENT* handle, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
 {
     UINT status;
     UINT response_status = 0;
@@ -346,8 +436,8 @@ UINT nx_vt_fallcurve_fingerprint_type_property(NX_VT_FALLCURVE_COMPONENT* handle
     return (status);
 }
 
-UINT nx_vt_fallcurve_fingerprint_template_confidence_metric_property(
-    NX_VT_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
+UINT nx_vt_currentsense_fingerprint_template_confidence_metric_property(
+    NX_VT_CURRENTSENSE_COMPONENT* handle, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
 {
     UINT status;
     UINT response_status = 0;
@@ -392,7 +482,7 @@ UINT nx_vt_fallcurve_fingerprint_template_confidence_metric_property(
     return (status);
 }
 
-UINT nx_vt_fallcurve_process_command(NX_VT_FALLCURVE_COMPONENT* handle,
+UINT nx_vt_currentsense_process_command(NX_VT_CURRENTSENSE_COMPONENT* handle,
     NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
     UCHAR* component_name_ptr,
     UINT component_name_length,
@@ -419,7 +509,7 @@ UINT nx_vt_fallcurve_process_command(NX_VT_FALLCURVE_COMPONENT* handle,
     if (((pnp_command_name_length == (sizeof(command_reset_fingerprint) - 1)) &&
             (!(strncmp((CHAR*)pnp_command_name_ptr, (CHAR*)command_reset_fingerprint, pnp_command_name_length)))) == 1)
     {
-        dm_status = (reset_refernce_fallcurve(handle, json_reader_ptr) != NX_AZURE_IOT_SUCCESS)
+        dm_status = (reset_refernce_currentsense(handle, json_reader_ptr) != NX_AZURE_IOT_SUCCESS)
                         ? SAMPLE_COMMAND_ERROR_STATUS
                         : SAMPLE_COMMAND_SUCCESS_STATUS;
 
@@ -427,7 +517,7 @@ UINT nx_vt_fallcurve_process_command(NX_VT_FALLCURVE_COMPONENT* handle,
         {
             VTLogError("Failed to update db in cloud\r\n");
         }
-        if (nx_vt_fallcurve_fingerprint_template_confidence_metric_property(handle, iotpnp_client_ptr))
+        if (nx_vt_currentsense_fingerprint_template_confidence_metric_property(handle, iotpnp_client_ptr))
         {
             VTLogError("Failed to update Fingerprint Template Confidence Metric\r\n");
         }
@@ -438,7 +528,7 @@ UINT nx_vt_fallcurve_process_command(NX_VT_FALLCURVE_COMPONENT* handle,
                  (!(strncmp(
                      (CHAR*)pnp_command_name_ptr, (CHAR*)command_retrain_fingerprint, pnp_command_name_length)))) == 1)
     {
-        dm_status = (retrain_refernce_fallcurve(handle, json_reader_ptr) != NX_AZURE_IOT_SUCCESS)
+        dm_status = (retrain_refernce_currentsense(handle, json_reader_ptr) != NX_AZURE_IOT_SUCCESS)
                         ? SAMPLE_COMMAND_ERROR_STATUS
                         : SAMPLE_COMMAND_SUCCESS_STATUS;
 
@@ -446,7 +536,7 @@ UINT nx_vt_fallcurve_process_command(NX_VT_FALLCURVE_COMPONENT* handle,
         {
             VTLogError("Failed to update db in cloud\r\n");
         }
-        if (nx_vt_fallcurve_fingerprint_template_confidence_metric_property(handle, iotpnp_client_ptr))
+        if (nx_vt_currentsense_fingerprint_template_confidence_metric_property(handle, iotpnp_client_ptr))
         {
             VTLogError("Failed to update Fingerprint Template Confidence Metric\r\n");
         }
@@ -465,7 +555,7 @@ UINT nx_vt_fallcurve_process_command(NX_VT_FALLCURVE_COMPONENT* handle,
     return (NX_AZURE_IOT_SUCCESS);
 }
 
-UINT nx_vt_fallcurve_process_reported_property_sync(NX_VT_FALLCURVE_COMPONENT* handle,
+UINT nx_vt_currentsense_process_reported_property_sync(NX_VT_CURRENTSENSE_COMPONENT* handle,
     NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
     const UCHAR* component_name_ptr,
     UINT component_name_length,
@@ -517,7 +607,7 @@ UINT nx_vt_fallcurve_process_reported_property_sync(NX_VT_FALLCURVE_COMPONENT* h
     return (NX_AZURE_IOT_SUCCESS);
 }
 
-UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* handle, bool toggle_verified_telemetry)
+UINT nx_vt_currentsense_compute_sensor_status_global(NX_VT_CURRENTSENSE_COMPONENT* handle, bool toggle_verified_telemetry)
 {
     if(!toggle_verified_telemetry)
     {
@@ -532,8 +622,7 @@ UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* han
     /* Compute fallcurve classification */
     VT_UINT sensor_status = 0;
     VT_UINT sensor_drift = 100;
-    vt_fallcurve_object_sensor_status(&(handle->fc_object), &sensor_status, &sensor_drift);
+    vt_currentsense_object_sensor_status(&(handle->cs_object), &sensor_status, &sensor_drift);
     handle->telemetry_status =  (sensor_status > 0) ? false : true;
     return (NX_AZURE_IOT_SUCCESS);
 }
-
