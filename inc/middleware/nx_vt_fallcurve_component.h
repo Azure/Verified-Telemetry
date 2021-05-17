@@ -23,13 +23,13 @@ typedef struct NX_VT_FALLCURVE_COMPONENT_TAG
     /* Component Name Length */
     UINT component_name_length;
 
-    /* Telemetry associated with the currentsense signature component*/
+    /* Telemetry associated with the fallcurve signature component*/
     UCHAR associated_telemetry[100];
 
-    /* Status of the telemetry associated with the currentsense signature component*/
+    /* Status of the telemetry associated with the fallcurve signature component*/
     bool telemetry_status;
 
-    /* Currentsense Object */
+    /* Fallcurve Object */
     VT_FALLCURVE_OBJECT fc_object;
 
     /* Status of reported properties sent  */
@@ -75,7 +75,7 @@ UINT nx_vt_fallcurve_process_reported_property_sync(NX_VT_FALLCURVE_COMPONENT* h
     UINT version);
 
 
-UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* handle, bool toggleVerifiedTelemetry);
+UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* handle, bool toggle_verified_telemetry);
 
 // UINT nx_vt_fallcurve_compute_sensor_status(NX_VT_FALLCURVE_COMPONENT* handle);
 

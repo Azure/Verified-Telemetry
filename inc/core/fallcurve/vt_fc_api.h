@@ -34,7 +34,7 @@ VT_UINT vt_fallcurve_object_sensor_calibrate(VT_FALLCURVE_OBJECT* fc_object, VT_
 VT_UINT vt_fallcurve_object_sensor_recalibrate(VT_FALLCURVE_OBJECT* fc_object, VT_UINT8* confidence_metric);
 
 // Status
-VT_UINT vt_fallcurve_object_sensor_status(
+VT_VOID vt_fallcurve_object_sensor_status(
    VT_FALLCURVE_OBJECT* fc_object, VT_UINT* sensor_status, VT_UINT* sensor_drift);
 
 // Sync Database
