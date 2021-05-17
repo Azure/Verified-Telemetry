@@ -1,16 +1,16 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
+#include <setjmp.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <string.h>
+
 #include "vt_test_curves.h"
 #include "vt_test_definitions.h"
 
 #include "vt_api.h"
 #include "vt_database.h"
-
-#include <setjmp.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <string.h>
 
 #include "cmocka.h"
 
