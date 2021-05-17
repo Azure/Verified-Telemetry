@@ -33,8 +33,7 @@ static az_result json_child_token_move(az_json_reader* ref_jr, az_span property_
     az_result _az_result;
     do
     {
-        if ((ref_jr->token.kind == AZ_JSON_TOKEN_PROPERTY_NAME) &&
-            az_json_token_is_text_equal(&(ref_jr->token), property_name))
+        if ((ref_jr->token.kind == AZ_JSON_TOKEN_PROPERTY_NAME) && az_json_token_is_text_equal(&(ref_jr->token), property_name))
         {
             _az_result = az_json_reader_next_token(ref_jr);
             if (az_result_failed(_az_result))
@@ -96,6 +95,7 @@ static az_result check_if_skippable_reported(az_json_reader* jr, az_iot_pnp_clie
             }
         }
     }
+
     while (true)
     {
         // Within the "root" or "component name" section
@@ -158,6 +158,7 @@ static az_result check_if_skippable_reported(az_json_reader* jr, az_iot_pnp_clie
         }
     }
 }
+
 static az_result az_iot_pnp_client_property_get_next_component_reported_property(az_iot_pnp_client const* client,
     az_json_reader* ref_json_reader,
     az_iot_pnp_client_property_response_type response_type,
@@ -262,8 +263,7 @@ UINT nx_azure_iot_pnp_client_reported_component_property_value_next(NX_AZURE_IOT
     az_iot_pnp_client_property_response_type type;
     az_result core_result;
 
-    if ((pnp_client_ptr == NX_NULL) || (reader_ptr == NX_NULL) || (component_pptr == NX_NULL) ||
-        (component_len_ptr == NX_NULL))
+    if ((pnp_client_ptr == NX_NULL) || (reader_ptr == NX_NULL) || (component_pptr == NX_NULL) || (component_len_ptr == NX_NULL))
     {
         LogError(LogLiteralArgs("IoT PnP client reported component next property failed: INVALID POINTER"));
         return (NX_AZURE_IOT_INVALID_PARAMETER);
@@ -279,16 +279,14 @@ UINT nx_azure_iot_pnp_client_reported_component_property_value_next(NX_AZURE_IOT
     /* Copy reader control block but do not give NX_PACKET ownership  */
     *name_value_reader_ptr            = *reader_ptr;
     name_value_reader_ptr->packet_ptr = NX_NULL;
-    type                              = (message_type == NX_AZURE_IOT_PNP_DESIRED_PROPERTIES)
-                                            ? AZ_IOT_PNP_CLIENT_PROPERTY_RESPONSE_TYPE_DESIRED_PROPERTIES
-                                            : AZ_IOT_PNP_CLIENT_PROPERTY_RESPONSE_TYPE_GET;
+    type = (message_type == NX_AZURE_IOT_PNP_DESIRED_PROPERTIES) ? AZ_IOT_PNP_CLIENT_PROPERTY_RESPONSE_TYPE_DESIRED_PROPERTIES
+                                                                 : AZ_IOT_PNP_CLIENT_PROPERTY_RESPONSE_TYPE_GET;
 
-    core_result =
-        az_iot_pnp_client_property_get_next_component_reported_property(&(pnp_client_ptr->iot_pnp_client_core),
-            &(reader_ptr->json_reader),
-            type,
-            &component_name,
-            &(name_value_reader_ptr->json_reader));
+    core_result = az_iot_pnp_client_property_get_next_component_reported_property(&(pnp_client_ptr->iot_pnp_client_core),
+        &(reader_ptr->json_reader),
+        type,
+        &component_name,
+        &(name_value_reader_ptr->json_reader));
     if (core_result == AZ_ERROR_IOT_END_OF_PROPERTIES)
     {
         return (NX_AZURE_IOT_NOT_FOUND);
@@ -336,8 +334,7 @@ UINT nx_azure_iot_pnp_client_telemetry_message_create_with_message_property(NX_A
 
     nx_azure_iot_json_reader_with_buffer_init(&json_reader, message_properties_buffer, message_properties_buffer_size);
 
-    az_span message_properties_span_buffer =
-        az_span_create((UCHAR*)message_properties_buffer, message_properties_buffer_size);
+    az_span message_properties_span_buffer = az_span_create((UCHAR*)message_properties_buffer, message_properties_buffer_size);
     az_iot_message_properties message_properties;
     core_result = az_iot_message_properties_init(
         &message_properties, message_properties_span_buffer, az_span_size(message_properties_span_buffer));

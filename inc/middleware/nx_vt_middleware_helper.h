@@ -42,4 +42,5 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
+
 #endif /* NX_VT_MIDDLEWARE_HELPER_H */

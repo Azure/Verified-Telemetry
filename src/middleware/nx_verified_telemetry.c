@@ -3,12 +3,12 @@
 
 #include <stdio.h>
 
-#include "nx_vt_middleware_helper.h"
 #include "nx_verified_telemetry.h"
+#include "nx_vt_middleware_helper.h"
 #include "vt_debug.h"
 
 static const CHAR enable_verified_telemetry_property[] = "enableVerifiedTelemetry";
-static const CHAR device_status_property[]            = "deviceStatus";
+static const CHAR device_status_property[]             = "deviceStatus";
 
 static const CHAR temp_response_description_success[] = "success";
 static const CHAR temp_response_description_failed[]  = "failed";
@@ -118,24 +118,24 @@ UINT nx_vt_process_command(void* verified_telemetry_DB,
     UINT* status_code)
 {
 
-    UINT status = 0;
-    UINT iter   = 0;
-    UINT components_num = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->components_num;
+    UINT status             = 0;
+    UINT iter               = 0;
+    UINT components_num     = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->components_num;
     void* component_pointer = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->first_component;
 
     for (iter = 0; iter < components_num; iter++)
     {
-        if(((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
+        if (((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
         {
             if ((status = nx_vt_fallcurve_process_command(&(((NX_VT_OBJECT*)component_pointer)->component.fc),
-                 iotpnp_client_ptr,
-                 component_name_ptr,
-                 component_name_length,
-                 pnp_command_name_ptr,
-                 pnp_command_name_length,
-                 json_reader_ptr,
-                 json_response_ptr,
-                 status_code)) == NX_AZURE_IOT_SUCCESS)
+                     iotpnp_client_ptr,
+                     component_name_ptr,
+                     component_name_length,
+                     pnp_command_name_ptr,
+                     pnp_command_name_length,
+                     json_reader_ptr,
+                     json_response_ptr,
+                     status_code)) == NX_AZURE_IOT_SUCCESS)
             {
                 VTLogInfo("Successfully executed command %.*s on %.*s component\r\n\n",
                     pnp_command_name_length,
@@ -193,8 +193,7 @@ UINT nx_vt_process_property_update(void* verified_telemetry_DB,
             description = temp_response_description_success;
 
             ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->enable_verified_telemetry = (bool)parsed_value;
-            VTLogInfo("Received Enable Verified Telemetry Twin update with value %s\r\n",
-                (bool)parsed_value ? "true" : "false");
+            VTLogInfo("Received Enable Verified Telemetry Twin update with value %s\r\n", (bool)parsed_value ? "true" : "false");
         }
         send_reported_property(iotpnp_client_ptr,
             component_name_ptr,
@@ -218,12 +217,12 @@ UINT nx_vt_process_reported_property_sync(void* verified_telemetry_DB,
     NX_AZURE_IOT_JSON_READER* name_value_reader_ptr,
     UINT version)
 {
-    UINT iter = 0;
-    UINT components_num = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->components_num;
+    UINT iter               = 0;
+    UINT components_num     = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->components_num;
     void* component_pointer = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->first_component;
     for (iter = 0; iter < components_num; iter++)
     {
-        if(((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
+        if (((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
         {
             if (nx_vt_fallcurve_process_reported_property_sync(&(((NX_VT_OBJECT*)component_pointer)->component.fc),
                     iotpnp_client_ptr,
@@ -262,19 +261,19 @@ UINT nx_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotp
 {
     UINT status = 0;
 
-    UINT components_num = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->components_num;
+    UINT components_num     = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->components_num;
     void* component_pointer = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->first_component;
-    bool device_status             = true;
+    bool device_status      = true;
     for (UINT i = 0; i < components_num; i++)
     {
 
-        if(((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
+        if (((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
         {
             if ((status = nx_vt_fallcurve_telemetry_status_property(
-                &(((NX_VT_OBJECT*)component_pointer)->component.fc), iotpnp_client_ptr, &device_status)))
+                     &(((NX_VT_OBJECT*)component_pointer)->component.fc), iotpnp_client_ptr, &device_status)))
             {
                 VTLogError("Failed nx_vt_fallcurve_telemetry_status_property for component %.*s: error code = "
-                        "0x%08x\r\n\n",
+                           "0x%08x\r\n\n",
                     (INT)((NX_VT_OBJECT*)component_pointer)->component.fc.component_name_length,
                     (CHAR*)((NX_VT_OBJECT*)component_pointer)->component.fc.component_name_ptr,
                     status);
@@ -282,7 +281,8 @@ UINT nx_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotp
 
             if (((NX_VT_OBJECT*)component_pointer)->component.fc.property_sent == 0)
             {
-                if ((status = nx_vt_fallcurve_fingerprint_type_property(&(((NX_VT_OBJECT*)component_pointer)->component.fc), iotpnp_client_ptr)))
+                if ((status = nx_vt_fallcurve_fingerprint_type_property(
+                         &(((NX_VT_OBJECT*)component_pointer)->component.fc), iotpnp_client_ptr)))
                 {
                     VTLogError("Failed nx_vt_fallcurve_fingerprint_type_property: error code = 0x%08x\r\n", status);
                 }
@@ -291,7 +291,6 @@ UINT nx_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotp
             }
         }
         component_pointer = (((NX_VT_OBJECT*)component_pointer)->next_component);
-        
     }
 
     if (device_status != ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->device_status ||
@@ -313,19 +312,17 @@ UINT nx_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotp
     return status;
 }
 
-UINT nx_vt_init(void* verified_telemetry_DB,
-    UCHAR* component_name_ptr,
-    bool enable_verified_telemetry,
-    VT_DEVICE_DRIVER* device_driver)
+UINT nx_vt_init(
+    void* verified_telemetry_DB, UCHAR* component_name_ptr, bool enable_verified_telemetry, VT_DEVICE_DRIVER* device_driver)
 {
-    NX_VERIFIED_TELEMETRY_DB* VT_DB     = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB);
+    NX_VERIFIED_TELEMETRY_DB* VT_DB = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB);
     strncpy((CHAR*)VT_DB->component_name_ptr, (CHAR*)component_name_ptr, sizeof(VT_DB->component_name_ptr));
-    VT_DB->component_name_length     = strlen((const char*)component_name_ptr);
+    VT_DB->component_name_length       = strlen((const char*)component_name_ptr);
     VT_DB->enable_verified_telemetry   = enable_verified_telemetry;
     VT_DB->device_status_property_sent = false;
-    VT_DB->components_num = 0;
-    VT_DB->first_component = NULL;
-    VT_DB->last_component = NULL;
+    VT_DB->components_num              = 0;
+    VT_DB->first_component             = NULL;
+    VT_DB->last_component              = NULL;
 
     VT_DB->device_driver = device_driver;
 
@@ -340,25 +337,25 @@ UINT nx_vt_signature_init(void* verified_telemetry_DB,
     bool telemetry_status_auto_update,
     VT_SENSOR_HANDLE* sensor_handle)
 {
-    if(signature_type != VT_SIGNATURE_TYPE_FALLCURVE)
+    if (signature_type != VT_SIGNATURE_TYPE_FALLCURVE)
     {
         return NX_AZURE_IOT_FAILURE;
     }
-    NX_VERIFIED_TELEMETRY_DB* VT_DB  = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB);
+    NX_VERIFIED_TELEMETRY_DB* VT_DB = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB);
     VT_DB->components_num++;
-    if(VT_DB->first_component == NULL)
+    if (VT_DB->first_component == NULL)
     {
-        VT_DB->first_component = (void*) handle;
+        VT_DB->first_component = (void*)handle;
     }
     else
     {
-        ((NX_VT_OBJECT*)(VT_DB->last_component))->next_component = (void*) handle;
+        ((NX_VT_OBJECT*)(VT_DB->last_component))->next_component = (void*)handle;
     }
-    VT_DB->last_component = (void*) handle;
+    VT_DB->last_component = (void*)handle;
 
     handle->next_component = NULL;
     handle->signature_type = signature_type;
-    if(signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
+    if (signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
     {
         nx_vt_fallcurve_init(&(handle->component.fc),
             component_name_ptr,
@@ -382,7 +379,7 @@ UINT nx_vt_verified_telemetry_message_create_send(void* verified_telemetry_DB,
     NX_PACKET* packet_ptr;
     NX_AZURE_IOT_JSON_READER json_reader;
     NX_AZURE_IOT_JSON_READER json_reader_copy;
-    UINT components_num = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->components_num;
+    UINT components_num     = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->components_num;
     void* component_pointer = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->first_component;
     UCHAR property_name[50];
     memset(property_name, 0, sizeof(property_name));
@@ -390,9 +387,9 @@ UINT nx_vt_verified_telemetry_message_create_send(void* verified_telemetry_DB,
     CHAR vt_property_name[50];
     memset(vt_property_name, 0, sizeof(vt_property_name));
     memset(scratch_buffer, 0, sizeof(scratch_buffer));
-    UINT token_found = 0;
+    UINT token_found     = 0;
     UCHAR* token_pointer = NULL;
-    UINT tokens      = 0;
+    UINT tokens          = 0;
 
     nx_azure_iot_json_reader_with_buffer_init(&json_reader, telemetry_data, data_size);
 
@@ -402,11 +399,11 @@ UINT nx_vt_verified_telemetry_message_create_send(void* verified_telemetry_DB,
         token_found      = 0;
         while (token_found == 0 && nx_azure_iot_json_reader_next_token(&json_reader_copy) == NX_AZURE_IOT_SUCCESS)
         {
-            nx_azure_iot_json_reader_token_string_get(&json_reader_copy, property_name, 
-                                                        sizeof(property_name), &bytes_copied);
-            if(((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
+            nx_azure_iot_json_reader_token_string_get(&json_reader_copy, property_name, sizeof(property_name), &bytes_copied);
+            if (((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
             {
-                if((token_pointer = (UCHAR*)strstr((CHAR*)(((NX_VT_OBJECT*)component_pointer)->component.fc.associated_telemetry), (CHAR*)property_name)))
+                if ((token_pointer = (UCHAR*)strstr(
+                         (CHAR*)(((NX_VT_OBJECT*)component_pointer)->component.fc.associated_telemetry), (CHAR*)property_name)))
                 {
                     snprintf(vt_property_name, sizeof(vt_property_name), "vT");
                     strcat(vt_property_name, (CHAR*)token_pointer);
@@ -416,12 +413,12 @@ UINT nx_vt_verified_telemetry_message_create_send(void* verified_telemetry_DB,
                     }
                     strcat(scratch_buffer, vt_property_name);
                     strcat(scratch_buffer, "=");
-                    strcat(scratch_buffer, (((NX_VT_OBJECT*)component_pointer)->component.fc.telemetry_status > 0) ? "true" : "false");
+                    strcat(scratch_buffer,
+                        (((NX_VT_OBJECT*)component_pointer)->component.fc.telemetry_status > 0) ? "true" : "false");
                     token_found = 1;
                     tokens++;
                 }
             }
-            
         }
         component_pointer = (((NX_VT_OBJECT*)component_pointer)->next_component);
     }
@@ -438,8 +435,7 @@ UINT nx_vt_verified_telemetry_message_create_send(void* verified_telemetry_DB,
         printf("Telemetry message with message properties create failed!: error code = 0x%08x\r\n", status);
         return (status);
     }
-    if ((status = nx_azure_iot_pnp_client_telemetry_send(
-             pnp_client_ptr, packet_ptr, telemetry_data, data_size, wait_option)))
+    if ((status = nx_azure_iot_pnp_client_telemetry_send(pnp_client_ptr, packet_ptr, telemetry_data, data_size, wait_option)))
     {
         printf("Telemetry message send failed!: error code = 0x%08x\r\n", status);
         nx_azure_iot_pnp_client_telemetry_message_delete(packet_ptr);
@@ -450,16 +446,17 @@ UINT nx_vt_verified_telemetry_message_create_send(void* verified_telemetry_DB,
 
 UINT nx_vt_compute_evaluate_fingerprint_all_sensors(void* verified_telemetry_DB)
 {
-    UINT status = 0;
-    UINT iter = 0;
-    UINT components_num = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->components_num;
-    void* component_pointer = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->first_component;
-    bool enable_verified_telemetry  = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->enable_verified_telemetry;
+    UINT status                    = 0;
+    UINT iter                      = 0;
+    UINT components_num            = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->components_num;
+    void* component_pointer        = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->first_component;
+    bool enable_verified_telemetry = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->enable_verified_telemetry;
     for (iter = 0; iter < components_num; iter++)
     {
-        if(((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
+        if (((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
         {
-            status |= nx_vt_fallcurve_compute_sensor_status_global(&(((NX_VT_OBJECT*)component_pointer)->component.fc), enable_verified_telemetry);
+            status |= nx_vt_fallcurve_compute_sensor_status_global(
+                &(((NX_VT_OBJECT*)component_pointer)->component.fc), enable_verified_telemetry);
         }
         component_pointer = (((NX_VT_OBJECT*)component_pointer)->next_component);
     }
