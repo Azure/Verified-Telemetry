@@ -53,5 +53,4 @@ VT_VOID vt_fallcurve_object_sensor_status(VT_FALLCURVE_OBJECT* fc_object, VT_UIN
     *sensor_status = VT_SIGNATURE_DB_EMPTY;
     *sensor_drift = 100;
   }
-  return;
 }

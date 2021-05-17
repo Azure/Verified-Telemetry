@@ -532,7 +532,7 @@ UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* han
     /* Compute fallcurve classification */
     VT_UINT sensor_status = 0;
     VT_UINT sensor_drift = 100;
-    if(vt_fallcurve_object_sensor_status(&(handle->fc_object), &sensor_status, &sensor_drift));
+    vt_fallcurve_object_sensor_status(&(handle->fc_object), &sensor_status, &sensor_drift);
     handle->telemetry_status =  (sensor_status > 0) ? false : true;
     return (NX_AZURE_IOT_SUCCESS);
 }
