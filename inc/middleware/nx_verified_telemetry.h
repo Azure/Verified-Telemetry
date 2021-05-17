@@ -17,16 +17,12 @@ extern "C"
 #include "nx_vt_fallcurve_component.h"
 
 #define VT_SIGNATURE_TYPE_FALLCURVE 0x01
-#define VT_SIGNATURE_TYPE_CURRENTSENSE 0x02
 
 
 union NX_VT_SIGNATURE_COMPONENT_UNION_TAG
 {
     /* FallCurve Component */
     NX_VT_FALLCURVE_COMPONENT fc;
-
-    /* CurrentSense Component */
-    // NX_VT_CURRENTSENSE_COMPONENT cs;
 
 };
 

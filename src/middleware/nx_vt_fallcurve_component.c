@@ -517,9 +517,9 @@ UINT nx_vt_fallcurve_process_reported_property_sync(NX_VT_FALLCURVE_COMPONENT* h
     return (NX_AZURE_IOT_SUCCESS);
 }
 
-UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* handle, bool toggleVerifiedTelemetry)
+UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* handle, bool toggle_verified_telemetry)
 {
-    if(!toggleVerifiedTelemetry)
+    if(!toggle_verified_telemetry)
     {
         handle->telemetry_status = false;
         return (NX_AZURE_IOT_SUCCESS);
@@ -532,10 +532,7 @@ UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* han
     /* Compute fallcurve classification */
     VT_UINT sensor_status = 0;
     VT_UINT sensor_drift = 100;
-    if(vt_fallcurve_object_sensor_status(&(handle->fc_object), &sensor_status, &sensor_drift))
-    {
-        return (NX_AZURE_IOT_FAILURE);
-    }
+    if(vt_fallcurve_object_sensor_status(&(handle->fc_object), &sensor_status, &sensor_drift));
     handle->telemetry_status =  (sensor_status > 0) ? false : true;
     return (NX_AZURE_IOT_SUCCESS);
 }
