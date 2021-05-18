@@ -9,7 +9,7 @@ defaults:
     working-directory: .
 
 jobs:
-  run-tests:
+  build-doxygen:
     runs-on: ubuntu-latest
 
     steps:
