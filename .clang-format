@@ -7,3 +7,5 @@ AlignConsecutiveAssignments: true
 IndentCaseLabels: true
 PointerAlignment: Left
 ColumnLimit: 130
+BraceWrapping:
+  AfterExternBlock: false
