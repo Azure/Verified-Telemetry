@@ -1,7 +1,7 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-/** @file vt_defs.h */
+/** @file */
 
 #ifndef _VT_DEFS_H
 #define _VT_DEFS_H

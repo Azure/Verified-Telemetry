@@ -1,7 +1,7 @@
 #ifndef _VT_DEBUG_H
 #define _VT_DEBUG_H
 
-/** @file vt_debug.h */
+/** @file */
 
 /* Define the VT_LOG_LEVEL.  */
 #ifndef VT_LOG_LEVEL

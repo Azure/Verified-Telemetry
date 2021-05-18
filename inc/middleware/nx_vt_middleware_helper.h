@@ -1,7 +1,7 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-/** @file nx_vt_middleware_helper.h */ 
+/** @file */ 
 
 #ifndef NX_VT_MIDDLEWARE_HELPER_H
 #define NX_VT_MIDDLEWARE_HELPER_H

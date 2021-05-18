@@ -1,7 +1,7 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-/** @file vt_platform.h */
+/** @file */
 
 #ifndef _VT_PLATFORM_H
 #define _VT_PLATFORM_H

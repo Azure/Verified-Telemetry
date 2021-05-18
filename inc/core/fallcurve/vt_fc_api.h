@@ -1,7 +1,7 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-/** @file vt_fc_api.h */ 
+/** @file */ 
 
 #ifndef _VT_FC_API_H
 #define _VT_FC_API_H
