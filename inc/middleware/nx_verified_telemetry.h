@@ -1,7 +1,7 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-/** @file nx_verified_telemetry.h */ 
+/** @file nx_verified_telemetry.h */
 
 #ifndef NX_VERIFIED_TELEMETRY_H
 #define NX_VERIFIED_TELEMETRY_H
