@@ -1,0 +1,25 @@
+var vt__defs_8h =
+[
+    [ "abs_custom", "vt__defs_8h.html#a37b525a6550eeb933ec7ecfbab49efb2", null ],
+    [ "VT_ADC_CHANNEL", "vt__defs_8h.html#a7910b90c8c7cdb97e03f30940dc77b45", null ],
+    [ "VT_ADC_CONTROLLER", "vt__defs_8h.html#a4f0ccf8a16f954032ab704a813abc64a", null ],
+    [ "VT_ADC_ID", "vt__defs_8h.html#aa8e06b3f7e674bfa43a94760e9850165", null ],
+    [ "VT_BOOL", "vt__defs_8h.html#ad8d0431024a73180013356f9622e542e", null ],
+    [ "VT_CHAR", "vt__defs_8h.html#aca47ee1be828b0e663a33916f72c0fbf", null ],
+    [ "VT_ERROR", "vt__defs_8h.html#a885ca5278444346f422097ce49f8adb8", null ],
+    [ "VT_FLOAT", "vt__defs_8h.html#a8ea40dbaf6ddc79132c4c71ebac5d977", null ],
+    [ "VT_GPIO_ID", "vt__defs_8h.html#ab9dcb99f4c8fb3ec46b8d748829ff601", null ],
+    [ "VT_GPIO_PIN", "vt__defs_8h.html#ae4240467d4b4c6019752076df6957f0a", null ],
+    [ "VT_GPIO_PORT", "vt__defs_8h.html#abc2635cf74a3260d96f43736e8f590b4", null ],
+    [ "VT_INT", "vt__defs_8h.html#a7c890dde60531cef7c0694c711ac2877", null ],
+    [ "VT_SIGNATURE_COMPUTE_FAIL", "vt__defs_8h.html#a05f5cc4199fbca0e3af0b32ab1b35ce0", null ],
+    [ "VT_SIGNATURE_DB_EMPTY", "vt__defs_8h.html#aa4cf95da2451deec2da94628f90ed40c", null ],
+    [ "VT_SIGNATURE_MATCHING", "vt__defs_8h.html#a05509b553f5ac7a5485df593fa4629a1", null ],
+    [ "VT_SIGNATURE_NOT_MATCHING", "vt__defs_8h.html#aabb7a36eec6310449d6bb73ddd826961", null ],
+    [ "VT_SUCCESS", "vt__defs_8h.html#ac3bacf6bfffad7a6d10bcc556b08237f", null ],
+    [ "VT_UCHAR", "vt__defs_8h.html#a4ec174f699842b07e246656e588689fa", null ],
+    [ "VT_UINT", "vt__defs_8h.html#a0e83e64a574a9f145b7d109baf6f147e", null ],
+    [ "VT_UINT8", "vt__defs_8h.html#af0151dffd4a422e7073f5ec026e17d00", null ],
+    [ "VT_ULONG", "vt__defs_8h.html#abcdb3857532ded2c27f7cca26e29ecc7", null ],
+    [ "VT_VOID", "vt__defs_8h.html#aa17f8269c5495208cb666154ac85d708", null ]
+];
