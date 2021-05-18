@@ -1,12 +1,13 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
+/** @file nx_verified_telemetry.h */
+
 #ifndef NX_VERIFIED_TELEMETRY_H
 #define NX_VERIFIED_TELEMETRY_H
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #include "nx_azure_iot_json_reader.h"
@@ -18,27 +19,23 @@ extern "C"
 
 #define VT_SIGNATURE_TYPE_FALLCURVE 0x01
 
-
-union NX_VT_SIGNATURE_COMPONENT_UNION_TAG
-{
+union NX_VT_SIGNATURE_COMPONENT_UNION_TAG {
     /* FallCurve Component */
     NX_VT_FALLCURVE_COMPONENT fc;
-
 };
 
 typedef struct NX_VT_OBJECT_TAG
 {
     /* Signature Object Union */
     union NX_VT_SIGNATURE_COMPONENT_UNION_TAG component;
-    
+
     /* Signature Type */
     UINT signature_type;
 
     /* Pointer to next component */
-    void *next_component;
+    void* next_component;
 
 } NX_VT_OBJECT;
-
 
 typedef struct NX_VERIFIED_TELEMETRY_DB_TAG
 {
@@ -48,10 +45,10 @@ typedef struct NX_VERIFIED_TELEMETRY_DB_TAG
     UINT component_name_length;
 
     /* Pointer to first component */
-    void *first_component;
+    void* first_component;
 
     /* Pointer to last component */
-    void *last_component;
+    void* last_component;
 
     /* Number of component*/
     UINT components_num;
@@ -71,10 +68,8 @@ typedef struct NX_VERIFIED_TELEMETRY_DB_TAG
 } NX_VERIFIED_TELEMETRY_DB;
 
 // VT Initialization
-UINT nx_vt_init(void* verified_telemetry_DB,
-    UCHAR* component_name_ptr,
-    bool enable_verified_telemetry,
-    VT_DEVICE_DRIVER* device_driver);
+UINT nx_vt_init(
+    void* verified_telemetry_DB, UCHAR* component_name_ptr, bool enable_verified_telemetry, VT_DEVICE_DRIVER* device_driver);
 
 UINT nx_vt_signature_init(void* verified_telemetry_DB,
     NX_VT_OBJECT* handle,
@@ -131,11 +126,11 @@ UINT nx_vt_verified_telemetry_message_create_send(void* verified_telemetry_DB,
 
 UINT nx_vt_compute_evaluate_fingerprint_all_sensors(void* verified_telemetry_DB);
 
-// UINT nx_vt_compute_evaluate_fingerprint_one_sensor(void* verified_telemetry_DB, const UCHAR* component_name_ptr, 
+// UINT nx_vt_compute_evaluate_fingerprint_one_sensor(void* verified_telemetry_DB, const UCHAR* component_name_ptr,
 //     UINT component_name_length);
-
 
 #ifdef __cplusplus
 }
 #endif
+
 #endif /* NX_VERIFIED_TELEMETRY_H */

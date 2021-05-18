@@ -1,12 +1,13 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
+/** @file nx_vt_fallcurve_component.h */ 
+
 #ifndef NX_VT_FALLCURVE_COMPONENT_H
 #define NX_VT_FALLCURVE_COMPONENT_H
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #include "nx_azure_iot_json_reader.h"
@@ -50,12 +51,10 @@ UINT nx_vt_fallcurve_init(NX_VT_FALLCURVE_COMPONENT* handle,
     UCHAR* associated_telemetry,
     bool telemetry_status_auto_update);
 
-UINT nx_vt_fallcurve_telemetry_status_property(NX_VT_FALLCURVE_COMPONENT* handle, 
-    NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
-    bool* device_status);
+UINT nx_vt_fallcurve_telemetry_status_property(
+    NX_VT_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr, bool* device_status);
 
-UINT nx_vt_fallcurve_fingerprint_type_property(
-    NX_VT_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr);
+UINT nx_vt_fallcurve_fingerprint_type_property(NX_VT_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr);
 
 UINT nx_vt_fallcurve_process_command(NX_VT_FALLCURVE_COMPONENT* handle,
     NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
@@ -74,13 +73,12 @@ UINT nx_vt_fallcurve_process_reported_property_sync(NX_VT_FALLCURVE_COMPONENT* h
     NX_AZURE_IOT_JSON_READER* name_value_reader_ptr,
     UINT version);
 
-
 UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* handle, bool toggle_verified_telemetry);
 
 // UINT nx_vt_fallcurve_compute_sensor_status(NX_VT_FALLCURVE_COMPONENT* handle);
 
-
 #ifdef __cplusplus
 }
 #endif
+
 #endif /* NX_VT_FALLCURVE_COMPONENT_H */
