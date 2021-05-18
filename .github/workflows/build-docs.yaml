@@ -1,0 +1,29 @@
+name: Build Docs
+
+on:
+  push:
+    branches: [ main ]
+
+defaults:
+  run:
+    working-directory: .
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install build dependencies
+        run: sudo apt-get install doxygen
+
+      - name: Build docs
+        run: doxygen
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/doxygen
