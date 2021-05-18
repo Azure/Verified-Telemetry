@@ -1,7 +1,7 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-/** @file nx_vt_fallcurve_component.h */ 
+/** @file nx_vt_fallcurve_component.h */
 
 #ifndef NX_VT_FALLCURVE_COMPONENT_H
 #define NX_VT_FALLCURVE_COMPONENT_H
@@ -44,6 +44,18 @@ typedef struct NX_VT_FALLCURVE_COMPONENT_TAG
 
 } NX_VT_FALLCURVE_COMPONENT;
 
+/**
+ * @brief Initializes an instance of Verified Telemetry Information Interface.
+ *
+ * @param[in] handle The handle created by a call to the initialization function.
+ * @param[in] component_name_ptr Name of the PNP component.
+ * @param[in] device_driver The platform driver functions for interacting with the device hardware.
+ * @param[in] sensor_handle The platform driver references for interacting with the device hardware.
+ * @param[in] associated_telemetry Name of the telemetry associated with this component.
+ * @param[in] telemetry_status_auto_update
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
 UINT nx_vt_fallcurve_init(NX_VT_FALLCURVE_COMPONENT* handle,
     UCHAR* component_name_ptr,
     VT_DEVICE_DRIVER* device_driver,

@@ -67,7 +67,17 @@ typedef struct NX_VERIFIED_TELEMETRY_DB_TAG
 
 } NX_VERIFIED_TELEMETRY_DB;
 
-// VT Initialization
+/**
+ * @brief Initializes Global Verified Telemetry.
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] component_name_ptr Name of the PNP component.
+ * @param[in] enableVerifiedTelemetry User specified value to set Verified Telemetry active or inactive, can also be configured
+ * during runtime from a writable Digital Twin property.
+ * @param[in] device_driver The platform driver components for interacting with the device hardware.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
 UINT nx_vt_init(
     void* verified_telemetry_DB, UCHAR* component_name_ptr, bool enable_verified_telemetry, VT_DEVICE_DRIVER* device_driver);
 
@@ -79,8 +89,21 @@ UINT nx_vt_signature_init(void* verified_telemetry_DB,
     bool telemetry_status_auto_update,
     VT_SENSOR_HANDLE* sensor_handle);
 
-// VT Configuration Command and Properties
-
+/**
+ * @brief Processes all commands supported by VT Middleware.
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] iotpnp_client_ptr Pointer to initialized Azure IoT PnP instance.
+ * @param[in] component_name_ptr Name of the component.
+ * @param[in] component_name_length Length of name of the component.
+ * @param[in] pnp_command_name_ptr Name of the command invoked.
+ * @param[in] pnp_command_name_length Length of name of the command invoked.
+ * @param[in] json_reader_ptr Pointer to read the JSON payload of command.
+ * @param[in] json_response_ptr Pointer to write response JSON payload.
+ * @param[out] status_code Status updated by function based on command execution.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
 UINT nx_vt_process_command(void* verified_telemetry_DB,
     NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
     UCHAR* component_name_ptr,
@@ -91,6 +114,18 @@ UINT nx_vt_process_command(void* verified_telemetry_DB,
     NX_AZURE_IOT_JSON_WRITER* json_response_ptr,
     UINT* status_code);
 
+/**
+ * @brief Processes all desired property updates supported by vT Middleware.
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] iotpnp_client_ptr Pointer to initialized Azure IoT PnP instance.
+ * @param[in] component_name_ptr Name of the component.
+ * @param[in] component_name_length Length of name of the component.
+ * @param[in] name_value_reader_ptr Pointer to read the JSON payload of command.
+ * @param[in] version Property version stored in digital twin.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
 UINT nx_vt_process_property_update(void* verified_telemetry_DB,
     NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
     const UCHAR* component_name_ptr,
@@ -98,13 +133,31 @@ UINT nx_vt_process_property_update(void* verified_telemetry_DB,
     NX_AZURE_IOT_JSON_READER* name_value_reader_ptr,
     UINT version);
 
+/**
+ * @brief Creates payloads and sends all reported properties supported by VT Middleware.
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] iotpnp_client_ptr Pointer to initialized Azure IoT PnP instance.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
 UINT nx_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr);
 
 UINT nx_vt_send_desired_property_after_boot(
     void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr, UINT message_type);
 
-// VT Fingerprint Template Sync
-
+/**
+ * @brief Synchronizes VT Settings stored in digital Twin as reported properties at startup.
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] iotpnp_client_ptr Pointer to initialized Azure IoT PnP instance.
+ * @param[in] component_name_ptr Name of the component.
+ * @param[in] component_name_length Length of name of the component.
+ * @param[in] name_value_reader_ptr Pointer to read the JSON payload of command.
+ * @param[in] version Property version stored in digital twin.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
 UINT nx_vt_process_reported_property_sync(void* verified_telemetry_DB,
     NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
     const UCHAR* component_name_ptr,
@@ -113,7 +166,6 @@ UINT nx_vt_process_reported_property_sync(void* verified_telemetry_DB,
     UINT version);
 
 // VT Create and Send Telemetry JSON with message properties
-
 UINT nx_vt_verified_telemetry_message_create_send(void* verified_telemetry_DB,
     NX_AZURE_IOT_PNP_CLIENT* pnp_client_ptr,
     const UCHAR* component_name_ptr,
@@ -123,7 +175,6 @@ UINT nx_vt_verified_telemetry_message_create_send(void* verified_telemetry_DB,
     UINT data_size);
 
 // VT Compute and Evaluate Sensor Fingerprints
-
 UINT nx_vt_compute_evaluate_fingerprint_all_sensors(void* verified_telemetry_DB);
 
 // UINT nx_vt_compute_evaluate_fingerprint_one_sensor(void* verified_telemetry_DB, const UCHAR* component_name_ptr,
