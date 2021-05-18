@@ -107,8 +107,8 @@ typedef struct <a class="el" href="struct_n_x___v_t___f_a_l_l_c_u_r_v_e___c_o_m_
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a26b42b9452a1855a306c94bd5d867891"><td class="memItemLeft" align="right" valign="top"><a id="a26b42b9452a1855a306c94bd5d867891"></a>
-UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_fallcurve_init</b> (<a class="el" href="struct_n_x___v_t___f_a_l_l_c_u_r_v_e___c_o_m_p_o_n_e_n_t___t_a_g.html">NX_VT_FALLCURVE_COMPONENT</a> *handle, UCHAR *component_name_ptr, <a class="el" href="struct_v_t___d_e_v_i_c_e___d_r_i_v_e_r___s_t_r_u_c_t.html">VT_DEVICE_DRIVER</a> *device_driver, <a class="el" href="struct_v_t___s_e_n_s_o_r___h_a_n_d_l_e___s_t_r_u_c_t.html">VT_SENSOR_HANDLE</a> *sensor_handle, UCHAR *associated_telemetry, bool telemetry_status_auto_update)</td></tr>
+<tr class="memitem:a26b42b9452a1855a306c94bd5d867891"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__vt__fallcurve__component_8h.html#a26b42b9452a1855a306c94bd5d867891">nx_vt_fallcurve_init</a> (<a class="el" href="struct_n_x___v_t___f_a_l_l_c_u_r_v_e___c_o_m_p_o_n_e_n_t___t_a_g.html">NX_VT_FALLCURVE_COMPONENT</a> *handle, UCHAR *component_name_ptr, <a class="el" href="struct_v_t___d_e_v_i_c_e___d_r_i_v_e_r___s_t_r_u_c_t.html">VT_DEVICE_DRIVER</a> *device_driver, <a class="el" href="struct_v_t___s_e_n_s_o_r___h_a_n_d_l_e___s_t_r_u_c_t.html">VT_SENSOR_HANDLE</a> *sensor_handle, UCHAR *associated_telemetry, bool telemetry_status_auto_update)</td></tr>
+<tr class="memdesc:a26b42b9452a1855a306c94bd5d867891"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes an instance of Verified Telemetry Information Interface.  <a href="nx__vt__fallcurve__component_8h.html#a26b42b9452a1855a306c94bd5d867891">More...</a><br /></td></tr>
 <tr class="separator:a26b42b9452a1855a306c94bd5d867891"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37d95b8a69d26cf4a494bdc582623be9"><td class="memItemLeft" align="right" valign="top"><a id="a37d95b8a69d26cf4a494bdc582623be9"></a>
 UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_fallcurve_telemetry_status_property</b> (<a class="el" href="struct_n_x___v_t___f_a_l_l_c_u_r_v_e___c_o_m_p_o_n_e_n_t___t_a_g.html">NX_VT_FALLCURVE_COMPONENT</a> *handle, NX_AZURE_IOT_PNP_CLIENT *iotpnp_client_ptr, bool *device_status)</td></tr>
@@ -126,6 +126,78 @@ UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_fallcurve_proce
 UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_fallcurve_compute_sensor_status_global</b> (<a class="el" href="struct_n_x___v_t___f_a_l_l_c_u_r_v_e___c_o_m_p_o_n_e_n_t___t_a_g.html">NX_VT_FALLCURVE_COMPONENT</a> *handle, bool toggle_verified_telemetry)</td></tr>
 <tr class="separator:a4dc3b37d01fdcf3533f1040b1ccddb9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a26b42b9452a1855a306c94bd5d867891"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26b42b9452a1855a306c94bd5d867891">&#9670;&nbsp;</a></span>nx_vt_fallcurve_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">UINT nx_vt_fallcurve_init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_n_x___v_t___f_a_l_l_c_u_r_v_e___c_o_m_p_o_n_e_n_t___t_a_g.html">NX_VT_FALLCURVE_COMPONENT</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UCHAR *&#160;</td>
+          <td class="paramname"><em>component_name_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_v_t___d_e_v_i_c_e___d_r_i_v_e_r___s_t_r_u_c_t.html">VT_DEVICE_DRIVER</a> *&#160;</td>
+          <td class="paramname"><em>device_driver</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_v_t___s_e_n_s_o_r___h_a_n_d_l_e___s_t_r_u_c_t.html">VT_SENSOR_HANDLE</a> *&#160;</td>
+          <td class="paramname"><em>sensor_handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UCHAR *&#160;</td>
+          <td class="paramname"><em>associated_telemetry</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>telemetry_status_auto_update</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initializes an instance of Verified Telemetry Information Interface. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">handle</td><td>The handle created by a call to the initialization function. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">component_name_ptr</td><td>Name of the PNP component. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">device_driver</td><td>The platform driver functions for interacting with the device hardware. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sensor_handle</td><td>The platform driver references for interacting with the device hardware. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">associated_telemetry</td><td>Name of the telemetry associated with this component. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">telemetry_status_auto_update</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">NX_AZURE_IOT_SUCCESS</td><td>upon success or an error code upon failure. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
