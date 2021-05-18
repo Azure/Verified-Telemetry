@@ -1,6 +1,8 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
+/** @file nx_vt_middleware_helper.h */ 
+
 #ifndef NX_VT_MIDDLEWARE_HELPER_H
 #define NX_VT_MIDDLEWARE_HELPER_H
 
@@ -11,7 +13,7 @@ extern "C" {
 #include "nx_azure_iot_pnp_client.h"
 
 /**
- * Return the next reported property in the property document passed.
+ * @brief Return the next reported property in the property document passed.
  *
  * @param[in] pnp_client_ptr A pointer to a #NX_AZURE_IOT_PNP_CLIENT.
  * @param[in] reader_ptr A pointer to a #NX_AZURE_IOT_JSON_READER containing properties document

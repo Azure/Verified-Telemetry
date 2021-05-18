@@ -1,6 +1,8 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
+/** @file nx_vt_fallcurve_component.h */ 
+
 #ifndef NX_VT_FALLCURVE_COMPONENT_H
 #define NX_VT_FALLCURVE_COMPONENT_H
 

@@ -1,6 +1,8 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
+/** @file vt_fc_config.h */ 
+
 #ifndef _VT_FC_CONFIG_H
 #define _VT_FC_CONFIG_H
 
