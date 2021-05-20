@@ -2,7 +2,8 @@ name: Build Docs
 
 on:
   push:
-    branches: [public_preview_1]
+    branches:
+      - public_preview_1
 
 defaults:
   run:
