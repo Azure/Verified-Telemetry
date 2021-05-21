@@ -10,9 +10,9 @@ VT_FLOAT fc_calculate_falltime_deviation(VT_ULONG falltime_under_test, VT_ULONG 
         (abs_custom((VT_FLOAT)falltime_under_test - (VT_FLOAT)falltime_saved) / (VT_FLOAT)falltime_saved) * 100.0f;
 
 #if VT_LOG_LEVEL > 2
-    int32_t decimal  = falltime_deviation;
-    float frac_float = falltime_deviation - (float)decimal;
-    int32_t frac     = frac_float * 10000;
+    VT_INT32 decimal    = falltime_deviation;
+    VT_FLOAT frac_float = falltime_deviation - (VT_FLOAT)decimal;
+    VT_INT32 frac       = frac_float * 10000;
 #endif /* VT_LOG_LEVEL > 2 */
     VTLogDebug("FallTime Deviation: %lu.%lu \r\n", decimal, frac);
 
@@ -25,9 +25,9 @@ VT_FLOAT fc_calculate_pearson_coeff_deviation(VT_FLOAT pearson_coeff_under_test,
         (abs_custom(pearson_coeff_under_test - pearson_coeff_saved) / pearson_coeff_saved) * 100.0f;
 
 #if VT_LOG_LEVEL > 2
-    int32_t decimal  = pearson_coeff_deviation;
-    float frac_float = pearson_coeff_deviation - (float)decimal;
-    int32_t frac     = frac_float * 10000;
+    VT_INT32 decimal    = pearson_coeff_deviation;
+    VT_FLOAT frac_float = pearson_coeff_deviation - (VT_FLOAT)decimal;
+    VT_INT32 frac       = frac_float * 10000;
 #endif /* VT_LOG_LEVEL > 2 */
     VTLogDebug("Pearson Coeff Deviation: %lu.%lu \r\n", decimal, frac);
 

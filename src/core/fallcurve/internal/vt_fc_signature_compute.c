@@ -25,9 +25,9 @@ static VT_UINT fc_signature_calculate_maximum_index(VT_UINT* raw_signature, VT_U
 static VT_INT fc_signature_calculate_37index(VT_UINT* raw_signature, VT_UINT sample_length)
 {
 
-    for (VT_UINT iter = 0; iter < sample_length; iter++)
+    for (VT_UINT iter = 1; iter < sample_length; iter++)
     {
-        if ((float)raw_signature[iter] <= (float)(0.37f * (float)raw_signature[0]))
+        if ((VT_FLOAT)raw_signature[iter] <= (VT_FLOAT)(0.37f * (VT_FLOAT)raw_signature[0]))
         {
             return iter;
         }
@@ -114,9 +114,9 @@ VT_UINT fc_signature_compute(
     pearson_coeff_computed =
         fc_signature_calculate_correlation_coefficient(perfect_exponential_raw_siganture, raw_signature, sample_length);
 #if VT_LOG_LEVEL > 2
-    int32_t decimal  = pearson_coeff_computed;
-    float frac_float = pearson_coeff_computed - (float)decimal;
-    int32_t frac     = frac_float * 10000;
+    VT_INT32 decimal    = pearson_coeff_computed;
+    VT_FLOAT frac_float = pearson_coeff_computed - (VT_FLOAT)decimal;
+    VT_INT32 frac       = frac_float * 10000;
 #endif /* VT_LOG_LEVEL > 2 */
     VTLogDebug("Pearson Coeff: %lu.%lu \r\n", decimal, frac);
 

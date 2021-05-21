@@ -79,7 +79,8 @@ target_include_directories(${TARGET}
     inc/middleware
     inc/platform
     inc/core/fallcurve
-    inc/core/fallcurve/internal
     inc/core/fallcurve/config
+  PRIVATE
+    inc/core/fallcurve/internal
 )
 

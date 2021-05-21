@@ -19,13 +19,13 @@ extern "C" {
 typedef struct NX_VT_FALLCURVE_COMPONENT_TAG
 {
     /* Name of this component */
-    UCHAR component_name_ptr[30];
+    UCHAR component_name_ptr[VT_COMPONENT_NAME_MAX_LENGTH];
 
     /* Component Name Length */
     UINT component_name_length;
 
     /* Telemetry associated with the fallcurve signature component*/
-    UCHAR associated_telemetry[100];
+    UCHAR associated_telemetry[VT_ASSOCIATED_TELEMETRY_CSV_MAX_LENGTH];
 
     /* Status of the telemetry associated with the fallcurve signature component*/
     bool telemetry_status;
@@ -86,8 +86,6 @@ UINT nx_vt_fallcurve_process_reported_property_sync(NX_VT_FALLCURVE_COMPONENT* h
     UINT version);
 
 UINT nx_vt_fallcurve_compute_sensor_status_global(NX_VT_FALLCURVE_COMPONENT* handle, bool toggle_verified_telemetry);
-
-// UINT nx_vt_fallcurve_compute_sensor_status(NX_VT_FALLCURVE_COMPONENT* handle);
 
 #ifdef __cplusplus
 }

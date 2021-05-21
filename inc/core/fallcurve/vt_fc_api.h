@@ -1,15 +1,27 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-/** @file */ 
+/** @file */
 
 #ifndef _VT_FC_API_H
 #define _VT_FC_API_H
 
 #include "vt_defs.h"
-#include "vt_fc.h"
 #include "vt_fc_config.h"
 #include "vt_platform.h"
+
+typedef struct VT_FALLCURVE_TEMPLATE_SIGNATURE_STRUCT
+{
+    VT_ULONG sampling_interval_us;
+    VT_ULONG falltime;
+    VT_FLOAT pearson_coeff;
+} VT_FALLCURVE_TEMPLATE_SIGNATURE;
+
+typedef struct VT_FALLCURVE_DATABASE_STRUCT
+{
+    VT_UINT num_signatures;
+    VT_FALLCURVE_TEMPLATE_SIGNATURE db[VT_FC_MAX_SIGNATURES];
+} VT_FALLCURVE_DATABASE;
 
 typedef struct VT_FALLCURVE_OBJECT_STRUCT
 {
@@ -20,10 +32,10 @@ typedef struct VT_FALLCURVE_OBJECT_STRUCT
 
 typedef struct VT_FALLCURVE_DATABASE_FLATTENED_STRUCT
 {
-    VT_UCHAR num_signatures[10];
-    VT_UCHAR sampling_interval_us[10 * VT_FC_MAX_SIGNATURES];
-    VT_UCHAR falltime[10 * VT_FC_MAX_SIGNATURES];
-    VT_UCHAR pearson_coeff[10 * VT_FC_MAX_SIGNATURES];
+    VT_UCHAR num_signatures[VT_CHARACTERS_IN_A_NUMBER];
+    VT_UCHAR sampling_interval_us[VT_CHARACTERS_IN_A_NUMBER * VT_FC_MAX_SIGNATURES];
+    VT_UCHAR falltime[VT_CHARACTERS_IN_A_NUMBER * VT_FC_MAX_SIGNATURES];
+    VT_UCHAR pearson_coeff[VT_CHARACTERS_IN_A_NUMBER * VT_FC_MAX_SIGNATURES];
 } VT_FALLCURVE_DATABASE_FLATTENED;
 
 // Initialize
@@ -40,7 +52,7 @@ VT_UINT vt_fallcurve_object_sensor_recalibrate(VT_FALLCURVE_OBJECT* fc_object, V
 VT_VOID vt_fallcurve_object_sensor_status(VT_FALLCURVE_OBJECT* fc_object, VT_UINT* sensor_status, VT_UINT* sensor_drift);
 
 // Sync Database
-VT_VOID vt_fallcurve_object_database_sync(VT_FALLCURVE_OBJECT* fc_object, VT_FALLCURVE_DATABASE_FLATTENED flattened_db);
+VT_VOID vt_fallcurve_object_database_sync(VT_FALLCURVE_OBJECT* fc_object, VT_FALLCURVE_DATABASE_FLATTENED* flattened_db);
 
 // Fetch Database
 VT_VOID vt_fallcurve_object_database_fetch(VT_FALLCURVE_OBJECT* fc_object, VT_FALLCURVE_DATABASE_FLATTENED* flattened_db);

@@ -15,7 +15,7 @@ VT_UINT fc_signature_compute_collection_settings(
     VT_UINT tick_resolution_usec      = 1;
     VT_ULONG time_to_fall             = 0;
     VT_ULONG time_to_powerup          = 0;
-    VT_ULONG max_time_allowed         = VT_FC_MAX_SAMPLING_INTERVAL_US * VT_FC_SAMPLE_LENGTH;
+    const VT_ULONG max_time_allowed   = VT_FC_MAX_SAMPLING_INTERVAL_US * VT_FC_SAMPLE_LENGTH;
     VT_UINT adc_value_start           = 0;
     VT_UINT adc_value                 = 0;
     VT_UINT start_tick_count          = 0;
@@ -33,7 +33,7 @@ VT_UINT fc_signature_compute_collection_settings(
     adc_value_start = fc_object->device_driver->adc_read(
         fc_object->sensor_handle->adc_id, fc_object->sensor_handle->adc_controller, fc_object->sensor_handle->adc_channel);
     VTLogDebug("FallCurve first value: %d \r\n", adc_value_start);
-    adc_value_start = round((float)adc_value_start * (float)(37.0f / 100.0f));
+    adc_value_start = round(adc_value_start * 0.37f);
 
     fc_object->device_driver->interrupt_disable();
     fc_object->device_driver->tick_init(&max_tick_value, &tick_resolution_usec);
@@ -76,7 +76,7 @@ VT_UINT fc_signature_compute_collection_settings(
     else
     {
         *confidence_metric    = 100;
-        *sampling_interval_us = round((float)time_to_fall / 100.0f);
+        *sampling_interval_us = round(time_to_fall / 100.0f);
     }
     if (*sampling_interval_us < VT_FC_MIN_SAMPLING_INTERVAL_US)
     {
