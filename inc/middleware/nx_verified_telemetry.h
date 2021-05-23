@@ -40,7 +40,7 @@ typedef struct NX_VT_OBJECT_TAG
 typedef struct NX_VERIFIED_TELEMETRY_DB_TAG
 {
     /* Name of this component */
-    UCHAR component_name_ptr[30];
+    UCHAR component_name_ptr[VT_COMPONENT_NAME_MAX_LENGTH];
 
     UINT component_name_length;
 
@@ -78,10 +78,12 @@ typedef struct NX_VERIFIED_TELEMETRY_DB_TAG
  *
  * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
  */
-UINT nx_vt_init(
-    void* verified_telemetry_DB, UCHAR* component_name_ptr, bool enable_verified_telemetry, VT_DEVICE_DRIVER* device_driver);
+UINT nx_vt_init(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
+    UCHAR* component_name_ptr,
+    bool enable_verified_telemetry,
+    VT_DEVICE_DRIVER* device_driver);
 
-UINT nx_vt_signature_init(void* verified_telemetry_DB,
+UINT nx_vt_signature_init(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     NX_VT_OBJECT* handle,
     UCHAR* component_name_ptr,
     UINT signature_type,
@@ -104,7 +106,7 @@ UINT nx_vt_signature_init(void* verified_telemetry_DB,
  *
  * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
  */
-UINT nx_vt_process_command(void* verified_telemetry_DB,
+UINT nx_vt_process_command(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
     UCHAR* component_name_ptr,
     UINT component_name_length,
@@ -126,7 +128,7 @@ UINT nx_vt_process_command(void* verified_telemetry_DB,
  *
  * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
  */
-UINT nx_vt_process_property_update(void* verified_telemetry_DB,
+UINT nx_vt_process_property_update(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
     const UCHAR* component_name_ptr,
     UINT component_name_length,
@@ -141,10 +143,10 @@ UINT nx_vt_process_property_update(void* verified_telemetry_DB,
  *
  * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
  */
-UINT nx_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr);
+UINT nx_vt_properties(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr);
 
 UINT nx_vt_send_desired_property_after_boot(
-    void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr, UINT message_type);
+    NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr, UINT message_type);
 
 /**
  * @brief Synchronizes VT Settings stored in digital Twin as reported properties at startup.
@@ -158,7 +160,7 @@ UINT nx_vt_send_desired_property_after_boot(
  *
  * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
  */
-UINT nx_vt_process_reported_property_sync(void* verified_telemetry_DB,
+UINT nx_vt_process_reported_property_sync(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
     const UCHAR* component_name_ptr,
     UINT component_name_length,
@@ -166,7 +168,7 @@ UINT nx_vt_process_reported_property_sync(void* verified_telemetry_DB,
     UINT version);
 
 // VT Create and Send Telemetry JSON with message properties
-UINT nx_vt_verified_telemetry_message_create_send(void* verified_telemetry_DB,
+UINT nx_vt_verified_telemetry_message_create_send(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     NX_AZURE_IOT_PNP_CLIENT* pnp_client_ptr,
     const UCHAR* component_name_ptr,
     UINT component_name_length,
@@ -175,10 +177,11 @@ UINT nx_vt_verified_telemetry_message_create_send(void* verified_telemetry_DB,
     UINT data_size);
 
 // VT Compute and Evaluate Sensor Fingerprints
-UINT nx_vt_compute_evaluate_fingerprint_all_sensors(void* verified_telemetry_DB);
+UINT nx_vt_compute_evaluate_fingerprint_all_sensors(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB);
 
-// UINT nx_vt_compute_evaluate_fingerprint_one_sensor(void* verified_telemetry_DB, const UCHAR* component_name_ptr,
-//     UINT component_name_length);
+// Add VT PnP components to pnp_client
+UINT nx_vt_azure_iot_pnp_client_component_add(
+    NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* pnp_client_ptr);
 
 #ifdef __cplusplus
 }

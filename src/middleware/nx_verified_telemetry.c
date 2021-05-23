@@ -7,6 +7,8 @@
 #include "nx_vt_middleware_helper.h"
 #include "vt_debug.h"
 
+#define PROPERTY_NAME_MAX_LENGTH 50
+
 static const CHAR enable_verified_telemetry_property[] = "enableVerifiedTelemetry";
 static const CHAR device_status_property[]             = "deviceStatus";
 
@@ -48,7 +50,7 @@ static VOID send_reported_property(NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
         nx_azure_iot_pnp_client_reported_property_status_end(iotpnp_client_ptr, &json_writer) ||
         nx_azure_iot_pnp_client_reported_property_component_end(iotpnp_client_ptr, &json_writer))
     {
-        nx_azure_iot_json_writer_deinit(&json_writer);
+
         VTLogError("Failed to build reported response\r\n");
     }
     else
@@ -58,9 +60,8 @@ static VOID send_reported_property(NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
         {
             VTLogError("Failed to send reported response\r\n");
         }
-
-        nx_azure_iot_json_writer_deinit(&json_writer);
     }
+    nx_azure_iot_json_writer_deinit(&json_writer);
 }
 
 UINT nx_vt_device_status_property(
@@ -107,7 +108,7 @@ UINT nx_vt_device_status_property(
     return (status);
 }
 
-UINT nx_vt_process_command(void* verified_telemetry_DB,
+UINT nx_vt_process_command(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
     UCHAR* component_name_ptr,
     UINT component_name_length,
@@ -120,8 +121,8 @@ UINT nx_vt_process_command(void* verified_telemetry_DB,
 
     UINT status             = 0;
     UINT iter               = 0;
-    UINT components_num     = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->components_num;
-    void* component_pointer = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->first_component;
+    UINT components_num     = verified_telemetry_DB->components_num;
+    void* component_pointer = verified_telemetry_DB->first_component;
 
     for (iter = 0; iter < components_num; iter++)
     {
@@ -151,7 +152,7 @@ UINT nx_vt_process_command(void* verified_telemetry_DB,
     return NX_NOT_SUCCESSFUL;
 }
 
-UINT nx_vt_process_property_update(void* verified_telemetry_DB,
+UINT nx_vt_process_property_update(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
     const UCHAR* component_name_ptr,
     UINT component_name_length,
@@ -161,13 +162,11 @@ UINT nx_vt_process_property_update(void* verified_telemetry_DB,
     UINT parsed_value = 0;
     INT status_code;
     const CHAR* description;
-    CHAR property_name[50];
+    CHAR property_name[PROPERTY_NAME_MAX_LENGTH];
     UINT property_name_length = 0;
 
-    if (((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->component_name_length != component_name_length ||
-        strncmp((CHAR*)((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->component_name_ptr,
-            (CHAR*)component_name_ptr,
-            component_name_length) != 0)
+    if (verified_telemetry_DB->component_name_length != component_name_length ||
+        strncmp((CHAR*)verified_telemetry_DB->component_name_ptr, (CHAR*)component_name_ptr, component_name_length) != 0)
     {
         return (NX_NOT_SUCCESSFUL);
     }
@@ -192,7 +191,7 @@ UINT nx_vt_process_property_update(void* verified_telemetry_DB,
             status_code = 200;
             description = temp_response_description_success;
 
-            ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->enable_verified_telemetry = (bool)parsed_value;
+            verified_telemetry_DB->enable_verified_telemetry = (bool)parsed_value;
             VTLogInfo("Received Enable Verified Telemetry Twin update with value %s\r\n", (bool)parsed_value ? "true" : "false");
         }
         send_reported_property(iotpnp_client_ptr,
@@ -210,7 +209,7 @@ UINT nx_vt_process_property_update(void* verified_telemetry_DB,
     return NX_NOT_SUCCESSFUL;
 }
 
-UINT nx_vt_process_reported_property_sync(void* verified_telemetry_DB,
+UINT nx_vt_process_reported_property_sync(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
     const UCHAR* component_name_ptr,
     UINT component_name_length,
@@ -218,8 +217,8 @@ UINT nx_vt_process_reported_property_sync(void* verified_telemetry_DB,
     UINT version)
 {
     UINT iter               = 0;
-    UINT components_num     = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->components_num;
-    void* component_pointer = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->first_component;
+    UINT components_num     = verified_telemetry_DB->components_num;
+    void* component_pointer = verified_telemetry_DB->first_component;
     for (iter = 0; iter < components_num; iter++)
     {
         if (((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
@@ -240,14 +239,14 @@ UINT nx_vt_process_reported_property_sync(void* verified_telemetry_DB,
 }
 
 UINT nx_vt_send_desired_property_after_boot(
-    void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr, UINT message_type)
+    NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr, UINT message_type)
 {
     if (message_type == NX_AZURE_IOT_PNP_PROPERTIES)
     {
         send_reported_property(iotpnp_client_ptr,
-            ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->component_name_ptr,
-            ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->component_name_length,
-            ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->enable_verified_telemetry,
+            verified_telemetry_DB->component_name_ptr,
+            verified_telemetry_DB->component_name_length,
+            verified_telemetry_DB->enable_verified_telemetry,
             200,
             1,
             temp_response_description_success,
@@ -257,12 +256,12 @@ UINT nx_vt_send_desired_property_after_boot(
     return NX_AZURE_IOT_SUCCESS;
 }
 
-UINT nx_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
+UINT nx_vt_properties(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
 {
     UINT status = 0;
 
-    UINT components_num     = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->components_num;
-    void* component_pointer = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->first_component;
+    UINT components_num     = verified_telemetry_DB->components_num;
+    void* component_pointer = verified_telemetry_DB->first_component;
     bool device_status      = true;
     for (UINT i = 0; i < components_num; i++)
     {
@@ -293,43 +292,45 @@ UINT nx_vt_properties(void* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotp
         component_pointer = (((NX_VT_OBJECT*)component_pointer)->next_component);
     }
 
-    if (device_status != ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->device_status ||
-        ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->device_status_property_sent == 0)
+    if (device_status != verified_telemetry_DB->device_status || verified_telemetry_DB->device_status_property_sent == 0)
     {
 
-        ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->device_status = device_status;
+        verified_telemetry_DB->device_status = device_status;
         if ((status = nx_vt_device_status_property(
                  (NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB, device_status, iotpnp_client_ptr)))
         {
             VTLogError("Failed pnp_vt_device_status_property: error code = 0x%08x\r\n", status);
         }
-        else if (((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->device_status_property_sent == 0)
+        else if (verified_telemetry_DB->device_status_property_sent == 0)
         {
-            ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->device_status_property_sent = 1;
+            verified_telemetry_DB->device_status_property_sent = 1;
         }
     }
 
     return status;
 }
 
-UINT nx_vt_init(
-    void* verified_telemetry_DB, UCHAR* component_name_ptr, bool enable_verified_telemetry, VT_DEVICE_DRIVER* device_driver)
+UINT nx_vt_init(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
+    UCHAR* component_name_ptr,
+    bool enable_verified_telemetry,
+    VT_DEVICE_DRIVER* device_driver)
 {
-    NX_VERIFIED_TELEMETRY_DB* VT_DB = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB);
-    strncpy((CHAR*)VT_DB->component_name_ptr, (CHAR*)component_name_ptr, sizeof(VT_DB->component_name_ptr));
-    VT_DB->component_name_length       = strlen((const char*)component_name_ptr);
-    VT_DB->enable_verified_telemetry   = enable_verified_telemetry;
-    VT_DB->device_status_property_sent = false;
-    VT_DB->components_num              = 0;
-    VT_DB->first_component             = NULL;
-    VT_DB->last_component              = NULL;
+    strncpy((CHAR*)verified_telemetry_DB->component_name_ptr,
+        (CHAR*)component_name_ptr,
+        sizeof(verified_telemetry_DB->component_name_ptr));
+    verified_telemetry_DB->component_name_length       = strlen((const char*)component_name_ptr);
+    verified_telemetry_DB->enable_verified_telemetry   = enable_verified_telemetry;
+    verified_telemetry_DB->device_status_property_sent = false;
+    verified_telemetry_DB->components_num              = 0;
+    verified_telemetry_DB->first_component             = NULL;
+    verified_telemetry_DB->last_component              = NULL;
 
-    VT_DB->device_driver = device_driver;
+    verified_telemetry_DB->device_driver = device_driver;
 
     return NX_AZURE_IOT_SUCCESS;
 }
 
-UINT nx_vt_signature_init(void* verified_telemetry_DB,
+UINT nx_vt_signature_init(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     NX_VT_OBJECT* handle,
     UCHAR* component_name_ptr,
     UINT signature_type,
@@ -341,17 +342,16 @@ UINT nx_vt_signature_init(void* verified_telemetry_DB,
     {
         return NX_AZURE_IOT_FAILURE;
     }
-    NX_VERIFIED_TELEMETRY_DB* VT_DB = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB);
-    VT_DB->components_num++;
-    if (VT_DB->first_component == NULL)
+    verified_telemetry_DB->components_num++;
+    if (verified_telemetry_DB->first_component == NULL)
     {
-        VT_DB->first_component = (void*)handle;
+        verified_telemetry_DB->first_component = (void*)handle;
     }
     else
     {
-        ((NX_VT_OBJECT*)(VT_DB->last_component))->next_component = (void*)handle;
+        ((NX_VT_OBJECT*)(verified_telemetry_DB->last_component))->next_component = (void*)handle;
     }
-    VT_DB->last_component = (void*)handle;
+    verified_telemetry_DB->last_component = (void*)handle;
 
     handle->next_component = NULL;
     handle->signature_type = signature_type;
@@ -359,7 +359,7 @@ UINT nx_vt_signature_init(void* verified_telemetry_DB,
     {
         nx_vt_fallcurve_init(&(handle->component.fc),
             component_name_ptr,
-            VT_DB->device_driver,
+            verified_telemetry_DB->device_driver,
             sensor_handle,
             associated_telemetry,
             telemetry_status_auto_update);
@@ -367,7 +367,7 @@ UINT nx_vt_signature_init(void* verified_telemetry_DB,
     return NX_AZURE_IOT_SUCCESS;
 }
 
-UINT nx_vt_verified_telemetry_message_create_send(void* verified_telemetry_DB,
+UINT nx_vt_verified_telemetry_message_create_send(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     NX_AZURE_IOT_PNP_CLIENT* pnp_client_ptr,
     const UCHAR* component_name_ptr,
     UINT component_name_length,
@@ -379,12 +379,12 @@ UINT nx_vt_verified_telemetry_message_create_send(void* verified_telemetry_DB,
     NX_PACKET* packet_ptr;
     NX_AZURE_IOT_JSON_READER json_reader;
     NX_AZURE_IOT_JSON_READER json_reader_copy;
-    UINT components_num     = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->components_num;
-    void* component_pointer = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->first_component;
-    UCHAR property_name[50];
+    UINT components_num     = verified_telemetry_DB->components_num;
+    void* component_pointer = verified_telemetry_DB->first_component;
+    UCHAR property_name[PROPERTY_NAME_MAX_LENGTH];
     memset(property_name, 0, sizeof(property_name));
     UINT bytes_copied = 0;
-    CHAR vt_property_name[50];
+    CHAR vt_property_name[PROPERTY_NAME_MAX_LENGTH];
     memset(vt_property_name, 0, sizeof(vt_property_name));
     memset(scratch_buffer, 0, sizeof(scratch_buffer));
     UINT token_found     = 0;
@@ -444,21 +444,47 @@ UINT nx_vt_verified_telemetry_message_create_send(void* verified_telemetry_DB,
     return (status);
 }
 
-UINT nx_vt_compute_evaluate_fingerprint_all_sensors(void* verified_telemetry_DB)
+UINT nx_vt_compute_evaluate_fingerprint_all_sensors(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB)
 {
     UINT status                    = 0;
     UINT iter                      = 0;
-    UINT components_num            = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->components_num;
-    void* component_pointer        = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->first_component;
-    bool enable_verified_telemetry = ((NX_VERIFIED_TELEMETRY_DB*)verified_telemetry_DB)->enable_verified_telemetry;
+    UINT components_num            = verified_telemetry_DB->components_num;
+    void* component_pointer        = verified_telemetry_DB->first_component;
+    bool enable_verified_telemetry = verified_telemetry_DB->enable_verified_telemetry;
     for (iter = 0; iter < components_num; iter++)
     {
         if (((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
         {
-            status |= nx_vt_fallcurve_compute_sensor_status_global(
-                &(((NX_VT_OBJECT*)component_pointer)->component.fc), enable_verified_telemetry);
+            status = status || nx_vt_fallcurve_compute_sensor_status_global(
+                                   &(((NX_VT_OBJECT*)component_pointer)->component.fc), enable_verified_telemetry);
         }
         component_pointer = (((NX_VT_OBJECT*)component_pointer)->next_component);
     }
+    return status;
+}
+
+UINT nx_vt_azure_iot_pnp_client_component_add(
+    NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* pnp_client_ptr)
+{
+    UINT status             = 0;
+    UINT iter               = 0;
+    UINT components_num     = verified_telemetry_DB->components_num;
+    void* component_pointer = verified_telemetry_DB->first_component;
+
+    status =
+        status || nx_azure_iot_pnp_client_component_add(
+                      pnp_client_ptr, verified_telemetry_DB->component_name_ptr, verified_telemetry_DB->component_name_length);
+
+    for (iter = 0; iter < components_num; iter++)
+    {
+        if (((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
+        {
+            status = status || nx_azure_iot_pnp_client_component_add(pnp_client_ptr,
+                                   ((NX_VT_OBJECT*)component_pointer)->component.fc.component_name_ptr,
+                                   ((NX_VT_OBJECT*)component_pointer)->component.fc.component_name_length);
+        }
+        component_pointer = (((NX_VT_OBJECT*)component_pointer)->next_component);
+    }
+
     return status;
 }

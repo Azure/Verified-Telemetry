@@ -12,17 +12,22 @@
 
 #define abs_custom(x) ((x) > 0 ? (x) : -(x))
 
-#define VT_SUCCESS 0X00
-#define VT_ERROR   0X01
+#define VT_SUCCESS 0x00
+#define VT_ERROR   0x01
 
-#define VT_SIGNATURE_MATCHING     0X00
-#define VT_SIGNATURE_NOT_MATCHING 0X01
-#define VT_SIGNATURE_COMPUTE_FAIL 0X02
-#define VT_SIGNATURE_DB_EMPTY     0X03
+#define VT_SIGNATURE_MATCHING     0x00
+#define VT_SIGNATURE_NOT_MATCHING 0x01
+#define VT_SIGNATURE_COMPUTE_FAIL 0x02
+#define VT_SIGNATURE_DB_EMPTY     0x03
+
+#define VT_CHARACTERS_IN_A_NUMBER              10
+#define VT_COMPONENT_NAME_MAX_LENGTH           30
+#define VT_ASSOCIATED_TELEMETRY_CSV_MAX_LENGTH 100
 
 #define VT_UINT  uint16_t
 #define VT_INT   int16_t
 #define VT_UINT8 uint8_t
+#define VT_INT32 int32_t
 #define VT_ULONG unsigned long
 #define VT_UCHAR unsigned char
 #define VT_CHAR  char

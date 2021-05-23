@@ -9,6 +9,8 @@
 #define SAMPLE_COMMAND_SUCCESS_STATUS (200)
 #define SAMPLE_COMMAND_ERROR_STATUS   (500)
 
+#define PROPERTY_NAME_MAX_LENGTH 50
+
 /* Pnp command supported */
 static const CHAR command_reset_fingerprint[]   = "setResetFingerprintTemplate";
 static const CHAR command_retrain_fingerprint[] = "retrainFingerprintTemplate";
@@ -32,18 +34,26 @@ UINT nx_vt_fallcurve_init(NX_VT_FALLCURVE_COMPONENT* handle,
     UCHAR* associated_telemetry,
     bool telemetry_status_auto_update)
 {
-    CHAR vt_component_name[50];
+    CHAR vt_component_name[VT_COMPONENT_NAME_MAX_LENGTH];
+    VT_INT str_manipulation_return;
+    VT_INT str_buffer_space_available;
+
     if (handle == NX_NULL)
     {
         return (NX_NOT_SUCCESSFUL);
     }
 
     memset(vt_component_name, 0, sizeof(vt_component_name));
-    snprintf(vt_component_name, sizeof(vt_component_name), "vT");
-    strcat(vt_component_name, (CHAR*)component_name_ptr);
-    strncpy((CHAR*)handle->component_name_ptr, vt_component_name, sizeof(handle->component_name_ptr));
+    str_manipulation_return = snprintf(vt_component_name, sizeof(vt_component_name), "vT");
+    if (str_manipulation_return < 0 || (VT_UINT)str_manipulation_return > sizeof(vt_component_name))
+    {
+        VTLogError("Flattened Database Buffer Overflow! \r\n");
+    }
+    str_buffer_space_available = sizeof(vt_component_name) - strlen(vt_component_name);
+    strncat(vt_component_name, (CHAR*)component_name_ptr, str_buffer_space_available);
+    strncpy((CHAR*)handle->component_name_ptr, vt_component_name, sizeof(handle->component_name_ptr) - 1);
     handle->component_name_length = strlen(vt_component_name);
-    strncpy((CHAR*)handle->associated_telemetry, (CHAR*)associated_telemetry, sizeof(handle->associated_telemetry));
+    strncpy((CHAR*)handle->associated_telemetry, (CHAR*)associated_telemetry, sizeof(handle->associated_telemetry) - 1);
     handle->telemetry_status             = false;
     handle->property_sent                = 0;
     handle->template_confidence_metric   = 0;
@@ -193,7 +203,7 @@ static UINT sync_fingerprint_template(NX_AZURE_IOT_JSON_READER* property_value_r
         return NX_NOT_SUCCESSFUL;
     }
     memset(flattened_db.num_signatures, 0, sizeof(flattened_db.num_signatures));
-    strncpy((VT_CHAR*)flattened_db.num_signatures, jsonValue, sizeof(flattened_db.num_signatures));
+    strncpy((VT_CHAR*)flattened_db.num_signatures, jsonValue, sizeof(flattened_db.num_signatures) - 1);
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
@@ -212,7 +222,7 @@ static UINT sync_fingerprint_template(NX_AZURE_IOT_JSON_READER* property_value_r
         return NX_NOT_SUCCESSFUL;
     }
     memset(flattened_db.sampling_interval_us, 0, sizeof(flattened_db.sampling_interval_us));
-    strncpy((VT_CHAR*)flattened_db.sampling_interval_us, jsonValue, sizeof(flattened_db.sampling_interval_us));
+    strncpy((VT_CHAR*)flattened_db.sampling_interval_us, jsonValue, sizeof(flattened_db.sampling_interval_us) - 1);
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
@@ -231,7 +241,7 @@ static UINT sync_fingerprint_template(NX_AZURE_IOT_JSON_READER* property_value_r
         return NX_NOT_SUCCESSFUL;
     }
     memset(flattened_db.falltime, 0, sizeof(flattened_db.falltime));
-    strncpy((VT_CHAR*)flattened_db.falltime, jsonValue, sizeof(flattened_db.falltime));
+    strncpy((VT_CHAR*)flattened_db.falltime, jsonValue, sizeof(flattened_db.falltime) - 1);
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
@@ -250,9 +260,9 @@ static UINT sync_fingerprint_template(NX_AZURE_IOT_JSON_READER* property_value_r
         return NX_NOT_SUCCESSFUL;
     }
     memset(flattened_db.pearson_coeff, 0, sizeof(flattened_db.pearson_coeff));
-    strncpy((VT_CHAR*)flattened_db.pearson_coeff, jsonValue, sizeof(flattened_db.pearson_coeff));
+    strncpy((VT_CHAR*)flattened_db.pearson_coeff, jsonValue, sizeof(flattened_db.pearson_coeff) - 1);
 
-    vt_fallcurve_object_database_sync(&(handle->fc_object), flattened_db);
+    vt_fallcurve_object_database_sync(&(handle->fc_object), &flattened_db);
 
     return NX_SUCCESS;
 }
@@ -357,9 +367,6 @@ UINT nx_vt_fallcurve_fingerprint_template_confidence_metric_property(
         VTLogError("Failed create reported properties: error code = 0x%08x\r\n", status);
         return (status);
     }
-    // CHAR *templateConfidenceMetricValue = ((double)handle->templateConfidenceMetric > 0.75) ? "HIGH"
-    //                                     : ((double)handle->templateConfidenceMetric > 0.25) ? "MEDIUM"
-    //                                     : "LOW";
     if ((status = nx_azure_iot_pnp_client_reported_property_component_begin(
              iotpnp_client_ptr, &json_writer, handle->component_name_ptr, handle->component_name_length)) ||
         (status = nx_azure_iot_json_writer_append_property_with_int32_value(&json_writer,
@@ -389,7 +396,7 @@ UINT nx_vt_fallcurve_fingerprint_template_confidence_metric_property(
         return (NX_NOT_SUCCESSFUL);
     }
 
-    return (status);
+    return (NX_AZURE_IOT_SUCCESS);
 }
 
 UINT nx_vt_fallcurve_process_command(NX_VT_FALLCURVE_COMPONENT* handle,
@@ -467,7 +474,7 @@ UINT nx_vt_fallcurve_process_reported_property_sync(NX_VT_FALLCURVE_COMPONENT* h
     NX_AZURE_IOT_JSON_READER* name_value_reader_ptr,
     UINT version)
 {
-    CHAR property_name[50];
+    CHAR property_name[PROPERTY_NAME_MAX_LENGTH];
     UINT property_name_length = 0;
 
     if (handle == NX_NULL)
