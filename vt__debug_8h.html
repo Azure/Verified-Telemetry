@@ -91,7 +91,7 @@ $(document).ready(function(){initNavTree('vt__debug_8h.html',''); initResizable(
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a59e0cecebadb3e53516222820317bb18"><td class="memItemLeft" align="right" valign="top"><a id="a59e0cecebadb3e53516222820317bb18"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>VT_LOG_LEVEL</b>&#160;&#160;&#160;3</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>VT_LOG_LEVEL</b>&#160;&#160;&#160;2</td></tr>
 <tr class="separator:a59e0cecebadb3e53516222820317bb18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c2eefc110330ba6794ff6b6d92a47e1"><td class="memItemLeft" align="right" valign="top"><a id="a2c2eefc110330ba6794ff6b6d92a47e1"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>VTLogError</b>(fmt, ...)</td></tr>
@@ -109,77 +109,8 @@ Macros</h2></td></tr>
 <tr class="separator:a2c2eefc110330ba6794ff6b6d92a47e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b6031dc648e5345b8114a472e4bb4ed"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>VTLogInfo</b>(fmt, ...)</td></tr>
 <tr class="separator:a5b6031dc648e5345b8114a472e4bb4ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea8a8deb976a5b71efd7f71db7047886"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>VTLogDebug</b>(fmt, ...)</td></tr>
-<tr class="separator:aea8a8deb976a5b71efd7f71db7047886"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a908169b99734da528d880e27bc4c63f8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>VTLogDebugNoTag</b>(fmt, ...)</td></tr>
-<tr class="separator:a908169b99734da528d880e27bc4c63f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="aea8a8deb976a5b71efd7f71db7047886"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea8a8deb976a5b71efd7f71db7047886">&#9670;&nbsp;</a></span>VTLogDebug</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define VTLogDebug</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">fmt, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span>                                                                                                                           \</div>
-<div class="line">    {                                                                                                                            \</div>
-<div class="line">        printf(<span class="stringliteral">&quot;[VT DEBUG] &quot;</span>);                                                                                                   \</div>
-<div class="line">        printf(fmt, ##__VA_ARGS__);                                                                                              \</div>
-<div class="line">    } <span class="keywordflow">while</span> (0)</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a908169b99734da528d880e27bc4c63f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a908169b99734da528d880e27bc4c63f8">&#9670;&nbsp;</a></span>VTLogDebugNoTag</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define VTLogDebugNoTag</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">fmt, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span>                                                                                                                           \</div>
-<div class="line">    {                                                                                                                            \</div>
-<div class="line">        printf(fmt, ##__VA_ARGS__);                                                                                              \</div>
-<div class="line">    } <span class="keywordflow">while</span> (0)</div>
-</div><!-- fragment -->
-</div>
-</div>
 <a id="a2c2eefc110330ba6794ff6b6d92a47e1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2c2eefc110330ba6794ff6b6d92a47e1">&#9670;&nbsp;</a></span>VTLogError</h2>
 

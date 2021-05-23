@@ -1,7 +1,7 @@
 var struct_v_t___f_a_l_l_c_u_r_v_e___d_a_t_a_b_a_s_e___f_l_a_t_t_e_n_e_d___s_t_r_u_c_t =
 [
-    [ "falltime", "struct_v_t___f_a_l_l_c_u_r_v_e___d_a_t_a_b_a_s_e___f_l_a_t_t_e_n_e_d___s_t_r_u_c_t.html#acd13bb30f83d9019ceb4f40d709a12b3", null ],
-    [ "num_signatures", "struct_v_t___f_a_l_l_c_u_r_v_e___d_a_t_a_b_a_s_e___f_l_a_t_t_e_n_e_d___s_t_r_u_c_t.html#a288925f9415f1b682f772634252097b1", null ],
-    [ "pearson_coeff", "struct_v_t___f_a_l_l_c_u_r_v_e___d_a_t_a_b_a_s_e___f_l_a_t_t_e_n_e_d___s_t_r_u_c_t.html#a6c7b6f8e915c449af40fa9d038f07b46", null ],
-    [ "sampling_interval_us", "struct_v_t___f_a_l_l_c_u_r_v_e___d_a_t_a_b_a_s_e___f_l_a_t_t_e_n_e_d___s_t_r_u_c_t.html#ab708615bd5cd52558fb7eeb562c485b9", null ]
+    [ "falltime", "struct_v_t___f_a_l_l_c_u_r_v_e___d_a_t_a_b_a_s_e___f_l_a_t_t_e_n_e_d___s_t_r_u_c_t.html#abafaacdf681aaa9b6644b69af7433825", null ],
+    [ "num_signatures", "struct_v_t___f_a_l_l_c_u_r_v_e___d_a_t_a_b_a_s_e___f_l_a_t_t_e_n_e_d___s_t_r_u_c_t.html#a6573490b31181ac42c6dc6f7004b9da1", null ],
+    [ "pearson_coeff", "struct_v_t___f_a_l_l_c_u_r_v_e___d_a_t_a_b_a_s_e___f_l_a_t_t_e_n_e_d___s_t_r_u_c_t.html#a69408ccea16924c616d9ab65b5a376ee", null ],
+    [ "sampling_interval_us", "struct_v_t___f_a_l_l_c_u_r_v_e___d_a_t_a_b_a_s_e___f_l_a_t_t_e_n_e_d___s_t_r_u_c_t.html#a684cafdf7088fe36be1564524e65e34d", null ]
 ];

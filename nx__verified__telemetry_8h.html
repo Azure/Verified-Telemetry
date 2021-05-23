@@ -121,37 +121,40 @@ typedef struct <a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ad062c9c653e648444b86331c85461346"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#ad062c9c653e648444b86331c85461346">nx_vt_init</a> (void *verified_telemetry_DB, UCHAR *component_name_ptr, bool enable_verified_telemetry, <a class="el" href="struct_v_t___d_e_v_i_c_e___d_r_i_v_e_r___s_t_r_u_c_t.html">VT_DEVICE_DRIVER</a> *device_driver)</td></tr>
-<tr class="memdesc:ad062c9c653e648444b86331c85461346"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Global Verified Telemetry.  <a href="nx__verified__telemetry_8h.html#ad062c9c653e648444b86331c85461346">More...</a><br /></td></tr>
-<tr class="separator:ad062c9c653e648444b86331c85461346"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a338d44d33a8566bb94dac31ea18bb7ba"><td class="memItemLeft" align="right" valign="top"><a id="a338d44d33a8566bb94dac31ea18bb7ba"></a>
-UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_signature_init</b> (void *verified_telemetry_DB, <a class="el" href="struct_n_x___v_t___o_b_j_e_c_t___t_a_g.html">NX_VT_OBJECT</a> *handle, UCHAR *component_name_ptr, UINT signature_type, UCHAR *associated_telemetry, bool telemetry_status_auto_update, <a class="el" href="struct_v_t___s_e_n_s_o_r___h_a_n_d_l_e___s_t_r_u_c_t.html">VT_SENSOR_HANDLE</a> *sensor_handle)</td></tr>
-<tr class="separator:a338d44d33a8566bb94dac31ea18bb7ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3eade7dce821075fbb798accfba9861"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#ae3eade7dce821075fbb798accfba9861">nx_vt_process_command</a> (void *verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT *iotpnp_client_ptr, UCHAR *component_name_ptr, UINT component_name_length, UCHAR *pnp_command_name_ptr, UINT pnp_command_name_length, NX_AZURE_IOT_JSON_READER *json_reader_ptr, NX_AZURE_IOT_JSON_WRITER *json_response_ptr, UINT *status_code)</td></tr>
-<tr class="memdesc:ae3eade7dce821075fbb798accfba9861"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes all commands supported by VT Middleware.  <a href="nx__verified__telemetry_8h.html#ae3eade7dce821075fbb798accfba9861">More...</a><br /></td></tr>
-<tr class="separator:ae3eade7dce821075fbb798accfba9861"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe321e112e5f1352cd7565abfd2b29b0"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#afe321e112e5f1352cd7565abfd2b29b0">nx_vt_process_property_update</a> (void *verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT *iotpnp_client_ptr, const UCHAR *component_name_ptr, UINT component_name_length, NX_AZURE_IOT_JSON_READER *name_value_reader_ptr, UINT version)</td></tr>
-<tr class="memdesc:afe321e112e5f1352cd7565abfd2b29b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes all desired property updates supported by vT Middleware.  <a href="nx__verified__telemetry_8h.html#afe321e112e5f1352cd7565abfd2b29b0">More...</a><br /></td></tr>
-<tr class="separator:afe321e112e5f1352cd7565abfd2b29b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd4f204d322dd91d1343740775eba1f3"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#acd4f204d322dd91d1343740775eba1f3">nx_vt_properties</a> (void *verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT *iotpnp_client_ptr)</td></tr>
-<tr class="memdesc:acd4f204d322dd91d1343740775eba1f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates payloads and sends all reported properties supported by VT Middleware.  <a href="nx__verified__telemetry_8h.html#acd4f204d322dd91d1343740775eba1f3">More...</a><br /></td></tr>
-<tr class="separator:acd4f204d322dd91d1343740775eba1f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4ad0cc40fa18f47c4d5f483545de89d"><td class="memItemLeft" align="right" valign="top"><a id="ab4ad0cc40fa18f47c4d5f483545de89d"></a>
-UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_send_desired_property_after_boot</b> (void *verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT *iotpnp_client_ptr, UINT message_type)</td></tr>
-<tr class="separator:ab4ad0cc40fa18f47c4d5f483545de89d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1564061e99e94806333c9377258d0ca4"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#a1564061e99e94806333c9377258d0ca4">nx_vt_process_reported_property_sync</a> (void *verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT *iotpnp_client_ptr, const UCHAR *component_name_ptr, UINT component_name_length, NX_AZURE_IOT_JSON_READER *name_value_reader_ptr, UINT version)</td></tr>
-<tr class="memdesc:a1564061e99e94806333c9377258d0ca4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Synchronizes VT Settings stored in digital Twin as reported properties at startup.  <a href="nx__verified__telemetry_8h.html#a1564061e99e94806333c9377258d0ca4">More...</a><br /></td></tr>
-<tr class="separator:a1564061e99e94806333c9377258d0ca4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5fae12c741fc64acf4952e1feb74194"><td class="memItemLeft" align="right" valign="top"><a id="ab5fae12c741fc64acf4952e1feb74194"></a>
-UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_verified_telemetry_message_create_send</b> (void *verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT *pnp_client_ptr, const UCHAR *component_name_ptr, UINT component_name_length, UINT wait_option, const UCHAR *telemetry_data, UINT data_size)</td></tr>
-<tr class="separator:ab5fae12c741fc64acf4952e1feb74194"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15a7a978a681c922eb2993bf72f5da9b"><td class="memItemLeft" align="right" valign="top"><a id="a15a7a978a681c922eb2993bf72f5da9b"></a>
-UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_compute_evaluate_fingerprint_all_sensors</b> (void *verified_telemetry_DB)</td></tr>
-<tr class="separator:a15a7a978a681c922eb2993bf72f5da9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e766b053a437b8cf4bd44d2679f681d"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#a0e766b053a437b8cf4bd44d2679f681d">nx_vt_init</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, UCHAR *component_name_ptr, bool enable_verified_telemetry, <a class="el" href="struct_v_t___d_e_v_i_c_e___d_r_i_v_e_r___s_t_r_u_c_t.html">VT_DEVICE_DRIVER</a> *device_driver)</td></tr>
+<tr class="memdesc:a0e766b053a437b8cf4bd44d2679f681d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Global Verified Telemetry.  <a href="nx__verified__telemetry_8h.html#a0e766b053a437b8cf4bd44d2679f681d">More...</a><br /></td></tr>
+<tr class="separator:a0e766b053a437b8cf4bd44d2679f681d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af097ec10f7efe9e8ef6505166938b46c"><td class="memItemLeft" align="right" valign="top"><a id="af097ec10f7efe9e8ef6505166938b46c"></a>
+UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_signature_init</b> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, <a class="el" href="struct_n_x___v_t___o_b_j_e_c_t___t_a_g.html">NX_VT_OBJECT</a> *handle, UCHAR *component_name_ptr, UINT signature_type, UCHAR *associated_telemetry, bool telemetry_status_auto_update, <a class="el" href="struct_v_t___s_e_n_s_o_r___h_a_n_d_l_e___s_t_r_u_c_t.html">VT_SENSOR_HANDLE</a> *sensor_handle)</td></tr>
+<tr class="separator:af097ec10f7efe9e8ef6505166938b46c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46ff9a72de2b986dc1f1171899e853c0"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#a46ff9a72de2b986dc1f1171899e853c0">nx_vt_process_command</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT *iotpnp_client_ptr, UCHAR *component_name_ptr, UINT component_name_length, UCHAR *pnp_command_name_ptr, UINT pnp_command_name_length, NX_AZURE_IOT_JSON_READER *json_reader_ptr, NX_AZURE_IOT_JSON_WRITER *json_response_ptr, UINT *status_code)</td></tr>
+<tr class="memdesc:a46ff9a72de2b986dc1f1171899e853c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes all commands supported by VT Middleware.  <a href="nx__verified__telemetry_8h.html#a46ff9a72de2b986dc1f1171899e853c0">More...</a><br /></td></tr>
+<tr class="separator:a46ff9a72de2b986dc1f1171899e853c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a488c29e768970f226bb4402d59efdd18"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#a488c29e768970f226bb4402d59efdd18">nx_vt_process_property_update</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT *iotpnp_client_ptr, const UCHAR *component_name_ptr, UINT component_name_length, NX_AZURE_IOT_JSON_READER *name_value_reader_ptr, UINT version)</td></tr>
+<tr class="memdesc:a488c29e768970f226bb4402d59efdd18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes all desired property updates supported by vT Middleware.  <a href="nx__verified__telemetry_8h.html#a488c29e768970f226bb4402d59efdd18">More...</a><br /></td></tr>
+<tr class="separator:a488c29e768970f226bb4402d59efdd18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51167bbb2a392a62012b8464b770a2e9"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#a51167bbb2a392a62012b8464b770a2e9">nx_vt_properties</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT *iotpnp_client_ptr)</td></tr>
+<tr class="memdesc:a51167bbb2a392a62012b8464b770a2e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates payloads and sends all reported properties supported by VT Middleware.  <a href="nx__verified__telemetry_8h.html#a51167bbb2a392a62012b8464b770a2e9">More...</a><br /></td></tr>
+<tr class="separator:a51167bbb2a392a62012b8464b770a2e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad468475e9e6479ceb198ebabc888730a"><td class="memItemLeft" align="right" valign="top"><a id="ad468475e9e6479ceb198ebabc888730a"></a>
+UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_send_desired_property_after_boot</b> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT *iotpnp_client_ptr, UINT message_type)</td></tr>
+<tr class="separator:ad468475e9e6479ceb198ebabc888730a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef2379f9a4dc3e65e49246a042a0dc39"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#aef2379f9a4dc3e65e49246a042a0dc39">nx_vt_process_reported_property_sync</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT *iotpnp_client_ptr, const UCHAR *component_name_ptr, UINT component_name_length, NX_AZURE_IOT_JSON_READER *name_value_reader_ptr, UINT version)</td></tr>
+<tr class="memdesc:aef2379f9a4dc3e65e49246a042a0dc39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Synchronizes VT Settings stored in digital Twin as reported properties at startup.  <a href="nx__verified__telemetry_8h.html#aef2379f9a4dc3e65e49246a042a0dc39">More...</a><br /></td></tr>
+<tr class="separator:aef2379f9a4dc3e65e49246a042a0dc39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf3d2ce9f5f948886380e7c5003232ed"><td class="memItemLeft" align="right" valign="top"><a id="acf3d2ce9f5f948886380e7c5003232ed"></a>
+UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_verified_telemetry_message_create_send</b> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT *pnp_client_ptr, const UCHAR *component_name_ptr, UINT component_name_length, UINT wait_option, const UCHAR *telemetry_data, UINT data_size)</td></tr>
+<tr class="separator:acf3d2ce9f5f948886380e7c5003232ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e590a098a15b05ff917c846ba34f034"><td class="memItemLeft" align="right" valign="top"><a id="a1e590a098a15b05ff917c846ba34f034"></a>
+UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_compute_evaluate_fingerprint_all_sensors</b> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB)</td></tr>
+<tr class="separator:a1e590a098a15b05ff917c846ba34f034"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44f7374f9f470f0652b9cebf0dbd8183"><td class="memItemLeft" align="right" valign="top"><a id="a44f7374f9f470f0652b9cebf0dbd8183"></a>
+UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_azure_iot_pnp_client_component_add</b> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT *pnp_client_ptr)</td></tr>
+<tr class="separator:a44f7374f9f470f0652b9cebf0dbd8183"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ad062c9c653e648444b86331c85461346"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad062c9c653e648444b86331c85461346">&#9670;&nbsp;</a></span>nx_vt_init()</h2>
+<a id="a0e766b053a437b8cf4bd44d2679f681d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e766b053a437b8cf4bd44d2679f681d">&#9670;&nbsp;</a></span>nx_vt_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -159,7 +162,7 @@ UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_compute_evaluat
         <tr>
           <td class="memname">UINT nx_vt_init </td>
           <td>(</td>
-          <td class="paramtype">void *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *&#160;</td>
           <td class="paramname"><em>verified_telemetry_DB</em>, </td>
         </tr>
         <tr>
@@ -207,8 +210,8 @@ UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_compute_evaluat
 
 </div>
 </div>
-<a id="ae3eade7dce821075fbb798accfba9861"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3eade7dce821075fbb798accfba9861">&#9670;&nbsp;</a></span>nx_vt_process_command()</h2>
+<a id="a46ff9a72de2b986dc1f1171899e853c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46ff9a72de2b986dc1f1171899e853c0">&#9670;&nbsp;</a></span>nx_vt_process_command()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -216,7 +219,7 @@ UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_compute_evaluat
         <tr>
           <td class="memname">UINT nx_vt_process_command </td>
           <td>(</td>
-          <td class="paramtype">void *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *&#160;</td>
           <td class="paramname"><em>verified_telemetry_DB</em>, </td>
         </tr>
         <tr>
@@ -299,8 +302,8 @@ UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_compute_evaluat
 
 </div>
 </div>
-<a id="afe321e112e5f1352cd7565abfd2b29b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe321e112e5f1352cd7565abfd2b29b0">&#9670;&nbsp;</a></span>nx_vt_process_property_update()</h2>
+<a id="a488c29e768970f226bb4402d59efdd18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a488c29e768970f226bb4402d59efdd18">&#9670;&nbsp;</a></span>nx_vt_process_property_update()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -308,7 +311,7 @@ UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_compute_evaluat
         <tr>
           <td class="memname">UINT nx_vt_process_property_update </td>
           <td>(</td>
-          <td class="paramtype">void *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *&#160;</td>
           <td class="paramname"><em>verified_telemetry_DB</em>, </td>
         </tr>
         <tr>
@@ -370,8 +373,8 @@ UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_compute_evaluat
 
 </div>
 </div>
-<a id="a1564061e99e94806333c9377258d0ca4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1564061e99e94806333c9377258d0ca4">&#9670;&nbsp;</a></span>nx_vt_process_reported_property_sync()</h2>
+<a id="aef2379f9a4dc3e65e49246a042a0dc39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef2379f9a4dc3e65e49246a042a0dc39">&#9670;&nbsp;</a></span>nx_vt_process_reported_property_sync()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -379,7 +382,7 @@ UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_compute_evaluat
         <tr>
           <td class="memname">UINT nx_vt_process_reported_property_sync </td>
           <td>(</td>
-          <td class="paramtype">void *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *&#160;</td>
           <td class="paramname"><em>verified_telemetry_DB</em>, </td>
         </tr>
         <tr>
@@ -441,8 +444,8 @@ UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_compute_evaluat
 
 </div>
 </div>
-<a id="acd4f204d322dd91d1343740775eba1f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd4f204d322dd91d1343740775eba1f3">&#9670;&nbsp;</a></span>nx_vt_properties()</h2>
+<a id="a51167bbb2a392a62012b8464b770a2e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51167bbb2a392a62012b8464b770a2e9">&#9670;&nbsp;</a></span>nx_vt_properties()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -450,7 +453,7 @@ UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_vt_compute_evaluat
         <tr>
           <td class="memname">UINT nx_vt_properties </td>
           <td>(</td>
-          <td class="paramtype">void *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *&#160;</td>
           <td class="paramname"><em>verified_telemetry_DB</em>, </td>
         </tr>
         <tr>
