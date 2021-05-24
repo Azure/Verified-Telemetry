@@ -8,7 +8,7 @@ VT_UINT fc_store_signature(
     VT_FALLCURVE_OBJECT* fc_object, VT_ULONG sampling_interval_us, VT_ULONG falltime, VT_FLOAT pearson_coeff)
 {
     VT_UINT num_signatures = fc_object->fingerprintdb.num_signatures;
-    if ((num_signatures + 1) >= VT_FC_MAX_SIGNATURES)
+    if ((num_signatures + 1) > VT_FC_MAX_SIGNATURES)
     {
         return VT_ERROR;
     }

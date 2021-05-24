@@ -4,8 +4,10 @@
 #ifndef _VT_TEST_DEFINITIONS_H
 #define _VT_TEST_DEFINITIONS_H
 
-int test_vt_fingerprint();
-int test_vt_database();
-int test_vt_sensor();
+#include "vt_defs.h"
+
+VT_INT test_vt_fc_object_sensor();
+VT_INT test_vt_fc_object_database();
+VT_INT test_vt_fc_object_initialize();
 
 #endif

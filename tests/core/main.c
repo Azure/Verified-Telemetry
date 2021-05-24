@@ -18,9 +18,9 @@ int main()
 
     // every test function returns the number of tests failed, 0 means success (there shouldn't be
     // negative numbers
-    result += test_vt_fingerprint();
-    result += test_vt_database();
-    result += test_vt_sensor();
-
+    result += test_vt_fc_object_sensor();
+    result += test_vt_fc_object_database();
+    result += test_vt_fc_object_initialize();
+    
     return result;
 }
