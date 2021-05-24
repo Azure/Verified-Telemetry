@@ -1,0 +1,3 @@
+NOTICES
+
+This software does not incorporate material from third parties.

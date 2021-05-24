@@ -88,15 +88,14 @@ Verified Telemetry Library provides capabilities for interaction using a Plug an
 Details about this model can be found [here](./PnPModel).
 
 # API Documentation
-| Function          | Description                                                                     |
-|-----------------|---------------------------------------------------------------------------------|
-| [pnp_vt_init](./docs/VT_API.md#pnp_vt_init) | Initializes Global Verified Telemetry                |
-| [pnp_fallcurve_init](./docs/VT_API.md#pnp_fallcurve_init)  | Initializes an instance of Verified Telemetry Information Interface                   |
-| [pnp_vt_process_command](./docs/VT_API.md#pnp_vt_process_command)  | Processes all commands supported by VT Middleware                 |
-| [pnp_vt_process_property_update](./docs/VT_API.md#pnp_vt_process_property_update)  |  Processes all desired property updates supported by VT Middleware               |
-| [pnp_vt_process_reported_property_sync](./docs/VT_API.md#pnp_vt_process_reported_property_sync)  |  Syncronizes VT Settings stored in digital Twin as reported properties at startup               |
-| [pnp_vt_properties](./docs/VT_API.md#pnp_vt_properties)  | Creates payloads and sends all reported properties supported by VT Middleware                 |
- 
+| Function | Description |
+|-|-|
+| [nx_vt_init](https://azure.github.io/Verified-Telemetry/nx__verified__telemetry_8h.html) | Initializes Global Verified Telemetry |
+| [nx_vt_fallcurve_init](https://azure.github.io/Verified-Telemetry/nx__vt__fallcurve__component_8h.html) | Initializes an instance of Verified Telemetry Information Interface |
+| [nx_vt_process_command](https://azure.github.io/Verified-Telemetry/nx__verified__telemetry_8h.html) | Processes all commands supported by VT Middleware |
+| [nx_vt_process_property_update](https://azure.github.io/Verified-Telemetry/nx__verified__telemetry_8h.html) | Processes all desired property updates supported by VT Middleware |
+| [nx_vt_properties](https://azure.github.io/Verified-Telemetry/nx__verified__telemetry_8h.html)  | Creates payloads and sends all reported properties supported by VT Middleware |
+| [nx_vt_process_reported_property_sync](https://azure.github.io/Verified-Telemetry/nx__verified__telemetry_8h.html) | Synchronizes VT Settings stored in digital Twin as reported properties at startup |
 
 # Integration of VT with existing device code
 * Developers can refer to the [Device Samples](https://github.com/Azure/Verified-Telemetry-Device-Sample) for Verified Telemetry sample code. The following steps showcase how Verified Telemetry Library can be integrated separately with [Azure RTOS getting started samples](https://github.com/azure-rtos/getting-started)

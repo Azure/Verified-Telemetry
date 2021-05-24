@@ -351,3 +351,4 @@ MigrationBackup/
 
 out/
 build/
+docs/doxygen
