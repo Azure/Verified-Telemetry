@@ -68,13 +68,13 @@ typedef struct NX_VERIFIED_TELEMETRY_DB_TAG
 } NX_VERIFIED_TELEMETRY_DB;
 
 /**
- * @brief Initializes Global Verified Telemetry.
+ * @brief Initializes Global Verified Telemetry using platform specific device drivers
  *
  * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
- * @param[in] component_name_ptr Name of the PNP component.
+ * @param[in] component_name_ptr Name of the PnP component. Example - "vTDevice"
  * @param[in] enableVerifiedTelemetry User specified value to set Verified Telemetry active or inactive, can also be configured
  * during runtime from a writable Digital Twin property.
- * @param[in] device_driver The platform driver components for interacting with the device hardware.
+ * @param[in] device_driver The platform specific device driver components for interacting with the device hardware.
  *
  * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
  */
@@ -83,6 +83,20 @@ UINT nx_vt_init(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     bool enable_verified_telemetry,
     VT_DEVICE_DRIVER* device_driver);
 
+/**
+ * @brief Initializes Verified Telemetry for a particular sensor data stream
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] handle Pointer to variable of type NX_VT_OBJECT storing collection settings and configuration data for a particular sensor telemetry.
+ * @param[in] component_name_ptr Name of the sensor.  Example - "accelerometer" This would be prepended with 'vT' by VT library 
+ * @param[in] signature_type One of the defined signature types. Currently available types - VT_SIGNATURE_TYPE_FALLCURVE
+ * @param[in] associated_telemetry Telmetries associated with this sensor, sperated by commas  Example - "accelerometerX, accelerometerY, accelerometerZ"
+ * @param[in] telemetry_status_auto_update User specified value to control whether fingerprint computation for the sensor should be invoked 
+ * when nx_vt_compute_evaluate_fingerprint_all_sensors is called
+ * @param[in] sensor_handle The sensor specific connection configuration for collecting VT signatures.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
 UINT nx_vt_signature_init(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     NX_VT_OBJECT* handle,
     UCHAR* component_name_ptr,
@@ -145,6 +159,16 @@ UINT nx_vt_process_property_update(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_
  */
 UINT nx_vt_properties(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr);
 
+/**
+ * @brief Updates Digital Twin with default desired property values when device is booted for the first time 
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] iotpnp_client_ptr Pointer to initialized Azure IoT PnP instance.
+ * @param[in] message_type Type of document, only valid value are NX_AZURE_IOT_PNP_DESIRED_PROPERTIES or
+ * NX_AZURE_IOT_PNP_PROPERTIES
+ * 
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
 UINT nx_vt_send_desired_property_after_boot(
     NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr, UINT message_type);
 
@@ -167,7 +191,19 @@ UINT nx_vt_process_reported_property_sync(NX_VERIFIED_TELEMETRY_DB* verified_tel
     NX_AZURE_IOT_JSON_READER* name_value_reader_ptr,
     UINT version);
 
-// VT Create and Send Telemetry JSON with message properties
+/**
+ * @brief Creates and sends telemetry JSON with message properties containing telemetry status
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] pnp_client_ptr Pointer to initialized Azure IoT PnP instance.
+ * @param[in] component_name_ptr Name of the component.
+ * @param[in] component_name_length Length of name of the component.
+ * @param[in] wait_option Ticks to wait if no packet is available.
+ * @param[in] telemetry_data Pointer to buffer containing telemetry data.
+ * @param[in] data_size Length of telemetry data passed in the buffer.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
 UINT nx_vt_verified_telemetry_message_create_send(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     NX_AZURE_IOT_PNP_CLIENT* pnp_client_ptr,
     const UCHAR* component_name_ptr,
@@ -176,10 +212,23 @@ UINT nx_vt_verified_telemetry_message_create_send(NX_VERIFIED_TELEMETRY_DB* veri
     const UCHAR* telemetry_data,
     UINT data_size);
 
-// VT Compute and Evaluate Sensor Fingerprints
+/**
+ * @brief Computes status of all telemetries which have been initialized to provide Verified Telemetry
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
 UINT nx_vt_compute_evaluate_fingerprint_all_sensors(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB);
 
-// Add VT PnP components to pnp_client
+/**
+ * @brief Adds VT Information Interfaces that are initialized to the nx_pnp_client object
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] pnp_client_ptr Pointer to initialized Azure IoT PnP instance.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
 UINT nx_vt_azure_iot_pnp_client_component_add(
     NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* pnp_client_ptr);
 
