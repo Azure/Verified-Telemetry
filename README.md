@@ -123,87 +123,87 @@ Details about this model can be found [here](./PnPModel).
 	```
 	add_subdirectory(${CORE_LIB_DIR}/verified-telemetry verified_telemetry)
 	```
-### Step 2: Initialize Global Verified Telemetry
+### Step 2: Initialize Verified Telemetry
 * Global Verified Telemetry needs to be initialized with the device specific platform functions
-* An example of usage of [nx_vt_init](https://azure.github.io/Verified-Telemetry/nx__verified__telemetry_8h.html) function is shown below
-
+* Similarly, to initalize Verified Telemetry for a particular sensor/telemetry the details of sensor connection must be passed using the nx_vt_signature_init function
+* An example of usage of [nx_vt_init](https://azure.github.io/Verified-Telemetry/nx__verified__telemetry_8h.html) and [nx_vt_signature_init](https://azure.github.io/Verified-Telemetry/nx__verified__telemetry_8h.html#af097ec10f7efe9e8ef6505166938b46c) functions is shown below
+* Include headers for VT
 	```C
 	#include "nx_verified_telemetry.h"
-	#include "sample_vt_device_driver.h"
-	static NX_VERIFIED_TELEMETRY_DB verified_telemetry_DB;
-	static VT_DEVICE_DRIVER sample_device_driver;
-
-	UINT status;
-	
-	sample_device_driver.adc_init          = &vt_adc_init;
-    sample_device_driver.adc_read          = &vt_adc_read;
-    sample_device_driver.gpio_on           = &vt_gpio_on;
-    sample_device_driver.gpio_off          = &vt_gpio_off;
-    sample_device_driver.tick_init         = &vt_tick_init;
-    sample_device_driver.tick_deinit       = &vt_tick_deinit;
-    sample_device_driver.tick              = &vt_tick;
-    sample_device_driver.interrupt_enable  = &vt_interrupt_enable;
-    sample_device_driver.interrupt_disable = &vt_interrupt_disable;
-
-    if ((status = nx_vt_init(&verified_telemetry_DB, (UCHAR*)"vTDevice", true, &sample_device_driver)))
-    {
-        printf("Failed to configure Verified Telemetry settings: error code = 0x%08x\r\n", status);
-    }
 	```
-* A complete sample can be found [here](https://github.com/Azure/Verified-Telemetry-Device-Sample/blob/main/MXChip/AZ3166/app/sample_nx_verified_telemetry_init.c)
-
-### Step 3: Initialize Verified Telemetry for a particular sensor/telemetry
-* To initalize Verified Telemetry for a particular sensor/telemetry the details of sensor connection must be passed using the [nx_vt_signature_init](https://azure.github.io/Verified-Telemetry/nx__verified__telemetry_8h.html#af097ec10f7efe9e8ef6505166938b46c) function
-* Note that Global Verified Telemetry must be initialized before initializing VT for a particular sensor/telemetry
-* An example of the usage of this function is shown below
-
+* Include header which define platform specific device drivers
 	```C
-	#include "nx_verified_telemetry.h"
 	#include "sample_vt_device_driver.h"
+	```
+* Define Verified Telemetry DB which will store configuration, platform specific device drivers and runtime information
+	```C
 	static NX_VERIFIED_TELEMETRY_DB verified_telemetry_DB;
+	```
+* Define variable of VT_DEVICE_DRIVER type which will contain pointers to platform specific functions required by VT
+	```C
 	static VT_DEVICE_DRIVER sample_device_driver;
-
+	```
+* Define a variables of NX_VT_OBJECT type for each telemetry that will be supporting Verified Telemetry
+	```C
 	static NX_VT_OBJECT sample_signature_sensor_1;
-	static VT_SENSOR_HANDLE sample_handle_sensor_1;
-
-	UINT status;
-
-	sample_device_driver.adc_init          = &vt_adc_init;
-    sample_device_driver.adc_read          = &vt_adc_read;
-    sample_device_driver.gpio_on           = &vt_gpio_on;
-    sample_device_driver.gpio_off          = &vt_gpio_off;
-    sample_device_driver.tick_init         = &vt_tick_init;
-    sample_device_driver.tick_deinit       = &vt_tick_deinit;
-    sample_device_driver.tick              = &vt_tick;
-    sample_device_driver.interrupt_enable  = &vt_interrupt_enable;
-    sample_device_driver.interrupt_disable = &vt_interrupt_disable;
-
-    if ((status = nx_vt_init(&verified_telemetry_DB, (UCHAR*)"vTDevice", true, &sample_device_driver)))
-    {
-        printf("Failed to configure Verified Telemetry settings: error code = 0x%08x\r\n", status);
-    }
-
-	sample_handle_sensor_1.adc_id         = vt_adc_id_sensor_1;
-    sample_handle_sensor_1.adc_controller = (void*)&vt_adc_controller_sensor_1;
-    sample_handle_sensor_1.adc_channel    = (void*)&vt_adc_channel_sensor_1;
-    sample_handle_sensor_1.gpio_id        = vt_gpio_id_sensor_1;
-    sample_handle_sensor_1.gpio_port      = (void*)vt_gpio_port_sensor_1;
-    sample_handle_sensor_1.gpio_pin       = (void*)&vt_gpio_pin_sensor_1;
-
-    if ((status = nx_vt_signature_init(&verified_telemetry_DB,
-             &sample_signature_sensor_1,
-             (UCHAR*)"soilMoistureExternal1",
-             VT_SIGNATURE_TYPE_FALLCURVE,
-             (UCHAR*)"soilMoistureExternal1",
-             true,
-             &sample_handle_sensor_1)))
-    {
-        printf("Failed to initialize VT for soilMoistureExternal1 telemetry: error code = 0x%08x\r\n", status);
-    }
+	// static NX_VT_OBJECT sample_signature_sensor_2;
+	static NX_VT_OBJECT sample_signature_sensor_N;
 	```
+* Define variables of VT_SENSOR_HANDLE type which will contain connection information for each sensor
+	```C
+	static VT_SENSOR_HANDLE sample_handle_sensor_1;
+	// static VT_SENSOR_HANDLE sample_handle_sensor_2;
+	static VT_SENSOR_HANDLE sample_handle_sensor_N;
+	```
+* Define a Verified Telemetry User Initialization wrapper function which will make calls to necessary initilization function from the vT library and return pointer to the configured NX_VERIFIED_TELEMETRY_DB variable 
+	```C
+	NX_VERIFIED_TELEMETRY_DB* sample_nx_verified_telemetry_user_init()
+	{
+	    UINT status;
+
+		sample_device_driver.adc_init          = &vt_adc_init;
+		sample_device_driver.adc_read          = &vt_adc_read;
+		sample_device_driver.gpio_on           = &vt_gpio_on;
+		sample_device_driver.gpio_off          = &vt_gpio_off;
+		sample_device_driver.tick_init         = &vt_tick_init;
+		sample_device_driver.tick_deinit       = &vt_tick_deinit;
+		sample_device_driver.tick              = &vt_tick;
+		sample_device_driver.interrupt_enable  = &vt_interrupt_enable;
+		sample_device_driver.interrupt_disable = &vt_interrupt_disable;
+
+		if ((status = nx_vt_init(&verified_telemetry_DB, (UCHAR*)"vTDevice", true, &sample_device_driver)))
+		{
+			printf("Failed to configure Verified Telemetry settings: error code = 0x%08x\r\n", status);
+		}
+
+		sample_handle_sensor_1.adc_id         = vt_adc_id_sensor_1;
+		sample_handle_sensor_1.adc_controller = (void*)&vt_adc_controller_sensor_1;
+		sample_handle_sensor_1.adc_channel    = (void*)&vt_adc_channel_sensor_1;
+		sample_handle_sensor_1.gpio_id        = vt_gpio_id_sensor_1;
+		sample_handle_sensor_1.gpio_port      = (void*)vt_gpio_port_sensor_1;
+		sample_handle_sensor_1.gpio_pin       = (void*)&vt_gpio_pin_sensor_1;
+
+		if ((status = nx_vt_signature_init(&verified_telemetry_DB,
+				&sample_signature_sensor_1,
+				(UCHAR*)"soilMoistureExternal1",
+				VT_SIGNATURE_TYPE_FALLCURVE,
+				(UCHAR*)"soilMoistureExternal1",
+				true,
+				&sample_handle_sensor_1)))
+		{
+			printf("Failed to initialize VT for soilMoistureExternal1 telemetry: error code = 0x%08x\r\n", status);
+		}
+		
+		return (&verified_telemetry_DB);
+	}
+	```
+* Call the Verified Telemetry User Initialization wrapper function and update verified_telemetry_DB
+	 ```C
+	verified_telemetry_DB = sample_pnp_verified_telemetry_user_init();
+	 ```
 * A complete sample can be found [here](https://github.com/Azure/Verified-Telemetry-Device-Sample/blob/main/MXChip/AZ3166/app/sample_nx_verified_telemetry_init.c)
 
-### Step 4: Use VT Middleware APIs based on the following guidelines 
+### Step 3: Use VT Middleware APIs based on the following guidelines 
 
 * Use this function to initialize VT PnP Components
 	```C
