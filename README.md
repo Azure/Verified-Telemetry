@@ -56,7 +56,7 @@ The structure of the library is as follows:
 	* `VT_CODE_COVERAGE` : Setting this ON calculates the code coverage of the [test cases](./tests) for [VT Core](./src/core)
 
 # Dependencies
-Verified Telemetry is dependant on following SDK's:
+Verified Telemetry is dependant on following SDK:
   * [NetXDuo](https://github.com/azure-rtos/netxduo/tree/feature/iot_pnp)
 
 # Samples
