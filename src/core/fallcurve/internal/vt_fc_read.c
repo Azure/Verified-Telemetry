@@ -19,7 +19,7 @@ static VT_VOID fc_calculate_required_tick_resolution(
     {
         *tick_resolution_us = MIN_TICK_RESOLUTION;
     }
-    if(max_tick_value < MIN_TICK_VALUE || max_tick_value > MAX_TICK_VALUE)
+    if(max_tick_value < MIN_TICK_VALUE)
     {
         max_tick_value = MAX_TICK_VALUE;
     }
