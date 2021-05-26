@@ -3,7 +3,7 @@ name: Build Docs
 on:
   push:
     branches:
-      - public_preview_1
+      - main
 
 defaults:
   run:
