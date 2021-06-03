@@ -115,7 +115,6 @@ static VT_UINT vt_adc_read_inconsistent_voltage_response(VT_UINT adc_id, VT_VOID
 {
     if (vt_adc_inconsistent_response_iter < 2)
     {
-        vt_adc_inconsistent_response_iter++;
         return vt_adc_read_exponential_fall_voltage_response(adc_id, adc_controller, adc_channel);
     }
     else
