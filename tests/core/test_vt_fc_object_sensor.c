@@ -55,6 +55,21 @@ static VT_UINT vt_adc_read_step_voltage_response(VT_UINT adc_id, VT_VOID* adc_co
     return value;
 }
 
+static VT_UINT vt_adc_read_step_going_to_zero_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
+{
+    VT_UINT value = 50;
+    if (vt_adc_iter == 0)
+    {
+        value = 100;
+    }
+    else if (vt_adc_iter == (VT_FC_SAMPLE_LENGTH - 1))
+    {
+        value = 0;
+    }
+    vt_adc_iter++;
+    return value;
+}
+
 static VT_UINT vt_adc_read_triangular_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
 {
     VT_UINT value = 0;
@@ -113,7 +128,7 @@ static VT_UINT vt_adc_read_different_amplitude_exponential_fall_voltage_response
 
 static VT_UINT vt_adc_read_inconsistent_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
 {
-    if (vt_adc_inconsistent_response_iter < 2)
+    if (vt_adc_inconsistent_response_iter < 3)
     {
         return vt_adc_read_exponential_fall_voltage_response(adc_id, adc_controller, adc_channel);
     }
@@ -289,6 +304,10 @@ static VT_VOID test_vt_fallcurve_object_sensor_status(VT_VOID** state)
     assert_int_equal(sensor_status, VT_SIGNATURE_COMPUTE_FAIL);
 
     fc_object.device_driver->adc_read = &vt_adc_read_step_voltage_response;
+    vt_fallcurve_object_sensor_status(&fc_object, &sensor_status, &sensor_drift);
+    assert_int_equal(sensor_status, VT_SIGNATURE_COMPUTE_FAIL);
+
+    fc_object.device_driver->adc_read = &vt_adc_read_step_going_to_zero_voltage_response;
     vt_fallcurve_object_sensor_status(&fc_object, &sensor_status, &sensor_drift);
     assert_int_equal(sensor_status, VT_SIGNATURE_COMPUTE_FAIL);
 

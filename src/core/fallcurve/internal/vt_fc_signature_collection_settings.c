@@ -40,7 +40,7 @@ VT_UINT fc_signature_compute_collection_settings(
         fc_object->sensor_handle->gpio_id, fc_object->sensor_handle->gpio_port, fc_object->sensor_handle->gpio_pin);
     start_tick_count = (VT_UINT)fc_object->device_driver->tick();
 
-    while (time_to_fall < max_time_allowed)
+    while (time_to_fall <= max_time_allowed)
     {
         adc_value = fc_object->device_driver->adc_read(
             fc_object->sensor_handle->adc_id, fc_object->sensor_handle->adc_controller, fc_object->sensor_handle->adc_channel);
