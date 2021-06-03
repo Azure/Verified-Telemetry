@@ -33,7 +33,9 @@ static VT_INT fc_signature_calculate_37index(VT_UINT* raw_signature, VT_UINT sam
         }
     }
 
-    return abs_custom(((VT_FLOAT)sample_length / (log(raw_signature[sample_length - 1]) / -1.0f)) + 1);
+    return abs_custom(
+        ((VT_FLOAT)sample_length / (log((VT_FLOAT)raw_signature[sample_length - 1] / (VT_FLOAT)raw_signature[0]) / -1.0f)) +
+        1.0f);
 }
 
 static VT_FLOAT fc_signature_calculate_correlation_coefficient(VT_UINT* signature1, VT_UINT* signature2, VT_UINT sample_length)

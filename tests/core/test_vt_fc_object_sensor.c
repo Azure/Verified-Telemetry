@@ -46,7 +46,7 @@ static VT_UINT vt_adc_read_constant_voltage_response(VT_UINT adc_id, VT_VOID* ad
 
 static VT_UINT vt_adc_read_step_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
 {
-    VT_UINT value = 5;
+    VT_UINT value = 50;
     if (vt_adc_iter == 0)
     {
         value = 100;
@@ -113,7 +113,7 @@ static VT_UINT vt_adc_read_different_amplitude_exponential_fall_voltage_response
 
 static VT_UINT vt_adc_read_inconsistent_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
 {
-    if (vt_adc_inconsistent_response_iter < 3)
+    if (vt_adc_inconsistent_response_iter < 2)
     {
         vt_adc_inconsistent_response_iter++;
         return vt_adc_read_exponential_fall_voltage_response(adc_id, adc_controller, adc_channel);
@@ -275,7 +275,7 @@ static VT_VOID test_vt_fallcurve_object_sensor_status(VT_VOID** state)
     {
         fc_object.fingerprintdb.db[iter].sampling_interval_us = 200;
         fc_object.fingerprintdb.db[iter].falltime             = 200;
-        fc_object.fingerprintdb.db[iter].pearson_coeff        = 0.99f;
+        fc_object.fingerprintdb.db[iter].pearson_coeff        = 0.85f;
     }
     fc_object.fingerprintdb.db[VT_FC_MAX_SIGNATURES - 1].sampling_interval_us = 1;
     fc_object.fingerprintdb.db[VT_FC_MAX_SIGNATURES - 1].falltime             = 100;
