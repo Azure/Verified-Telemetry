@@ -27,6 +27,10 @@ static VT_UINT vt_adc_init(
 static VT_UINT vt_adc_init_inconsistent_voltage_response(
     VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel, VT_UINT* adc_resolution, float* adc_ref_volt)
 {
+    if(vt_adc_inconsistent_response_iter > 2)
+    {
+        vt_adc_inconsistent_response_iter = 0;
+    }
     vt_adc_inconsistent_response_iter++;
     vt_adc_iter = 0;
     return 0;
@@ -134,7 +138,6 @@ static VT_UINT vt_adc_read_inconsistent_voltage_response(VT_UINT adc_id, VT_VOID
     }
     else
     {
-        vt_adc_inconsistent_response_iter = 0;
         return vt_adc_read_step_voltage_response(adc_id, adc_controller, adc_channel);
     }
 }
@@ -246,11 +249,9 @@ static VT_VOID test_vt_fallcurve_object_sensor_calibrate_recalibrate(VT_VOID** s
     assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_ERROR);
     assert_int_equal(fc_object.fingerprintdb.num_signatures, 5);
 
-    fc_object.device_driver->adc_init = &vt_adc_init;
     fc_object.device_driver->adc_read = &vt_adc_read_fast_exponential_fall_voltage_response;
     assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_SUCCESS);
 
-    fc_object.device_driver->adc_init = &vt_adc_init;
     fc_object.device_driver->adc_read = &vt_adc_read_slow_exponential_fall_voltage_response;
     assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_SUCCESS);
 
