@@ -105,8 +105,11 @@ Macros</h2></td></tr>
 <tr class="memitem:a73ed72697249930e78540b6292beab96"><td class="memItemLeft" align="right" valign="top"><a id="a73ed72697249930e78540b6292beab96"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>VT_FC_MAX_FALLTIME_DEVIATION</b>&#160;&#160;&#160;20.0f</td></tr>
 <tr class="separator:a73ed72697249930e78540b6292beab96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34388ae040fd7a7fb389dcc99345a7b7"><td class="memItemLeft" align="right" valign="top"><a id="a34388ae040fd7a7fb389dcc99345a7b7"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>VT_FC_MAX_SHAPE_DEVIATION_FACTOR</b>&#160;&#160;&#160;20.0f</td></tr>
+<tr class="separator:a34388ae040fd7a7fb389dcc99345a7b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69d2d32ce5fe2fdcf9545e62eddd8189"><td class="memItemLeft" align="right" valign="top"><a id="a69d2d32ce5fe2fdcf9545e62eddd8189"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>VT_FC_MAX_SHAPE_DEVIATION</b>&#160;&#160;&#160;20.0f</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>VT_FC_MAX_SHAPE_DEVIATION</b>&#160;&#160;&#160;((1.0f - VT_FC_MIN_SHAPE_MATCH) / VT_FC_MIN_SHAPE_MATCH) * VT_FC_MAX_SHAPE_DEVIATION_FACTOR</td></tr>
 <tr class="separator:a69d2d32ce5fe2fdcf9545e62eddd8189"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c2c5d892a10f0858315de24c601a136"><td class="memItemLeft" align="right" valign="top"><a id="a3c2c5d892a10f0858315de24c601a136"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>VT_FC_SAMPLE_LENGTH</b>&#160;&#160;&#160;100</td></tr>
