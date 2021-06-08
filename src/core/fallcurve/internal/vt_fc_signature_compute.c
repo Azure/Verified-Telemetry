@@ -33,7 +33,9 @@ static VT_INT fc_signature_calculate_37index(VT_UINT* raw_signature, VT_UINT sam
         }
     }
 
-    return -1;
+    return abs_custom(
+        (((VT_FLOAT)sample_length * -1.0f) / log((VT_FLOAT)raw_signature[sample_length - 1] / (VT_FLOAT)raw_signature[0])) +
+        1.0f);
 }
 
 static VT_FLOAT fc_signature_calculate_correlation_coefficient(VT_UINT* signature1, VT_UINT* signature2, VT_UINT sample_length)
@@ -95,12 +97,12 @@ VT_UINT fc_signature_compute(
     // Find datapoint which reaches 37% of the starting value
     VT_INT index_37 = fc_signature_calculate_37index(raw_signature, sample_length);
     // fingerprint_length of this new fingerprint
-    if (index_37 > 0)
+    if (index_37 < sample_length)
     {
         sample_length = index_37 + 1;
     }
     // Calculate FallTime
-    falltime_computed = (VT_ULONG)sample_length * sampling_interval_us;
+    falltime_computed = (VT_ULONG)index_37 * sampling_interval_us;
     VTLogDebug("FallTime computed: %lu\r\n", falltime_computed);
 
     // Reconstruct exponential fall for the N points
