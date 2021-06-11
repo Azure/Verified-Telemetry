@@ -75,7 +75,7 @@ VT_UINT fc_signature_compute_collection_settings(
     else
     {
         *confidence_metric    = 100;
-        *sampling_interval_us = round(time_to_fall / 100.0f);
+        *sampling_interval_us = round(time_to_fall / (float)VT_FC_SAMPLE_LENGTH);
     }
     if (*sampling_interval_us < VT_FC_MIN_SAMPLING_INTERVAL_US)
     {
