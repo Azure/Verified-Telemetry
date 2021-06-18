@@ -1,0 +1,16 @@
+/* Copyright (c) Microsoft Corporation.
+   Licensed under the MIT License. */
+
+#ifndef _VT_CS_RAW_SIGNATURE_READ_H
+#define _VT_CS_RAW_SIGNATURE_READ_H
+
+#include "vt_cs_api.h"
+#include "vt_defs.h"
+
+VT_UINT cs_raw_signature_read(
+    VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT* sampling_frequencies, VT_UINT num_sampling_frequencies, VT_UINT sample_length);
+
+VT_UINT cs_raw_signature_fetch_stored_current_measurement(
+    VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT* raw_signature, VT_FLOAT sampling_frequency, VT_UINT sample_length);
+
+#endif
