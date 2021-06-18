@@ -48,7 +48,7 @@ static VT_BOOL cs_adc_buffer_to_raw_signature_buffers(VT_UINT adc_read_buffer_st
     for (VT_UINT iter = 0; iter < cs_object_reference->raw_signatures_reader->num_raw_signatures; iter++)
     {
         all_raw_signature_buffers_filled =
-            all_raw_signature_buffers_filled && cs_downsample_adc_buffer(iter, adc_read_buffer_start_index);
+            all_raw_signature_buffers_filled && cs_downsample_half_adc_buffer(iter, adc_read_buffer_start_index);
     }
     if (all_raw_signature_buffers_filled)
     {
@@ -148,7 +148,7 @@ VT_UINT cs_raw_signature_read(
     /* Initialize raw signature buffer */
     for (VT_UINT iter = 0; iter < num_sampling_frequencies; iter++)
     {
-        raw_signature_buffer_init(cs_object_reference->raw_signatures_reader->raw_signatures_shared_buffer[iter],
+        cs_raw_signature_buffer_init(&(cs_object_reference->raw_signatures_reader->raw_signatures_shared_buffer[iter]),
             sampling_frequencies[iter],
             sample_length);
     }
@@ -166,6 +166,8 @@ VT_UINT cs_raw_signature_read(
         cs_object_reference->raw_signatures_reader->adc_read_sampling_frequency,
         &cs_raw_signature_read_half_complete_callback,
         &cs_raw_signature_read_full_complete_callback);
+    
+    return VT_SUCCESS;
 }
 
 VT_UINT cs_raw_signature_fetch_stored_current_measurement(

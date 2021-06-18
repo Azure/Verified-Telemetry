@@ -48,7 +48,7 @@ VT_VOID fc_adc_read(VT_FALLCURVE_OBJECT* fc_object, VT_UINT* raw_signature, VT_U
     sampling_period_ticks = round((float)sampling_interval_us / (float)tick_resolution_usec);
     VTLogDebug("Sampling Period Ticks: %d \r\n", sampling_period_ticks);
 
-    fc_object->device_driver->adc_init(fc_object->sensor_handle->adc_id,
+    fc_object->device_driver->adc_single_read_init(fc_object->sensor_handle->adc_id,
         fc_object->sensor_handle->adc_controller,
         fc_object->sensor_handle->adc_channel,
         &adc_resolution,
@@ -61,7 +61,7 @@ VT_VOID fc_adc_read(VT_FALLCURVE_OBJECT* fc_object, VT_UINT* raw_signature, VT_U
 
     for (VT_UINT iter = 0; iter < sample_length; iter++)
     {
-        raw_signature[iter] = fc_object->device_driver->adc_read(
+        raw_signature[iter] = fc_object->device_driver->adc_single_read(
             fc_object->sensor_handle->adc_id, fc_object->sensor_handle->adc_controller, fc_object->sensor_handle->adc_channel);
         while ((uint16_t)((VT_UINT)fc_object->device_driver->tick() - start_tick_count) < sampling_period_ticks)
         {

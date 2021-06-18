@@ -17,14 +17,14 @@ static VT_UINT vt_adc_iter;
 static VT_ULONG vt_tick_iter;
 static VT_UINT vt_adc_inconsistent_response_iter = 0;
 
-static VT_UINT vt_adc_init(
+static VT_UINT vt_adc_single_read_init(
     VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel, VT_UINT* adc_resolution, float* adc_ref_volt)
 {
     vt_adc_iter = 0;
     return 0;
 }
 
-static VT_UINT vt_adc_init_inconsistent_voltage_response(
+static VT_UINT vt_adc_single_read_init_inconsistent_voltage_response(
     VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel, VT_UINT* adc_resolution, float* adc_ref_volt)
 {
     if (vt_adc_inconsistent_response_iter > 2)
@@ -36,19 +36,19 @@ static VT_UINT vt_adc_init_inconsistent_voltage_response(
     return 0;
 }
 
-static VT_UINT vt_adc_read_zero_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
+static VT_UINT vt_adc_single_read_zero_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
 {
     VT_UINT value = 0;
     return value;
 }
 
-static VT_UINT vt_adc_read_constant_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
+static VT_UINT vt_adc_single_read_constant_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
 {
     VT_UINT value = 5;
     return value;
 }
 
-static VT_UINT vt_adc_read_step_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
+static VT_UINT vt_adc_single_read_step_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
 {
     VT_UINT value = 50;
     if (vt_adc_iter == 0)
@@ -59,7 +59,7 @@ static VT_UINT vt_adc_read_step_voltage_response(VT_UINT adc_id, VT_VOID* adc_co
     return value;
 }
 
-static VT_UINT vt_adc_read_step_going_to_zero_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
+static VT_UINT vt_adc_single_read_step_going_to_zero_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
 {
     VT_UINT value = 50;
     if (vt_adc_iter == 0)
@@ -74,7 +74,7 @@ static VT_UINT vt_adc_read_step_going_to_zero_voltage_response(VT_UINT adc_id, V
     return value;
 }
 
-static VT_UINT vt_adc_read_triangular_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
+static VT_UINT vt_adc_single_read_triangular_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
 {
     VT_UINT value = 0;
     if (vt_adc_iter < (VT_FC_SAMPLE_LENGTH / 2))
@@ -89,7 +89,7 @@ static VT_UINT vt_adc_read_triangular_voltage_response(VT_UINT adc_id, VT_VOID* 
     return value;
 }
 
-static VT_UINT vt_adc_read_exponential_rise_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
+static VT_UINT vt_adc_single_read_exponential_rise_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
 {
     VT_UINT value = 0;
     value = round((VT_FLOAT)1000 * (VT_FLOAT)exp(1.0f - (-1.0f * ((VT_FLOAT)vt_adc_iter / (VT_FLOAT)(VT_FC_SAMPLE_LENGTH - 1)))));
@@ -97,7 +97,7 @@ static VT_UINT vt_adc_read_exponential_rise_voltage_response(VT_UINT adc_id, VT_
     return value;
 }
 
-static VT_UINT vt_adc_read_exponential_fall_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
+static VT_UINT vt_adc_single_read_exponential_fall_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
 {
     VT_UINT value = 0;
     value         = round((VT_FLOAT)1000 * (VT_FLOAT)exp(-1.0f * ((VT_FLOAT)vt_adc_iter / (VT_FLOAT)(VT_FC_SAMPLE_LENGTH - 1))));
@@ -105,7 +105,7 @@ static VT_UINT vt_adc_read_exponential_fall_voltage_response(VT_UINT adc_id, VT_
     return value;
 }
 
-static VT_UINT vt_adc_read_fast_exponential_fall_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
+static VT_UINT vt_adc_single_read_fast_exponential_fall_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
 {
     VT_UINT value = 0;
     value = round((VT_FLOAT)1000 * (VT_FLOAT)exp(-1.0f * ((VT_FLOAT)vt_adc_iter / (VT_FLOAT)((VT_FC_SAMPLE_LENGTH / 3) - 1))));
@@ -113,7 +113,7 @@ static VT_UINT vt_adc_read_fast_exponential_fall_voltage_response(VT_UINT adc_id
     return value;
 }
 
-static VT_UINT vt_adc_read_slow_exponential_fall_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
+static VT_UINT vt_adc_single_read_slow_exponential_fall_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
 {
     VT_UINT value = 0;
     value = round((VT_FLOAT)1000 * (VT_FLOAT)exp(-1.0f * ((VT_FLOAT)vt_adc_iter / (VT_FLOAT)((VT_FC_SAMPLE_LENGTH * 3) - 1))));
@@ -121,7 +121,7 @@ static VT_UINT vt_adc_read_slow_exponential_fall_voltage_response(VT_UINT adc_id
     return value;
 }
 
-static VT_UINT vt_adc_read_different_amplitude_exponential_fall_voltage_response(
+static VT_UINT vt_adc_single_read_different_amplitude_exponential_fall_voltage_response(
     VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
 {
     VT_UINT value = 0;
@@ -130,7 +130,7 @@ static VT_UINT vt_adc_read_different_amplitude_exponential_fall_voltage_response
     return value;
 }
 
-static VT_UINT vt_adc_read_half_exponential_half_linear_fall_voltage_response(
+static VT_UINT vt_adc_single_read_half_exponential_half_linear_fall_voltage_response(
     VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
 {
     VT_UINT value = 0;
@@ -146,15 +146,15 @@ static VT_UINT vt_adc_read_half_exponential_half_linear_fall_voltage_response(
     return value;
 }
 
-static VT_UINT vt_adc_read_inconsistent_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
+static VT_UINT vt_adc_single_read_inconsistent_voltage_response(VT_UINT adc_id, VT_VOID* adc_controller, VT_VOID* adc_channel)
 {
     if (vt_adc_inconsistent_response_iter < 3)
     {
-        return vt_adc_read_exponential_fall_voltage_response(adc_id, adc_controller, adc_channel);
+        return vt_adc_single_read_exponential_fall_voltage_response(adc_id, adc_controller, adc_channel);
     }
     else
     {
-        return vt_adc_read_step_voltage_response(adc_id, adc_controller, adc_channel);
+        return vt_adc_single_read_step_voltage_response(adc_id, adc_controller, adc_channel);
     }
 }
 
@@ -212,7 +212,7 @@ static VT_VOID test_vt_fallcurve_object_sensor_calibrate_recalibrate(VT_VOID** s
     fc_object.device_driver = &device_driver;
     fc_object.sensor_handle = &sensor_handle;
     VT_UINT8 confidence_metric;
-    fc_object.device_driver->adc_init          = &vt_adc_init;
+    fc_object.device_driver->adc_single_read_init          = &vt_adc_single_read_init;
     fc_object.device_driver->gpio_on           = &vt_gpio_on;
     fc_object.device_driver->gpio_off          = &vt_gpio_off;
     fc_object.device_driver->tick_init         = &vt_tick_init;
@@ -221,23 +221,23 @@ static VT_VOID test_vt_fallcurve_object_sensor_calibrate_recalibrate(VT_VOID** s
     fc_object.device_driver->interrupt_enable  = &vt_interrupt_enable;
     fc_object.device_driver->interrupt_disable = &vt_interrupt_disable;
 
-    fc_object.device_driver->adc_read = &vt_adc_read_zero_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_zero_voltage_response;
     assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_ERROR);
     assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_ERROR);
 
-    fc_object.device_driver->adc_read = &vt_adc_read_constant_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_constant_voltage_response;
     assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_ERROR);
     assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_ERROR);
 
-    fc_object.device_driver->adc_read = &vt_adc_read_step_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_step_voltage_response;
     assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_ERROR);
     assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_ERROR);
 
-    fc_object.device_driver->adc_read = &vt_adc_read_exponential_rise_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_exponential_rise_voltage_response;
     assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_ERROR);
     assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_ERROR);
 
-    fc_object.device_driver->adc_read = &vt_adc_read_triangular_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_triangular_voltage_response;
     assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_SUCCESS);
     assert_int_equal(fc_object.fingerprintdb.num_signatures, 1);
     assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_SUCCESS);
@@ -251,7 +251,7 @@ static VT_VOID test_vt_fallcurve_object_sensor_calibrate_recalibrate(VT_VOID** s
     assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_ERROR);
     assert_int_equal(fc_object.fingerprintdb.num_signatures, 5);
 
-    fc_object.device_driver->adc_read = &vt_adc_read_exponential_fall_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_exponential_fall_voltage_response;
     assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_SUCCESS);
     assert_int_equal(fc_object.fingerprintdb.num_signatures, 1);
     assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_SUCCESS);
@@ -265,14 +265,14 @@ static VT_VOID test_vt_fallcurve_object_sensor_calibrate_recalibrate(VT_VOID** s
     assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_ERROR);
     assert_int_equal(fc_object.fingerprintdb.num_signatures, 5);
 
-    fc_object.device_driver->adc_read = &vt_adc_read_fast_exponential_fall_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_fast_exponential_fall_voltage_response;
     assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_SUCCESS);
 
-    fc_object.device_driver->adc_read = &vt_adc_read_slow_exponential_fall_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_slow_exponential_fall_voltage_response;
     assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_SUCCESS);
 
-    fc_object.device_driver->adc_init = &vt_adc_init_inconsistent_voltage_response;
-    fc_object.device_driver->adc_read = &vt_adc_read_inconsistent_voltage_response;
+    fc_object.device_driver->adc_single_read_init = &vt_adc_single_read_init_inconsistent_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_inconsistent_voltage_response;
     assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_ERROR);
     assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_ERROR);
 }
@@ -287,7 +287,7 @@ static VT_VOID test_vt_fallcurve_object_sensor_status(VT_VOID** state)
     fc_object.sensor_handle = &sensor_handle;
     VT_UINT sensor_status;
     VT_UINT sensor_drift;
-    fc_object.device_driver->adc_init          = &vt_adc_init;
+    fc_object.device_driver->adc_single_read_init          = &vt_adc_single_read_init;
     fc_object.device_driver->gpio_on           = &vt_gpio_on;
     fc_object.device_driver->gpio_off          = &vt_gpio_off;
     fc_object.device_driver->tick_init         = &vt_tick_init;
@@ -296,7 +296,7 @@ static VT_VOID test_vt_fallcurve_object_sensor_status(VT_VOID** state)
     fc_object.device_driver->interrupt_enable  = &vt_interrupt_enable;
     fc_object.device_driver->interrupt_disable = &vt_interrupt_disable;
 
-    fc_object.device_driver->adc_read      = &vt_adc_read_zero_voltage_response;
+    fc_object.device_driver->adc_single_read      = &vt_adc_single_read_zero_voltage_response;
     fc_object.fingerprintdb.num_signatures = 0;
     vt_fallcurve_object_sensor_status(&fc_object, &sensor_status, &sensor_drift);
     assert_int_equal(sensor_status, VT_SIGNATURE_DB_EMPTY);
@@ -317,52 +317,52 @@ static VT_VOID test_vt_fallcurve_object_sensor_status(VT_VOID** state)
     fc_object.fingerprintdb.db[VT_FC_MAX_SIGNATURES - 1].falltime             = 100;
     fc_object.fingerprintdb.db[VT_FC_MAX_SIGNATURES - 1].pearson_coeff        = 1.0f;
 
-    fc_object.device_driver->adc_read = &vt_adc_read_zero_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_zero_voltage_response;
     vt_fallcurve_object_sensor_status(&fc_object, &sensor_status, &sensor_drift);
     assert_int_equal(sensor_status, VT_SIGNATURE_COMPUTE_FAIL);
 
-    fc_object.device_driver->adc_read = &vt_adc_read_constant_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_constant_voltage_response;
     vt_fallcurve_object_sensor_status(&fc_object, &sensor_status, &sensor_drift);
     assert_int_equal(sensor_status, VT_SIGNATURE_COMPUTE_FAIL);
 
-    fc_object.device_driver->adc_read = &vt_adc_read_step_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_step_voltage_response;
     vt_fallcurve_object_sensor_status(&fc_object, &sensor_status, &sensor_drift);
     assert_int_equal(sensor_status, VT_SIGNATURE_COMPUTE_FAIL);
 
-    fc_object.device_driver->adc_read = &vt_adc_read_step_going_to_zero_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_step_going_to_zero_voltage_response;
     vt_fallcurve_object_sensor_status(&fc_object, &sensor_status, &sensor_drift);
     assert_int_equal(sensor_status, VT_SIGNATURE_COMPUTE_FAIL);
 
-    fc_object.device_driver->adc_read = &vt_adc_read_exponential_rise_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_exponential_rise_voltage_response;
     vt_fallcurve_object_sensor_status(&fc_object, &sensor_status, &sensor_drift);
     assert_int_equal(sensor_status, VT_SIGNATURE_COMPUTE_FAIL);
 
-    fc_object.device_driver->adc_read = &vt_adc_read_triangular_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_triangular_voltage_response;
     vt_fallcurve_object_sensor_status(&fc_object, &sensor_status, &sensor_drift);
     assert_int_equal(sensor_status, VT_SIGNATURE_NOT_MATCHING);
 
-    fc_object.device_driver->adc_read = &vt_adc_read_slow_exponential_fall_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_slow_exponential_fall_voltage_response;
     vt_fallcurve_object_sensor_status(&fc_object, &sensor_status, &sensor_drift);
     assert_int_equal(sensor_status, VT_SIGNATURE_NOT_MATCHING);
 
-    fc_object.device_driver->adc_read = &vt_adc_read_fast_exponential_fall_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_fast_exponential_fall_voltage_response;
     vt_fallcurve_object_sensor_status(&fc_object, &sensor_status, &sensor_drift);
     assert_int_equal(sensor_status, VT_SIGNATURE_NOT_MATCHING);
 
-    fc_object.device_driver->adc_read = &vt_adc_read_half_exponential_half_linear_fall_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_half_exponential_half_linear_fall_voltage_response;
     vt_fallcurve_object_sensor_status(&fc_object, &sensor_status, &sensor_drift);
     assert_int_equal(sensor_status, VT_SIGNATURE_NOT_MATCHING);
 
-    fc_object.device_driver->adc_read = &vt_adc_read_exponential_fall_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_exponential_fall_voltage_response;
     vt_fallcurve_object_sensor_status(&fc_object, &sensor_status, &sensor_drift);
     assert_int_equal(sensor_status, VT_SIGNATURE_MATCHING);
 
-    fc_object.device_driver->adc_read = &vt_adc_read_different_amplitude_exponential_fall_voltage_response;
+    fc_object.device_driver->adc_single_read = &vt_adc_single_read_different_amplitude_exponential_fall_voltage_response;
     vt_fallcurve_object_sensor_status(&fc_object, &sensor_status, &sensor_drift);
     assert_int_equal(sensor_status, VT_SIGNATURE_MATCHING);
 
     fc_object.device_driver->tick_init = &vt_tick_init_with_some_values;
-    fc_object.device_driver->adc_read  = &vt_adc_read_exponential_fall_voltage_response;
+    fc_object.device_driver->adc_single_read  = &vt_adc_single_read_exponential_fall_voltage_response;
     vt_fallcurve_object_sensor_status(&fc_object, &sensor_status, &sensor_drift);
     assert_int_equal(sensor_status, VT_SIGNATURE_MATCHING);
 }

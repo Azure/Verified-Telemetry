@@ -60,7 +60,7 @@ VT_VOID cs_calibrate_sensor(VT_CURRENTSENSE_OBJECT* cs_object)
     for (VT_INT iter = 0; iter < VT_CS_AVG_SIGNATURE_REPEATABILITY_TEST; iter++)
     {
         cs_signature_features_avg_compute(cs_object, lowest_sample_freq, &(avg_curr_repeatability_test[iter]));
-        if (cs_signature_avg_evaluate(avg_curr_repeatability_test[iter], avg_curr) > VT_CS_MAX_AVG_CURR_DRIFT)
+        if (cs_signature_features_avg_evaluate(avg_curr_repeatability_test[iter], avg_curr) > VT_CS_MAX_AVG_CURR_DRIFT)
         {
             avg_curr_repeatability_test_result = false;
             break;
@@ -82,7 +82,7 @@ VT_VOID cs_recalibrate_sensor(VT_CURRENTSENSE_OBJECT* cs_object)
 {
     VT_FLOAT top_N_frequencies[VT_CS_MAX_TEST_FREQUENCIES] = {0};
     VT_FLOAT lowest_sample_freq                            = VT_CS_ADC_MAX_SAMPLING_FREQ;
-    cs_signature_compute_collection_settings(cs_object, top_N_frequencies, &lowest_sample_freq);
+    cs_calibrate_compute_signature_collection_settings(cs_object, top_N_frequencies, &lowest_sample_freq);
 
     VT_UINT8 characteristic_frequencies_found = 0;
     VT_FLOAT signal_freq;
@@ -106,7 +106,7 @@ VT_VOID cs_recalibrate_sensor(VT_CURRENTSENSE_OBJECT* cs_object)
             continue;
         }
 
-        if (cs_signature_compute(cs_object, top_N_frequencies[iter], &signal_freq, &duty_cycle, &curr_diff))
+        if (cs_signature_features_compute(cs_object, top_N_frequencies[iter], &signal_freq, &duty_cycle, &curr_diff))
         {
             continue;
         }
@@ -123,11 +123,11 @@ VT_VOID cs_recalibrate_sensor(VT_CURRENTSENSE_OBJECT* cs_object)
         cs_repeating_signature_confidence = 100;
     }
 
-    cs_signature_avg_compute(cs_object, lowest_sample_freq, &avg_curr);
+    cs_signature_features_avg_compute(cs_object, lowest_sample_freq, &avg_curr);
     for (VT_INT iter = 0; iter < VT_CS_AVG_SIGNATURE_REPEATABILITY_TEST; iter++)
     {
-        cs_signature_avg_compute(cs_object, lowest_sample_freq, &(avg_curr_repeatability_test[iter]));
-        if (cs_signature_avg_evaluate(avg_curr_repeatability_test[iter], avg_curr) > VT_CS_MAX_AVG_CURR_DRIFT)
+        cs_signature_features_avg_compute(cs_object, lowest_sample_freq, &(avg_curr_repeatability_test[iter]));
+        if (cs_signature_features_avg_evaluate(avg_curr_repeatability_test[iter], avg_curr) > VT_CS_MAX_AVG_CURR_DRIFT)
         {
             avg_curr_repeatability_test_result = false;
             break;

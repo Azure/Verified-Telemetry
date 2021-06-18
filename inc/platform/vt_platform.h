@@ -14,7 +14,7 @@ typedef VT_UINT (*VT_ADC_SINGLE_READ_INIT_FUNC)(VT_ADC_ID adc_id,
     VT_UINT* adc_resolution,
     VT_FLOAT* adc_ref_volt);
 typedef VT_UINT (*VT_ADC_SINGLE_READ_FUNC)(VT_ADC_ID adc_id, VT_ADC_CONTROLLER* adc_controller, VT_ADC_CHANNEL* adc_channel);
-typedef VT_UINT (*VT_ADC_BUFFER_READ_CALLBACK_FUNC)(void);
+typedef VT_VOID (*VT_ADC_BUFFER_READ_CALLBACK_FUNC)(void);
 typedef VT_UINT (*VT_ADC_BUFFER_READ_FUNC)(VT_ADC_ID adc_id,
     VT_ADC_CONTROLLER* adc_controller,
     VT_ADC_CHANNEL* adc_channel,

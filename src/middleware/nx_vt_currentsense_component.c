@@ -33,7 +33,7 @@ UINT nx_vt_currentsense_init(NX_VT_CURRENTSENSE_COMPONENT* handle,
     VT_DEVICE_DRIVER* device_driver,
     VT_SENSOR_HANDLE* sensor_handle,
     UCHAR* associated_telemetry,
-    UINT* shared_buffer,
+    CHAR* shared_buffer,
     UINT shared_buffer_size)
 {
     UINT status;
@@ -392,12 +392,10 @@ static UINT nx_vt_currentsense_fingerprint_template_associated_properties(
     NX_VT_CURRENTSENSE_COMPONENT* handle, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
 {
     UINT status          = true;
-    UINT response_status = 0;
-    NX_AZURE_IOT_JSON_WRITER json_writer;
 
     VT_CURRENTSENSE_DATABASE_FLATTENED flattened_db;
     bool db_required_to_store       = true;
-    UINT template_confidence_metric = 0;
+    VT_UINT template_confidence_metric = 0;
     vt_currentsense_object_database_fetch(
         &(handle->cs_object), &flattened_db, &db_required_to_store, &template_confidence_metric);
 
@@ -428,8 +426,8 @@ static UINT nx_vt_currentsense_telemetry_status_property(NX_VT_CURRENTSENSE_COMP
     UINT response_status = 0;
     NX_AZURE_IOT_JSON_WRITER json_writer;
 
-    UINT sensor_status    = 0;
-    UINT sensor_drift     = 0;
+    VT_UINT sensor_status    = 0;
+    VT_UINT sensor_drift     = 0;
     bool telemetry_status = false;
 
     if (toggle_verified_telemetry)
@@ -702,8 +700,8 @@ UINT nx_vt_currentsense_signature_process(NX_VT_CURRENTSENSE_COMPONENT* handle,
 
 bool nx_vt_currentsense_fetch_telemetry_status(NX_VT_CURRENTSENSE_COMPONENT* handle, bool toggle_verified_telemetry)
 {
-    UINT sensor_status    = 0;
-    UINT sensor_drift     = 0;
+    VT_UINT sensor_status    = 0;
+    VT_UINT sensor_drift     = 0;
     bool telemetry_status = false;
 
     if (toggle_verified_telemetry)

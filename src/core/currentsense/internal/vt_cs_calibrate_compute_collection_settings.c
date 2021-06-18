@@ -272,7 +272,7 @@ VT_VOID cs_calibrate_compute_sampling_frequencies(VT_CURRENTSENSE_OBJECT* cs_obj
             break;
         }
         sampling_frequencies[iter] = get_calib_range_freq(iter);
-        *num_sampling_frequencies++;
+        *num_sampling_frequencies = *num_sampling_frequencies + 1;
     }
 }
 
@@ -304,7 +304,7 @@ VT_VOID cs_calibrate_compute_signature_collection_settings(
     for (VT_INT iter = 0; iter < calib_ranges; iter++)
     {
 
-        ccs_raw_signature_fetch_stored_current_measurement(
+        cs_raw_signature_fetch_stored_current_measurement(
             cs_object, adc_read_signal, get_calib_range_freq(iter), VT_CS_SAMPLE_LENGTH);
         // Add Digital Filter
         for (VT_INT iter1 = 0; iter1 < VT_CS_SAMPLE_LENGTH; iter1++)

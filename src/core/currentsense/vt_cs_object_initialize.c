@@ -6,7 +6,7 @@
 VT_UINT vt_currentsense_object_initialize(VT_CURRENTSENSE_OBJECT* cs_object,
     VT_DEVICE_DRIVER* device_driver,
     VT_SENSOR_HANDLE* sensor_handle,
-    VT_UINT8* raw_signatures_buffer,
+    VT_CHAR* raw_signatures_buffer,
     VT_UINT raw_signatures_buffer_size)
 {
     cs_object->sensor_handle = sensor_handle;

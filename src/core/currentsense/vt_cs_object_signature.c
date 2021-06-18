@@ -9,7 +9,7 @@
 VT_VOID vt_currentsense_object_signature_read(VT_CURRENTSENSE_OBJECT* cs_object)
 {
     VT_FLOAT sampling_frequencies[VT_CS_MAX_SIGNATURES];
-    VT_UINT8 num_sampling_frqeuencies = 0;
+    VT_UINT num_sampling_frqeuencies = 0;
     if (cs_object->mode == VT_MODE_RUNTIME_EVALUATE)
     {
         cs_fetch_evaluation_sampling_frequencies(

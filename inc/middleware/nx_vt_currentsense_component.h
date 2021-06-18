@@ -40,7 +40,7 @@ UINT nx_vt_currentsense_init(NX_VT_CURRENTSENSE_COMPONENT* handle,
     VT_DEVICE_DRIVER* device_driver,
     VT_SENSOR_HANDLE* sensor_handle,
     UCHAR* associated_telemetry,
-    UINT* shared_buffer,
+    CHAR* shared_buffer,
     UINT shared_buffer_size);
 
 UINT nx_vt_currentsense_reported_properties(NX_VT_CURRENTSENSE_COMPONENT* handle,
@@ -75,7 +75,7 @@ UINT nx_vt_currentsense_signature_process(NX_VT_CURRENTSENSE_COMPONENT* handle,
     UINT associated_telemetry_length,
     bool toggle_verified_telemetry);
 
-bool nx_vt_currentsense_fetch_telemetry_status(NX_VT_CURRENTSENSE_COMPONENT* handle, bool toggle_verified_telemetry)
+bool nx_vt_currentsense_fetch_telemetry_status(NX_VT_CURRENTSENSE_COMPONENT* handle, bool toggle_verified_telemetry);
 
 #ifdef __cplusplus
 }

@@ -491,8 +491,8 @@ UINT nx_vt_verified_telemetry_message_create_send(NX_VERIFIED_TELEMETRY_DB* veri
                     strcat(scratch_buffer, vt_property_name);
                     strcat(scratch_buffer, "=");
                     strcat(scratch_buffer,
-                        nx_vt_currentsense_fetch_telemetry_status(
-                            &(((NX_VT_OBJECT*)component_pointer)->component.cs), enable_verified_telemetry));
+                        (nx_vt_currentsense_fetch_telemetry_status(
+                            &(((NX_VT_OBJECT*)component_pointer)->component.cs), enable_verified_telemetry) == true) ? "true" : "false");
                     token_found = 1;
                     tokens++;
                 }
@@ -591,7 +591,7 @@ UINT nx_vt_signature_read(
     {
         if (((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_CURRENTSENSE)
         {
-            status = status || nx_vt_currentsense_signature_read(&(((NX_VT_OBJECT*)component_pointer)->component.fc),
+            status = status || nx_vt_currentsense_signature_read(&(((NX_VT_OBJECT*)component_pointer)->component.cs),
                                    associated_telemetry,
                                    associated_telemetry_length,
                                    enable_verified_telemetry);
@@ -619,7 +619,7 @@ UINT nx_vt_signature_process(
     {
         if (((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_CURRENTSENSE)
         {
-            status = status || nx_vt_currentsense_signature_process(&(((NX_VT_OBJECT*)component_pointer)->component.fc),
+            status = status || nx_vt_currentsense_signature_process(&(((NX_VT_OBJECT*)component_pointer)->component.cs),
                                    associated_telemetry,
                                    associated_telemetry_length,
                                    enable_verified_telemetry);
