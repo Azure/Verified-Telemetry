@@ -15,8 +15,6 @@ static const CHAR device_status_property[]             = "deviceStatus";
 static const CHAR temp_response_description_success[] = "success";
 static const CHAR temp_response_description_failed[]  = "failed";
 
-static CHAR scratch_buffer[3500];
-
 static VOID send_reported_property(NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr,
     const UCHAR* component_name_ptr,
     UINT component_name_length,
@@ -360,7 +358,8 @@ UINT nx_vt_properties(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, NX_AZURE_
 UINT nx_vt_init(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     UCHAR* component_name_ptr,
     bool enable_verified_telemetry,
-    VT_DEVICE_DRIVER* device_driver)
+    VT_DEVICE_DRIVER* device_driver,
+    CHAR* scratch_buffer)
 {
     strncpy((CHAR*)verified_telemetry_DB->component_name_ptr,
         (CHAR*)component_name_ptr,
@@ -372,7 +371,8 @@ UINT nx_vt_init(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     verified_telemetry_DB->first_component             = NULL;
     verified_telemetry_DB->last_component              = NULL;
 
-    verified_telemetry_DB->device_driver = device_driver;
+    verified_telemetry_DB->device_driver  = device_driver;
+    verified_telemetry_DB->scratch_buffer = verified_telemetry_DB->scratch_buffer;
 
     return NX_AZURE_IOT_SUCCESS;
 }
@@ -418,8 +418,8 @@ UINT nx_vt_signature_init(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
             verified_telemetry_DB->device_driver,
             sensor_handle,
             associated_telemetry,
-            scratch_buffer,
-            sizeof(scratch_buffer));
+            verified_telemetry_DB->scratch_buffer,
+            sizeof(verified_telemetry_DB->scratch_buffer));
     }
     return NX_AZURE_IOT_SUCCESS;
 }
@@ -444,7 +444,7 @@ UINT nx_vt_verified_telemetry_message_create_send(NX_VERIFIED_TELEMETRY_DB* veri
     UINT bytes_copied = 0;
     CHAR vt_property_name[PROPERTY_NAME_MAX_LENGTH];
     memset(vt_property_name, 0, sizeof(vt_property_name));
-    memset(scratch_buffer, 0, sizeof(scratch_buffer));
+    memset(verified_telemetry_DB->scratch_buffer, 0, sizeof(verified_telemetry_DB->scratch_buffer));
     UINT token_found     = 0;
     UCHAR* token_pointer = NULL;
     UINT tokens          = 0;
@@ -467,11 +467,11 @@ UINT nx_vt_verified_telemetry_message_create_send(NX_VERIFIED_TELEMETRY_DB* veri
                     strcat(vt_property_name, (CHAR*)token_pointer);
                     if (tokens > 0)
                     {
-                        strcat(scratch_buffer, "&");
+                        strcat(verified_telemetry_DB->scratch_buffer, "&");
                     }
-                    strcat(scratch_buffer, vt_property_name);
-                    strcat(scratch_buffer, "=");
-                    strcat(scratch_buffer,
+                    strcat(verified_telemetry_DB->scratch_buffer, vt_property_name);
+                    strcat(verified_telemetry_DB->scratch_buffer, "=");
+                    strcat(verified_telemetry_DB->scratch_buffer,
                         (((NX_VT_OBJECT*)component_pointer)->component.fc.telemetry_status > 0) ? "true" : "false");
                     token_found = 1;
                     tokens++;
@@ -486,13 +486,15 @@ UINT nx_vt_verified_telemetry_message_create_send(NX_VERIFIED_TELEMETRY_DB* veri
                     strcat(vt_property_name, (CHAR*)token_pointer);
                     if (tokens > 0)
                     {
-                        strcat(scratch_buffer, "&");
+                        strcat(verified_telemetry_DB->scratch_buffer, "&");
                     }
-                    strcat(scratch_buffer, vt_property_name);
-                    strcat(scratch_buffer, "=");
-                    strcat(scratch_buffer,
+                    strcat(verified_telemetry_DB->scratch_buffer, vt_property_name);
+                    strcat(verified_telemetry_DB->scratch_buffer, "=");
+                    strcat(verified_telemetry_DB->scratch_buffer,
                         (nx_vt_currentsense_fetch_telemetry_status(
-                            &(((NX_VT_OBJECT*)component_pointer)->component.cs), enable_verified_telemetry) == true) ? "true" : "false");
+                             &(((NX_VT_OBJECT*)component_pointer)->component.cs), enable_verified_telemetry) == true)
+                            ? "true"
+                            : "false");
                     token_found = 1;
                     tokens++;
                 }
@@ -500,15 +502,17 @@ UINT nx_vt_verified_telemetry_message_create_send(NX_VERIFIED_TELEMETRY_DB* veri
         }
         component_pointer = (((NX_VT_OBJECT*)component_pointer)->next_component);
     }
-    VTLogInfo("Attaching Telemetry Message Properties: %.*s \r\n", strlen(scratch_buffer), scratch_buffer);
+    VTLogInfo("Attaching Telemetry Message Properties: %.*s \r\n",
+        strlen(verified_telemetry_DB->scratch_buffer),
+        verified_telemetry_DB->scratch_buffer);
     /* Create a telemetry message packet. */
     if ((status = nx_azure_iot_pnp_client_telemetry_message_create_with_message_property(pnp_client_ptr,
              component_name_ptr,
              component_name_length,
              &packet_ptr,
              wait_option,
-             (UCHAR*)scratch_buffer,
-             strlen(scratch_buffer))))
+             (UCHAR*)verified_telemetry_DB->scratch_buffer,
+             strlen(verified_telemetry_DB->scratch_buffer))))
     {
         printf("Telemetry message with message properties create failed!: error code = 0x%08x\r\n", status);
         return (status);

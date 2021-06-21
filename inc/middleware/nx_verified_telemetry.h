@@ -21,6 +21,8 @@ extern "C" {
 #define VT_SIGNATURE_TYPE_FALLCURVE    0x01
 #define VT_SIGNATURE_TYPE_CURRENTSENSE 0x02
 
+#define VT_RECOMMENDED_BUFFFER_SIZE_BYTES 3500
+
 union NX_VT_SIGNATURE_COMPONENT_UNION_TAG {
 
     /* FallCurve Component */
@@ -71,6 +73,9 @@ typedef struct NX_VERIFIED_TELEMETRY_DB_TAG
     /* Device Status Property Sent*/
     bool device_status_property_sent;
 
+    /* Pointer to buffer passed from application layer, used for fingerprint calculation/storage */
+    CHAR* scratch_buffer
+
 } NX_VERIFIED_TELEMETRY_DB;
 
 /**
@@ -81,13 +86,15 @@ typedef struct NX_VERIFIED_TELEMETRY_DB_TAG
  * @param[in] enableVerifiedTelemetry User specified value to set Verified Telemetry active or inactive, can also be configured
  * during runtime from a writable Digital Twin property.
  * @param[in] device_driver The platform specific device driver components for interacting with the device hardware.
+ * @param[in] scratch_buffer Pointer to buffer passed from application layer, used for fingerprint calculation/storage.
  *
  * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
  */
 UINT nx_vt_init(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     UCHAR* component_name_ptr,
     bool enable_verified_telemetry,
-    VT_DEVICE_DRIVER* device_driver);
+    VT_DEVICE_DRIVER* device_driver,
+    CHAR* scratch_buffer);
 
 /**
  * @brief Initializes Verified Telemetry for a particular sensor data stream
