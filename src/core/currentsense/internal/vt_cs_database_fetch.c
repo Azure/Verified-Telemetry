@@ -42,20 +42,27 @@ VT_VOID cs_fetch_evaluation_sampling_frequencies(VT_CURRENTSENSE_OBJECT* cs_obje
     VT_UINT sampling_frequencies_buffer_length,
     VT_UINT* num_sampling_frequencies)
 {
-    if (num_sampling_frequencies == 0)
+    *num_sampling_frequencies = 0;
+    if (sampling_frequencies_buffer_length == 0)
     {
         return;
     }
 
-    sampling_freqeuencies[0] = cs_object->fingerprintdb.lowest_sample_freq;
-
-    for (VT_UINT iter = 1; iter < cs_object->fingerprintdb.num_signatures; iter++)
+    if (cs_object->fingerprintdb.avg_curr == VT_DATA_NOT_AVAILABLE)
     {
-        if (!(iter < sampling_frequencies_buffer_length))
+        return;
+    }
+
+    sampling_freqeuencies[0]  = cs_object->fingerprintdb.lowest_sample_freq;
+    *num_sampling_frequencies = *num_sampling_frequencies + 1;
+
+    for (VT_UINT iter = 0; iter < cs_object->fingerprintdb.num_signatures; iter++)
+    {
+        if ((iter + 1) == sampling_frequencies_buffer_length)
         {
             return;
         }
-        sampling_freqeuencies[iter] = cs_object->fingerprintdb.db[iter].sampling_freq;
-        num_sampling_frequencies++;
+        sampling_freqeuencies[iter + 1] = cs_object->fingerprintdb.db[iter].sampling_freq;
+        *num_sampling_frequencies       = *num_sampling_frequencies + 1;
     }
 }

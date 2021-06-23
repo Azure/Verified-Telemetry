@@ -74,7 +74,7 @@ typedef struct NX_VERIFIED_TELEMETRY_DB_TAG
     bool device_status_property_sent;
 
     /* Pointer to buffer passed from application layer, used for fingerprint calculation/storage */
-    CHAR* scratch_buffer
+    CHAR* scratch_buffer;
 
 } NX_VERIFIED_TELEMETRY_DB;
 

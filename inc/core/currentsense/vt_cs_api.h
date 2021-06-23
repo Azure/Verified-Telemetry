@@ -13,6 +13,7 @@ typedef struct VT_CURRENTSENSE_RAW_SIGNATURE_BUFFER_STRUCT
     VT_FLOAT sampling_frequency;
     VT_UINT sample_length;
     VT_UINT num_datapoints;
+    VT_UINT num_adc_buffer_datapoints_iterated;
     VT_FLOAT current_measured[VT_CS_SAMPLE_LENGTH];
 } VT_CURRENTSENSE_RAW_SIGNATURE_BUFFER;
 
@@ -23,6 +24,7 @@ typedef struct VT_CURRENTSENSE_RAW_SIGNATURES_READER_STRUCT
     VT_FLOAT adc_read_buffer[VT_CS_SAMPLE_LENGTH];
     VT_FLOAT adc_read_sampling_frequency;
     VT_BOOL raw_signature_ongoing_collection;
+    VT_BOOL raw_signature_buffers_filled;
 } VT_CURRENTSENSE_RAW_SIGNATURES_READER;
 
 typedef struct VT_CURRENTSENSE_TEMPLATE_SIGNATURE_FEATURES_STRUCT
@@ -93,7 +95,9 @@ VT_VOID vt_currentsense_object_signature_process(VT_CURRENTSENSE_OBJECT* cs_obje
 VT_VOID vt_currentsense_object_database_sync(VT_CURRENTSENSE_OBJECT* cs_object, VT_CURRENTSENSE_DATABASE_FLATTENED* flattened_db);
 
 // Fetch Database and template confidence
-VT_VOID vt_currentsense_object_database_fetch(
-    VT_CURRENTSENSE_OBJECT* cs_object, VT_CURRENTSENSE_DATABASE_FLATTENED* flattened_db, VT_BOOL* db_updated, VT_UINT* template_confidence_metric);
+VT_VOID vt_currentsense_object_database_fetch(VT_CURRENTSENSE_OBJECT* cs_object,
+    VT_CURRENTSENSE_DATABASE_FLATTENED* flattened_db,
+    VT_BOOL* db_updated,
+    VT_UINT* template_confidence_metric);
 
 #endif

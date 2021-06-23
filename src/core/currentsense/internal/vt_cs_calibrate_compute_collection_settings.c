@@ -267,12 +267,12 @@ VT_VOID cs_calibrate_compute_sampling_frequencies(VT_CURRENTSENSE_OBJECT* cs_obj
     *num_sampling_frequencies = 0;
     for (VT_UINT iter = 0; iter < fft_ranges; iter++)
     {
-        if (!(iter < sampling_frequencies_buffer_length))
+        if (iter == sampling_frequencies_buffer_length)
         {
             break;
         }
         sampling_frequencies[iter] = get_calib_range_freq(iter);
-        *num_sampling_frequencies = *num_sampling_frequencies + 1;
+        *num_sampling_frequencies  = *num_sampling_frequencies + 1;
     }
 }
 
