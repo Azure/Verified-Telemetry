@@ -359,7 +359,8 @@ UINT nx_vt_init(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     UCHAR* component_name_ptr,
     bool enable_verified_telemetry,
     VT_DEVICE_DRIVER* device_driver,
-    CHAR* scratch_buffer)
+    CHAR* scratch_buffer,
+    UINT scratch_buffer_length)
 {
     strncpy((CHAR*)verified_telemetry_DB->component_name_ptr,
         (CHAR*)component_name_ptr,
@@ -371,8 +372,9 @@ UINT nx_vt_init(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     verified_telemetry_DB->first_component             = NULL;
     verified_telemetry_DB->last_component              = NULL;
 
-    verified_telemetry_DB->device_driver  = device_driver;
-    verified_telemetry_DB->scratch_buffer = verified_telemetry_DB->scratch_buffer;
+    verified_telemetry_DB->device_driver         = device_driver;
+    verified_telemetry_DB->scratch_buffer        = scratch_buffer;
+    verified_telemetry_DB->scratch_buffer_length = scratch_buffer_length;
 
     return NX_AZURE_IOT_SUCCESS;
 }
@@ -419,7 +421,7 @@ UINT nx_vt_signature_init(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
             sensor_handle,
             associated_telemetry,
             verified_telemetry_DB->scratch_buffer,
-            sizeof(verified_telemetry_DB->scratch_buffer));
+            verified_telemetry_DB->scratch_buffer_length);
     }
     return NX_AZURE_IOT_SUCCESS;
 }
@@ -444,10 +446,11 @@ UINT nx_vt_verified_telemetry_message_create_send(NX_VERIFIED_TELEMETRY_DB* veri
     UINT bytes_copied = 0;
     CHAR vt_property_name[PROPERTY_NAME_MAX_LENGTH];
     memset(vt_property_name, 0, sizeof(vt_property_name));
-    memset(verified_telemetry_DB->scratch_buffer, 0, sizeof(verified_telemetry_DB->scratch_buffer));
-    UINT token_found     = 0;
-    UCHAR* token_pointer = NULL;
-    UINT tokens          = 0;
+    memset(verified_telemetry_DB->scratch_buffer, 0, verified_telemetry_DB->scratch_buffer_length);
+    UINT token_found                = 0;
+    UCHAR* token_pointer            = NULL;
+    UINT tokens                     = 0;
+    UINT str_buffer_space_available = 0;
 
     nx_azure_iot_json_reader_with_buffer_init(&json_reader, telemetry_data, data_size);
 
@@ -467,12 +470,21 @@ UINT nx_vt_verified_telemetry_message_create_send(NX_VERIFIED_TELEMETRY_DB* veri
                     strcat(vt_property_name, (CHAR*)token_pointer);
                     if (tokens > 0)
                     {
-                        strcat(verified_telemetry_DB->scratch_buffer, "&");
+                        str_buffer_space_available =
+                            verified_telemetry_DB->scratch_buffer_length - (strlen(verified_telemetry_DB->scratch_buffer) + 1);
+                        strncat(verified_telemetry_DB->scratch_buffer, "&", str_buffer_space_available);
                     }
-                    strcat(verified_telemetry_DB->scratch_buffer, vt_property_name);
-                    strcat(verified_telemetry_DB->scratch_buffer, "=");
-                    strcat(verified_telemetry_DB->scratch_buffer,
-                        (((NX_VT_OBJECT*)component_pointer)->component.fc.telemetry_status > 0) ? "true" : "false");
+                    str_buffer_space_available =
+                        verified_telemetry_DB->scratch_buffer_length - (strlen(verified_telemetry_DB->scratch_buffer) + 1);
+                    strncat(verified_telemetry_DB->scratch_buffer, vt_property_name, str_buffer_space_available);
+                    str_buffer_space_available =
+                        verified_telemetry_DB->scratch_buffer_length - (strlen(verified_telemetry_DB->scratch_buffer) + 1);
+                    strncat(verified_telemetry_DB->scratch_buffer, "=", str_buffer_space_available);
+                    str_buffer_space_available =
+                        verified_telemetry_DB->scratch_buffer_length - (strlen(verified_telemetry_DB->scratch_buffer) + 1);
+                    strncat(verified_telemetry_DB->scratch_buffer,
+                        (((NX_VT_OBJECT*)component_pointer)->component.fc.telemetry_status > 0) ? "true" : "false",
+                        str_buffer_space_available);
                     token_found = 1;
                     tokens++;
                 }
@@ -486,15 +498,24 @@ UINT nx_vt_verified_telemetry_message_create_send(NX_VERIFIED_TELEMETRY_DB* veri
                     strcat(vt_property_name, (CHAR*)token_pointer);
                     if (tokens > 0)
                     {
-                        strcat(verified_telemetry_DB->scratch_buffer, "&");
+                        str_buffer_space_available =
+                            verified_telemetry_DB->scratch_buffer_length - (strlen(verified_telemetry_DB->scratch_buffer) + 1);
+                        strncat(verified_telemetry_DB->scratch_buffer, "&", str_buffer_space_available);
                     }
-                    strcat(verified_telemetry_DB->scratch_buffer, vt_property_name);
-                    strcat(verified_telemetry_DB->scratch_buffer, "=");
-                    strcat(verified_telemetry_DB->scratch_buffer,
+                    str_buffer_space_available =
+                        verified_telemetry_DB->scratch_buffer_length - (strlen(verified_telemetry_DB->scratch_buffer) + 1);
+                    strncat(verified_telemetry_DB->scratch_buffer, vt_property_name, str_buffer_space_available);
+                    str_buffer_space_available =
+                        verified_telemetry_DB->scratch_buffer_length - (strlen(verified_telemetry_DB->scratch_buffer) + 1);
+                    strncat(verified_telemetry_DB->scratch_buffer, "=", str_buffer_space_available);
+                    str_buffer_space_available =
+                        verified_telemetry_DB->scratch_buffer_length - (strlen(verified_telemetry_DB->scratch_buffer) + 1);
+                    strncat(verified_telemetry_DB->scratch_buffer,
                         (nx_vt_currentsense_fetch_telemetry_status(
                              &(((NX_VT_OBJECT*)component_pointer)->component.cs), enable_verified_telemetry) == true)
                             ? "true"
-                            : "false");
+                            : "false",
+                        str_buffer_space_available);
                     token_found = 1;
                     tokens++;
                 }

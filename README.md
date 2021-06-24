@@ -100,16 +100,16 @@ Details about this model can be found [here](./PnPModel).
 
  | Platform Function  | Requirements to be implemented by Application Developer                                 | Required?  |
  |------------------- |---------------------------------------------------------------------------------------- |:---------: |
- | adc_single_init           | Should initialize ADC when the controller and channel are passed as arguments           |    YES     |
- | adc_single_read           | Should return ADC data when the controller and channel are passed as arguments          |    YES     |
- | adc_buffer_read           | Should return buffer filled with ADC data using DMA/non-blocking read when the controller, channel, sampling freqeuncy and sample length are passed as arguments         |    REQUIRED FOR CURRENTSENSE SIGNATURE     |
- | gpio_on            | Should set a GPIO pin HIGH when the GPIO port and pin are passed as arguments           |    YES     |
- | gpio_off           | Should set a GPIO pin LOW when the GPIO port and pin are passed as arguments            |    YES     |
- | tick_init          | Should initialize a tick counter with a time resolution that is passed as an argument   |    YES     |
- | tick_deinit        | Should de-initialize a running tick counter                                             |    YES     |
- | tick               | Should return the present tick value                                                    |    YES     |
- | interrupt_enable   | Should enable global interrupts on the MCU                                              |  OPTIONAL  |
- | interrupt_disable  | Should disable global interrupts on the MCU                                             |  OPTIONAL  |
+ | adc_single_init           | Should initialize ADC when the controller and channel are passed as arguments           |    REQUIRED FOR FALLCURVE SIGNATURE     |
+ | adc_single_read           | Should return ADC data when the controller and channel are passed as arguments          |    REQUIRED FOR FALLCURVE SIGNATURE     |
+ | adc_buffer_read           | Should return buffer filled with ADC data using DMA/non-blocking read when the controller, channel, sampling frequency and sample length are passed as arguments         |    REQUIRED FOR CURRENTSENSE SIGNATURE     |
+ | gpio_on            | Should set a GPIO pin HIGH when the GPIO port and pin are passed as arguments           |    REQUIRED FOR FALLCURVE SIGNATURE     |
+ | gpio_off           | Should set a GPIO pin LOW when the GPIO port and pin are passed as arguments            |    REQUIRED FOR FALLCURVE SIGNATURE     |
+ | tick_init          | Should initialize a tick counter with a time resolution that is passed as an argument   |    REQUIRED FOR FALLCURVE SIGNATURE     |
+ | tick_deinit        | Should de-initialize a running tick counter                                             |    REQUIRED FOR FALLCURVE SIGNATURE     |
+ | tick               | Should return the present tick value                                                    |    REQUIRED FOR FALLCURVE SIGNATURE     |
+ | interrupt_enable   | Should enable global interrupts on the MCU                                              |  OPTIONAL FOR FALLCURVE SIGNATURE |
+ | interrupt_disable  | Should disable global interrupts on the MCU                                             |  OPTIONAL FOR FALLCURVE SIGNATURE |
 * Samples for implementation of platform functions can be found [here](https://github.com/Azure/Verified-Telemetry-Device-Sample/blob/main/MXChip/AZ3166/app/sample_vt_device_driver.c) in the Device Samples
 
 ## Middleware API Documentation

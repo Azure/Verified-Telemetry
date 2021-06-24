@@ -21,7 +21,7 @@ extern "C" {
 #define VT_SIGNATURE_TYPE_FALLCURVE    0x01
 #define VT_SIGNATURE_TYPE_CURRENTSENSE 0x02
 
-#define VT_RECOMMENDED_BUFFFER_SIZE_BYTES 3500
+#define VT_MINIMUM_BUFFFER_SIZE_BYTES 3500
 
 union NX_VT_SIGNATURE_COMPONENT_UNION_TAG {
 
@@ -73,8 +73,11 @@ typedef struct NX_VERIFIED_TELEMETRY_DB_TAG
     /* Device Status Property Sent*/
     bool device_status_property_sent;
 
-    /* Pointer to buffer passed from application layer, used for fingerprint calculation/storage */
+    /* Pointer to byte buffer passed from application layer, used for fingerprint calculation/storage */
     CHAR* scratch_buffer;
+
+    /* Length of byte buffer passed from application layer, used for fingerprint calculation/storage */
+    UINT scratch_buffer_length;
 
 } NX_VERIFIED_TELEMETRY_DB;
 
@@ -86,7 +89,8 @@ typedef struct NX_VERIFIED_TELEMETRY_DB_TAG
  * @param[in] enableVerifiedTelemetry User specified value to set Verified Telemetry active or inactive, can also be configured
  * during runtime from a writable Digital Twin property.
  * @param[in] device_driver The platform specific device driver components for interacting with the device hardware.
- * @param[in] scratch_buffer Pointer to buffer passed from application layer, used for fingerprint calculation/storage.
+ * @param[in] scratch_buffer Pointer to byte buffer passed from application layer, used for fingerprint calculation/storage.
+ * @param[in] scratch_buffer_length Length of byte buffer passed from application layer, used for fingerprint calculation/storage.
  *
  * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
  */
@@ -94,7 +98,8 @@ UINT nx_vt_init(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     UCHAR* component_name_ptr,
     bool enable_verified_telemetry,
     VT_DEVICE_DRIVER* device_driver,
-    CHAR* scratch_buffer);
+    CHAR* scratch_buffer,
+    UINT scratch_buffer_length);
 
 /**
  * @brief Initializes Verified Telemetry for a particular sensor data stream
@@ -104,7 +109,7 @@ UINT nx_vt_init(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
  * sensor telemetry.
  * @param[in] component_name_ptr Name of the sensor.  Example - "accelerometer" This would be prepended with 'vT' by VT library
  * @param[in] signature_type One of the defined signature types. Currently available types - VT_SIGNATURE_TYPE_FALLCURVE
- * @param[in] associated_telemetry Telmetries associated with this sensor, sperated by commas  Example - "accelerometerX,
+ * @param[in] associated_telemetry Telmetries associated with this sensor, separated by commas  Example - "accelerometerX,
  * accelerometerY, accelerometerZ"
  * @param[in] telemetry_status_auto_update User specified value to control whether fingerprint computation for the sensor should
  * be invoked when nx_vt_compute_evaluate_fingerprint_all_sensors is called

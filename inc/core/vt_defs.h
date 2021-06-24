@@ -10,7 +10,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#define abs_custom(x) ((x) > 0.0f ? (x) : -(x))
+#define abs_custom(x) ((float)(x) > 0.0f ? (x) : -(x))
 
 #define VT_SUCCESS 0x00
 #define VT_ERROR   0x01
