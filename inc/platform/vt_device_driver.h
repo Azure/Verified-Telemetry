@@ -3,8 +3,8 @@
 
 /** @file */
 
-#ifndef _VT_DEVICE_DRIVER_TEMPLATE_H
-#define _VT_DEVICE_DRIVER_TEMPLATE_H
+#ifndef _VT_DEVICE_DRIVER_H
+#define _VT_DEVICE_DRIVER_H
 
 #include <stdint.h>
 
