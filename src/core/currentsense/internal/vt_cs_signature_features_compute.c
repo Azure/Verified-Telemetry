@@ -130,7 +130,7 @@ VT_UINT cs_signature_features_compute(VT_CURRENTSENSE_OBJECT* cs_object,
     {
         decimal    = lag_array[iter];
         frac_float = lag_array[iter] - (VT_FLOAT)decimal;
-        frac       = abs_custom(frac_float) * 10000;
+        frac       = fabsf(frac_float) * 10000;
         VTLogDebugNoTag("%d.%04d, ", decimal, frac);
     }
 #endif /* VT_LOG_LEVEL > 2 */
@@ -246,7 +246,7 @@ VT_UINT cs_signature_features_compute(VT_CURRENTSENSE_OBJECT* cs_object,
 #if VT_LOG_LEVEL > 2
     decimal    = period_total;
     frac_float = period_total - (VT_FLOAT)decimal;
-    frac       = abs_custom(frac_float) * 10000;
+    frac       = fabsf(frac_float) * 10000;
 #endif /* VT_LOG_LEVEL > 2 */
     VTLogDebug("Signature Time Period = %d.%04d\r\n", decimal, frac);
     VTLogDebug("Processed Signature:\r\n");
@@ -255,7 +255,7 @@ VT_UINT cs_signature_features_compute(VT_CURRENTSENSE_OBJECT* cs_object,
     {
         decimal    = raw_signature[iter];
         frac_float = raw_signature[iter] - (VT_FLOAT)decimal;
-        frac       = abs_custom(frac_float) * 10000;
+        frac       = fabsf(frac_float) * 10000;
         VTLogDebugNoTag("%d.%04d, ", decimal, frac);
     }
 #endif /* VT_LOG_LEVEL > 2 */
@@ -278,12 +278,12 @@ VT_UINT cs_signature_features_compute(VT_CURRENTSENSE_OBJECT* cs_object,
         if (raw_signature[iter] == 1)
         {
             period_on++;
-            avg_current_on += lag_array[iter] + abs_custom(min_value);
+            avg_current_on += lag_array[iter] + fabsf(min_value);
         }
         else
         {
             period_off++;
-            avg_current_off += lag_array[iter] + abs_custom(min_value);
+            avg_current_off += lag_array[iter] + fabsf(min_value);
         }
     }
     avg_current_on /= period_on;
@@ -295,21 +295,21 @@ VT_UINT cs_signature_features_compute(VT_CURRENTSENSE_OBJECT* cs_object,
 #if VT_LOG_LEVEL > 2
     decimal    = *current_draw;
     frac_float = *current_draw - (VT_FLOAT)decimal;
-    frac       = abs_custom(frac_float) * 10000;
+    frac       = fabsf(frac_float) * 10000;
 #endif /* VT_LOG_LEVEL > 2 */
     VTLogDebug("Signature Curr Draw = %d.%04d\r\n", decimal, frac);
 
 #if VT_LOG_LEVEL > 2
     decimal    = *duty_cycle;
     frac_float = *duty_cycle - (VT_FLOAT)decimal;
-    frac       = abs_custom(frac_float) * 10000;
+    frac       = fabsf(frac_float) * 10000;
 #endif /* VT_LOG_LEVEL > 2 */
     VTLogDebug("Signature Duty Cycle = %d.%04d\r\n", decimal, frac);
 
 #if VT_LOG_LEVEL > 2
     decimal    = *signature_frequency;
     frac_float = *signature_frequency - (VT_FLOAT)decimal;
-    frac       = abs_custom(frac_float) * 10000;
+    frac       = fabsf(frac_float) * 10000;
 #endif /* VT_LOG_LEVEL > 2 */
     VTLogDebug("Signature Frequency = %d.%04d\r\n", decimal, frac);
 
@@ -336,7 +336,7 @@ VT_VOID cs_signature_features_avg_compute(VT_CURRENTSENSE_OBJECT* cs_object, VT_
 #if VT_LOG_LEVEL > 2
     decimal    = *avg_curr;
     frac_float = *avg_curr - (VT_FLOAT)decimal;
-    frac       = abs_custom(frac_float) * 10000;
+    frac       = fabsf(frac_float) * 10000;
 #endif /* VT_LOG_LEVEL > 2 */
     VTLogDebug("Signature Average Current Draw = %d.%04d\r\n", decimal, frac);
 }

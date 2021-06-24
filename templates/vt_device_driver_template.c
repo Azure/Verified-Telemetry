@@ -1,7 +1,7 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-#include "sample_vt_device_driver.h"
+#include "vt_device_driver.h"
 
 #define SAMPLE_INTERNAL_ADC_TYPE_ID  0x01
 #define SAMPLE_INTERNAL_GPIO_TYPE_ID 0x01

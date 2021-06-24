@@ -111,7 +111,7 @@ static VT_VOID remove_harmonics(SPECTOGRAM* spectogram_object, VT_INT start_inde
             {
                 break;
             }
-            frequency_difference = abs_custom(((VT_FLOAT)round(frequency_multiplier)) - frequency_multiplier);
+            frequency_difference = fabsf(((VT_FLOAT)round(frequency_multiplier)) - frequency_multiplier);
             frequency_allowed_delta =
                 ((sampling_frequency / (VT_FLOAT)VT_CS_SAMPLE_LENGTH) * ((VT_FLOAT)round(frequency_multiplier))) /
                 spectogram_object[iter1].frequency;
@@ -146,7 +146,7 @@ static VT_VOID calculate_top_N_signal_frequencies(
     {
         decimal    = signal[iter].real;
         frac_float = signal[iter].real - (VT_FLOAT)decimal;
-        frac       = abs_custom(frac_float) * 10000;
+        frac       = fabsf(frac_float) * 10000;
         VTLogDebugNoTag("%d.%04d, ", decimal, frac);
     }
 #endif /* VT_LOG_LEVEL > 2 */
@@ -163,7 +163,7 @@ static VT_VOID calculate_top_N_signal_frequencies(
     {
         decimal    = signal[iter].real;
         frac_float = signal[iter].real - (VT_FLOAT)decimal;
-        frac       = abs_custom(frac_float) * 10000;
+        frac       = fabsf(frac_float) * 10000;
         VTLogDebugNoTag("%d.%04d, ", decimal, frac);
     }
 #endif /* VT_LOG_LEVEL > 2 */
@@ -178,7 +178,7 @@ static VT_VOID calculate_top_N_signal_frequencies(
     {
         decimal    = signal[iter].real;
         frac_float = signal[iter].real - (VT_FLOAT)decimal;
-        frac       = abs_custom(frac_float) * 10000;
+        frac       = fabsf(frac_float) * 10000;
         VTLogDebugNoTag("%d.%04d, ", decimal, frac);
     }
 #endif /* VT_LOG_LEVEL > 2 */
@@ -221,11 +221,11 @@ static VT_VOID calculate_top_N_signal_frequencies(
     {
         decimal    = spectogram_object[start_index + iter].frequency;
         frac_float = spectogram_object[start_index + iter].frequency - (VT_FLOAT)decimal;
-        frac       = abs_custom(frac_float) * 10000;
+        frac       = fabsf(frac_float) * 10000;
         VTLogDebugNoTag("%d.%04d : ", decimal, frac);
         decimal    = spectogram_object[start_index + iter].magnitude;
         frac_float = spectogram_object[start_index + iter].magnitude - (VT_FLOAT)decimal;
-        frac       = abs_custom(frac_float) * 10000;
+        frac       = fabsf(frac_float) * 10000;
         VTLogDebugNoTag("%d.%04d \r\n", decimal, frac);
     }
 #endif /* VT_LOG_LEVEL > 2 */
@@ -238,11 +238,11 @@ static VT_VOID calculate_top_N_signal_frequencies(
     {
         decimal    = spectogram_object[start_index + iter].frequency;
         frac_float = spectogram_object[start_index + iter].frequency - (VT_FLOAT)decimal;
-        frac       = abs_custom(frac_float) * 10000;
+        frac       = fabsf(frac_float) * 10000;
         VTLogDebugNoTag("%d.%04d : ", decimal, frac);
         decimal    = spectogram_object[start_index + iter].magnitude;
         frac_float = spectogram_object[start_index + iter].magnitude - (VT_FLOAT)decimal;
-        frac       = abs_custom(frac_float) * 10000;
+        frac       = fabsf(frac_float) * 10000;
         VTLogDebugNoTag("%d.%04d \r\n", decimal, frac);
     }
 #endif /* VT_LOG_LEVEL > 2 */
@@ -336,11 +336,11 @@ VT_VOID cs_calibrate_compute_signature_collection_settings(
     {
         decimal    = spectogram_calib[iter].frequency;
         frac_float = spectogram_calib[iter].frequency - (VT_FLOAT)decimal;
-        frac       = abs_custom(frac_float) * 10000;
+        frac       = fabsf(frac_float) * 10000;
         VTLogDebugNoTag("%d.%04d : ", decimal, frac);
         decimal    = spectogram_calib[iter].magnitude;
         frac_float = spectogram_calib[iter].magnitude - (VT_FLOAT)decimal;
-        frac       = abs_custom(frac_float) * 10000;
+        frac       = fabsf(frac_float) * 10000;
         VTLogDebugNoTag("%d.%04d \r\n", decimal, frac);
     }
 #endif /* VT_LOG_LEVEL > 2 */
