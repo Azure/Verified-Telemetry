@@ -95,7 +95,8 @@ Details about this model can be found [here](./PnPModel).
 ## Implementing Platform level functions
 
 * For Verified Telemetry to work, it requires some platform specific functions to be defined at the application layer and then passed down to the library when VT is initialized.
-* Function type definitions can be found in [platform.h](./inc/platform/vt_platform.h)
+* Function declarations can be found in [vt_device_driver.h](./inc/platform/vt_device_driver.h)
+* A template for implementing function defintions at application layer can be found in [vt_device_driver_template.c](./templates/vt_device_driver_template.c)
 * Here is a summarised list of the functions that need to be defined by the application developer
 
  | Platform Function  | Requirements to be implemented by Application Developer                                 | Required?  |
@@ -110,7 +111,7 @@ Details about this model can be found [here](./PnPModel).
  | tick               | Should return the present tick value                                                    |    REQUIRED FOR FALLCURVE SIGNATURE     |
  | interrupt_enable   | Should enable global interrupts on the MCU                                              |  OPTIONAL FOR FALLCURVE SIGNATURE |
  | interrupt_disable  | Should disable global interrupts on the MCU                                             |  OPTIONAL FOR FALLCURVE SIGNATURE |
-* Samples for implementation of platform functions can be found [here](https://github.com/Azure/Verified-Telemetry-Device-Sample/blob/main/MXChip/AZ3166/app/sample_vt_device_driver.c) in the Device Samples
+* Samples for implementation of platform functions can also be found [here](https://github.com/Azure/Verified-Telemetry-Device-Sample/blob/main/MXChip/AZ3166/app/sample_vt_device_driver.c) in the Device Samples
 
 ## Middleware API Documentation
 
