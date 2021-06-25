@@ -274,6 +274,8 @@ UINT nx_vt_fallcurve_telemetry_status_property(
     UINT response_status = 0;
     NX_AZURE_IOT_JSON_WRITER json_writer;
 
+    *deviceStatus = *deviceStatus && handle->telemetry_status;
+
     if ((status = nx_azure_iot_pnp_client_reported_properties_create(iotpnp_client_ptr, &json_writer, NX_WAIT_FOREVER)))
     {
         VTLogError("Failed create reported properties: error code = 0x%08x\r\n", status);
