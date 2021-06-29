@@ -8,22 +8,28 @@
 #include "vt_defs.h"
 
 VT_VOID cs_reset_db(VT_CURRENTSENSE_OBJECT* cs_object);
-VT_UINT cs_store_signature(VT_CURRENTSENSE_OBJECT* cs_object,
+VT_UINT cs_store_repeating_signature_feature_vector(VT_CURRENTSENSE_OBJECT* cs_object,
     VT_FLOAT sampling_frequency,
     VT_FLOAT signature_frequency,
     VT_FLOAT duty_cycle,
-    VT_FLOAT current_draw);
-VT_UINT cs_update_average_current_draw(VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT lowest_sample_freq, VT_FLOAT avg_curr);
-VT_UINT cs_fetch_signature(VT_CURRENTSENSE_OBJECT* cs_object,
+    VT_FLOAT relative_current_draw);
+VT_UINT cs_update_repeating_signature_offset_current_draw(
+    VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT lowest_sample_freq, VT_FLOAT offset_curr);
+VT_UINT cs_update_non_repeating_signature_average_current_draw(
+    VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT avg_curr_on, VT_FLOAT avg_curr_off);
+VT_UINT cs_fetch_repeating_signature_feature_vector(VT_CURRENTSENSE_OBJECT* cs_object,
     VT_UINT signature_iter,
     VT_FLOAT* sampling_frequency,
     VT_FLOAT* signature_frequency,
     VT_FLOAT* duty_cycle,
-    VT_FLOAT* current_draw);
-VT_UINT cs_fetch_average_current(VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT* lowest_sample_freq, VT_FLOAT* avg_curr);
-VT_VOID cs_fetch_evaluation_sampling_frequencies(VT_CURRENTSENSE_OBJECT* cs_object,
-    VT_FLOAT* sampling_freqeuencies,
-    VT_UINT sampling_frequencies_buffer_length,
-    VT_UINT* num_sampling_frequencies);
+    VT_FLOAT* relative_current_draw);
+VT_UINT cs_fetch_repeating_signature_offset_current(
+    VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT* lowest_sample_freq, VT_FLOAT* offset_current);
+VT_UINT cs_fetch_non_repeating_signature_average_current(
+    VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT* avg_curr_on, VT_FLOAT* avg_curr_off);
+VT_VOID cs_fetch_repeating_signature_sampling_frequencies(VT_CURRENTSENSE_OBJECT* cs_object,
+    VT_FLOAT* repeating_signature_sampling_freqeuencies,
+    VT_UINT repeating_signature_sampling_frequencies_buffer_capacity,
+    VT_UINT* num_repeating_signature_sampling_frequencies);
 
 #endif

@@ -12,12 +12,12 @@ VT_VOID vt_currentsense_object_signature_read(VT_CURRENTSENSE_OBJECT* cs_object)
     VT_UINT num_sampling_frqeuencies = 0;
     if (cs_object->mode == VT_MODE_RUNTIME_EVALUATE)
     {
-        cs_fetch_evaluation_sampling_frequencies(
+        cs_fetch_repeating_signature_sampling_frequencies(
             cs_object, sampling_frequencies, VT_CS_MAX_SIGNATURES, &num_sampling_frqeuencies);
     }
     else
     {
-        cs_calibrate_compute_sampling_frequencies(
+        cs_calibrate_repeating_signatures_compute_sampling_frequencies(
             cs_object, sampling_frequencies, VT_CS_MAX_SIGNATURES, &num_sampling_frqeuencies);
     }
     cs_raw_signature_read(cs_object, sampling_frequencies, num_sampling_frqeuencies, VT_CS_SAMPLE_LENGTH);
@@ -25,7 +25,8 @@ VT_VOID vt_currentsense_object_signature_read(VT_CURRENTSENSE_OBJECT* cs_object)
 
 VT_VOID vt_currentsense_object_signature_process(VT_CURRENTSENSE_OBJECT* cs_object)
 {
-    while (cs_object->raw_signatures_reader->raw_signature_ongoing_collection)
+    cs_object->raw_signatures_reader->non_repeating_raw_signature_stop_collection = true;
+    while (cs_object->raw_signatures_reader->repeating_raw_signature_ongoing_collection)
     {
         // do nothing, wait till raw signatures are collected
     }

@@ -19,28 +19,51 @@ typedef struct VT_CURRENTSENSE_RAW_SIGNATURE_BUFFER_STRUCT
 
 typedef struct VT_CURRENTSENSE_RAW_SIGNATURES_READER_STRUCT
 {
-    VT_CURRENTSENSE_RAW_SIGNATURE_BUFFER raw_signatures_shared_buffer[VT_CS_MAX_SIGNATURES];
-    VT_UINT num_raw_signatures;
+    VT_CURRENTSENSE_RAW_SIGNATURE_BUFFER repeating_raw_signatures[VT_CS_MAX_SIGNATURES];
+    VT_CURRENTSENSE_RAW_SIGNATURE_BUFFER non_repeating_raw_signature;
+    VT_UINT num_repeating_raw_signatures;
     VT_FLOAT adc_read_buffer[VT_CS_SAMPLE_LENGTH];
     VT_FLOAT adc_read_sampling_frequency;
-    VT_BOOL raw_signature_ongoing_collection;
-    VT_BOOL raw_signature_buffers_filled;
+    VT_BOOL repeating_raw_signature_ongoing_collection;
+    VT_BOOL repeating_raw_signature_buffers_filled;
+    VT_BOOL non_repeating_raw_signature_stop_collection;
 } VT_CURRENTSENSE_RAW_SIGNATURES_READER;
 
-typedef struct VT_CURRENTSENSE_TEMPLATE_SIGNATURE_FEATURES_STRUCT
+typedef struct VT_CURRENTSENSE_NON_REPEATING_SIGNATURE_TEMPLATE_STRUCT
+{
+    VT_FLOAT avg_curr_on;
+    VT_FLOAT avg_curr_off;
+} VT_CURRENTSENSE_NON_REPEATING_SIGNATURE_TEMPLATE;
+
+typedef struct VT_CURRENTSENSE_REPEATING_SIGNATURE_FEATURE_VECTOR_STRUCT
 {
     VT_FLOAT sampling_freq;
-    VT_FLOAT signal_freq;
-    VT_FLOAT curr_diff;
+    VT_FLOAT signature_freq;
+    VT_FLOAT relative_curr_draw;
     VT_FLOAT duty_cycle;
-} VT_CURRENTSENSE_TEMPLATE_SIGNATURE_FEATURES;
+} VT_CURRENTSENSE_REPEATING_SIGNATURE_FEATURE_VECTOR;
+
+typedef struct VT_CURRENTSENSE_REPEATING_SIGNATURES_TEMPLATE_STRUCT
+{
+    VT_UINT num_signatures;
+    VT_FLOAT offset_current;
+    VT_FLOAT lowest_sample_freq;
+    VT_CURRENTSENSE_REPEATING_SIGNATURE_FEATURE_VECTOR signatures[VT_CS_MAX_SIGNATURES];
+} VT_CURRENTSENSE_REPEATING_SIGNATURES_TEMPLATE;
+
+union VT_CURRENTSENSE_SIGNATURES_TEMPLATE {
+
+    /* Non-Repeating Signature Template */
+    VT_CURRENTSENSE_NON_REPEATING_SIGNATURE_TEMPLATE non_repeating_signature;
+
+    /* Repeating Signatures Template */
+    VT_CURRENTSENSE_REPEATING_SIGNATURES_TEMPLATE repeating_signatures;
+};
 
 typedef struct VT_CURRENTSENSE_DATABASE_STRUCT
 {
-    VT_UINT num_signatures;
-    VT_FLOAT avg_curr;
-    VT_FLOAT lowest_sample_freq;
-    VT_CURRENTSENSE_TEMPLATE_SIGNATURE_FEATURES db[VT_CS_MAX_SIGNATURES];
+    VT_UINT template_type;
+    union VT_CURRENTSENSE_SIGNATURES_TEMPLATE template;
 } VT_CURRENTSENSE_DATABASE;
 
 typedef struct VT_CURRENTSENSE_OBJECT_STRUCT
@@ -59,13 +82,16 @@ typedef struct VT_CURRENTSENSE_OBJECT_STRUCT
 
 typedef struct VT_CURRENTSENSE_DATABASE_FLATTENED
 {
-    VT_UCHAR num_signatures[VT_CHARACTERS_IN_A_NUMBER];
-    VT_UCHAR avg_curr[VT_CHARACTERS_IN_A_NUMBER];
-    VT_UCHAR lowest_sample_freq[VT_CHARACTERS_IN_A_NUMBER];
-    VT_UCHAR sampling_freq[VT_CHARACTERS_IN_A_NUMBER * VT_CS_MAX_SIGNATURES];
-    VT_UCHAR signal_freq[VT_CHARACTERS_IN_A_NUMBER * VT_CS_MAX_SIGNATURES];
-    VT_UCHAR curr_diff[VT_CHARACTERS_IN_A_NUMBER * VT_CS_MAX_SIGNATURES];
-    VT_UCHAR duty_cycle[VT_CHARACTERS_IN_A_NUMBER * VT_CS_MAX_SIGNATURES];
+    VT_UCHAR template_type[VT_CHARACTERS_IN_A_NUMBER];
+    VT_UCHAR non_repeating_signature_avg_curr_on[VT_CHARACTERS_IN_A_NUMBER];
+    VT_UCHAR non_repeating_signature_avg_curr_off[VT_CHARACTERS_IN_A_NUMBER];
+    VT_UCHAR repeating_signature_num_signatures[VT_CHARACTERS_IN_A_NUMBER];
+    VT_UCHAR repeating_signature_offset_curr[VT_CHARACTERS_IN_A_NUMBER];
+    VT_UCHAR repeating_signature_lowest_sample_freq[VT_CHARACTERS_IN_A_NUMBER];
+    VT_UCHAR repeating_signature_sampling_freq[VT_CHARACTERS_IN_A_NUMBER * VT_CS_MAX_SIGNATURES];
+    VT_UCHAR repeating_signature_freq[VT_CHARACTERS_IN_A_NUMBER * VT_CS_MAX_SIGNATURES];
+    VT_UCHAR repeating_signature_relative_curr_draw[VT_CHARACTERS_IN_A_NUMBER * VT_CS_MAX_SIGNATURES];
+    VT_UCHAR repeating_signature_duty_cycle[VT_CHARACTERS_IN_A_NUMBER * VT_CS_MAX_SIGNATURES];
 } VT_CURRENTSENSE_DATABASE_FLATTENED;
 
 // Initialize

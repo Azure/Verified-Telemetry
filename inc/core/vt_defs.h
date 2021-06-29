@@ -20,7 +20,7 @@
 #define VT_SIGNATURE_EVAL_DEFAULT_VALUE                0x04
 #define VT_SIGNATURE_DRIFT_DEFAULT_VALUE               0
 #define VT_SIGNATURE_TEMPLATE_CONFIDENCE_DEFAULT_VALUE 0
-#define VT_DATA_NOT_AVAILABLE                          0xFF
+#define VT_DATA_NOT_AVAILABLE                          -1
 
 #define VT_CHARACTERS_IN_A_NUMBER              10
 #define VT_COMPONENT_NAME_MAX_LENGTH           30

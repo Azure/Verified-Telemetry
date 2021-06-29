@@ -32,8 +32,9 @@ VT_UINT vt_currentsense_object_initialize(VT_CURRENTSENSE_OBJECT* cs_object,
         return VT_ERROR;
     }
 
-    cs_object->raw_signatures_reader->raw_signature_ongoing_collection = false;
-    cs_object->raw_signatures_reader->raw_signature_buffers_filled     = false;
+    cs_object->raw_signatures_reader->repeating_raw_signature_ongoing_collection  = false;
+    cs_object->raw_signatures_reader->repeating_raw_signature_buffers_filled      = false;
+    cs_object->raw_signatures_reader->non_repeating_raw_signature_stop_collection = false;
 
     cs_object->raw_signatures_reader_initialized = true;
     cs_object->raw_signatures_reader             = (VT_CURRENTSENSE_RAW_SIGNATURES_READER*)raw_signatures_buffer;

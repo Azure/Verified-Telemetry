@@ -258,7 +258,7 @@ static VT_FLOAT get_raw_signature_sample_freq(VT_FLOAT signal_freq)
     return sample_freq;
 }
 
-VT_VOID cs_calibrate_compute_sampling_frequencies(VT_CURRENTSENSE_OBJECT* cs_object,
+VT_VOID cs_calibrate_repeating_signatures_compute_sampling_frequencies(VT_CURRENTSENSE_OBJECT* cs_object,
     VT_FLOAT* sampling_frequencies,
     VT_UINT sampling_frequencies_buffer_length,
     VT_UINT* num_sampling_frequencies)
@@ -276,7 +276,7 @@ VT_VOID cs_calibrate_compute_sampling_frequencies(VT_CURRENTSENSE_OBJECT* cs_obj
     }
 }
 
-VT_VOID cs_calibrate_compute_signature_collection_settings(
+VT_VOID cs_calibrate_repeating_signatures_compute_collection_settings(
     VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT* top_N_sample_frequencies, VT_FLOAT* lowest_sample_freq)
 {
 #if VT_LOG_LEVEL > 2
@@ -304,7 +304,7 @@ VT_VOID cs_calibrate_compute_signature_collection_settings(
     for (VT_INT iter = 0; iter < calib_ranges; iter++)
     {
 
-        cs_raw_signature_fetch_stored_current_measurement(
+        cs_repeating_raw_signature_fetch_stored_current_measurement(
             cs_object, adc_read_signal, get_calib_range_freq(iter), VT_CS_SAMPLE_LENGTH);
         // Add Digital Filter
         for (VT_INT iter1 = 0; iter1 < VT_CS_SAMPLE_LENGTH; iter1++)

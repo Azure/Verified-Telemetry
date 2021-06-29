@@ -15,18 +15,21 @@ static const CHAR command_retrain_fingerprint[] = "retrainFingerprintTemplate";
 
 /* Names of properties for desired/reporting */
 
-static const CHAR telemetry_name_telemetry_status[]     = "telemetryStatus";
-static const CHAR fingerprint_type_property[]           = "fingerprintType";
-static const CHAR template_confidence_metric_property[] = "fingerprintTemplateConfidenceMetric";
-static const CHAR fingerprint_type_value[]              = "CurrentSense";
-static const CHAR fingerprint_template_property[]       = "fingerprintTemplate";
-static const CHAR num_signatures_json_property[]        = "numSignatures";
-static const CHAR avg_curr_json_property[]              = "avgCurr";
-static const CHAR lowest_sample_freq_json_property[]    = "lowestSampleFreq";
-static const CHAR sampling_freq_json_property[]         = "samplingFreq";
-static const CHAR signal_freq_json_property[]           = "signalFreq";
-static const CHAR curr_diff_json_property[]             = "currDiff";
-static const CHAR duty_cycle_json_property[]            = "dutyCycle";
+static const CHAR telemetry_name_telemetry_status[]        = "telemetryStatus";
+static const CHAR fingerprint_type_property[]              = "fingerprintType";
+static const CHAR template_confidence_metric_property[]    = "fingerprintTemplateConfidenceMetric";
+static const CHAR fingerprint_type_value[]                 = "CurrentSense";
+static const CHAR fingerprint_template_property[]          = "fingerprintTemplate";
+static const CHAR template_type_json_property[]            = "templateType";
+static const CHAR average_current_on_json_property[]       = "averageCurrentOn";
+static const CHAR average_current_off_json_property[]      = "averageCurrentOff";
+static const CHAR num_repeating_signatures_json_property[] = "numRepeatingSignatures";
+static const CHAR offset_curr_json_property[]              = "offsetCurr";
+static const CHAR lowest_sample_freq_json_property[]       = "lowestSampleFreq";
+static const CHAR sampling_freq_json_property[]            = "samplingFreq";
+static const CHAR signal_freq_json_property[]              = "signalFreq";
+static const CHAR curr_diff_json_property[]                = "currDiff";
+static const CHAR duty_cycle_json_property[]               = "dutyCycle";
 
 UINT nx_vt_currentsense_init(NX_VT_CURRENTSENSE_COMPONENT* handle,
     UCHAR* component_name_ptr,
@@ -89,13 +92,13 @@ static UINT sync_fingerprint_template(NX_AZURE_IOT_JSON_READER* property_value_r
         return NX_NOT_SUCCESSFUL;
     }
     VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
-    if (((strlen(jsonKey) == (sizeof(num_signatures_json_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)num_signatures_json_property, strlen(jsonKey))))) == 0)
+    if (((strlen(jsonKey) == (sizeof(template_type_json_property) - 1)) &&
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)template_type_json_property, strlen(jsonKey))))) == 0)
     {
         return NX_NOT_SUCCESSFUL;
     }
-    memset(flattened_db.num_signatures, 0, sizeof(flattened_db.num_signatures));
-    strncpy((VT_CHAR*)flattened_db.num_signatures, jsonValue, sizeof(flattened_db.num_signatures));
+    memset(flattened_db.template_type, 0, sizeof(flattened_db.template_type));
+    strncpy((VT_CHAR*)flattened_db.template_type, jsonValue, sizeof(flattened_db.template_type));
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
@@ -108,13 +111,70 @@ static UINT sync_fingerprint_template(NX_AZURE_IOT_JSON_READER* property_value_r
         return NX_NOT_SUCCESSFUL;
     }
     VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
-    if (((strlen(jsonKey) == (sizeof(avg_curr_json_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)avg_curr_json_property, strlen(jsonKey))))) == 0)
+    if (((strlen(jsonKey) == (sizeof(average_current_off_json_property) - 1)) &&
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)average_current_off_json_property, strlen(jsonKey))))) == 0)
     {
         return NX_NOT_SUCCESSFUL;
     }
-    memset(flattened_db.avg_curr, 0, sizeof(flattened_db.avg_curr));
-    strncpy((VT_CHAR*)flattened_db.avg_curr, jsonValue, sizeof(flattened_db.avg_curr));
+    memset(flattened_db.non_repeating_signature_avg_curr_off, 0, sizeof(flattened_db.non_repeating_signature_avg_curr_off));
+    strncpy((VT_CHAR*)flattened_db.non_repeating_signature_avg_curr_off, jsonValue, sizeof(flattened_db.non_repeating_signature_avg_curr_off));
+
+    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+    {
+        return NX_SUCCESS;
+    }
+    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+    if (((strlen(jsonKey) == (sizeof(average_current_on_json_property) - 1)) &&
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)average_current_on_json_property, strlen(jsonKey))))) == 0)
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    memset(flattened_db.non_repeating_signature_avg_curr_on, 0, sizeof(flattened_db.non_repeating_signature_avg_curr_on));
+    strncpy((VT_CHAR*)flattened_db.non_repeating_signature_avg_curr_on, jsonValue, sizeof(flattened_db.non_repeating_signature_avg_curr_on));
+
+    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+    {
+        return NX_SUCCESS;
+    }
+    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+    if (((strlen(jsonKey) == (sizeof(num_repeating_signatures_json_property) - 1)) &&
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)num_repeating_signatures_json_property, strlen(jsonKey))))) == 0)
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    memset(flattened_db.repeating_signature_num_signatures, 0, sizeof(flattened_db.repeating_signature_num_signatures));
+    strncpy((VT_CHAR*)flattened_db.repeating_signature_num_signatures, jsonValue, sizeof(flattened_db.repeating_signature_num_signatures));
+
+    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+    {
+        return NX_SUCCESS;
+    }
+    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+    if (((strlen(jsonKey) == (sizeof(offset_curr_json_property) - 1)) &&
+            (!(strncmp((CHAR*)jsonKey, (CHAR*)offset_curr_json_property, strlen(jsonKey))))) == 0)
+    {
+        return NX_NOT_SUCCESSFUL;
+    }
+    memset(flattened_db.repeating_signature_offset_curr, 0, sizeof(flattened_db.repeating_signature_offset_curr));
+    strncpy((VT_CHAR*)flattened_db.repeating_signature_offset_curr, jsonValue, sizeof(flattened_db.repeating_signature_offset_curr));
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
@@ -132,8 +192,8 @@ static UINT sync_fingerprint_template(NX_AZURE_IOT_JSON_READER* property_value_r
     {
         return NX_NOT_SUCCESSFUL;
     }
-    memset(flattened_db.lowest_sample_freq, 0, sizeof(flattened_db.lowest_sample_freq));
-    strncpy((VT_CHAR*)flattened_db.lowest_sample_freq, jsonValue, sizeof(flattened_db.lowest_sample_freq));
+    memset(flattened_db.repeating_signature_lowest_sample_freq, 0, sizeof(flattened_db.repeating_signature_lowest_sample_freq));
+    strncpy((VT_CHAR*)flattened_db.repeating_signature_lowest_sample_freq, jsonValue, sizeof(flattened_db.repeating_signature_lowest_sample_freq));
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
@@ -151,8 +211,8 @@ static UINT sync_fingerprint_template(NX_AZURE_IOT_JSON_READER* property_value_r
     {
         return NX_NOT_SUCCESSFUL;
     }
-    memset(flattened_db.sampling_freq, 0, sizeof(flattened_db.sampling_freq));
-    strncpy((VT_CHAR*)flattened_db.sampling_freq, jsonValue, sizeof(flattened_db.sampling_freq));
+    memset(flattened_db.repeating_signature_sampling_freq, 0, sizeof(flattened_db.repeating_signature_sampling_freq));
+    strncpy((VT_CHAR*)flattened_db.repeating_signature_sampling_freq, jsonValue, sizeof(flattened_db.repeating_signature_sampling_freq));
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
@@ -170,8 +230,8 @@ static UINT sync_fingerprint_template(NX_AZURE_IOT_JSON_READER* property_value_r
     {
         return NX_NOT_SUCCESSFUL;
     }
-    memset(flattened_db.signal_freq, 0, sizeof(flattened_db.signal_freq));
-    strncpy((VT_CHAR*)flattened_db.signal_freq, jsonValue, sizeof(flattened_db.signal_freq));
+    memset(flattened_db.repeating_signature_freq, 0, sizeof(flattened_db.repeating_signature_freq));
+    strncpy((VT_CHAR*)flattened_db.repeating_signature_freq, jsonValue, sizeof(flattened_db.repeating_signature_freq));
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
@@ -189,8 +249,8 @@ static UINT sync_fingerprint_template(NX_AZURE_IOT_JSON_READER* property_value_r
     {
         return NX_NOT_SUCCESSFUL;
     }
-    memset(flattened_db.curr_diff, 0, sizeof(flattened_db.curr_diff));
-    strncpy((VT_CHAR*)flattened_db.curr_diff, jsonValue, sizeof(flattened_db.curr_diff));
+    memset(flattened_db.repeating_signature_relative_curr_draw, 0, sizeof(flattened_db.repeating_signature_relative_curr_draw));
+    strncpy((VT_CHAR*)flattened_db.repeating_signature_relative_curr_draw, jsonValue, sizeof(flattened_db.repeating_signature_relative_curr_draw));
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
@@ -208,8 +268,8 @@ static UINT sync_fingerprint_template(NX_AZURE_IOT_JSON_READER* property_value_r
     {
         return NX_NOT_SUCCESSFUL;
     }
-    memset(flattened_db.duty_cycle, 0, sizeof(flattened_db.duty_cycle));
-    strncpy((VT_CHAR*)flattened_db.duty_cycle, jsonValue, sizeof(flattened_db.duty_cycle));
+    memset(flattened_db.repeating_signature_duty_cycle, 0, sizeof(flattened_db.repeating_signature_duty_cycle));
+    strncpy((VT_CHAR*)flattened_db.repeating_signature_duty_cycle, jsonValue, sizeof(flattened_db.repeating_signature_duty_cycle));
 
     vt_currentsense_object_database_sync(&(handle->cs_object), &flattened_db);
 
@@ -242,10 +302,10 @@ static UINT nx_vt_currentsense_fingerprint_template_property(NX_VT_CURRENTSENSE_
     }
 
     if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer,
-             (UCHAR*)num_signatures_json_property,
-             strlen((const char*)num_signatures_json_property),
-             flattened_db->num_signatures,
-             strlen((CHAR*)flattened_db->num_signatures))))
+             (UCHAR*)template_type_json_property,
+             strlen((const char*)template_type_json_property),
+             flattened_db->template_type,
+             strlen((CHAR*)flattened_db->template_type))))
     {
         VTLogError("Failed to append currentsense DB data: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
@@ -253,10 +313,43 @@ static UINT nx_vt_currentsense_fingerprint_template_property(NX_VT_CURRENTSENSE_
     }
 
     if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer,
-             (UCHAR*)avg_curr_json_property,
-             strlen((const char*)avg_curr_json_property),
-             flattened_db->avg_curr,
-             strlen((CHAR*)flattened_db->avg_curr))))
+             (UCHAR*)average_current_off_json_property,
+             strlen((const char*)average_current_off_json_property),
+             flattened_db->non_repeating_signature_avg_curr_off,
+             strlen((CHAR*)flattened_db->non_repeating_signature_avg_curr_off))))
+    {
+        VTLogError("Failed to append currentsense DB data: error code = 0x%08x\r\n", status);
+        nx_azure_iot_json_writer_deinit(&json_writer);
+        return (status);
+    }
+
+    if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer,
+             (UCHAR*)average_current_on_json_property,
+             strlen((const char*)average_current_on_json_property),
+             flattened_db->non_repeating_signature_avg_curr_on,
+             strlen((CHAR*)flattened_db->non_repeating_signature_avg_curr_on))))
+    {
+        VTLogError("Failed to append currentsense DB data: error code = 0x%08x\r\n", status);
+        nx_azure_iot_json_writer_deinit(&json_writer);
+        return (status);
+    }
+
+    if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer,
+             (UCHAR*)num_repeating_signatures_json_property,
+             strlen((const char*)num_repeating_signatures_json_property),
+             flattened_db->repeating_signature_num_signatures,
+             strlen((CHAR*)flattened_db->repeating_signature_num_signatures))))
+    {
+        VTLogError("Failed to append currentsense DB data: error code = 0x%08x\r\n", status);
+        nx_azure_iot_json_writer_deinit(&json_writer);
+        return (status);
+    }
+
+    if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer,
+             (UCHAR*)offset_curr_json_property,
+             strlen((const char*)offset_curr_json_property),
+             flattened_db->repeating_signature_offset_curr,
+             strlen((CHAR*)flattened_db->repeating_signature_offset_curr))))
     {
         VTLogError("Failed to append currentsense DB data: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
@@ -266,8 +359,8 @@ static UINT nx_vt_currentsense_fingerprint_template_property(NX_VT_CURRENTSENSE_
     if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer,
              (UCHAR*)lowest_sample_freq_json_property,
              strlen((const char*)lowest_sample_freq_json_property),
-             flattened_db->lowest_sample_freq,
-             strlen((CHAR*)flattened_db->lowest_sample_freq))))
+             flattened_db->repeating_signature_lowest_sample_freq,
+             strlen((CHAR*)flattened_db->repeating_signature_lowest_sample_freq))))
     {
         VTLogError("Failed to append currentsense DB data: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
@@ -277,8 +370,8 @@ static UINT nx_vt_currentsense_fingerprint_template_property(NX_VT_CURRENTSENSE_
     if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer,
              (UCHAR*)sampling_freq_json_property,
              strlen((const char*)sampling_freq_json_property),
-             flattened_db->sampling_freq,
-             strlen((CHAR*)flattened_db->sampling_freq))))
+             flattened_db->repeating_signature_sampling_freq,
+             strlen((CHAR*)flattened_db->repeating_signature_sampling_freq))))
     {
         VTLogError("Failed to append currentsense DB data: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
@@ -288,8 +381,8 @@ static UINT nx_vt_currentsense_fingerprint_template_property(NX_VT_CURRENTSENSE_
     if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer,
              (UCHAR*)signal_freq_json_property,
              strlen((const char*)signal_freq_json_property),
-             flattened_db->signal_freq,
-             strlen((CHAR*)flattened_db->signal_freq))))
+             flattened_db->repeating_signature_freq,
+             strlen((CHAR*)flattened_db->repeating_signature_freq))))
     {
         VTLogError("Failed to append currentsense DB data: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
@@ -299,8 +392,8 @@ static UINT nx_vt_currentsense_fingerprint_template_property(NX_VT_CURRENTSENSE_
     if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer,
              (UCHAR*)curr_diff_json_property,
              strlen((const char*)curr_diff_json_property),
-             flattened_db->curr_diff,
-             strlen((CHAR*)flattened_db->curr_diff))))
+             flattened_db->repeating_signature_relative_curr_draw,
+             strlen((CHAR*)flattened_db->repeating_signature_relative_curr_draw))))
     {
         VTLogError("Failed to append currentsense DB data: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
@@ -310,8 +403,8 @@ static UINT nx_vt_currentsense_fingerprint_template_property(NX_VT_CURRENTSENSE_
     if ((status = nx_azure_iot_json_writer_append_property_with_string_value(&json_writer,
              (UCHAR*)duty_cycle_json_property,
              strlen((const char*)duty_cycle_json_property),
-             flattened_db->duty_cycle,
-             strlen((CHAR*)flattened_db->duty_cycle))))
+             flattened_db->repeating_signature_duty_cycle,
+             strlen((CHAR*)flattened_db->repeating_signature_duty_cycle))))
     {
         VTLogError("Failed to append currentsense DB data: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
@@ -391,10 +484,10 @@ static UINT nx_vt_currentsense_fingerprint_template_confidence_metric_property(
 static UINT nx_vt_currentsense_fingerprint_template_associated_properties(
     NX_VT_CURRENTSENSE_COMPONENT* handle, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
 {
-    UINT status          = true;
+    UINT status = true;
 
     VT_CURRENTSENSE_DATABASE_FLATTENED flattened_db;
-    bool db_required_to_store       = true;
+    bool db_required_to_store          = true;
     VT_UINT template_confidence_metric = 0;
     vt_currentsense_object_database_fetch(
         &(handle->cs_object), &flattened_db, &db_required_to_store, &template_confidence_metric);
@@ -426,8 +519,8 @@ static UINT nx_vt_currentsense_telemetry_status_property(NX_VT_CURRENTSENSE_COMP
     UINT response_status = 0;
     NX_AZURE_IOT_JSON_WRITER json_writer;
 
-    VT_UINT sensor_status    = 0;
-    VT_UINT sensor_drift     = 0;
+    VT_UINT sensor_status = 0;
+    VT_UINT sensor_drift  = 0;
     bool telemetry_status = false;
 
     if (toggle_verified_telemetry)
@@ -700,8 +793,8 @@ UINT nx_vt_currentsense_signature_process(NX_VT_CURRENTSENSE_COMPONENT* handle,
 
 bool nx_vt_currentsense_fetch_telemetry_status(NX_VT_CURRENTSENSE_COMPONENT* handle, bool toggle_verified_telemetry)
 {
-    VT_UINT sensor_status    = 0;
-    VT_UINT sensor_drift     = 0;
+    VT_UINT sensor_status = 0;
+    VT_UINT sensor_drift  = 0;
     bool telemetry_status = false;
 
     if (toggle_verified_telemetry)
