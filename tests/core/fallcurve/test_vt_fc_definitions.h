@@ -1,8 +1,8 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-#ifndef _VT_TEST_DEFINITIONS_H
-#define _VT_TEST_DEFINITIONS_H
+#ifndef _TEST_VT_FC_DEFINITIONS_H
+#define _TEST_VT_FC_DEFINITIONS_H
 
 #include "vt_defs.h"
 

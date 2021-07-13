@@ -6,7 +6,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 
-#include "vt_test_definitions.h"
+#include "test_vt_fc_definitions.h"
 
 #include "vt_fc_api.h"
 
