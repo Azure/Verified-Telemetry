@@ -304,9 +304,12 @@ VT_VOID cs_calibrate_repeating_signatures_compute_collection_settings(
     for (VT_INT iter = 0; iter < calib_ranges; iter++)
     {
 
-        cs_repeating_raw_signature_fetch_stored_current_measurement(
-            cs_object, adc_read_signal, get_calib_range_freq(iter), VT_CS_SAMPLE_LENGTH);
-        // Add Digital Filter
+        if (cs_repeating_raw_signature_fetch_stored_current_measurement(
+                cs_object, adc_read_signal, get_calib_range_freq(iter), VT_CS_SAMPLE_LENGTH))
+        {
+            continue;
+        }
+        // [TODO] Add Digital Filter
         for (VT_INT iter1 = 0; iter1 < VT_CS_SAMPLE_LENGTH; iter1++)
         {
             signal[iter1].real = adc_read_signal[iter1];

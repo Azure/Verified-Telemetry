@@ -8,14 +8,21 @@
 #include "vt_defs.h"
 
 VT_UINT cs_repeating_signature_feature_vector_compute(VT_CURRENTSENSE_OBJECT* cs_object,
+    VT_FLOAT* raw_signature,
+    VT_UINT raw_signature_length,
     VT_FLOAT sampling_frequency,
     VT_FLOAT* signature_frequency,
     VT_FLOAT* duty_cycle,
     VT_FLOAT* relative_current_draw);
-VT_UINT cs_repeating_signature_offset_current_compute(
-    VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT lowest_sample_freq, VT_FLOAT* offset_current);
-VT_UINT cs_non_repeating_signature_average_current_compute(
-    VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT* avg_curr_on, VT_FLOAT* avg_curr_off);
+VT_UINT cs_repeating_signature_offset_current_compute(VT_CURRENTSENSE_OBJECT* cs_object,
+    VT_FLOAT* raw_signature,
+    VT_UINT raw_signature_length,
+    VT_FLOAT* offset_current);
+VT_UINT cs_non_repeating_signature_average_current_compute(VT_CURRENTSENSE_OBJECT* cs_object,
+    VT_FLOAT* raw_signature,
+    VT_UINT raw_signature_length,
+    VT_FLOAT* avg_curr_on,
+    VT_FLOAT* avg_curr_off);
 VT_FLOAT cs_repeating_signature_feature_vector_evaluate(VT_FLOAT signature_frequency_under_test,
     VT_FLOAT signature_frequency_saved,
     VT_FLOAT duty_cycle_under_test,

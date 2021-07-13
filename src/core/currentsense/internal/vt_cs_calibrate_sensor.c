@@ -3,12 +3,14 @@
 #include "vt_cs_api.h"
 #include "vt_cs_calibrate.h"
 #include "vt_cs_database.h"
+#include "vt_cs_raw_signature_read.h"
 #include "vt_cs_signature_features.h"
 #include "vt_debug.h"
 #include <math.h>
 
 static VT_UINT cs_calibrate_repeating_signature_template(VT_CURRENTSENSE_OBJECT* cs_object)
 {
+    VT_FLOAT raw_signature[VT_CS_SAMPLE_LENGTH]            = {0};
     VT_FLOAT top_N_frequencies[VT_CS_MAX_TEST_FREQUENCIES] = {0};
     VT_FLOAT lowest_sample_freq                            = VT_CS_ADC_MAX_SAMPLING_FREQ;
     cs_calibrate_repeating_signatures_compute_collection_settings(cs_object, top_N_frequencies, &lowest_sample_freq);
@@ -31,22 +33,38 @@ static VT_UINT cs_calibrate_repeating_signature_template(VT_CURRENTSENSE_OBJECT*
             continue;
         }
 
-        if (cs_repeating_signature_feature_vector_compute(
-                cs_object, top_N_frequencies[iter], &signal_freq, &duty_cycle, &relative_curr_draw))
+        if (cs_repeating_raw_signature_fetch_extrapolated_current_measurement_for_calibration(
+                cs_object, raw_signature, top_N_frequencies[iter], VT_CS_SAMPLE_LENGTH))
         {
+            VTLogDebug("Error in fetching extrapolated raw signature! \r\n");
+            continue;
+        }
+
+        if (cs_repeating_signature_feature_vector_compute(cs_object,
+                raw_signature,
+                VT_CS_SAMPLE_LENGTH,
+                top_N_frequencies[iter],
+                &signal_freq,
+                &duty_cycle,
+                &relative_curr_draw))
+        {
+            VTLogDebug("Error in computing feature vector! \r\n");
             continue;
         }
 
         if (characteristic_frequencies_found == 0)
         {
             cs_reset_db(cs_object);
+            VTLogDebug("DB Reset! \r\n");
         }
 
         if (cs_store_repeating_signature_feature_vector(
                 cs_object, top_N_frequencies[iter], signal_freq, duty_cycle, relative_curr_draw))
         {
+            VTLogDebug("Error in storing feature vector! \r\n");
             break;
         }
+        VTLogDebug("Feature vector stored successfully! \r\n");
         characteristic_frequencies_found++;
     }
 
@@ -55,12 +73,20 @@ static VT_UINT cs_calibrate_repeating_signature_template(VT_CURRENTSENSE_OBJECT*
         return VT_ERROR;
     }
 
-    if (cs_repeating_signature_offset_current_compute(cs_object, lowest_sample_freq, &offset_current))
+    if (cs_repeating_raw_signature_fetch_extrapolated_current_measurement_for_calibration(
+            cs_object, raw_signature, lowest_sample_freq, VT_CS_SAMPLE_LENGTH))
     {
         return VT_ERROR;
     }
 
+    if (cs_repeating_signature_offset_current_compute(cs_object, raw_signature, VT_CS_SAMPLE_LENGTH, &offset_current))
+    {
+        VTLogDebug("Error in computing offset current feature! \r\n");
+        return VT_ERROR;
+    }
+
     cs_update_repeating_signature_offset_current_draw(cs_object, lowest_sample_freq, offset_current);
+    VTLogDebug("Offset current feature stored! \r\n");
     cs_object->template_confidence_metric = 100;
 
     return VT_SUCCESS;
@@ -68,6 +94,7 @@ static VT_UINT cs_calibrate_repeating_signature_template(VT_CURRENTSENSE_OBJECT*
 
 static VT_UINT cs_recalibrate_repeating_signature_template(VT_CURRENTSENSE_OBJECT* cs_object)
 {
+    VT_FLOAT raw_signature[VT_CS_SAMPLE_LENGTH]            = {0};
     VT_FLOAT top_N_frequencies[VT_CS_MAX_TEST_FREQUENCIES] = {0};
     VT_FLOAT lowest_sample_freq                            = VT_CS_ADC_MAX_SAMPLING_FREQ;
     cs_calibrate_repeating_signatures_compute_collection_settings(cs_object, top_N_frequencies, &lowest_sample_freq);
@@ -90,9 +117,21 @@ static VT_UINT cs_recalibrate_repeating_signature_template(VT_CURRENTSENSE_OBJEC
             continue;
         }
 
-        if (cs_repeating_signature_feature_vector_compute(
-                cs_object, top_N_frequencies[iter], &signal_freq, &duty_cycle, &relative_curr_draw))
+        if (cs_repeating_raw_signature_fetch_extrapolated_current_measurement_for_calibration(
+                cs_object, raw_signature, top_N_frequencies[iter], VT_CS_SAMPLE_LENGTH))
         {
+            continue;
+        }
+
+        if (cs_repeating_signature_feature_vector_compute(cs_object,
+                raw_signature,
+                VT_CS_SAMPLE_LENGTH,
+                top_N_frequencies[iter],
+                &signal_freq,
+                &duty_cycle,
+                &relative_curr_draw))
+        {
+            VTLogDebug("Error in computing feature vector! \r\n");
             continue;
         }
 
@@ -109,7 +148,13 @@ static VT_UINT cs_recalibrate_repeating_signature_template(VT_CURRENTSENSE_OBJEC
         return VT_ERROR;
     }
 
-    if (cs_repeating_signature_offset_current_compute(cs_object, lowest_sample_freq, &offset_current))
+    if (cs_repeating_raw_signature_fetch_extrapolated_current_measurement_for_calibration(
+            cs_object, raw_signature, lowest_sample_freq, VT_CS_SAMPLE_LENGTH))
+    {
+        return VT_ERROR;
+    }
+
+    if (cs_repeating_signature_offset_current_compute(cs_object, raw_signature, VT_CS_SAMPLE_LENGTH, &offset_current))
     {
         return VT_ERROR;
     }
@@ -122,12 +167,20 @@ static VT_UINT cs_recalibrate_repeating_signature_template(VT_CURRENTSENSE_OBJEC
 
 static VT_UINT cs_calibrate_non_repeating_signature_template(VT_CURRENTSENSE_OBJECT* cs_object)
 {
-    VT_FLOAT avg_curr_on  = 0;
-    VT_FLOAT avg_curr_off = 0;
+    VT_FLOAT raw_signature[VT_CS_SAMPLE_LENGTH] = {0};
+    VT_FLOAT sampling_frequency                 = 0;
+    VT_UINT num_datapoints                      = 0;
+    VT_FLOAT avg_curr_on                        = 0;
+    VT_FLOAT avg_curr_off                       = 0;
 
-    if (cs_non_repeating_signature_average_current_compute(cs_object, &avg_curr_on, &avg_curr_off))
+    if (cs_non_repeating_raw_signature_fetch_stored_current_measurement(
+            cs_object, raw_signature, &sampling_frequency, &num_datapoints) == VT_SUCCESS)
     {
-        return VT_ERROR;
+        if (cs_non_repeating_signature_average_current_compute(
+                cs_object, raw_signature, num_datapoints, &avg_curr_on, &avg_curr_off))
+        {
+            return VT_ERROR;
+        }
     }
 
     cs_reset_db(cs_object);
@@ -140,12 +193,20 @@ static VT_UINT cs_calibrate_non_repeating_signature_template(VT_CURRENTSENSE_OBJ
 
 static VT_UINT cs_recalibrate_non_repeating_signature_template(VT_CURRENTSENSE_OBJECT* cs_object)
 {
-    VT_FLOAT avg_curr_on  = 0;
-    VT_FLOAT avg_curr_off = 0;
+    VT_FLOAT raw_signature[VT_CS_SAMPLE_LENGTH] = {0};
+    VT_FLOAT sampling_frequency                 = 0;
+    VT_UINT num_datapoints                      = 0;
+    VT_FLOAT avg_curr_on                        = 0;
+    VT_FLOAT avg_curr_off                       = 0;
 
-    if (cs_non_repeating_signature_average_current_compute(cs_object, &avg_curr_on, &avg_curr_off))
+    if (cs_non_repeating_raw_signature_fetch_stored_current_measurement(
+            cs_object, raw_signature, &sampling_frequency, &num_datapoints) == VT_SUCCESS)
     {
-        return VT_ERROR;
+        if (cs_non_repeating_signature_average_current_compute(
+                cs_object, raw_signature, num_datapoints, &avg_curr_on, &avg_curr_off))
+        {
+            return VT_ERROR;
+        }
     }
 
     cs_update_non_repeating_signature_average_current_draw(cs_object, avg_curr_on, avg_curr_off);

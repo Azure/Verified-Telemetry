@@ -1,6 +1,5 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
-#include "vt_cs_raw_signature_read.h"
 #include "vt_cs_signature_features.h"
 #include "vt_debug.h"
 #include <math.h>
@@ -241,6 +240,9 @@ static VT_VOID binary_state_current_compute(VT_FLOAT* raw_signature,
     VT_FLOAT average_low_diff_increase          = 0;
     VT_FLOAT average_high_diff_increase         = 0;
     VT_FLOAT min_max_value                      = 0;
+    VT_UINT num_seedpoints =
+        sample_length > (2 * VT_CS_PEAK_DETECTOR_SEED_POINTS) ? VT_CS_PEAK_DETECTOR_SEED_POINTS : (sample_length / 2);
+    VT_BOOL valid_seedpoints = true;
 
     *curr_draw_active  = 0;
     *datapoints_active = 0;
@@ -248,73 +250,92 @@ static VT_VOID binary_state_current_compute(VT_FLOAT* raw_signature,
     *curr_draw_standby  = 0;
     *datapoints_standby = 0;
 
-    for (VT_UINT iter = 0; iter < VT_CS_PEAK_DETECTOR_SEED_POINTS; iter++)
+    for (VT_UINT iter = 0; iter < num_seedpoints; iter++)
     {
         min_value(raw_signature, sample_length, &state_array[iter], datapoint_visited);
         low_state_count++;
         max_value(raw_signature, sample_length, &state_array[sample_length - 1 - iter], datapoint_visited);
         high_state_count++;
+
+        if (state_array[iter] == state_array[sample_length - 1 - iter])
+        {
+            valid_seedpoints = false;
+        }
     }
 
-    while (true)
+    if (valid_seedpoints == false)
     {
-        if (low_state_count > high_state_count)
+        low_state_count  = sample_length;
+        high_state_count = 0;
+        for (VT_UINT iter = 0; iter < sample_length; iter++)
         {
-            max_value(raw_signature, sample_length, &min_max_value, datapoint_visited);
+            state_array[iter] = raw_signature[iter];
         }
-        else
+    }
+
+    if (valid_seedpoints && (sample_length - (low_state_count + high_state_count)))
+    {
+        while (true)
         {
-            min_value(raw_signature, sample_length, &min_max_value, datapoint_visited);
-        }
-
-        z_score_low = fabsf(min_max_value - average_calculate(state_array, low_state_count, 0, VT_CS_BUFFER_COUNT_UP)) /
-                      std_dev(state_array, low_state_count, 0, VT_CS_BUFFER_COUNT_UP);
-
-        z_score_high =
-            fabsf(min_max_value - average_calculate(state_array, high_state_count, sample_length - 1, VT_CS_BUFFER_COUNT_DOWN)) /
-            std_dev(state_array, high_state_count, sample_length - 1, VT_CS_BUFFER_COUNT_DOWN);
-
-        average_low_diff_increase = fabsf(
-            (((average_calculate(state_array, low_state_count, 0, VT_CS_BUFFER_COUNT_UP) * low_state_count) + min_max_value) /
-                (low_state_count + 1)) -
-            average_calculate(state_array, high_state_count, sample_length - 1, VT_CS_BUFFER_COUNT_DOWN));
-
-        average_high_diff_increase = fabsf(
-            (((average_calculate(state_array, high_state_count, sample_length - 1, VT_CS_BUFFER_COUNT_DOWN) * high_state_count) +
-                 min_max_value) /
-                (high_state_count + 1)) -
-            average_calculate(state_array, low_state_count, 0, VT_CS_BUFFER_COUNT_UP));
-
-        if (fabsf(z_score_high - z_score_low) < VT_CS_LOW_STD_DEVIATION_THRESHOLD)
-        {
-            if (average_high_diff_increase > average_low_diff_increase)
+            if (low_state_count > high_state_count)
             {
-                state_array[(sample_length - 1) - high_state_count] = min_max_value;
-                high_state_count++;
+                max_value(raw_signature, sample_length, &min_max_value, datapoint_visited);
             }
             else
             {
-                state_array[low_state_count] = min_max_value;
-                low_state_count++;
+                min_value(raw_signature, sample_length, &min_max_value, datapoint_visited);
             }
-        }
-        else
-        {
-            if (z_score_high < z_score_low)
+
+            z_score_low = fabsf(min_max_value - average_calculate(state_array, low_state_count, 0, VT_CS_BUFFER_COUNT_UP)) /
+                          std_dev(state_array, low_state_count, 0, VT_CS_BUFFER_COUNT_UP);
+
+            z_score_high = fabsf(min_max_value -
+                                 average_calculate(state_array, high_state_count, sample_length - 1, VT_CS_BUFFER_COUNT_DOWN)) /
+                           std_dev(state_array, high_state_count, sample_length - 1, VT_CS_BUFFER_COUNT_DOWN);
+
+            average_low_diff_increase = fabsf(
+                (((average_calculate(state_array, low_state_count, 0, VT_CS_BUFFER_COUNT_UP) * low_state_count) + min_max_value) /
+                    (low_state_count + 1)) -
+                average_calculate(state_array, high_state_count, sample_length - 1, VT_CS_BUFFER_COUNT_DOWN));
+
+            average_high_diff_increase =
+                fabsf((((average_calculate(state_array, high_state_count, sample_length - 1, VT_CS_BUFFER_COUNT_DOWN) *
+                            high_state_count) +
+                           min_max_value) /
+                          (high_state_count + 1)) -
+                      average_calculate(state_array, low_state_count, 0, VT_CS_BUFFER_COUNT_UP));
+
+            if (fabsf(z_score_high - z_score_low) < VT_CS_LOW_STD_DEVIATION_THRESHOLD)
             {
-                state_array[(sample_length - 1) - high_state_count] = min_max_value;
-                high_state_count++;
+                if (average_high_diff_increase > average_low_diff_increase)
+                {
+                    state_array[(sample_length - 1) - high_state_count] = min_max_value;
+                    high_state_count++;
+                }
+                else
+                {
+                    state_array[low_state_count] = min_max_value;
+                    low_state_count++;
+                }
             }
             else
             {
-                state_array[low_state_count] = min_max_value;
-                low_state_count++;
+                if (z_score_high < z_score_low)
+                {
+                    state_array[(sample_length - 1) - high_state_count] = min_max_value;
+                    high_state_count++;
+                }
+                else
+                {
+                    state_array[low_state_count] = min_max_value;
+                    low_state_count++;
+                }
             }
-        }
 
-        if (low_state_count + high_state_count == sample_length)
-        {
-            break;
+            if (low_state_count + high_state_count == sample_length)
+            {
+                break;
+            }
         }
     }
 
@@ -332,29 +353,24 @@ static VT_VOID binary_state_current_compute(VT_FLOAT* raw_signature,
 }
 
 VT_UINT cs_repeating_signature_feature_vector_compute(VT_CURRENTSENSE_OBJECT* cs_object,
+    VT_FLOAT* raw_signature,
+    VT_UINT raw_signature_length,
     VT_FLOAT sampling_frequency,
     VT_FLOAT* signature_frequency,
     VT_FLOAT* duty_cycle,
     VT_FLOAT* relative_current_draw)
 {
-    VT_FLOAT raw_signature[VT_CS_SAMPLE_LENGTH] = {0};
-    VT_FLOAT signature_period_datapoints        = 1;
-    VT_FLOAT curr_draw_active                   = 0;
-    VT_FLOAT curr_draw_standby                  = 0;
-    VT_UINT datapoints_active                   = 1;
-    VT_UINT datapoints_standby                  = 1;
+    VT_FLOAT signature_period_datapoints = 1;
+    VT_FLOAT curr_draw_active            = 0;
+    VT_FLOAT curr_draw_standby           = 0;
+    VT_UINT datapoints_active            = 1;
+    VT_UINT datapoints_standby           = 1;
 
 #if VT_LOG_LEVEL > 2
     VT_INT decimal;
     VT_FLOAT frac_float;
     VT_INT frac;
 #endif /* VT_LOG_LEVEL > 2 */
-
-    if (cs_repeating_raw_signature_fetch_stored_current_measurement(
-            cs_object, raw_signature, sampling_frequency, VT_CS_SAMPLE_LENGTH))
-    {
-        return VT_ERROR;
-    }
 
     if (period_calculate(raw_signature, &signature_period_datapoints) == VT_SUCCESS)
     {
@@ -364,11 +380,11 @@ VT_UINT cs_repeating_signature_feature_vector_compute(VT_CURRENTSENSE_OBJECT* cs
         }
 
         binary_state_current_compute(
-            raw_signature, VT_CS_SAMPLE_LENGTH, &curr_draw_active, &curr_draw_standby, &datapoints_active, &datapoints_standby);
+            raw_signature, raw_signature_length, &curr_draw_active, &curr_draw_standby, &datapoints_active, &datapoints_standby);
 
         if (datapoints_standby || datapoints_active)
         {
-            *duty_cycle = datapoints_active / (datapoints_standby + datapoints_active);
+            *duty_cycle = (VT_FLOAT)datapoints_active / (VT_FLOAT)(datapoints_standby + datapoints_active);
         }
         *relative_current_draw = curr_draw_active - curr_draw_standby;
 
@@ -402,13 +418,12 @@ VT_UINT cs_repeating_signature_feature_vector_compute(VT_CURRENTSENSE_OBJECT* cs
 }
 
 VT_UINT cs_repeating_signature_offset_current_compute(
-    VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT lowest_sample_freq, VT_FLOAT* offset_current)
+    VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT* raw_signature, VT_UINT raw_signature_length, VT_FLOAT* offset_current)
 {
-    VT_FLOAT raw_signature[VT_CS_SAMPLE_LENGTH] = {0};
-    VT_FLOAT curr_draw_active                   = 0;
-    VT_FLOAT curr_draw_standby                  = 0;
-    VT_UINT datapoints_active                   = 1;
-    VT_UINT datapoints_standby                  = 1;
+    VT_FLOAT curr_draw_active  = 0;
+    VT_FLOAT curr_draw_standby = 0;
+    VT_UINT datapoints_active  = 1;
+    VT_UINT datapoints_standby = 1;
 
 #if VT_LOG_LEVEL > 2
     VT_INT decimal;
@@ -416,14 +431,8 @@ VT_UINT cs_repeating_signature_offset_current_compute(
     VT_INT frac;
 #endif /* VT_LOG_LEVEL > 2 */
 
-    if (cs_repeating_raw_signature_fetch_stored_current_measurement(
-            cs_object, raw_signature, lowest_sample_freq, VT_CS_SAMPLE_LENGTH))
-    {
-        return VT_ERROR;
-    }
-
     binary_state_current_compute(
-        raw_signature, VT_CS_SAMPLE_LENGTH, &curr_draw_active, &curr_draw_standby, &datapoints_active, &datapoints_standby);
+        raw_signature, raw_signature_length, &curr_draw_active, &curr_draw_standby, &datapoints_active, &datapoints_standby);
 
     *offset_current = curr_draw_standby;
 
@@ -436,16 +445,16 @@ VT_UINT cs_repeating_signature_offset_current_compute(
     return VT_SUCCESS;
 }
 
-VT_UINT cs_non_repeating_signature_average_current_compute(
-    VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT* avg_curr_on, VT_FLOAT* avg_curr_off)
+VT_UINT cs_non_repeating_signature_average_current_compute(VT_CURRENTSENSE_OBJECT* cs_object,
+    VT_FLOAT* raw_signature,
+    VT_UINT raw_signature_length,
+    VT_FLOAT* avg_curr_on,
+    VT_FLOAT* avg_curr_off)
 {
-    VT_FLOAT raw_signature[VT_CS_SAMPLE_LENGTH] = {0};
-    VT_FLOAT sampling_frequency                 = 0;
-    VT_UINT num_datapoints                      = 0;
-    VT_FLOAT curr_draw_active                   = 0;
-    VT_FLOAT curr_draw_standby                  = 0;
-    VT_UINT datapoints_active                   = 1;
-    VT_UINT datapoints_standby                  = 1;
+    VT_FLOAT curr_draw_active  = 0;
+    VT_FLOAT curr_draw_standby = 0;
+    VT_UINT datapoints_active  = 1;
+    VT_UINT datapoints_standby = 1;
 
 #if VT_LOG_LEVEL > 2
     VT_INT decimal;
@@ -453,14 +462,8 @@ VT_UINT cs_non_repeating_signature_average_current_compute(
     VT_INT frac;
 #endif /* VT_LOG_LEVEL > 2 */
 
-    if (cs_non_repeating_raw_signature_fetch_stored_current_measurement(
-            cs_object, raw_signature, &sampling_frequency, &num_datapoints))
-    {
-        return VT_ERROR;
-    }
-
     binary_state_current_compute(
-        raw_signature, num_datapoints, &curr_draw_active, &curr_draw_standby, &datapoints_active, &datapoints_standby);
+        raw_signature, raw_signature_length, &curr_draw_active, &curr_draw_standby, &datapoints_active, &datapoints_standby);
 
     *avg_curr_on  = curr_draw_active;
     *avg_curr_off = curr_draw_standby;

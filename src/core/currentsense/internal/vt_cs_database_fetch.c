@@ -3,14 +3,18 @@
 #include "vt_cs_database.h"
 #include "vt_debug.h"
 
-VT_UINT cs_fetch_repeating_signature_feature_vector(VT_CURRENTSENSE_OBJECT* cs_object,
+VT_UINT cs_fetch_template_repeating_signature_feature_vector(VT_CURRENTSENSE_OBJECT* cs_object,
     VT_UINT signature_iter,
     VT_FLOAT* sampling_frequency,
     VT_FLOAT* signature_frequency,
     VT_FLOAT* duty_cycle,
     VT_FLOAT* relative_current_draw)
 {
-    VTLogDebug("Fetching next repeating signature from DB\r\n");
+    if (cs_object->fingerprintdb.template.repeating_signatures.num_signatures == 0)
+    {
+        VTLogDebug("Repeating signatures unavailable in DB\r\n");
+        return VT_ERROR;
+    }
     if (signature_iter >= cs_object->fingerprintdb.template.repeating_signatures.num_signatures)
     {
         VTLogDebug("Next repeating signature cannot be fetched from DB\r\n");
@@ -21,11 +25,10 @@ VT_UINT cs_fetch_repeating_signature_feature_vector(VT_CURRENTSENSE_OBJECT* cs_o
     *signature_frequency   = cs_object->fingerprintdb.template.repeating_signatures.signatures[signature_iter].signature_freq;
     *duty_cycle            = cs_object->fingerprintdb.template.repeating_signatures.signatures[signature_iter].duty_cycle;
     *relative_current_draw = cs_object->fingerprintdb.template.repeating_signatures.signatures[signature_iter].relative_curr_draw;
-    VTLogDebug("Fetched next repeating signature from DB\r\n");
     return VT_SUCCESS;
 }
 
-VT_UINT cs_fetch_repeating_signature_offset_current(
+VT_UINT cs_fetch_template_repeating_signature_offset_current(
     VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT* lowest_sample_freq, VT_FLOAT* offset_current)
 {
     if (cs_object->fingerprintdb.template.repeating_signatures.offset_current == VT_DATA_NOT_AVAILABLE)
@@ -38,7 +41,7 @@ VT_UINT cs_fetch_repeating_signature_offset_current(
     return VT_SUCCESS;
 }
 
-VT_UINT cs_fetch_non_repeating_signature_average_current(
+VT_UINT cs_fetch_template_non_repeating_signature_average_current(
     VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT* avg_curr_on, VT_FLOAT* avg_curr_off)
 {
     if (cs_object->fingerprintdb.template.non_repeating_signature.avg_curr_on == VT_DATA_NOT_AVAILABLE ||
@@ -52,13 +55,23 @@ VT_UINT cs_fetch_non_repeating_signature_average_current(
     return VT_SUCCESS;
 }
 
-VT_VOID cs_fetch_repeating_signature_sampling_frequencies(VT_CURRENTSENSE_OBJECT* cs_object,
+VT_VOID cs_fetch_template_repeating_signature_sampling_frequencies(VT_CURRENTSENSE_OBJECT* cs_object,
     VT_FLOAT* repeating_signature_sampling_freqeuencies,
     VT_UINT repeating_signature_sampling_frequencies_buffer_capacity,
     VT_UINT* num_repeating_signature_sampling_frequencies)
 {
     *num_repeating_signature_sampling_frequencies = 0;
     if (repeating_signature_sampling_frequencies_buffer_capacity == 0)
+    {
+        return;
+    }
+
+    if (cs_object->fingerprintdb.template_type != VT_CS_REPEATING_SIGNATURE)
+    {
+        return;
+    }
+
+    if (cs_object->fingerprintdb.template.repeating_signatures.num_signatures == 0)
     {
         return;
     }

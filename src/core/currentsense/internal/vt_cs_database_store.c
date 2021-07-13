@@ -21,9 +21,10 @@ VT_UINT cs_store_repeating_signature_feature_vector(VT_CURRENTSENSE_OBJECT* cs_o
     cs_object->fingerprintdb.template.repeating_signatures.signatures[num_signatures].relative_curr_draw = relative_current_draw;
     cs_object->fingerprintdb.template.repeating_signatures.num_signatures++;
 
-    cs_object->db_updated = VT_DB_UPDATED;
+    cs_object->db_updated                  = VT_DB_UPDATED;
     cs_object->fingerprintdb.template_type = VT_CS_REPEATING_SIGNATURE;
-    VTLogDebug("Number of Repeating Signatures stored in DB %d\r\n", cs_object->fingerprintdb.num_signatures);
+    VTLogDebug("Number of Repeating Signatures stored in DB %d\r\n",
+        cs_object->fingerprintdb.template.repeating_signatures.num_signatures);
     return VT_SUCCESS;
 }
 
@@ -33,7 +34,7 @@ VT_UINT cs_update_repeating_signature_offset_current_draw(
     cs_object->fingerprintdb.template.repeating_signatures.lowest_sample_freq = lowest_sample_freq;
     cs_object->fingerprintdb.template.repeating_signatures.offset_current     = offset_curr;
 
-    cs_object->db_updated = VT_DB_UPDATED;
+    cs_object->db_updated                  = VT_DB_UPDATED;
     cs_object->fingerprintdb.template_type = VT_CS_REPEATING_SIGNATURE;
     VTLogDebug("Modified Offset Current for Repeating Signatures value stored in DB \r\n");
     return VT_SUCCESS;
@@ -45,7 +46,7 @@ VT_UINT cs_update_non_repeating_signature_average_current_draw(
     cs_object->fingerprintdb.template.non_repeating_signature.avg_curr_on  = avg_curr_on;
     cs_object->fingerprintdb.template.non_repeating_signature.avg_curr_off = avg_curr_off;
 
-    cs_object->db_updated = VT_DB_UPDATED;
+    cs_object->db_updated                  = VT_DB_UPDATED;
     cs_object->fingerprintdb.template_type = VT_CS_NON_REPEATING_SIGNATURE;
     VTLogDebug("Modified Average Current for Non-Repeating Signatures value stored in DB \r\n");
     return VT_SUCCESS;
