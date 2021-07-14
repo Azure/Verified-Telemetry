@@ -7,5 +7,8 @@
 #include "vt_defs.h"
 
 VT_INT test_vt_cs_object_signature();
+VT_INT test_vt_cs_object_database();
+VT_INT test_vt_cs_object_initialize();
+VT_INT test_vt_cs_object_sensor();
 
 #endif

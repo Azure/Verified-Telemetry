@@ -15,7 +15,7 @@
 
 static VT_UINT random_sampling_interval_array[VT_FC_MAX_SIGNATURES] = {26317, 6696, 278, 14072, 19332};
 static VT_UINT random_falltime_array[VT_FC_MAX_SIGNATURES]          = {22914, 21767, 8921, 8518, 6110};
-static VT_UINT random_pearson_coeff_array[VT_FC_MAX_SIGNATURES]     = {0.2794f, 0.9518f, 0.3319f, 0.8680f, 0.6204f};
+static VT_FLOAT random_pearson_coeff_array[VT_FC_MAX_SIGNATURES]    = {0.2794f, 0.9518f, 0.3319f, 0.8680f, 0.6204f};
 
 // vt_fallcurve_object_database_fetch() & vt_fallcurve_object_database_sync()
 static VT_VOID test_vt_fallcurve_object_database_fetch_sync(VT_VOID** state)
