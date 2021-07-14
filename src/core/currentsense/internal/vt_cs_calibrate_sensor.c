@@ -221,11 +221,11 @@ VT_VOID cs_calibrate_sensor(VT_CURRENTSENSE_OBJECT* cs_object)
     {
         if (cs_calibrate_non_repeating_signature_template(cs_object))
         {
-            VTLogInfo("Error calibrating sensor");
+            VTLogInfo("Error calibrating sensor\r\n");
             return;
         }
     }
-    VTLogInfo("Successfully calibrated sensor");
+    VTLogInfo("Successfully calibrated sensor\r\n");
     return;
 }
 
@@ -235,10 +235,10 @@ VT_VOID cs_recalibrate_sensor(VT_CURRENTSENSE_OBJECT* cs_object)
     {
         if (cs_recalibrate_non_repeating_signature_template(cs_object))
         {
-            VTLogInfo("Error re-calibrating sensor");
+            VTLogInfo("Error re-calibrating sensor\r\n");
             return;
         }
     }
-    VTLogInfo("Successfully re-calibrated sensor");
+    VTLogInfo("Successfully re-calibrated sensor\r\n");
     return;
 }

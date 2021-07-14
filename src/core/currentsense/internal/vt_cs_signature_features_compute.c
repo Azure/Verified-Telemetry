@@ -242,7 +242,8 @@ static VT_VOID binary_state_current_compute(VT_FLOAT* raw_signature,
     VT_FLOAT min_max_value                      = 0;
     VT_UINT num_seedpoints =
         sample_length > (2 * VT_CS_PEAK_DETECTOR_SEED_POINTS) ? VT_CS_PEAK_DETECTOR_SEED_POINTS : (sample_length / 2);
-    VT_BOOL valid_seedpoints = true;
+    VT_UINT num_seedpoints_added = 0;
+    VT_BOOL valid_seedpoints     = true;
 
     *curr_draw_active  = 0;
     *datapoints_active = 0;
@@ -250,17 +251,28 @@ static VT_VOID binary_state_current_compute(VT_FLOAT* raw_signature,
     *curr_draw_standby  = 0;
     *datapoints_standby = 0;
 
-    for (VT_UINT iter = 0; iter < num_seedpoints; iter++)
+    while (num_seedpoints_added < num_seedpoints)
     {
-        min_value(raw_signature, sample_length, &state_array[iter], datapoint_visited);
-        low_state_count++;
-        max_value(raw_signature, sample_length, &state_array[sample_length - 1 - iter], datapoint_visited);
-        high_state_count++;
+        min_value(raw_signature, sample_length, &state_array[low_state_count], datapoint_visited);
+        max_value(raw_signature, sample_length, &state_array[sample_length - 1 - high_state_count], datapoint_visited);
 
-        if (state_array[iter] == state_array[sample_length - 1 - iter])
+        if (low_state_count && high_state_count)
+        {
+            if ((state_array[low_state_count] != state_array[low_state_count - 1]) &&
+                (state_array[sample_length - 1 - high_state_count] != state_array[sample_length - 1 - high_state_count + 1]))
+            {
+                num_seedpoints_added++;
+            }
+        }
+
+        if (state_array[low_state_count] == state_array[sample_length - 1 - high_state_count])
         {
             valid_seedpoints = false;
+            break;
         }
+
+        low_state_count++;
+        high_state_count++;
     }
 
     if (valid_seedpoints == false)
@@ -435,6 +447,21 @@ VT_UINT cs_repeating_signature_offset_current_compute(
         raw_signature, raw_signature_length, &curr_draw_active, &curr_draw_standby, &datapoints_active, &datapoints_standby);
 
     *offset_current = curr_draw_standby;
+
+#if VT_LOG_LEVEL > 2
+    decimal    = curr_draw_active;
+    frac_float = curr_draw_active - (VT_FLOAT)decimal;
+    frac       = fabsf(frac_float) * 10000;
+    VTLogDebug("curr_draw_active = %d.%04d\r\n", decimal, frac);
+#endif /* VT_LOG_LEVEL > 2 */
+#if VT_LOG_LEVEL > 2
+    decimal    = curr_draw_standby;
+    frac_float = curr_draw_standby - (VT_FLOAT)decimal;
+    frac       = fabsf(frac_float) * 10000;
+    VTLogDebug("curr_draw_standby = %d.%04d\r\n", decimal, frac);
+#endif /* VT_LOG_LEVEL > 2 */
+    VTLogDebug("datapoints_active = %d\r\n", datapoints_active);
+    VTLogDebug("datapoints_standby = %d\r\n", datapoints_standby);
 
 #if VT_LOG_LEVEL > 2
     decimal    = *offset_current;

@@ -79,8 +79,7 @@ static VT_VOID cs_sensor_status_with_repeating_signature_template(VT_CURRENTSENS
     VT_BOOL signature_feature_vector_compute_fail = false;
     VT_BOOL signature_offset_current_compute_fail = false;
 
-    if (cs_fetch_template_repeating_signature_offset_current(cs_object, &lowest_sample_freq_saved, &offset_current_saved) ==
-        VT_SUCCESS)
+    if (cs_fetch_template_repeating_signature_offset_current(cs_object, &lowest_sample_freq_saved, &offset_current_saved))
     {
         offset_current_unavailable = true;
     }
