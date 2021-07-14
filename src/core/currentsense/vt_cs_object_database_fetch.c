@@ -106,6 +106,14 @@ VT_VOID vt_currentsense_object_database_fetch(VT_CURRENTSENSE_OBJECT* cs_object,
             strcat(string_buffer, string_element);
         }
         strcpy((VT_CHAR*)flattened_db->repeating_signature_duty_cycle, string_buffer);
+
+        memset(string_buffer, 0, sizeof(string_buffer));
+        snprintf(string_buffer, sizeof(string_buffer), "%d", 0);
+        strcpy((VT_CHAR*)flattened_db->non_repeating_signature_avg_curr_off, string_buffer);
+
+        memset(string_buffer, 0, sizeof(string_buffer));
+        snprintf(string_buffer, sizeof(string_buffer), "%d", 0);
+        strcpy((VT_CHAR*)flattened_db->non_repeating_signature_avg_curr_on, string_buffer);
     }
 
     else if (cs_object->fingerprintdb.template_type == VT_CS_NON_REPEATING_SIGNATURE)
@@ -123,6 +131,34 @@ VT_VOID vt_currentsense_object_database_fetch(VT_CURRENTSENSE_OBJECT* cs_object,
         memset(string_buffer, 0, sizeof(string_buffer));
         snprintf(string_buffer, sizeof(string_buffer), "%d.%04d", decimal, frac);
         strcpy((VT_CHAR*)flattened_db->non_repeating_signature_avg_curr_on, string_buffer);
+
+        memset(string_buffer, 0, sizeof(string_buffer));
+        snprintf(string_buffer, sizeof(string_buffer), "%d", 0);
+        strcpy((VT_CHAR*)flattened_db->repeating_signature_num_signatures, string_buffer);
+
+        memset(string_buffer, 0, sizeof(string_buffer));
+        snprintf(string_buffer, sizeof(string_buffer), "%d", 0);
+        strcpy((VT_CHAR*)flattened_db->repeating_signature_offset_curr, string_buffer);
+
+        memset(string_buffer, 0, sizeof(string_buffer));
+        snprintf(string_buffer, sizeof(string_buffer), "%d", 0);
+        strcpy((VT_CHAR*)flattened_db->repeating_signature_lowest_sample_freq, string_buffer);
+
+        memset(string_buffer, 0, sizeof(string_buffer));
+        snprintf(string_buffer, sizeof(string_buffer), "%d", 0);
+        strcpy((VT_CHAR*)flattened_db->repeating_signature_sampling_freq, string_buffer);
+
+        memset(string_buffer, 0, sizeof(string_buffer));
+        snprintf(string_buffer, sizeof(string_buffer), "%d", 0);
+        strcpy((VT_CHAR*)flattened_db->repeating_signature_freq, string_buffer);
+
+        memset(string_buffer, 0, sizeof(string_buffer));
+        snprintf(string_buffer, sizeof(string_buffer), "%d", 0);
+        strcpy((VT_CHAR*)flattened_db->repeating_signature_relative_curr_draw, string_buffer);
+
+        memset(string_buffer, 0, sizeof(string_buffer));
+        snprintf(string_buffer, sizeof(string_buffer), "%d", 0);
+        strcpy((VT_CHAR*)flattened_db->repeating_signature_duty_cycle, string_buffer);
     }
 
     *template_confidence_metric = cs_object->template_confidence_metric;
