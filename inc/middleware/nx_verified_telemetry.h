@@ -15,13 +15,21 @@ extern "C" {
 #include "nx_azure_iot_pnp_client.h"
 
 /* Verified Telemetry Components */
+#include "nx_vt_currentsense_component.h"
 #include "nx_vt_fallcurve_component.h"
 
-#define VT_SIGNATURE_TYPE_FALLCURVE 0x01
+#define VT_SIGNATURE_TYPE_FALLCURVE    0x01
+#define VT_SIGNATURE_TYPE_CURRENTSENSE 0x02
+
+#define VT_MINIMUM_BUFFER_SIZE_BYTES sizeof(VT_CURRENTSENSE_RAW_SIGNATURES_READER)
 
 union NX_VT_SIGNATURE_COMPONENT_UNION_TAG {
+
     /* FallCurve Component */
     NX_VT_FALLCURVE_COMPONENT fc;
+
+    /* CurrentSense Component */
+    NX_VT_CURRENTSENSE_COMPONENT cs;
 };
 
 typedef struct NX_VT_OBJECT_TAG
@@ -65,6 +73,12 @@ typedef struct NX_VERIFIED_TELEMETRY_DB_TAG
     /* Device Status Property Sent*/
     bool device_status_property_sent;
 
+    /* Pointer to byte buffer passed from application layer, used for fingerprint calculation/storage */
+    CHAR* scratch_buffer;
+
+    /* Length of byte buffer passed from application layer, used for fingerprint calculation/storage */
+    UINT scratch_buffer_length;
+
 } NX_VERIFIED_TELEMETRY_DB;
 
 /**
@@ -75,24 +89,30 @@ typedef struct NX_VERIFIED_TELEMETRY_DB_TAG
  * @param[in] enableVerifiedTelemetry User specified value to set Verified Telemetry active or inactive, can also be configured
  * during runtime from a writable Digital Twin property.
  * @param[in] device_driver The platform specific device driver components for interacting with the device hardware.
+ * @param[in] scratch_buffer Pointer to byte buffer passed from application layer, used for fingerprint calculation/storage.
+ * @param[in] scratch_buffer_length Length of byte buffer passed from application layer, used for fingerprint calculation/storage.
  *
  * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
  */
 UINT nx_vt_init(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     UCHAR* component_name_ptr,
     bool enable_verified_telemetry,
-    VT_DEVICE_DRIVER* device_driver);
+    VT_DEVICE_DRIVER* device_driver,
+    CHAR* scratch_buffer,
+    UINT scratch_buffer_length);
 
 /**
  * @brief Initializes Verified Telemetry for a particular sensor data stream
  *
  * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
- * @param[in] handle Pointer to variable of type NX_VT_OBJECT storing collection settings and configuration data for a particular sensor telemetry.
- * @param[in] component_name_ptr Name of the sensor.  Example - "accelerometer" This would be prepended with 'vT' by VT library 
+ * @param[in] handle Pointer to variable of type NX_VT_OBJECT storing collection settings and configuration data for a particular
+ * sensor telemetry.
+ * @param[in] component_name_ptr Name of the sensor.  Example - "accelerometer" This would be prepended with 'vT' by VT library
  * @param[in] signature_type One of the defined signature types. Currently available types - VT_SIGNATURE_TYPE_FALLCURVE
- * @param[in] associated_telemetry Telmetries associated with this sensor, sperated by commas  Example - "accelerometerX, accelerometerY, accelerometerZ"
- * @param[in] telemetry_status_auto_update User specified value to control whether fingerprint computation for the sensor should be invoked 
- * when nx_vt_compute_evaluate_fingerprint_all_sensors is called
+ * @param[in] associated_telemetry Telmetries associated with this sensor, separated by commas  Example - "accelerometerX,
+ * accelerometerY, accelerometerZ"
+ * @param[in] telemetry_status_auto_update User specified value to control whether fingerprint computation for the sensor should
+ * be invoked when nx_vt_compute_evaluate_fingerprint_all_sensors is called
  * @param[in] sensor_handle The sensor specific connection configuration for collecting VT signatures.
  *
  * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
@@ -160,13 +180,13 @@ UINT nx_vt_process_property_update(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_
 UINT nx_vt_properties(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr);
 
 /**
- * @brief Updates Digital Twin with default desired property values when device is booted for the first time 
+ * @brief Updates Digital Twin with default desired property values when device is booted for the first time
  *
  * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
  * @param[in] iotpnp_client_ptr Pointer to initialized Azure IoT PnP instance.
  * @param[in] message_type Type of document, only valid value are NX_AZURE_IOT_PNP_DESIRED_PROPERTIES or
  * NX_AZURE_IOT_PNP_PROPERTIES
- * 
+ *
  * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
  */
 UINT nx_vt_send_desired_property_after_boot(
@@ -231,6 +251,30 @@ UINT nx_vt_compute_evaluate_fingerprint_all_sensors(NX_VERIFIED_TELEMETRY_DB* ve
  */
 UINT nx_vt_azure_iot_pnp_client_component_add(
     NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT* pnp_client_ptr);
+
+/**
+ * @brief Starts reading VT signatures for the sensor mapped to the telemetry string passed
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] associated_telemetry Name of the telemetry.
+ * @param[in] associated_telemetry_length Length of name of the telemetry.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
+UINT nx_vt_signature_read(
+    NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, UCHAR* associated_telemetry, UINT associated_telemetry_length);
+
+/**
+ * @brief Processes the collected VT signatures for the sensor mapped to the telemetry string passed
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] associated_telemetry Name of the telemetry.
+ * @param[in] associated_telemetry_length Length of name of the telemetry.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
+UINT nx_vt_signature_process(
+    NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, UCHAR* associated_telemetry, UINT associated_telemetry_length);
 
 #ifdef __cplusplus
 }

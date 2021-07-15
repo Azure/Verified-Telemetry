@@ -24,12 +24,12 @@ VT_UINT fc_signature_compute_collection_settings(
     VT_ULONG falltime_calib_test      = 0;
     VT_FLOAT pearson_coeff_calib_test = 0;
 
-    fc_object->device_driver->adc_init(fc_object->sensor_handle->adc_id,
+    fc_object->device_driver->adc_single_read_init(fc_object->sensor_handle->adc_id,
         fc_object->sensor_handle->adc_controller,
         fc_object->sensor_handle->adc_channel,
         &adc_resolution,
         &adc_ref_volt);
-    adc_value_start = fc_object->device_driver->adc_read(
+    adc_value_start = fc_object->device_driver->adc_single_read(
         fc_object->sensor_handle->adc_id, fc_object->sensor_handle->adc_controller, fc_object->sensor_handle->adc_channel);
     VTLogDebug("FallCurve first value: %d \r\n", adc_value_start);
     adc_value_start = round(adc_value_start * 0.37f);
@@ -42,7 +42,7 @@ VT_UINT fc_signature_compute_collection_settings(
 
     while (time_to_fall <= max_time_allowed)
     {
-        adc_value = fc_object->device_driver->adc_read(
+        adc_value = fc_object->device_driver->adc_single_read(
             fc_object->sensor_handle->adc_id, fc_object->sensor_handle->adc_controller, fc_object->sensor_handle->adc_channel);
         if (adc_value <= adc_value_start)
         {

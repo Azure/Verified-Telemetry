@@ -33,9 +33,9 @@ static VT_INT fc_signature_calculate_37index(VT_UINT* raw_signature, VT_UINT sam
         }
     }
 
-    return abs_custom(
-        (((VT_FLOAT)sample_length * -1.0f) / log((VT_FLOAT)raw_signature[sample_length - 1] / (VT_FLOAT)raw_signature[0])) +
-        1.0f);
+    return fabsf((((VT_FLOAT)sample_length * -1.0f) /
+                     (VT_FLOAT)log((VT_FLOAT)raw_signature[sample_length - 1] / (VT_FLOAT)raw_signature[0])) +
+                 1.0f);
 }
 
 static VT_FLOAT fc_signature_calculate_correlation_coefficient(VT_UINT* signature1, VT_UINT* signature2, VT_UINT sample_length)
@@ -119,8 +119,8 @@ VT_UINT fc_signature_compute(
     VT_INT32 decimal    = pearson_coeff_computed;
     VT_FLOAT frac_float = pearson_coeff_computed - (VT_FLOAT)decimal;
     VT_INT32 frac       = frac_float * 10000;
-#endif /* VT_LOG_LEVEL > 2 */
     VTLogDebug("Pearson Coeff: %lu.%lu \r\n", decimal, frac);
+#endif /* VT_LOG_LEVEL > 2 */
 
     if (sample_length > VT_FC_MIN_FALLTIME_DATAPOINTS && pearson_coeff_computed > VT_FC_MIN_SHAPE_MATCH)
     {
