@@ -93,6 +93,7 @@ $(document).ready(function(){initNavTree('nx__verified__telemetry_8h.html',''); 
 <div class="textblock"><code>#include &quot;nx_azure_iot_json_reader.h&quot;</code><br />
 <code>#include &quot;nx_azure_iot_json_writer.h&quot;</code><br />
 <code>#include &quot;nx_azure_iot_pnp_client.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="nx__vt__currentsense__component_8h.html">nx_vt_currentsense_component.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="nx__vt__fallcurve__component_8h.html">nx_vt_fallcurve_component.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -109,6 +110,12 @@ Macros</h2></td></tr>
 <tr class="memitem:a87e1a292e0a65771acd330273ba9d055"><td class="memItemLeft" align="right" valign="top"><a id="a87e1a292e0a65771acd330273ba9d055"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>VT_SIGNATURE_TYPE_FALLCURVE</b>&#160;&#160;&#160;0x01</td></tr>
 <tr class="separator:a87e1a292e0a65771acd330273ba9d055"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0aac8d32b72f06a55bc75cde8afa1bb"><td class="memItemLeft" align="right" valign="top"><a id="ae0aac8d32b72f06a55bc75cde8afa1bb"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>VT_SIGNATURE_TYPE_CURRENTSENSE</b>&#160;&#160;&#160;0x02</td></tr>
+<tr class="separator:ae0aac8d32b72f06a55bc75cde8afa1bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b07aee91bd25e50184fd380707dde77"><td class="memItemLeft" align="right" valign="top"><a id="a0b07aee91bd25e50184fd380707dde77"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>VT_MINIMUM_BUFFER_SIZE_BYTES</b>&#160;&#160;&#160;sizeof(VT_CURRENTSENSE_RAW_SIGNATURES_READER)</td></tr>
+<tr class="separator:a0b07aee91bd25e50184fd380707dde77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -121,9 +128,9 @@ typedef struct <a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a0e766b053a437b8cf4bd44d2679f681d"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#a0e766b053a437b8cf4bd44d2679f681d">nx_vt_init</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, UCHAR *component_name_ptr, bool enable_verified_telemetry, <a class="el" href="struct_v_t___d_e_v_i_c_e___d_r_i_v_e_r___s_t_r_u_c_t.html">VT_DEVICE_DRIVER</a> *device_driver)</td></tr>
-<tr class="memdesc:a0e766b053a437b8cf4bd44d2679f681d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Global Verified Telemetry using platform specific device drivers.  <a href="nx__verified__telemetry_8h.html#a0e766b053a437b8cf4bd44d2679f681d">More...</a><br /></td></tr>
-<tr class="separator:a0e766b053a437b8cf4bd44d2679f681d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a024218d1173ba3a6ff7f4929f5dfc05d"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#a024218d1173ba3a6ff7f4929f5dfc05d">nx_vt_init</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, UCHAR *component_name_ptr, bool enable_verified_telemetry, <a class="el" href="struct_v_t___d_e_v_i_c_e___d_r_i_v_e_r___s_t_r_u_c_t.html">VT_DEVICE_DRIVER</a> *device_driver, CHAR *scratch_buffer, UINT scratch_buffer_length)</td></tr>
+<tr class="memdesc:a024218d1173ba3a6ff7f4929f5dfc05d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Global Verified Telemetry using platform specific device drivers.  <a href="nx__verified__telemetry_8h.html#a024218d1173ba3a6ff7f4929f5dfc05d">More...</a><br /></td></tr>
+<tr class="separator:a024218d1173ba3a6ff7f4929f5dfc05d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af097ec10f7efe9e8ef6505166938b46c"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#af097ec10f7efe9e8ef6505166938b46c">nx_vt_signature_init</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, <a class="el" href="struct_n_x___v_t___o_b_j_e_c_t___t_a_g.html">NX_VT_OBJECT</a> *handle, UCHAR *component_name_ptr, UINT signature_type, UCHAR *associated_telemetry, bool telemetry_status_auto_update, <a class="el" href="struct_v_t___s_e_n_s_o_r___h_a_n_d_l_e___s_t_r_u_c_t.html">VT_SENSOR_HANDLE</a> *sensor_handle)</td></tr>
 <tr class="memdesc:af097ec10f7efe9e8ef6505166938b46c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Verified Telemetry for a particular sensor data stream.  <a href="nx__verified__telemetry_8h.html#af097ec10f7efe9e8ef6505166938b46c">More...</a><br /></td></tr>
 <tr class="separator:af097ec10f7efe9e8ef6505166938b46c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -151,6 +158,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a44f7374f9f470f0652b9cebf0dbd8183"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#a44f7374f9f470f0652b9cebf0dbd8183">nx_vt_azure_iot_pnp_client_component_add</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT *pnp_client_ptr)</td></tr>
 <tr class="memdesc:a44f7374f9f470f0652b9cebf0dbd8183"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds VT Information Interfaces that are initialized to the nx_pnp_client object.  <a href="nx__verified__telemetry_8h.html#a44f7374f9f470f0652b9cebf0dbd8183">More...</a><br /></td></tr>
 <tr class="separator:a44f7374f9f470f0652b9cebf0dbd8183"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7358a90f8b82c462e2aad6e4ace327e"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#aa7358a90f8b82c462e2aad6e4ace327e">nx_vt_signature_read</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, UCHAR *associated_telemetry, UINT associated_telemetry_length)</td></tr>
+<tr class="memdesc:aa7358a90f8b82c462e2aad6e4ace327e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts reading VT signatures for the sensor mapped to the telemetry string passed.  <a href="nx__verified__telemetry_8h.html#aa7358a90f8b82c462e2aad6e4ace327e">More...</a><br /></td></tr>
+<tr class="separator:aa7358a90f8b82c462e2aad6e4ace327e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3e4a395187bbdf56c1f516419a0fd6b"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#af3e4a395187bbdf56c1f516419a0fd6b">nx_vt_signature_process</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, UCHAR *associated_telemetry, UINT associated_telemetry_length)</td></tr>
+<tr class="memdesc:af3e4a395187bbdf56c1f516419a0fd6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes the collected VT signatures for the sensor mapped to the telemetry string passed.  <a href="nx__verified__telemetry_8h.html#af3e4a395187bbdf56c1f516419a0fd6b">More...</a><br /></td></tr>
+<tr class="separator:af3e4a395187bbdf56c1f516419a0fd6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a44f7374f9f470f0652b9cebf0dbd8183"></a>
@@ -228,8 +241,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a0e766b053a437b8cf4bd44d2679f681d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e766b053a437b8cf4bd44d2679f681d">&#9670;&nbsp;</a></span>nx_vt_init()</h2>
+<a id="a024218d1173ba3a6ff7f4929f5dfc05d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a024218d1173ba3a6ff7f4929f5dfc05d">&#9670;&nbsp;</a></span>nx_vt_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -256,7 +269,19 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="struct_v_t___d_e_v_i_c_e___d_r_i_v_e_r___s_t_r_u_c_t.html">VT_DEVICE_DRIVER</a> *&#160;</td>
-          <td class="paramname"><em>device_driver</em>&#160;</td>
+          <td class="paramname"><em>device_driver</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">CHAR *&#160;</td>
+          <td class="paramname"><em>scratch_buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UINT&#160;</td>
+          <td class="paramname"><em>scratch_buffer_length</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -272,7 +297,9 @@ Functions</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">verified_telemetry_DB</td><td>Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">component_name_ptr</td><td>Name of the PnP component. Example - "vTDevice" </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">enableVerifiedTelemetry</td><td>User specified value to set Verified Telemetry active or inactive, can also be configured during runtime from a writable Digital Twin property. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">device_driver</td><td>The platform specific device driver components for interacting with the device hardware.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">device_driver</td><td>The platform specific device driver components for interacting with the device hardware. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">scratch_buffer</td><td>Pointer to byte buffer passed from application layer, used for fingerprint calculation/storage. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">scratch_buffer_length</td><td>Length of byte buffer passed from application layer, used for fingerprint calculation/storage.</td></tr>
   </table>
   </dd>
 </dl>
@@ -675,9 +702,110 @@ Functions</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">handle</td><td>Pointer to variable of type NX_VT_OBJECT storing collection settings and configuration data for a particular sensor telemetry. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">component_name_ptr</td><td>Name of the sensor. Example - "accelerometer" This would be prepended with 'vT' by VT library </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">signature_type</td><td>One of the defined signature types. Currently available types - VT_SIGNATURE_TYPE_FALLCURVE </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">associated_telemetry</td><td>Telmetries associated with this sensor, sperated by commas Example - "accelerometerX, accelerometerY, accelerometerZ" </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">associated_telemetry</td><td>Telmetries associated with this sensor, separated by commas Example - "accelerometerX,
+accelerometerY, accelerometerZ" </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">telemetry_status_auto_update</td><td>User specified value to control whether fingerprint computation for the sensor should be invoked when nx_vt_compute_evaluate_fingerprint_all_sensors is called </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">sensor_handle</td><td>The sensor specific connection configuration for collecting VT signatures.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">NX_AZURE_IOT_SUCCESS</td><td>upon success or an error code upon failure. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af3e4a395187bbdf56c1f516419a0fd6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3e4a395187bbdf56c1f516419a0fd6b">&#9670;&nbsp;</a></span>nx_vt_signature_process()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">UINT nx_vt_signature_process </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *&#160;</td>
+          <td class="paramname"><em>verified_telemetry_DB</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UCHAR *&#160;</td>
+          <td class="paramname"><em>associated_telemetry</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UINT&#160;</td>
+          <td class="paramname"><em>associated_telemetry_length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Processes the collected VT signatures for the sensor mapped to the telemetry string passed. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">verified_telemetry_DB</td><td>Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">associated_telemetry</td><td>Name of the telemetry. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">associated_telemetry_length</td><td>Length of name of the telemetry.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">NX_AZURE_IOT_SUCCESS</td><td>upon success or an error code upon failure. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa7358a90f8b82c462e2aad6e4ace327e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7358a90f8b82c462e2aad6e4ace327e">&#9670;&nbsp;</a></span>nx_vt_signature_read()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">UINT nx_vt_signature_read </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *&#160;</td>
+          <td class="paramname"><em>verified_telemetry_DB</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UCHAR *&#160;</td>
+          <td class="paramname"><em>associated_telemetry</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UINT&#160;</td>
+          <td class="paramname"><em>associated_telemetry_length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Starts reading VT signatures for the sensor mapped to the telemetry string passed. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">verified_telemetry_DB</td><td>Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">associated_telemetry</td><td>Name of the telemetry. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">associated_telemetry_length</td><td>Length of name of the telemetry.</td></tr>
   </table>
   </dd>
 </dl>

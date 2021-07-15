@@ -99,12 +99,18 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ab92e6d3b4d83f301de92556a337d42ed"><td class="memItemLeft" align="right" valign="top"><a id="ab92e6d3b4d83f301de92556a337d42ed"></a>
-typedef VT_UINT(*&#160;</td><td class="memItemRight" valign="bottom"><b>VT_ADC_FUNC_INIT</b>) (VT_ADC_ID adc_id, VT_ADC_CONTROLLER *adc_controller, VT_ADC_CHANNEL *adc_channel, VT_UINT *adc_resolution, VT_FLOAT *adc_ref_volt)</td></tr>
-<tr class="separator:ab92e6d3b4d83f301de92556a337d42ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c0e52d8beb6e46e86ee378edf35bf49"><td class="memItemLeft" align="right" valign="top"><a id="a3c0e52d8beb6e46e86ee378edf35bf49"></a>
-typedef VT_UINT(*&#160;</td><td class="memItemRight" valign="bottom"><b>VT_ADC_FUNC</b>) (VT_ADC_ID adc_id, VT_ADC_CONTROLLER *adc_controller, VT_ADC_CHANNEL *adc_channel)</td></tr>
-<tr class="separator:a3c0e52d8beb6e46e86ee378edf35bf49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a381a79b2d286828ff3fc157c783abbb3"><td class="memItemLeft" align="right" valign="top"><a id="a381a79b2d286828ff3fc157c783abbb3"></a>
+typedef VT_UINT(*&#160;</td><td class="memItemRight" valign="bottom"><b>VT_ADC_SINGLE_READ_INIT_FUNC</b>) (VT_ADC_ID adc_id, VT_ADC_CONTROLLER *adc_controller, VT_ADC_CHANNEL *adc_channel, VT_UINT *adc_resolution, VT_FLOAT *adc_ref_volt)</td></tr>
+<tr class="separator:a381a79b2d286828ff3fc157c783abbb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4550a9c2489ceccbb2f537c1aba2167"><td class="memItemLeft" align="right" valign="top"><a id="ab4550a9c2489ceccbb2f537c1aba2167"></a>
+typedef VT_UINT(*&#160;</td><td class="memItemRight" valign="bottom"><b>VT_ADC_SINGLE_READ_FUNC</b>) (VT_ADC_ID adc_id, VT_ADC_CONTROLLER *adc_controller, VT_ADC_CHANNEL *adc_channel)</td></tr>
+<tr class="separator:ab4550a9c2489ceccbb2f537c1aba2167"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7819f913660f8f0e35d36d402cd4777"><td class="memItemLeft" align="right" valign="top"><a id="aa7819f913660f8f0e35d36d402cd4777"></a>
+typedef VT_VOID(*&#160;</td><td class="memItemRight" valign="bottom"><b>VT_ADC_BUFFER_READ_CALLBACK_FUNC</b>) (void)</td></tr>
+<tr class="separator:aa7819f913660f8f0e35d36d402cd4777"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1ca7b95e19471b14e3c45aee8417c69"><td class="memItemLeft" align="right" valign="top"><a id="ac1ca7b95e19471b14e3c45aee8417c69"></a>
+typedef VT_UINT(*&#160;</td><td class="memItemRight" valign="bottom"><b>VT_ADC_BUFFER_READ_FUNC</b>) (VT_ADC_ID adc_id, VT_ADC_CONTROLLER *adc_controller, VT_ADC_CHANNEL *adc_channel, VT_FLOAT *adc_read_buffer, VT_UINT buffer_length, VT_FLOAT sampling_frequency, VT_ADC_BUFFER_READ_CALLBACK_FUNC vt_adc_buffer_read_conv_half_cplt_callback, VT_ADC_BUFFER_READ_CALLBACK_FUNC vt_adc_buffer_read_conv_cplt_callback)</td></tr>
+<tr class="separator:ac1ca7b95e19471b14e3c45aee8417c69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abab46aa3781a7f8f5a1c5a62598a1dfe"><td class="memItemLeft" align="right" valign="top"><a id="abab46aa3781a7f8f5a1c5a62598a1dfe"></a>
 typedef VT_UINT(*&#160;</td><td class="memItemRight" valign="bottom"><b>VT_GPIO_FUNC</b>) (VT_GPIO_ID gpio_id, VT_GPIO_PORT *gpio_port, VT_GPIO_PIN *gpio_pin)</td></tr>
 <tr class="separator:abab46aa3781a7f8f5a1c5a62598a1dfe"><td class="memSeparator" colspan="2">&#160;</td></tr>

@@ -8,5 +8,7 @@ var struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g =
     [ "device_status_property_sent", "struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html#a76bb9e65de7b15342dd45b397fa5ce84", null ],
     [ "enable_verified_telemetry", "struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html#aaee6d4778b8bfbb42798b07318a076f4", null ],
     [ "first_component", "struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html#ae43fdd32886955721c49d5a2dde95565", null ],
-    [ "last_component", "struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html#a5910c5d49c47ee03312b52fdc0572adc", null ]
+    [ "last_component", "struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html#a5910c5d49c47ee03312b52fdc0572adc", null ],
+    [ "scratch_buffer", "struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html#a492f79814edb692ef2cb65df04abf1f6", null ],
+    [ "scratch_buffer_length", "struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html#abc24359ce4369a65a4d85cfbecc89807", null ]
 ];
