@@ -57,17 +57,27 @@ list(APPEND VT_SOURCES
 
 )
 
-# Don't build middleware if unit testing enabled
-
-#if(VT_FREERTOS_ENABLE)
-if(VT_MIDDLEWARE_RTOS STREQUAL "FREE_RTOS")
-if (NOT VT_UNIT_TESTING)
-  list(APPEND VT_SOURCES
-    "src/middleware/freertos_middleware/FreeRTOS_verified_telemetry.c" 
-    "src/middleware/freertos_middleware/FreeRTOS_vt_fallcurve_component.c"
-  )
+# Add VT Azure RTOS middleware source files
+if(VT_MIDDLEWARE_RTOS STREQUAL "AZURE_RTOS")
+  if (NOT VT_UNIT_TESTING)
+    list(APPEND VT_SOURCES
+      "src/middleware/azure_rtos_middleware/nx_verified_telemetry.c" 
+      "src/middleware/azure_rtos_middleware/nx_vt_fallcurve_component.c"
+      "src/middleware/azure_rtos_middleware/nx_vt_currentsense_component.c"
+      "src/middleware/azure_rtos_middleware/nx_vt_middleware_helper.c"
+    )
+  endif()
 endif()
 
+# Add VT FREERTOS middleware source files
+if(VT_MIDDLEWARE_RTOS STREQUAL "FREE_RTOS")
+  if (NOT VT_UNIT_TESTING)
+    list(APPEND VT_SOURCES
+      "src/middleware/freertos_middleware/FreeRTOS_verified_telemetry.c" 
+      "src/middleware/freertos_middleware/FreeRTOS_vt_fallcurve_component.c"
+    )
+  endif()
+endif()
 
 set(TARGET verified_telemetry)
 
@@ -82,67 +92,31 @@ target_link_libraries(${TARGET}
     ${VT_LINK_LIBRARIES}
 )
 
-if (NOT VT_UNIT_TESTING)
-target_link_libraries(${TARGET}
- PUBLIC
-  az::iot_middleware::freertos
-) 
-
-endif()
-
-target_compile_definitions(${TARGET} 
-  PUBLIC 
-    ${VT_COMPILE_DEFINITIONS}
-)
-
-target_include_directories(${TARGET}
-  PUBLIC 
-    inc/core
-    inc/middleware/freertos_middleware
-    inc/platform
-    inc/core/fallcurve
-    inc/core/fallcurve/config
-    inc/core/currentsense
-    inc/core/currentsense/config
-  PRIVATE
-    inc/core/fallcurve/internal
-    inc/core/currentsense/internal
-    ${CONFIG_DIRECTORY}
-    ${FREERTOS_PORT_DIRECTORY}
-    ${FREERTOS_DIRECTORY}/FreeRTOS/Source/include
-)
-endif()
-#endif()
-
-#if(VT_AZURE_RTOS_ENABLE)
+# Include Azure RTOS middleware
 if(VT_MIDDLEWARE_RTOS STREQUAL "AZURE_RTOS")
-
-if (NOT VT_UNIT_TESTING)
-  list(APPEND VT_SOURCES
-    "src/middleware/azure_rtos_middleware/nx_verified_telemetry.c" 
-    "src/middleware/azure_rtos_middleware/nx_vt_fallcurve_component.c"
-    "src/middleware/azure_rtos_middleware/nx_vt_currentsense_component.c"
-    "src/middleware/azure_rtos_middleware/nx_vt_middleware_helper.c"
-  )
+  if (NOT VT_UNIT_TESTING)
+    target_link_libraries(${TARGET} 
+      PUBLIC 
+        azrtos::netxduo
+    )
+  endif()
+  
 endif()
 
-set(TARGET verified_telemetry)
-
-add_library(${TARGET} 
-  ${VT_SOURCES}
-)
-
-add_library(az:iot:vt ALIAS verified_telemetry)
-
-target_link_libraries(${TARGET} 
-  PUBLIC 
-    ${VT_LINK_LIBRARIES}
-)
-if (NOT VT_UNIT_TESTING)
-  target_link_libraries(${TARGET} 
-  PUBLIC 
-    azrtos::netxduo
-  )  
+# Include FREERTOS middleware
+if(VT_MIDDLEWARE_RTOS STREQUAL "FREE_RTOS")
+  if (NOT VT_UNIT_TESTING)
+    target_link_libraries(${TARGET}
+      PUBLIC
+        az::iot_middleware::freertos
+      )
+    target_include_directories(${TARGET}
+      PRIVATE
+        ${CONFIG_DIRECTORY}
+        ${FREERTOS_PORT_DIRECTORY}
+        ${FREERTOS_DIRECTORY}/FreeRTOS/Source/include
+    ) 
+  endif()
 endif()
 
 target_compile_definitions(${TARGET} 
@@ -153,7 +127,6 @@ target_compile_definitions(${TARGET}
 target_include_directories(${TARGET}
   PUBLIC 
     inc/core
-    inc/middleware/azure_rtos_middleware
     inc/platform
     inc/core/fallcurve
     inc/core/fallcurve/config
@@ -163,5 +136,24 @@ target_include_directories(${TARGET}
     inc/core/fallcurve/internal
     inc/core/currentsense/internal
 )
+
+# Include VT Azure RTOS middleware directory
+if(VT_MIDDLEWARE_RTOS STREQUAL "AZURE_RTOS")
+  if (NOT VT_UNIT_TESTING)
+    target_include_directories(${TARGET}
+      PUBLIC
+        inc/middleware/azure_rtos_middleware
+    )
+  endif()
+  
 endif()
-#endif()
+
+# Include VT FREERTOS middleware directory
+if(VT_MIDDLEWARE_RTOS STREQUAL "FREE_RTOS")
+  if (NOT VT_UNIT_TESTING)
+    target_include_directories(${TARGET}
+      PUBLIC
+        inc/middleware/freertos_middleware
+    ) 
+  endif()
+endif()
