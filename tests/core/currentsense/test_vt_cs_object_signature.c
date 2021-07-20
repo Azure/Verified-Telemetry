@@ -26,7 +26,90 @@ static VT_UINT repeating_raw_signature_5000_hz[TEST_REPEATING_RAW_SIGNATURE_SAMP
 static VT_UINT repeating_raw_signature_12_hz[TEST_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH] = {41, 47, 42, 53, 45, 60, 50, 56, 23, 25, 24, 29, 26, 18, 21, 36, 28, 23, 26, 29, 22, 22, 18, 30, 16, 16, 55, 54, 55, 55, 57, 59, 50, 47, 56, 25, 30, 21, 17, 22, 11, 32, 24, 22, 32, 28, 18, 25, 13, 24, 18, 26, 54, 63, 52, 59, 51, 60, 47, 46, 46, 23, 25, 24, 29, 26, 18, 21, 36, 28, 23, 26, 29, 22, 22, 18, 30, 16, 16, 55, 54, 55, 55, 57, 59, 50, 47, 56, 25, 30, 21, 17, 22, 11, 32, 24, 22, 32, 28, 18, 25, 13, 24, 18, 26, 54, 63, 52, 59, 51, 60, 47, 46, 46, 23, 25, 24, 29, 26, 18, 21, 36, 28, 23, 26, 29, 22, 22};
 static VT_UINT repeating_raw_signature_15_hz[TEST_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH] = {41, 47, 42, 53, 45, 60, 50, 56, 23, 25, 24, 29, 26, 18, 21, 36, 28, 23, 26, 29, 22, 22, 18, 30, 16, 16, 55, 54, 55, 55, 57, 59, 50, 47, 56, 25, 30, 21, 17, 22, 11, 32, 24, 22, 32, 28, 18, 25, 13, 24, 18, 26, 54, 63, 52, 59, 51, 60, 47, 46, 46, 23, 25, 24, 29, 26, 18, 21, 36, 28, 23, 26, 29, 22, 22, 18, 30, 16, 16, 55, 54, 55, 55, 57, 59, 50, 47, 56, 25, 30, 21, 17, 22, 11, 32, 24, 22, 32, 28, 18, 25, 13, 24, 18, 26, 54, 63, 52, 59, 51, 60, 47, 46, 46, 23, 25, 24, 29, 26, 18, 21, 36, 28, 23, 26, 29, 22, 22};
 static VT_UINT non_repeating_raw_signature[TEST_NON_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH] = {40, 31, 31, 28, 36, 32, 31, 45, 35, 28, 35, 43, 32, 31, 38, 41, 30, 29, 33, 42, 31, 29, 22, 40, 30, 28, 35, 39, 32, 30, 29, 38, 32, 28, 33, 38, 29, 30, 35, 37, 32, 31, 41, 39, 29, 31, 26, 38, 29, 32, 42, 58, 62, 65, 75, 64, 61, 55, 69, 61, 65, 74, 63, 63, 76, 62, 59, 74, 65, 28, 27, 36, 30, 36, 38, 28, 35, 39, 27, 33, 42, 30, 34, 42, 32, 32, 44, 32, 30, 44, 31, 30, 42, 31, 30, 43, 32, 29, 26, 33, 28, 39, 33, 29, 34, 36, 29, 27, 36, 29, 35, 38, 30, 34, 42, 31, 33, 42, 31, 32, 44, 29, 30, 45, 33, 30, 41, 33};
+static VT_FLOAT sampling_frequencies_template[VT_CS_MAX_SIGNATURES] = {5000.0f, 12.8000f, 15.2224f, 323.34f, 0.48f};
 // clang-format on
+
+static VT_UINT vt_adc_buffer_read(VT_ADC_ID adc_id,
+    VT_ADC_CONTROLLER* adc_controller,
+    VT_ADC_CHANNEL* adc_channel,
+    VT_FLOAT* adc_read_buffer,
+    VT_UINT buffer_length,
+    VT_FLOAT sampling_frequency,
+    VT_ADC_BUFFER_READ_CALLBACK_FUNC vt_adc_buffer_read_conv_half_cplt_callback,
+    VT_ADC_BUFFER_READ_CALLBACK_FUNC vt_adc_buffer_read_conv_cplt_callback)
+{
+    return 0;
+}
+
+static VT_UINT calculate_fft_ranges()
+{
+    VT_UINT ranges = 1;
+    VT_FLOAT f_low = (VT_CS_ADC_MAX_SAMPLING_FREQ / 2) / VT_CS_SAMPLE_LENGTH;
+    while (true)
+    {
+        if (f_low < VT_CS_FMIN)
+        {
+            break;
+        }
+        f_low /= (((VT_FLOAT)VT_CS_SAMPLE_LENGTH) / 2.0f);
+        ranges++;
+    }
+    return ranges;
+}
+
+// vt_currentsense_object_signature_read()
+static VT_VOID test_vt_currentsense_object_signature_read(VT_VOID** state)
+{
+    VT_CURRENTSENSE_OBJECT cs_object;
+    VT_DEVICE_DRIVER device_driver;
+    VT_SENSOR_HANDLE sensor_handle;
+    cs_object.device_driver                                                      = &device_driver;
+    cs_object.sensor_handle                                                      = &sensor_handle;
+    VT_CHAR raw_signatures_buffer[sizeof(VT_CURRENTSENSE_RAW_SIGNATURES_READER)] = {0};
+
+    cs_object.raw_signatures_reader_initialized = true;
+    cs_object.raw_signatures_reader             = (VT_CURRENTSENSE_RAW_SIGNATURES_READER*)raw_signatures_buffer;
+    cs_object.device_driver->adc_buffer_read    = &vt_adc_buffer_read;
+
+    cs_object.fingerprintdb.template_type                                    = VT_CS_REPEATING_SIGNATURE;
+    cs_object.fingerprintdb.template.repeating_signatures.num_signatures     = 0;
+    cs_object.fingerprintdb.template.repeating_signatures.lowest_sample_freq = VT_DATA_NOT_AVAILABLE;
+    cs_object.fingerprintdb.template.repeating_signatures.offset_current     = VT_DATA_NOT_AVAILABLE;
+    cs_object.fingerprintdb.template.non_repeating_signature.avg_curr_on     = VT_DATA_NOT_AVAILABLE;
+    cs_object.fingerprintdb.template.non_repeating_signature.avg_curr_off    = VT_DATA_NOT_AVAILABLE;
+    cs_object.mode                                                           = VT_MODE_RUNTIME_EVALUATE;
+
+    vt_currentsense_object_signature_read(&cs_object);
+
+    assert_int_equal(cs_object.raw_signatures_reader->num_repeating_raw_signatures, 0);
+
+    cs_object.fingerprintdb.template.repeating_signatures.num_signatures = VT_CS_MAX_SIGNATURES;
+    for (VT_UINT iter = 0; iter < VT_CS_MAX_SIGNATURES; iter++)
+    {
+        cs_object.fingerprintdb.template.repeating_signatures.signatures[iter].sampling_freq =
+            sampling_frequencies_template[iter];
+    }
+
+    vt_currentsense_object_signature_read(&cs_object);
+
+    assert_int_equal(cs_object.raw_signatures_reader->num_repeating_raw_signatures, VT_CS_MAX_SIGNATURES);
+    for (VT_UINT iter = 0; iter < VT_CS_MAX_SIGNATURES; iter++)
+    {
+        assert_float_equal(cs_object.raw_signatures_reader->repeating_raw_signatures[iter].sampling_frequency,
+            cs_object.fingerprintdb.template.repeating_signatures.signatures[iter].sampling_freq,
+            0.1);
+    }
+
+    cs_object.fingerprintdb.template_type = VT_CS_NON_REPEATING_SIGNATURE;
+    vt_currentsense_object_signature_read(&cs_object);
+    assert_int_equal(cs_object.raw_signatures_reader->num_repeating_raw_signatures, 0);
+    assert_int_equal(
+        cs_object.raw_signatures_reader->non_repeating_raw_signature.sampling_frequency, VT_CS_ADC_MAX_SAMPLING_FREQ);
+
+    cs_object.mode = VT_MODE_CALIBRATE;
+    vt_currentsense_object_signature_read(&cs_object);
+    assert_int_equal(cs_object.raw_signatures_reader->num_repeating_raw_signatures, calculate_fft_ranges());
+}
 
 // vt_currentsense_object_signature_process()
 static VT_VOID test_vt_currentsense_object_signature_process(VT_VOID** state)
@@ -532,6 +615,7 @@ VT_INT test_vt_cs_object_signature()
 {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_vt_currentsense_object_signature_process),
+        cmocka_unit_test(test_vt_currentsense_object_signature_read),
     };
 
     return cmocka_run_group_tests_name("vt_cs_object_signature", tests, NULL, NULL);
