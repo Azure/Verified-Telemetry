@@ -20,18 +20,6 @@
 #include "azure_iot_json_reader.h"
 #include "azure_iot_json_writer.h"
 
-/* Exponential backoff retry include. */
-//#include "backoff_algorithm.h"
-
-/* Transport interface implementation include header for TLS. */
-//#include "transport_tls_socket.h"
-
-/* Crypto helper header. */
-//#include "crypto.h"
-
-/* Demo Specific configs. */
-//#include "demo_config.h"
-//removed a static and commented these headers
 #include "FreeRTOS_verified_telemetry.h"
 #include "FreeRTOS_vt_fallcurve_component.h"
 #include "vt_defs.h"
@@ -96,18 +84,18 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_init(FreeRTOS_VT_FALLCURVE_COMPONENT* han
     return eAzureIoTSuccess;
 }
 
-static AzureIoTResult_t reset_refernce_fallcurve(FreeRTOS_VT_FALLCURVE_COMPONENT* handle, AzureIoTJSONReader_t* json_reader_ptr)
+static AzureIoTResult_t reset_refernce_fallcurve(FreeRTOS_VT_FALLCURVE_COMPONENT* handle)
 {
     uint8_t confidence_metric;
-    UINT status                        = vt_fallcurve_object_sensor_calibrate(&(handle->fc_object), &confidence_metric);
+    AzureIoTResult_t status                        = vt_fallcurve_object_sensor_calibrate(&(handle->fc_object), &confidence_metric);
     handle->template_confidence_metric = confidence_metric;
     return (status);
 }
 
-static AzureIoTResult_t retrain_refernce_fallcurve(FreeRTOS_VT_FALLCURVE_COMPONENT* handle, AzureIoTJSONReader_t* json_reader_ptr)
+static AzureIoTResult_t retrain_refernce_fallcurve(FreeRTOS_VT_FALLCURVE_COMPONENT* handle)
 {
     uint8_t confidence_metric;
-    UINT status                        = vt_fallcurve_object_sensor_recalibrate(&(handle->fc_object), &confidence_metric);
+    AzureIoTResult_t status                        = vt_fallcurve_object_sensor_recalibrate(&(handle->fc_object), &confidence_metric);
     handle->template_confidence_metric = confidence_metric;
     return (status);
 }
@@ -115,26 +103,14 @@ static AzureIoTResult_t retrain_refernce_fallcurve(FreeRTOS_VT_FALLCURVE_COMPONE
 
 static AzureIoTResult_t hub_store_all_db(FreeRTOS_VT_FALLCURVE_COMPONENT* handle, AzureIoTHubClient_t* xAzureIoTHubClient)
 {
-    UINT response_status = 0;
     AzureIoTJSONWriter_t json_writer;
     AzureIoTResult_t xResult;
     VT_FALLCURVE_DATABASE_FLATTENED flattened_db;
     int32_t lBytesWritten;
 
     vt_fallcurve_object_database_fetch(&(handle->fc_object), &flattened_db);
-    //snprintf(flattened_db.num_signatures, sizeof(flattened_db.num_signatures), "%03d", 2);
-    //snprintf(flattened_db.falltime, sizeof(flattened_db.falltime), "%lu", 10);
-    //snprintf(flattened_db.pearson_coeff, sizeof(flattened_db.pearson_coeff), "%lu", 95);
-    //snprintf(flattened_db.sampling_interval_us, sizeof(flattened_db.sampling_interval_us), "%lu", 4);
 
-
-    //strncpy((VT_CHAR*)flattened_db.num_signatures, "2", strlen("2"));
-    //strncpy((VT_CHAR*)flattened_db.falltime, "10", strlen("10"));
-    //strncpy((VT_CHAR*)flattened_db.pearson_coeff, "95", strlen("95"));
-    //strncpy((VT_CHAR*)flattened_db.sampling_interval_us, "4", strlen("4"));
- 
     memset((void *)ucPropertyPayloadBuffer,0,sizeof(ucPropertyPayloadBuffer));
-
 
     xResult = AzureIoTJSONWriter_Init( &json_writer, ucPropertyPayloadBuffer, sizeof( ucPropertyPayloadBuffer ));
     configASSERT( xResult == eAzureIoTSuccess );
@@ -167,7 +143,6 @@ static AzureIoTResult_t hub_store_all_db(FreeRTOS_VT_FALLCURVE_COMPONENT* handle
              strlen((const char*)sampling_interval_us_property),
              flattened_db.sampling_interval_us,
              strlen((CHAR*)flattened_db.sampling_interval_us));
-
     configASSERT( xResult == eAzureIoTSuccess );
 
     xResult = AzureIoTJSONWriter_AppendPropertyWithStringValue(&json_writer,
@@ -175,7 +150,6 @@ static AzureIoTResult_t hub_store_all_db(FreeRTOS_VT_FALLCURVE_COMPONENT* handle
              strlen((const char*)falltime_property),
              flattened_db.falltime,
              strlen((CHAR*)flattened_db.falltime));
-
     configASSERT( xResult == eAzureIoTSuccess );
 
     xResult = AzureIoTJSONWriter_AppendPropertyWithStringValue(&json_writer,
@@ -183,7 +157,6 @@ static AzureIoTResult_t hub_store_all_db(FreeRTOS_VT_FALLCURVE_COMPONENT* handle
              strlen((const char*)pearson_coeff_property),
              flattened_db.pearson_coeff,
              strlen((CHAR*)flattened_db.pearson_coeff));
-
     configASSERT( xResult == eAzureIoTSuccess );
 
 
@@ -208,7 +181,6 @@ static AzureIoTResult_t hub_store_all_db(FreeRTOS_VT_FALLCURVE_COMPONENT* handle
     else
     {
         xResult = AzureIoTHubClient_SendPropertiesReported( xAzureIoTHubClient, ucPropertyPayloadBuffer, lBytesWritten, NULL );
-        printf(" xResult -%d \n",xResult);
         if( xResult != eAzureIoTSuccess )
         {
             LogError( ( "There was an error sending the reported properties: 0x%08x", xResult ) );
@@ -223,13 +195,11 @@ static AzureIoTResult_t hub_store_all_db(FreeRTOS_VT_FALLCURVE_COMPONENT* handle
 AzureIoTResult_t FreeRTOS_vt_fallcurve_fingerprint_template_confidence_metric_property(
     FreeRTOS_VT_FALLCURVE_COMPONENT* handle, AzureIoTHubClient_t* xAzureIoTHubClient)
 {
-    UINT response_status = 0;
     AzureIoTJSONWriter_t xWriter;
     AzureIoTResult_t xResult;
     int32_t lBytesWritten;
 
     memset((void *)ucPropertyPayloadBuffer,0,sizeof(ucPropertyPayloadBuffer));
-
 
     xResult = AzureIoTJSONWriter_Init( &xWriter, ucPropertyPayloadBuffer, sizeof( ucPropertyPayloadBuffer ) );
     configASSERT( xResult == eAzureIoTSuccess );
@@ -277,8 +247,6 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_fingerprint_template_confidence_metric_pr
 AzureIoTResult_t FreeRTOS_vt_fallcurve_telemetry_status_property(
     FreeRTOS_VT_FALLCURVE_COMPONENT* handle, AzureIoTHubClient_t * xAzureIoTHubClient, bool* deviceStatus)
 {
-    UINT status          = 0;
-    UINT response_status = 0;
     AzureIoTJSONWriter_t xWriter;
     *deviceStatus = *deviceStatus && handle->telemetry_status;
     AzureIoTResult_t xResult;
@@ -293,9 +261,10 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_telemetry_status_property(
     xResult = AzureIoTJSONWriter_AppendBeginObject( &xWriter );
     configASSERT( xResult == eAzureIoTSuccess );
 
-    AzureIoTHubClientProperties_BuilderBeginComponent(xAzureIoTHubClient,&xWriter,
+    xResult = AzureIoTHubClientProperties_BuilderBeginComponent(xAzureIoTHubClient,&xWriter,
                                                     (const uint8_t *)handle->component_name_ptr,
                                                     handle->component_name_length);
+    configASSERT( xResult == eAzureIoTSuccess );
 
     xResult = AzureIoTJSONWriter_AppendPropertyName( &xWriter, (const uint8_t *)telemetry_name_telemetry_status,
                                                      strlen( telemetry_name_telemetry_status ) );
@@ -304,7 +273,8 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_telemetry_status_property(
     xResult = AzureIoTJSONWriter_AppendBool( &xWriter, handle->telemetry_status);
     configASSERT( xResult == eAzureIoTSuccess );
 
-    AzureIoTHubClientProperties_BuilderEndComponent(xAzureIoTHubClient,&xWriter);
+    xResult = AzureIoTHubClientProperties_BuilderEndComponent(xAzureIoTHubClient,&xWriter);
+    configASSERT( xResult == eAzureIoTSuccess );
 
     xResult = AzureIoTJSONWriter_AppendEndObject( &xWriter );
     configASSERT( xResult == eAzureIoTSuccess );
@@ -335,11 +305,7 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_telemetry_status_property(
 AzureIoTResult_t FreeRTOS_vt_fallcurve_fingerprint_type_property(FreeRTOS_VT_FALLCURVE_COMPONENT* handle, AzureIoTHubClient_t * xAzureIoTHubClient)
 
 {
-    UINT status          = 0;
-    UINT response_status = 0;
     AzureIoTJSONWriter_t xWriter;
-
-
     AzureIoTResult_t xResult;
     int32_t lBytesWritten;
 
@@ -352,9 +318,10 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_fingerprint_type_property(FreeRTOS_VT_FAL
     xResult = AzureIoTJSONWriter_AppendBeginObject( &xWriter );
     configASSERT( xResult == eAzureIoTSuccess );
 
-    AzureIoTHubClientProperties_BuilderBeginComponent(xAzureIoTHubClient,&xWriter,
+    xResult = AzureIoTHubClientProperties_BuilderBeginComponent(xAzureIoTHubClient,&xWriter,
                                                     (const uint8_t *)handle->component_name_ptr,
                                                     handle->component_name_length);
+    configASSERT( xResult == eAzureIoTSuccess );
 
     xResult = AzureIoTJSONWriter_AppendPropertyName( &xWriter, (const uint8_t *)fingerprint_type_property,
                                                      strlen( fingerprint_type_property ) );
@@ -363,7 +330,8 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_fingerprint_type_property(FreeRTOS_VT_FAL
     xResult = AzureIoTJSONWriter_AppendString( &xWriter, fingerprint_type_value,strlen(fingerprint_type_value));
     configASSERT( xResult == eAzureIoTSuccess );
 
-    AzureIoTHubClientProperties_BuilderEndComponent(xAzureIoTHubClient,&xWriter);
+    xResult = AzureIoTHubClientProperties_BuilderEndComponent(xAzureIoTHubClient,&xWriter);
+    configASSERT( xResult == eAzureIoTSuccess );
 
     xResult = AzureIoTJSONWriter_AppendEndObject( &xWriter );
     configASSERT( xResult == eAzureIoTSuccess );
@@ -476,14 +444,11 @@ static UINT sync_fingerprint_template(AzureIoTJSONReader_t* xReader, FreeRTOS_VT
 
 
 AzureIoTResult_t FreeRTOS_vt_fallcurve_process_reported_property_sync(FreeRTOS_VT_FALLCURVE_COMPONENT* handle,
-    AzureIoTHubClient_t * xAzureIoTHubClient,
     const UCHAR* component_name_ptr,
     UINT component_name_length,
-    AzureIoTJSONReader_t* json_reader_ptr,
-    UINT version)
+    AzureIoTJSONReader_t* json_reader_ptr)
 {
-    CHAR property_name[PROPERTY_NAME_MAX_LENGTH];
-    UINT property_name_length = 0;
+
 
     if (handle == NULL)
     {
@@ -543,8 +508,6 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_process_command(FreeRTOS_VT_FALLCURVE_COM
     UINT component_name_length,
     UCHAR* pnp_command_name_ptr,
     UINT pnp_command_name_length,
-    AzureIoTJSONReader_t* json_reader_ptr,
-    AzureIoTJSONWriter_t* json_response_ptr,
     UINT* status_code)
 {
     UINT dm_status;
@@ -564,7 +527,7 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_process_command(FreeRTOS_VT_FALLCURVE_COM
     if (((pnp_command_name_length == (sizeof(command_reset_fingerprint) - 1)) &&
             (!(strncmp((CHAR*)pnp_command_name_ptr, (CHAR*)command_reset_fingerprint, pnp_command_name_length)))) == 1)
     {
-        dm_status = (reset_refernce_fallcurve(handle, json_reader_ptr) != eAzureIoTSuccess) ? SAMPLE_COMMAND_ERROR_STATUS
+        dm_status = (reset_refernce_fallcurve(handle) != eAzureIoTSuccess) ? SAMPLE_COMMAND_ERROR_STATUS
                                                                                                 : SAMPLE_COMMAND_SUCCESS_STATUS;
         printf("reset_refernce_fallcurve \n");
         if (hub_store_all_db(handle, xAzureIoTHubClient))
@@ -581,7 +544,7 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_process_command(FreeRTOS_VT_FALLCURVE_COM
     else if (((pnp_command_name_length == (sizeof(command_retrain_fingerprint) - 1)) &&
                  (!(strncmp((CHAR*)pnp_command_name_ptr, (CHAR*)command_retrain_fingerprint, pnp_command_name_length)))) == 1)
     {
-        dm_status = (retrain_refernce_fallcurve(handle, json_reader_ptr) != eAzureIoTSuccess) ? SAMPLE_COMMAND_ERROR_STATUS
+        dm_status = (retrain_refernce_fallcurve(handle) != eAzureIoTSuccess) ? SAMPLE_COMMAND_ERROR_STATUS
                                                                                                   : SAMPLE_COMMAND_SUCCESS_STATUS;
         printf("Retrain_refernce_fallcurve \n");
         if (hub_store_all_db(handle, xAzureIoTHubClient))

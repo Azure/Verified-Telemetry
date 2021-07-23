@@ -21,7 +21,7 @@ extern "C" {
 #include "FreeRTOS_vt_fallcurve_component.h"
 #include "vt_defs.h"
 
-#define NX_AZURE_IOT_PNP_PROPERTIES                                 0x00000004
+#define FREERTOS_AZURE_IOT_PNP_PROPERTIES                                 0x00000004
 
 #define VT_SIGNATURE_TYPE_FALLCURVE 0x01
 
@@ -102,7 +102,6 @@ AzureIoTResult_t FreeRTOS_vt_verified_telemetry_message_create_send(FreeRTOS_VER
                 AzureIoTHubClient_t * xAzureIoTHubClient,
                 const UCHAR* component_name_ptr,
                 UINT component_name_length,
-                UINT wait_option,
                 const UCHAR* telemetry_data,
                 UINT data_size);
 
@@ -112,8 +111,6 @@ AzureIoTResult_t FreeRTOS_vt_process_command(FreeRTOS_VERIFIED_TELEMETRY_DB* ver
     UINT component_name_length,
     UCHAR* pnp_command_name_ptr,
     UINT pnp_command_name_length,
-    AzureIoTJSONReader_t* json_reader_ptr,
-    AzureIoTJSONWriter_t* json_response_ptr,
     UINT* status_code);
 
 AzureIoTResult_t FreeRTOS_vt_properties(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, AzureIoTHubClient_t * xAzureIoTHubClient);
@@ -131,11 +128,9 @@ AzureIoTResult_t FreeRTOS_vt_send_desired_property_after_boot(
     FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, AzureIoTHubClient_t * xAzureIoTHubClient, UINT message_type);
 
 AzureIoTResult_t FreeRTOS_vt_process_reported_property_sync(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
-    AzureIoTHubClient_t * xAzureIoTHubClient,
     const UCHAR* component_name_ptr,
     UINT component_name_length,
-    AzureIoTJSONReader_t* json_reader_ptr,
-    UINT version);
+    AzureIoTJSONReader_t* json_reader_ptr);
 
 #ifdef __cplusplus
 }

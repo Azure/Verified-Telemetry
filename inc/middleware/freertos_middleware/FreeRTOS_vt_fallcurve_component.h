@@ -52,8 +52,6 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_process_command(FreeRTOS_VT_FALLCURVE_COM
     UINT component_name_length,
     UCHAR* pnp_command_name_ptr,
     UINT pnp_command_name_length,
-    AzureIoTJSONReader_t* json_reader_ptr,
-    AzureIoTJSONWriter_t* json_response_ptr,
     UINT* status_code);
 
 AzureIoTResult_t FreeRTOS_vt_fallcurve_telemetry_status_property(
@@ -64,10 +62,8 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_fingerprint_type_property(FreeRTOS_VT_FAL
 AzureIoTResult_t FreeRTOS_vt_fallcurve_compute_sensor_status_global(FreeRTOS_VT_FALLCURVE_COMPONENT* handle, bool toggle_verified_telemetry);
 
 AzureIoTResult_t FreeRTOS_vt_fallcurve_process_reported_property_sync(FreeRTOS_VT_FALLCURVE_COMPONENT* handle,
-    AzureIoTHubClient_t * xAzureIoTHubClient,
     const UCHAR* component_name_ptr,
     UINT component_name_length,
-    AzureIoTJSONReader_t* json_reader_ptr,
-    UINT version);
+    AzureIoTJSONReader_t* json_reader_ptr);
 
     #endif /* FREERTOS_VT_FALLCURVE_COMPONENT_H */
