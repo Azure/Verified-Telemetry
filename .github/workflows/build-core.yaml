@@ -1,13 +1,7 @@
 name: Build Core
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-      - public_preview_1
+on: workflow_dispatch
+
 
 defaults:
   run:
