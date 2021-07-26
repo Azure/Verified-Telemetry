@@ -28,6 +28,12 @@ static VT_UINT repeating_raw_signature_15_hz[TEST_REPEATING_RAW_SIGNATURE_SAMPLE
 static VT_UINT non_repeating_raw_signature[TEST_NON_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH] = {40, 31, 31, 28, 36, 32, 31, 45, 35, 28, 35, 43, 32, 31, 38, 41, 30, 29, 33, 42, 31, 29, 22, 40, 30, 28, 35, 39, 32, 30, 29, 38, 32, 28, 33, 38, 29, 30, 35, 37, 32, 31, 41, 39, 29, 31, 26, 38, 29, 32, 42, 58, 62, 65, 75, 64, 61, 55, 69, 61, 65, 74, 63, 63, 76, 62, 59, 74, 65, 28, 27, 36, 30, 36, 38, 28, 35, 39, 27, 33, 42, 30, 34, 42, 32, 32, 44, 32, 30, 44, 31, 30, 42, 31, 30, 43, 32, 29, 26, 33, 28, 39, 33, 29, 34, 36, 29, 27, 36, 29, 35, 38, 30, 34, 42, 31, 33, 42, 31, 32, 44, 29, 30, 45, 33, 30, 41, 33};
 static VT_FLOAT sampling_frequencies_template[VT_CS_MAX_SIGNATURES] = {5000.0f, 12.8000f, 15.2224f, 323.34f, 0.48f};
 // clang-format on
+
+VT_CURRENTSENSE_OBJECT cs_object;
+VT_DEVICE_DRIVER device_driver;
+VT_SENSOR_HANDLE sensor_handle;
+VT_CURRENTSENSE_RAW_SIGNATURES_READER raw_signatures_reader;
+
 static VT_UINT vt_adc_buffer_read_with_real_func(VT_ADC_ID adc_id,
     VT_ADC_CONTROLLER* adc_controller,
     VT_ADC_CHANNEL* adc_channel,
@@ -37,11 +43,13 @@ static VT_UINT vt_adc_buffer_read_with_real_func(VT_ADC_ID adc_id,
     VT_ADC_BUFFER_READ_CALLBACK_FUNC vt_adc_buffer_read_conv_half_cplt_callback,
     VT_ADC_BUFFER_READ_CALLBACK_FUNC vt_adc_buffer_read_conv_cplt_callback)
 {
-    for (int iter = 0; iter <= buffer_length / 2; iter++)
+    for (int iter = 0; iter <= ((buffer_length / 2) + 6); iter++)
     {
         adc_read_buffer[iter] = 1;
     }
+    cs_object.raw_signatures_reader->non_repeating_raw_signature.num_datapoints = ((buffer_length / 2) + 6);
     vt_adc_buffer_read_conv_half_cplt_callback();
+
     for (int iter = buffer_length / 2; iter <= buffer_length; iter++)
     {
         adc_read_buffer[iter] = 1;
@@ -85,10 +93,6 @@ static VT_UINT calculate_fft_ranges()
 // vt_currentsense_object_signature_read()
 static VT_VOID test_vt_currentsense_object_signature_read(VT_VOID** state)
 {
-    VT_CURRENTSENSE_OBJECT cs_object;
-    VT_DEVICE_DRIVER device_driver;
-    VT_SENSOR_HANDLE sensor_handle;
-    VT_CURRENTSENSE_RAW_SIGNATURES_READER raw_signatures_reader;
 
     float ref_voltage                   = 5;
     uint16_t adc_res                    = 12;
@@ -100,6 +104,7 @@ static VT_VOID test_vt_currentsense_object_signature_read(VT_VOID** state)
     sensor_handle.adc_id                = 1;
 
     raw_signatures_reader.non_repeating_raw_signature.num_datapoints = TEST_NON_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH;
+    raw_signatures_reader.non_repeating_raw_signature.sample_length  = TEST_NON_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH;
 
     cs_object.device_driver         = &device_driver;
     cs_object.sensor_handle         = &sensor_handle;
