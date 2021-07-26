@@ -20,7 +20,7 @@
 
 #define TEST_NON_REPEATING_RAW_SIGNATURE_SAMPLING_FREQ 1000
 #define TEST_NON_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH 128
-
+static int complete_read_counter = 0;
 // clang-format off
 static VT_UINT repeating_raw_signature_5000_hz[TEST_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH] = {21,  22, 12, 14, 22, 15, 16, 18, 19, 23, 25, 15, 9, 5, 13, 16, 23, 22, 19, 19, 20, 21, 23, 23, 19, 23, 18, 18, 17, 16, 17, 23, 13, 13, 18, 14, 18, 19, 16, 6, 6, 22, 24, 26, 31, 22, 21, 18, 24, 23, 17, 13, 15, 22, 17, 16, 16, 21, 17, 19, 19, 23, 22, 26, 12, 8, 3, 5, 17, 28, 20, 20, 21, 21, 24, 28, 20, 19, 19, 18, 19, 15, 14, 13, 18, 21, 15, 16, 20, 17, 17, 14, 7, 6, 12, 22, 34, 24, 21, 19, 19, 23, 17, 15, 18, 16, 19, 16, 17, 19, 22, 18, 17, 20, 19, 22, 23, 11, 5, 7, 6, 13, 22, 28, 23, 23, 22, 24};
 static VT_UINT repeating_raw_signature_12_hz[TEST_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH] = {41, 47, 42, 53, 45, 60, 50, 56, 23, 25, 24, 29, 26, 18, 21, 36, 28, 23, 26, 29, 22, 22, 18, 30, 16, 16, 55, 54, 55, 55, 57, 59, 50, 47, 56, 25, 30, 21, 17, 22, 11, 32, 24, 22, 32, 28, 18, 25, 13, 24, 18, 26, 54, 63, 52, 59, 51, 60, 47, 46, 46, 23, 25, 24, 29, 26, 18, 21, 36, 28, 23, 26, 29, 22, 22, 18, 30, 16, 16, 55, 54, 55, 55, 57, 59, 50, 47, 56, 25, 30, 21, 17, 22, 11, 32, 24, 22, 32, 28, 18, 25, 13, 24, 18, 26, 54, 63, 52, 59, 51, 60, 47, 46, 46, 23, 25, 24, 29, 26, 18, 21, 36, 28, 23, 26, 29, 22, 22};
@@ -46,7 +46,11 @@ static VT_UINT vt_adc_buffer_read_with_real_func(VT_ADC_ID adc_id,
     {
         adc_read_buffer[iter] = 1;
     }
-    // vt_adc_buffer_read_conv_cplt_callback();
+    if (complete_read_counter == 0)
+    {
+        complete_read_counter++;
+        vt_adc_buffer_read_conv_cplt_callback();
+    }
     return 0;
 }
 
