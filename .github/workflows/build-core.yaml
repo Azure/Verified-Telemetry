@@ -3,7 +3,7 @@ name: Build Core
 on:
   push:
     branches:
-      - feature/testcases/sh
+      - main
   pull_request:
     branches:
       - main
