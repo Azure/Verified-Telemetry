@@ -9,7 +9,7 @@
 VT_UINT fc_signature_compute_collection_settings(
     VT_FALLCURVE_OBJECT* fc_object, VT_ULONG* sampling_interval_us, VT_UINT8* confidence_metric)
 {
-    VTLogInfo("\tComputing FallCurve Collection Settings\n");
+    VTLogInfo("Computing FallCurve Collection Settings\n");
 
     VT_UINT max_tick_value            = 65535;
     VT_UINT tick_resolution_usec      = 1;
