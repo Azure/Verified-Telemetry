@@ -4,22 +4,22 @@
 #include <math.h>
 #include <stdbool.h>
 
-#include "vt_fc_read.h"
 #include "vt_debug.h"
+#include "vt_fc_read.h"
 
-#define MAX_TICK_VALUE 65535
-#define MIN_TICK_VALUE 1
+#define MAX_TICK_VALUE      65535
+#define MIN_TICK_VALUE      1
 #define MIN_TICK_RESOLUTION 1
 
 static VT_VOID fc_calculate_required_tick_resolution(
     VT_ULONG sampling_interval_us, VT_UINT* tick_resolution_us, VT_UINT max_tick_value)
 {
     VT_FLOAT sampling_period_ticks;
-    if(*tick_resolution_us < MIN_TICK_RESOLUTION)
+    if (*tick_resolution_us < MIN_TICK_RESOLUTION)
     {
         *tick_resolution_us = MIN_TICK_RESOLUTION;
     }
-    if(max_tick_value < MIN_TICK_VALUE)
+    if (max_tick_value < MIN_TICK_VALUE)
     {
         max_tick_value = MAX_TICK_VALUE;
     }
@@ -42,6 +42,8 @@ VT_VOID fc_adc_read(VT_FALLCURVE_OBJECT* fc_object, VT_UINT* raw_signature, VT_U
     VT_FLOAT adc_ref_volt         = 0;
     VT_UINT start_tick_count      = 0;
     VT_UINT sampling_period_ticks = 0;
+    VT_UINT iter                  = 0;
+    VT_UINT temp_adc_read_data    = 0;
 
     fc_object->device_driver->tick_init(&max_tick_value, &tick_resolution_usec);
     fc_calculate_required_tick_resolution(sampling_interval_us, &tick_resolution_usec, max_tick_value);
@@ -59,14 +61,17 @@ VT_VOID fc_adc_read(VT_FALLCURVE_OBJECT* fc_object, VT_UINT* raw_signature, VT_U
         fc_object->sensor_handle->gpio_id, fc_object->sensor_handle->gpio_port, fc_object->sensor_handle->gpio_pin);
     start_tick_count = (VT_UINT)fc_object->device_driver->tick();
 
-    for (VT_UINT iter = 0; iter < sample_length; iter++)
+    while (iter < sample_length)
     {
-        raw_signature[iter] = fc_object->device_driver->adc_single_read(
+        temp_adc_read_data = fc_object->device_driver->adc_single_read(
             fc_object->sensor_handle->adc_id, fc_object->sensor_handle->adc_controller, fc_object->sensor_handle->adc_channel);
-        while ((uint16_t)((VT_UINT)fc_object->device_driver->tick() - start_tick_count) < sampling_period_ticks)
+
+        if ((uint16_t)((VT_UINT)fc_object->device_driver->tick() - start_tick_count) > sampling_period_ticks)
         {
+            raw_signature[iter] = temp_adc_read_data;
+            start_tick_count    = (VT_UINT)fc_object->device_driver->tick();
+            iter++;
         }
-        start_tick_count = (VT_UINT)fc_object->device_driver->tick();
     }
 
     fc_object->device_driver->tick_deinit();
