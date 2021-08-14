@@ -94,8 +94,8 @@ Functions</h2></td></tr>
 <tr class="memitem:af11846287349dd38be419df0e222f690"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__vt__middleware__helper_8h.html#af11846287349dd38be419df0e222f690">nx_azure_iot_pnp_client_reported_component_property_value_next</a> (NX_AZURE_IOT_PNP_CLIENT *pnp_client_ptr, NX_AZURE_IOT_JSON_READER *reader_ptr, UINT message_type, const UCHAR **component_pptr, UINT *component_len_ptr, NX_AZURE_IOT_JSON_READER *name_value_reader_ptr)</td></tr>
 <tr class="memdesc:af11846287349dd38be419df0e222f690"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the next reported property in the property document passed.  <a href="nx__vt__middleware__helper_8h.html#af11846287349dd38be419df0e222f690">More...</a><br /></td></tr>
 <tr class="separator:af11846287349dd38be419df0e222f690"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a249b3baba6e8896ac940fae47820ac71"><td class="memItemLeft" align="right" valign="top"><a id="a249b3baba6e8896ac940fae47820ac71"></a>
-UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_azure_iot_pnp_client_telemetry_message_create_with_message_property</b> (NX_AZURE_IOT_PNP_CLIENT *pnp_client_ptr, const UCHAR *component_name_ptr, UINT component_name_length, NX_PACKET **packet_pptr, UINT wait_option, UCHAR *message_properties_buffer, UINT message_properties_buffer_size)</td></tr>
+<tr class="memitem:a249b3baba6e8896ac940fae47820ac71"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__vt__middleware__helper_8h.html#a249b3baba6e8896ac940fae47820ac71">nx_azure_iot_pnp_client_telemetry_message_create_with_message_property</a> (NX_AZURE_IOT_PNP_CLIENT *pnp_client_ptr, const UCHAR *component_name_ptr, UINT component_name_length, NX_PACKET **packet_pptr, UINT wait_option, UCHAR *message_properties_buffer, UINT message_properties_buffer_size)</td></tr>
+<tr class="memdesc:a249b3baba6e8896ac940fae47820ac71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a telemetry property packet (NX PACKET) to be sent along with telemetry from the properties buffer containing properties (like status of each component) to be sent.  <a href="nx__vt__middleware__helper_8h.html#a249b3baba6e8896ac940fae47820ac71">More...</a><br /></td></tr>
 <tr class="separator:a249b3baba6e8896ac940fae47820ac71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
@@ -162,6 +162,84 @@ UINT&#160;</td><td class="memItemRight" valign="bottom"><b>nx_azure_iot_pnp_clie
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <code>UINT</code> with the result of the API. </dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">#NX_AZURE_IOT_SUCCESS</td><td>Successful if next desired property is found. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a249b3baba6e8896ac940fae47820ac71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a249b3baba6e8896ac940fae47820ac71">&#9670;&nbsp;</a></span>nx_azure_iot_pnp_client_telemetry_message_create_with_message_property()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">UINT nx_azure_iot_pnp_client_telemetry_message_create_with_message_property </td>
+          <td>(</td>
+          <td class="paramtype">NX_AZURE_IOT_PNP_CLIENT *&#160;</td>
+          <td class="paramname"><em>pnp_client_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const UCHAR *&#160;</td>
+          <td class="paramname"><em>component_name_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UINT&#160;</td>
+          <td class="paramname"><em>component_name_length</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">NX_PACKET **&#160;</td>
+          <td class="paramname"><em>packet_pptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UINT&#160;</td>
+          <td class="paramname"><em>wait_option</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UCHAR *&#160;</td>
+          <td class="paramname"><em>message_properties_buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UINT&#160;</td>
+          <td class="paramname"><em>message_properties_buffer_size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create a telemetry property packet (NX PACKET) to be sent along with telemetry from the properties buffer containing properties (like status of each component) to be sent. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">pnp_client_ptr</td><td>A pointer to a #NX_AZURE_IOT_PNP_CLIENT. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">component_ptr</td><td>A pointer to component name for which the property packet needs to be created. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">component_len_ptr</td><td>Length of the component name. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">packet_pptr</td><td>A pointer telemetry property packet which this function will create. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">wait_option</td><td>A NetX library wait option. Defines the number of ThreadX timer ticks to wait for a ping response </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">message_properties_buffer</td><td>Buffer containing properties to be sent as telemetry property packet. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">message_properties_buffer_size</td><td>Size of the buffer containing properties to be sent as telemetry property packet.</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">#NX_AZURE_IOT_SUCCESS</td><td>Successful if next desired property is found. </td></tr>
