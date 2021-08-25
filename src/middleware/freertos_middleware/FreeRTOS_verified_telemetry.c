@@ -29,7 +29,7 @@ static const CHAR device_status_property[]             = "deviceStatus";
 #define sampleazureiotPROPERTY_STATUS_SUCCESS             200
 #define sampleazureiotPROPERTY_ENABLE_VERIFIED_TELEMETRY "enableVerifiedTelemetry"
 #define PROPERTY_NAME_MAX_LENGTH 50
-static const CHAR temp_response_description_success[] = "success";
+//static const CHAR temp_response_description_success[] = "success";
 static const CHAR enable_verified_telemetry_property[] = "enableVerifiedTelemetry";
 
 static uint8_t ucScratchBuffer[ 256 ];
@@ -111,7 +111,7 @@ AzureIoTResult_t FreeRTOS_vt_verified_telemetry_message_create_send(FreeRTOS_VER
                                     component_name_length);
 
     AzureIoTResult_t xResult;
-    static uint8_t telemetryPacketBuffer[ 256 ];
+    //static uint8_t telemetryPacketBuffer[ 256 ];
     AzureIoTJSONReader_t json_reader;
     AzureIoTJSONReader_t json_reader_copy;
     UINT components_num     = verified_telemetry_DB->components_num;
@@ -165,9 +165,9 @@ AzureIoTResult_t FreeRTOS_vt_verified_telemetry_message_create_send(FreeRTOS_VER
         component_pointer = (((FreeRTOS_VT_OBJECT*)component_pointer)->next_component);
     }
 
-    if (xResult = AzureIoTHubClient_SendTelemetry( xAzureIoTHubClient,
+    if ((xResult = AzureIoTHubClient_SendTelemetry( xAzureIoTHubClient,
                                                telemetry_data, data_size,
-                                               &telemetrymessageProperties, eAzureIoTHubMessageQoS1, NULL ))
+                                               &telemetrymessageProperties, eAzureIoTHubMessageQoS1, NULL )))
     {
         printf("Telemetry message send failed!: error code = 0x%08x\r\n", xResult);
         return (xResult);
@@ -185,9 +185,9 @@ AzureIoTResult_t FreeRTOS_vt_process_command(FreeRTOS_VERIFIED_TELEMETRY_DB* ver
 
 
 {
-    AzureIoTResult_t xResult;
+    AzureIoTResult_t xResult=eAzureIoTErrorFailed;
 
-    UINT status             = 0;
+    //UINT status             = 0;
     UINT iter               = 0;
     UINT components_num     = verified_telemetry_DB->components_num;
     void* component_pointer = verified_telemetry_DB->first_component;
@@ -397,7 +397,7 @@ AzureIoTResult_t FreeRTOS_vt_process_reported_property_sync(FreeRTOS_VERIFIED_TE
 
 AzureIoTResult_t FreeRTOS_vt_compute_evaluate_fingerprint_all_sensors(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB)
 {
-    AzureIoTResult_t xResult;
+    AzureIoTResult_t xResult=eAzureIoTErrorFailed;
     UINT iter                      = 0;
     UINT components_num            = verified_telemetry_DB->components_num;
     void* component_pointer        = verified_telemetry_DB->first_component;
@@ -426,10 +426,10 @@ AzureIoTResult_t FreeRTOS_vt_process_property_update(FreeRTOS_VERIFIED_TELEMETRY
     UINT version)
 {
     bool parsed_value = false;
-    INT status_code;
-    const CHAR* description;
-    CHAR property_name[PROPERTY_NAME_MAX_LENGTH];
-    UINT property_name_length = 0;
+    //INT status_code;
+    //const CHAR* description;
+    //CHAR property_name[PROPERTY_NAME_MAX_LENGTH];
+    //UINT property_name_length = 0;
     AzureIoTResult_t xResult;
 
     if (verified_telemetry_DB->component_name_length != component_name_length ||
@@ -452,8 +452,8 @@ AzureIoTResult_t FreeRTOS_vt_process_property_update(FreeRTOS_VERIFIED_TELEMETRY
                 xResult = AzureIoTJSONReader_NextToken( xReader );
                 configASSERT( xResult == eAzureIoTSuccess );
 
-            status_code = 200;
-            description = temp_response_description_success;
+            //status_code = 200;
+            //description = temp_response_description_success;
 
             verified_telemetry_DB->enable_verified_telemetry = (bool)parsed_value;
             VTLogInfo("Received Enable Verified Telemetry Twin update with value %s\r\n", (bool)parsed_value ? "true" : "false");
@@ -493,7 +493,7 @@ AzureIoTResult_t FreeRTOS_vt_process_property_update(FreeRTOS_VERIFIED_TELEMETRY
                                                                 
 AzureIoTResult_t FreeRTOS_vt_properties(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, AzureIoTHubClient_t * xAzureIoTHubClient)
 {
-    AzureIoTResult_t xResult;
+    AzureIoTResult_t xResult=eAzureIoTErrorFailed;
 
     UINT components_num     = verified_telemetry_DB->components_num;
     void* component_pointer = verified_telemetry_DB->first_component;

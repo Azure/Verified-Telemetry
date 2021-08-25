@@ -209,7 +209,7 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_fingerprint_template_confidence_metric_pr
 
     AzureIoTHubClientProperties_BuilderBeginComponent(xAzureIoTHubClient,&xWriter,
                                                     (const uint8_t *)handle->component_name_ptr,
-                                                    strlen(handle->component_name_ptr));
+                                                    strlen((const char *)handle->component_name_ptr));
 
     xResult = AzureIoTJSONWriter_AppendPropertyName( &xWriter, (const uint8_t *)template_confidence_metric_property,
                                                      strlen(template_confidence_metric_property ) );
@@ -327,7 +327,7 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_fingerprint_type_property(FreeRTOS_VT_FAL
                                                      strlen( fingerprint_type_property ) );
     configASSERT( xResult == eAzureIoTSuccess );
 
-    xResult = AzureIoTJSONWriter_AppendString( &xWriter, fingerprint_type_value,strlen(fingerprint_type_value));
+    xResult = AzureIoTJSONWriter_AppendString( &xWriter, (const uint8_t *)fingerprint_type_value,strlen(fingerprint_type_value));
     configASSERT( xResult == eAzureIoTSuccess );
 
     xResult = AzureIoTHubClientProperties_BuilderEndComponent(xAzureIoTHubClient,&xWriter);
@@ -381,7 +381,7 @@ static UINT sync_fingerprint_template(AzureIoTJSONReader_t* xReader, FreeRTOS_VT
 
                 printf(" num_signatures - %s \n",pucBufferLocal);
                 memset(flattened_db.num_signatures, 0, sizeof(flattened_db.num_signatures));
-                strncpy((VT_CHAR*)flattened_db.num_signatures, pucBufferLocal, sizeof(flattened_db.num_signatures) - 1);
+                strncpy((VT_CHAR*)flattened_db.num_signatures, (const char *)pucBufferLocal, sizeof(flattened_db.num_signatures) - 1);
 
 
 
@@ -397,7 +397,7 @@ static UINT sync_fingerprint_template(AzureIoTJSONReader_t* xReader, FreeRTOS_VT
 
                 printf(" sampling_interval_us - %s \n",pucBufferLocal);
                 memset(flattened_db.sampling_interval_us, 0, sizeof(flattened_db.sampling_interval_us));
-                strncpy((VT_CHAR*)flattened_db.sampling_interval_us, pucBufferLocal, sizeof(flattened_db.sampling_interval_us) - 1);
+                strncpy((VT_CHAR*)flattened_db.sampling_interval_us, (const char *)pucBufferLocal, sizeof(flattened_db.sampling_interval_us) - 1);
 
 
 
@@ -413,7 +413,7 @@ static UINT sync_fingerprint_template(AzureIoTJSONReader_t* xReader, FreeRTOS_VT
 
                 printf(" falltime - %s \n",pucBufferLocal);
                 memset(flattened_db.falltime, 0, sizeof(flattened_db.falltime));
-                strncpy((VT_CHAR*)flattened_db.falltime, pucBufferLocal, sizeof(flattened_db.falltime) - 1);
+                strncpy((VT_CHAR*)flattened_db.falltime, (const char *)pucBufferLocal, sizeof(flattened_db.falltime) - 1);
 
 
 
@@ -429,7 +429,7 @@ static UINT sync_fingerprint_template(AzureIoTJSONReader_t* xReader, FreeRTOS_VT
 
                 printf(" pearson_coeff - %s \n",pucBufferLocal);
                 memset(flattened_db.pearson_coeff, 0, sizeof(flattened_db.pearson_coeff));
-                strncpy((VT_CHAR*)flattened_db.pearson_coeff, pucBufferLocal, sizeof(flattened_db.pearson_coeff) - 1);
+                strncpy((VT_CHAR*)flattened_db.pearson_coeff, (const char *)pucBufferLocal, sizeof(flattened_db.pearson_coeff) - 1);
 
 
                 xResult = AzureIoTJSONReader_NextToken( xReader );
