@@ -95,7 +95,7 @@ VT_UINT fc_signature_compute(
         raw_signature[iter] = raw_signature[iter + index_max];
     }
     // Find datapoint which reaches 37% of the starting value
-    VT_INT index_37 = fc_signature_calculate_37index(raw_signature, sample_length);
+    VT_UINT index_37 = fc_signature_calculate_37index(raw_signature, sample_length);
     // fingerprint_length of this new fingerprint
     if (index_37 < sample_length)
     {

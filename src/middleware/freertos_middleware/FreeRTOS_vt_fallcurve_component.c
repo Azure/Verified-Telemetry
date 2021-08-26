@@ -563,7 +563,7 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_process_command(FreeRTOS_VT_FALLCURVE_COM
         dm_status = 404;
     }
 
-    *status_code = dm_status;
+    //*status_code = dm_status;
 
     return (eAzureIoTSuccess);
 }
