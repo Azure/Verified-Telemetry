@@ -510,8 +510,7 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_process_command(FreeRTOS_VT_FALLCURVE_COM
     UINT pnp_command_name_length,
     UINT* status_code)
 {
-    UINT dm_status;
-
+    AzureIoTResult_t xResult;
     if (handle == NULL)
     {
         return (eAzureIoTErrorInvalidArgument);
@@ -527,8 +526,8 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_process_command(FreeRTOS_VT_FALLCURVE_COM
     if (((pnp_command_name_length == (sizeof(command_reset_fingerprint) - 1)) &&
             (!(strncmp((CHAR*)pnp_command_name_ptr, (CHAR*)command_reset_fingerprint, pnp_command_name_length)))) == 1)
     {
-        dm_status = (reset_refernce_fallcurve(handle) != eAzureIoTSuccess) ? SAMPLE_COMMAND_ERROR_STATUS
-                                                                                                : SAMPLE_COMMAND_SUCCESS_STATUS;
+        xResult = (reset_refernce_fallcurve(handle) != eAzureIoTSuccess) ? eAzureIoTErrorFailed
+                                                                                                : eAzureIoTSuccess;
         printf("reset_refernce_fallcurve \n");
         if (hub_store_all_db(handle, xAzureIoTHubClient))
         {
@@ -544,8 +543,8 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_process_command(FreeRTOS_VT_FALLCURVE_COM
     else if (((pnp_command_name_length == (sizeof(command_retrain_fingerprint) - 1)) &&
                  (!(strncmp((CHAR*)pnp_command_name_ptr, (CHAR*)command_retrain_fingerprint, pnp_command_name_length)))) == 1)
     {
-        dm_status = (retrain_refernce_fallcurve(handle) != eAzureIoTSuccess) ? SAMPLE_COMMAND_ERROR_STATUS
-                                                                                                  : SAMPLE_COMMAND_SUCCESS_STATUS;
+        xResult = (retrain_refernce_fallcurve(handle) != eAzureIoTSuccess) ? eAzureIoTErrorFailed
+                                                                                                  : eAzureIoTSuccess;
         printf("Retrain_refernce_fallcurve \n");
         if (hub_store_all_db(handle, xAzureIoTHubClient))
         {
@@ -560,10 +559,10 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_process_command(FreeRTOS_VT_FALLCURVE_COM
     else
     {
         VTLogError("PnP command=%.*s is not supported on vTInfo  component\r\n", pnp_command_name_length, pnp_command_name_ptr);
-        dm_status = 404;
+        xResult = eAzureIoTErrorItemNotFound;
     }
 
     //*status_code = dm_status;
 
-    return (eAzureIoTSuccess);
+    return (xResult);
 }
