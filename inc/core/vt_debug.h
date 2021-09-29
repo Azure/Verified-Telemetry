@@ -8,7 +8,7 @@
 
 /* Define the VT_LOG_LEVEL.  */
 #ifndef VT_LOG_LEVEL
-#define VT_LOG_LEVEL 3
+#define VT_LOG_LEVEL 2
 #endif /* VT_LOG_LEVEL */
 
 #define VTLogError(fmt, ...)
