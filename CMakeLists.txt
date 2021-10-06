@@ -2,7 +2,9 @@
 # Licensed under the MIT License.
 
 cmake_minimum_required (VERSION 3.14 FATAL_ERROR)
+
 set(CMAKE_C_STANDARD 99)
+
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 option(VT_UNIT_TESTING "Build unit test projects" OFF)
@@ -10,150 +12,34 @@ option(VT_CODE_COVERAGE "Run code coverage" OFF)
 
 project(vt LANGUAGES C)
 
-# default for Unit testing with cmocka is OFF, however, this will be ON on CI and tests must pass before committing changes
+set(VT_BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+# include core
+add_subdirectory(src/core)
+
+# default for Unit testing with cmocka is OFF
 if (VT_UNIT_TESTING)
-  add_subdirectory(tests)
+    add_subdirectory(tests)
 endif()
 
+# default for Code coverage is OFF.
 if(VT_CODE_COVERAGE)
-  include(CodeCoverageTarget)
-  add_code_coverage_target(vt_core_test)
+    include(CodeCoverageTarget)
+    add_code_coverage_target(vt_core_test)
 endif()
 
-if(NOT WIN32)
-  list(APPEND VT_LINK_LIBRARIES m)
-endif()
+# include the appropriate middleware
+if(NOT VT_UNIT_TESTING)
 
-# Add source to this project's executable.
-list(APPEND VT_SOURCES
-  "src/core/fallcurve/vt_fc_object_database_fetch.c"
-  "src/core/fallcurve/vt_fc_object_database_sync.c"
-  "src/core/fallcurve/vt_fc_object_initialize.c"
-  "src/core/fallcurve/vt_fc_object_sensor_calibrate.c"
-  "src/core/fallcurve/vt_fc_object_sensor_status.c"
-  "src/core/fallcurve/internal/vt_fc_database_fetch.c"
-  "src/core/fallcurve/internal/vt_fc_database_reset.c"
-  "src/core/fallcurve/internal/vt_fc_database_store.c"
-  "src/core/fallcurve/internal/vt_fc_read.c"
-  "src/core/fallcurve/internal/vt_fc_signature_collection_settings.c"
-  "src/core/fallcurve/internal/vt_fc_signature_compute.c"
-  "src/core/fallcurve/internal/vt_fc_signature_evaluate.c"
+    if(VT_MIDDLEWARE_RTOS STREQUAL "AZURE_RTOS")
+        add_subdirectory(src/middleware/azure_rtos_middleware)
 
-  "src/core/currentsense/vt_cs_object_database_fetch.c"
-  "src/core/currentsense/vt_cs_object_database_sync.c"
-  "src/core/currentsense/vt_cs_object_initialize.c"
-  "src/core/currentsense/vt_cs_object_sensor.c"
-  "src/core/currentsense/vt_cs_object_signature.c"
-  "src/core/currentsense/internal/vt_cs_calibrate_compute_collection_settings.c"
-  "src/core/currentsense/internal/vt_cs_calibrate_sensor.c"
-  "src/core/currentsense/internal/vt_cs_database_fetch.c"
-  "src/core/currentsense/internal/vt_cs_database_reset.c"
-  "src/core/currentsense/internal/vt_cs_database_store.c"
-  "src/core/currentsense/internal/vt_cs_fft.c"
-  "src/core/currentsense/internal/vt_cs_raw_signature_read.c"
-  "src/core/currentsense/internal/vt_cs_sensor_status_compute.c"
-  "src/core/currentsense/internal/vt_cs_signature_features_compute.c"
-  "src/core/currentsense/internal/vt_cs_signature_features_evaluate.c"
+    elseif(VT_MIDDLEWARE_RTOS STREQUAL "FREERTOS")
+        add_subdirectory(src/middleware/freertos_middleware)
 
-)
+    else()
+        message(FATAL_ERROR, "VT_MIDDLEWARE_RTOS not specified. Must be one of 'AZURE_RTOS' or 'FREERTOS'")
 
-# Add VT Azure RTOS middleware source files
-if(VT_MIDDLEWARE_RTOS STREQUAL "AZURE_RTOS")
-  if (NOT VT_UNIT_TESTING)
-    list(APPEND VT_SOURCES
-      "src/middleware/azure_rtos_middleware/nx_verified_telemetry.c" 
-      "src/middleware/azure_rtos_middleware/nx_vt_fallcurve_component.c"
-      "src/middleware/azure_rtos_middleware/nx_vt_currentsense_component.c"
-      "src/middleware/azure_rtos_middleware/nx_vt_middleware_helper.c"
-    )
-  endif()
-endif()
+    endif()
 
-# Add VT FREERTOS middleware source files
-if(VT_MIDDLEWARE_RTOS STREQUAL "FREE_RTOS")
-  if (NOT VT_UNIT_TESTING)
-    list(APPEND VT_SOURCES
-      "src/middleware/freertos_middleware/FreeRTOS_verified_telemetry.c" 
-      "src/middleware/freertos_middleware/FreeRTOS_vt_fallcurve_component.c"
-    )
-  endif()
-endif()
-
-set(TARGET verified_telemetry)
-
-add_library(${TARGET} 
-  ${VT_SOURCES}
-)
-
-add_library(az::iot::vt ALIAS verified_telemetry)
-
-target_link_libraries(${TARGET} 
-  PUBLIC 
-    ${VT_LINK_LIBRARIES}
-)
-
-# Include Azure RTOS middleware
-if(VT_MIDDLEWARE_RTOS STREQUAL "AZURE_RTOS")
-  if (NOT VT_UNIT_TESTING)
-    target_link_libraries(${TARGET} 
-      PUBLIC 
-        azrtos::netxduo
-    )
-  endif()
-  
-endif()
-
-# Include FREERTOS middleware
-if(VT_MIDDLEWARE_RTOS STREQUAL "FREE_RTOS")
-  if (NOT VT_UNIT_TESTING)
-    target_link_libraries(${TARGET}
-      PUBLIC
-        az::iot_middleware::freertos
-      )
-    target_include_directories(${TARGET}
-      PRIVATE
-        ${CONFIG_DIRECTORY}
-        ${FREERTOS_PORT_DIRECTORY}
-        ${FREERTOS_DIRECTORY}/FreeRTOS/Source/include
-    ) 
-  endif()
-endif()
-
-target_compile_definitions(${TARGET} 
-  PUBLIC 
-    ${VT_COMPILE_DEFINITIONS}
-)
-
-target_include_directories(${TARGET}
-  PUBLIC 
-    inc/core
-    inc/platform
-    inc/core/fallcurve
-    inc/core/fallcurve/config
-    inc/core/currentsense
-    inc/core/currentsense/config
-  PRIVATE
-    inc/core/fallcurve/internal
-    inc/core/currentsense/internal
-)
-
-# Include VT Azure RTOS middleware directory
-if(VT_MIDDLEWARE_RTOS STREQUAL "AZURE_RTOS")
-  if (NOT VT_UNIT_TESTING)
-    target_include_directories(${TARGET}
-      PUBLIC
-        inc/middleware/azure_rtos_middleware
-    )
-  endif()
-  
-endif()
-
-# Include VT FREERTOS middleware directory
-if(VT_MIDDLEWARE_RTOS STREQUAL "FREE_RTOS")
-  if (NOT VT_UNIT_TESTING)
-    target_include_directories(${TARGET}
-      PUBLIC
-        inc/middleware/freertos_middleware
-    ) 
-  endif()
 endif()
