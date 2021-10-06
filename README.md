@@ -17,7 +17,7 @@ Refer to the [Verified Telemetry API](https://azure.github.io/Verified-Telemetry
 
 ## Resource Requirements
 
-We expect Verified Telemetery code to run on microcontrollers, which have very limited amounts of flash and RAM. Below is our resource requirements to add verified telemetry code:
+Verified Telemetry is designed to run on resource contrained MCUs, flash and RAM is limited. Below is our resource requirements for Verified Telemetry:
 
 | Type      | Size  |
 | --------- | ----- |
