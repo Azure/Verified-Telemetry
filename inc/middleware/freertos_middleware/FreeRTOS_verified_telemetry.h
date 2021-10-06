@@ -10,22 +10,14 @@
 extern "C" {
 #endif
 
-
-#include <string.h>
-#include <stdio.h>
-#include <time.h>
-/* Kernel includes. */
-
 /* Azure Provisioning/IoT Hub library includes */
-#include "azure_iot_hub_client.h"
 #include "FreeRTOS_vt_fallcurve_component.h"
 #include "vt_defs.h"
 
-#define FREERTOS_AZURE_IOT_PNP_PROPERTIES                                 0x00000004
+#define FREERTOS_AZURE_IOT_PNP_PROPERTIES 0x00000004
 
-#define VT_SIGNATURE_TYPE_FALLCURVE 0x01
-
-
+#define VT_SIGNATURE_TYPE_FALLCURVE    0x01
+#define VT_SIGNATURE_TYPE_CURRENTSENSE 0x02
 
 union FreeRTOS_VT_SIGNATURE_COMPONENT_UNION_TAG {
     /* FallCurve Component */
@@ -80,7 +72,6 @@ AzureIoTResult_t FreeRTOS_vt_init(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telem
     bool enable_verified_telemetry,
     VT_DEVICE_DRIVER* device_driver);
 
-
 AzureIoTResult_t FreeRTOS_vt_signature_init(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     FreeRTOS_VT_OBJECT* handle,
     UCHAR* component_name_ptr,
@@ -89,34 +80,31 @@ AzureIoTResult_t FreeRTOS_vt_signature_init(FreeRTOS_VERIFIED_TELEMETRY_DB* veri
     bool telemetry_status_auto_update,
     VT_SENSOR_HANDLE* sensor_handle);
 
+int32_t prvTelemetryPayloadCreate(
+    char* ucScratchBuffer, unsigned long ucScratchBufferSize, char* telemetryKey, double telemetryValue);
 
-
-int32_t prvTelemetryPayloadCreate(char *ucScratchBuffer, 
-                                        unsigned long ucScratchBufferSize,
-                                        char *telemetryKey, double telemetryValue);
-
-
-AzureIoTResult_t sendTelemetrySampleDevice(AzureIoTHubClient_t * xAzureIoTHubClient);
+AzureIoTResult_t sendTelemetrySampleDevice(AzureIoTHubClient_t* xAzureIoTHubClient);
 
 AzureIoTResult_t FreeRTOS_vt_verified_telemetry_message_create_send(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
-                AzureIoTHubClient_t * xAzureIoTHubClient,
-                const UCHAR* component_name_ptr,
-                UINT component_name_length,
-                const UCHAR* telemetry_data,
-                UINT data_size);
+    AzureIoTHubClient_t* xAzureIoTHubClient,
+    const UCHAR* component_name_ptr,
+    UINT component_name_length,
+    const UCHAR* telemetry_data,
+    UINT data_size);
 
 AzureIoTResult_t FreeRTOS_vt_process_command(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
-    AzureIoTHubClient_t * xAzureIoTHubClient,
+    AzureIoTHubClient_t* xAzureIoTHubClient,
     UCHAR* component_name_ptr,
     UINT component_name_length,
     UCHAR* pnp_command_name_ptr,
     UINT pnp_command_name_length,
     UINT* status_code);
 
-AzureIoTResult_t FreeRTOS_vt_properties(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, AzureIoTHubClient_t * xAzureIoTHubClient);
+AzureIoTResult_t FreeRTOS_vt_properties(
+    FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, AzureIoTHubClient_t* xAzureIoTHubClient);
 
 AzureIoTResult_t FreeRTOS_vt_process_property_update(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
-    AzureIoTHubClient_t * xAzureIoTHubClient,
+    AzureIoTHubClient_t* xAzureIoTHubClient,
     const UCHAR* component_name_ptr,
     UINT component_name_length,
     AzureIoTJSONReader_t* xReader,
@@ -125,7 +113,7 @@ AzureIoTResult_t FreeRTOS_vt_process_property_update(FreeRTOS_VERIFIED_TELEMETRY
 AzureIoTResult_t FreeRTOS_vt_compute_evaluate_fingerprint_all_sensors(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB);
 
 AzureIoTResult_t FreeRTOS_vt_send_desired_property_after_boot(
-    FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, AzureIoTHubClient_t * xAzureIoTHubClient, UINT message_type);
+    FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, AzureIoTHubClient_t* xAzureIoTHubClient, UINT message_type);
 
 AzureIoTResult_t FreeRTOS_vt_process_reported_property_sync(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     const UCHAR* component_name_ptr,
