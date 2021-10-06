@@ -99,63 +99,63 @@ Developers can refer to the [Azure RTOS Device Samples](https://github.com/Azure
 
 ### Step 1 - Include Verified Telemetry library
 
-* In the root folder, run the following command
+1. In the root folder, run the following command
 
     ```shell
     git submodule add https://github.com/Azure/Verified-Telemetry.git core/lib/verified-telemetry
     ```
-    
-* Include library files in [getting-started/MXChip/AZ3166/lib/CMakeLists.txt](https://github.com/azure-rtos/getting-started/blob/master/MXChip/AZ3166/lib/CMakeLists.txt)
+
+1. Include library files in [getting-started/MXChip/AZ3166/lib/CMakeLists.txt](https://github.com/azure-rtos/getting-started/blob/master/MXChip/AZ3166/lib/CMakeLists.txt)
 
     ```cmake
     add_subdirectory(${CORE_LIB_DIR}/verified-telemetry verified_telemetry)
     ```
-    
+
 ### Step 2 - Initialize Verified Telemetry
 
-* Global Verified Telemetry needs to be initialized with the device specific platform functions
-* Similarly, to initalize Verified Telemetry for a particular sensor/telemetry the details of sensor connection must be passed using the nx_vt_signature_init function
-* An example of usage of [nx_vt_init](https://azure.github.io/Verified-Telemetry/nx__verified__telemetry_8h.html) and [nx_vt_signature_init](https://azure.github.io/Verified-Telemetry/nx__verified__telemetry_8h.html#af097ec10f7efe9e8ef6505166938b46c) functions is shown below
-* Include headers for VT
+1. Global Verified Telemetry needs to be initialized with the device specific platform functions
+1. Similarly, to initalize Verified Telemetry for a particular sensor/telemetry the details of sensor connection must be passed using the nx_vt_signature_init function
+1. An example of usage of [nx_vt_init](https://azure.github.io/Verified-Telemetry/nx__verified__telemetry_8h.html) and [nx_vt_signature_init](https://azure.github.io/Verified-Telemetry/nx__verified__telemetry_8h.html#af097ec10f7efe9e8ef6505166938b46c) functions is shown below
+1. Include headers for VT
     ```c
     #include "nx_verified_telemetry.h"
     ```
 
-* Include header which define platform specific device drivers
+1. Include header which define platform specific device drivers
     ```c
     #include "sample_vt_device_driver.h"
     ```
-    
-* Define Verified Telemetry DB which will store configuration, platform specific device drivers and runtime information
+
+1. Define Verified Telemetry DB which will store configuration, platform specific device drivers and runtime information
     ```c
     static NX_VERIFIED_TELEMETRY_DB verified_telemetry_DB;
     ```
-    
-* Define variable of VT_DEVICE_DRIVER type which will contain pointers to platform specific functions required by VT
+
+1. Define variable of VT_DEVICE_DRIVER type which will contain pointers to platform specific functions required by VT
     ```c
     static VT_DEVICE_DRIVER sample_device_driver;
     ```
 
-* Define scratch buffer of length VT_RECOMMENDED_BUFFFER_SIZE_BYTES (2500 bytes). Thus buffer would be used by the library to store runtime signatures
+1. Define scratch buffer of length VT_RECOMMENDED_BUFFFER_SIZE_BYTES (2500 bytes). Thus buffer would be used by the library to store runtime signatures
     ```c
     static char scratch_buffer[VT_RECOMMENDED_BUFFFER_SIZE_BYTES];
     ```
-    
-* Define a variables of NX_VT_OBJECT type for each telemetry that will be supporting Verified Telemetry
+
+1. Define a variables of NX_VT_OBJECT type for each telemetry that will be supporting Verified Telemetry
     ```c
     static NX_VT_OBJECT sample_signature_sensor_1;
     // static NX_VT_OBJECT sample_signature_sensor_2;
     static NX_VT_OBJECT sample_signature_sensor_N;
     ```
-    
-* Define variables of VT_SENSOR_HANDLE type which will contain connection information for each sensor
+
+1. Define variables of VT_SENSOR_HANDLE type which will contain connection information for each sensor
     ```c
     static VT_SENSOR_HANDLE sample_handle_sensor_1;
     // static VT_SENSOR_HANDLE sample_handle_sensor_2;
     static VT_SENSOR_HANDLE sample_handle_sensor_N;
     ```
-    
-* Define a Verified Telemetry User Initialization wrapper function which will make calls to necessary initialization function from the vT library and return pointer to the configured NX_VERIFIED_TELEMETRY_DB variable
+
+1. Define a Verified Telemetry User Initialization wrapper function which will make calls to necessary initialization function from the vT library and return pointer to the configured NX_VERIFIED_TELEMETRY_DB variable
     ```c
     NX_VERIFIED_TELEMETRY_DB* sample_nx_verified_telemetry_user_init()
     {
@@ -197,41 +197,41 @@ Developers can refer to the [Azure RTOS Device Samples](https://github.com/Azure
         return (&verified_telemetry_DB);
     }
     ```
-    
-* Call the Verified Telemetry User Initialization wrapper function and update verified_telemetry_DB
+
+1. Call the Verified Telemetry User Initialization wrapper function and update verified_telemetry_DB
     ```c
     verified_telemetry_DB = sample_pnp_verified_telemetry_user_init();
     ```
 
-* A complete sample can be found [here](https://github.com/Azure/Verified-Telemetry-Device-Sample/blob/main/MXChip/AZ3166/app/sample_nx_verified_telemetry_init.c)
+1. A complete sample can be found [here](https://github.com/Azure/Verified-Telemetry-Device-Sample/blob/main/MXChip/AZ3166/app/sample_nx_verified_telemetry_init.c)
 
 ### Step 3 - Use VT Middleware APIs based on the following guidelines
 
-* Use this function to initialize VT PnP Components
+1. Use this function to initialize VT PnP Components
     ```c
     nx_vt_azure_iot_pnp_client_component_add(verified_telemetry_DB, iotpnp_client_ptr)
     ```
-    
-* Call these functions once after boot
+
+1. Call these functions once after boot
     ```C
     nx_vt_send_desired_property_after_boot(verified_telemetry_DB, pnp_client_ptr, message_type)
     ```
-    
+
     ```c
     nx_vt_process_reported_property_sync(
         verified_telemetry_DB, pnp_client_ptr, component_ptr, component_len, &name_value_reader, version)
     ```
-    
-* Call these functions at fixed time intervals
+
+1. Call these functions at fixed time intervals
     ```c
     nx_vt_properties(verified_telemetry_DB, &(context->iotpnp_client))
     ```
-    
+
     ```c
     nx_vt_compute_evaluate_fingerprint_all_sensors(verified_telemetry_DB)
     ```
-    
-* Use this function to send telemetry
+
+1. Use this function to send telemetry
     ```c
     nx_vt_verified_telemetry_message_create_send(handle->verified_telemetry_DB,
         iotpnp_client_ptr,
@@ -241,14 +241,14 @@ Developers can refer to the [Azure RTOS Device Samples](https://github.com/Azure
         (UCHAR*)scratch_buffer,
         buffer_length)
     ```
-    
-* Desired Property Callback
+
+1. Desired Property Callback
     ```c
     nx_vt_process_property_update(
         verified_telemetry_DB, pnp_client_ptr, component_ptr, component_len, &name_value_reader, version)
     ```
-    
-* Command Callback
+
+1. Command Callback
     ```c
     nx_vt_process_command(verified_telemetry_DB,
         &(sample_context_ptr->iotpnp_client),
@@ -260,4 +260,3 @@ Developers can refer to the [Azure RTOS Device Samples](https://github.com/Azure
         &json_writer,
         &status_code))
     ```
-    
