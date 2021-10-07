@@ -90,3 +90,19 @@ The application developer will implement the following functions:
  | tick              | Return the present tick value                                                  | REQUIRED |
  | interrupt_enable  | Enable global interrupts on the MCU                                            | OPTIONAL |
  | interrupt_disable | Disable global interrupts on the MCU                                           | OPTIONAL |
+
+## Support
+
+If you need support, please see our [SUPPORT.md](./SUPPORT.md) file.
+
+## Contributing
+
+For details on contributing to this repository, see the [contributing](CONTRIBUTING.md) guide.
+
+## Reporting Security Vulnerabilities
+
+If you believe you have found a security vulnerability in any Microsoft-owned repository that meets Microsoft's definition of a security vulnerability, please report it to the [Microsoft Security Response Center](SECURITY.md).
+
+## License
+
+Verified Telemetry are licensed under the [MIT](LICENSE.txt) license.
