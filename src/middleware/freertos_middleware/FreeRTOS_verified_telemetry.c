@@ -19,10 +19,11 @@
 #include "vt_debug.h"
 #include "vt_defs.h"
 
-#define sampleazureiotPROPERTY_SUCCESS                   "success"
-#define sampleazureiotPROPERTY_STATUS_SUCCESS            200
-#define sampleazureiotPROPERTY_ENABLE_VERIFIED_TELEMETRY "enableVerifiedTelemetry"
-#define PROPERTY_NAME_MAX_LENGTH                         50
+#define azureiotPROPERTY_SUCCESS                   "success"
+#define azureiotPROPERTY_STATUS_SUCCESS            200
+#define azureiotPROPERTY_ENABLE_VERIFIED_TELEMETRY "enableVerifiedTelemetry"
+#define PROPERTY_NAME_MAX_LENGTH                   50
+#define azureiotMESSAGEPROPERTYSYMBOL              "$.sub"
 
 static const CHAR device_status_property[]             = "deviceStatus";
 static const CHAR enable_verified_telemetry_property[] = "enableVerifiedTelemetry";
@@ -99,8 +100,8 @@ AzureIoTResult_t FreeRTOS_vt_verified_telemetry_message_create_send(FreeRTOS_VER
     uint8_t telemetrymessagePropertyBuffer[128];
     AzureIoT_MessagePropertiesInit(&telemetrymessageProperties, telemetrymessagePropertyBuffer, 0, 128);
     AzureIoT_MessagePropertiesAppend(&telemetrymessageProperties,
-        (const uint8_t*)"$.sub",
-        sizeof("$.sub") - 1,
+        (const uint8_t*)azureiotMESSAGEPROPERTYSYMBOL,
+        sizeof(azureiotMESSAGEPROPERTYSYMBOL) - 1,
         (const uint8_t*)component_name_ptr,
         component_name_length);
 
@@ -235,10 +236,10 @@ static AzureIoTResult_t send_reported_property(AzureIoTHubClient_t* xAzureIoTHub
         &xWriter,
         (const uint8_t*)property_name,
         property_name_length,
-        sampleazureiotPROPERTY_STATUS_SUCCESS,
+        azureiotPROPERTY_STATUS_SUCCESS,
         version,
-        (const uint8_t*)sampleazureiotPROPERTY_SUCCESS,
-        strlen(sampleazureiotPROPERTY_SUCCESS));
+        (const uint8_t*)azureiotPROPERTY_SUCCESS,
+        strlen(azureiotPROPERTY_SUCCESS));
     configASSERT(xResult == eAzureIoTSuccess);
 
     xResult = AzureIoTJSONWriter_AppendBool(&xWriter, status);
@@ -412,8 +413,8 @@ AzureIoTResult_t FreeRTOS_vt_process_property_update(FreeRTOS_VERIFIED_TELEMETRY
     }
 
     if (AzureIoTJSONReader_TokenIsTextEqual(xReader,
-            (const uint8_t*)sampleazureiotPROPERTY_ENABLE_VERIFIED_TELEMETRY,
-            strlen(sampleazureiotPROPERTY_ENABLE_VERIFIED_TELEMETRY)))
+            (const uint8_t*)azureiotPROPERTY_ENABLE_VERIFIED_TELEMETRY,
+            strlen(azureiotPROPERTY_ENABLE_VERIFIED_TELEMETRY)))
     {
         xResult = AzureIoTJSONReader_NextToken(xReader);
         configASSERT(xResult == eAzureIoTSuccess);

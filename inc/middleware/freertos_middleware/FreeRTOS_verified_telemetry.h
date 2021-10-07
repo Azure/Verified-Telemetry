@@ -67,10 +67,39 @@ typedef struct FreeRTOS_VERIFIED_TELEMETRY_DB_TAG
 
 } FreeRTOS_VERIFIED_TELEMETRY_DB;
 
+/**
+ * @brief Initializes Global Verified Telemetry using platform specific device drivers
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] component_name_ptr Name of the PnP component. Example - "vTDevice"
+ * @param[in] enable_verified_telemetry User specified value to set Verified Telemetry active or inactive, can also be configured
+ * during runtime from a writable Digital Twin property.
+ * @param[in] device_driver The platform specific device driver components for interacting with the device hardware.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
+
 AzureIoTResult_t FreeRTOS_vt_init(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     UCHAR* component_name_ptr,
     bool enable_verified_telemetry,
     VT_DEVICE_DRIVER* device_driver);
+
+/**
+ * @brief Initializes Verified Telemetry for a particular sensor data stream
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] handle Pointer to variable of type NX_VT_OBJECT storing collection settings and configuration data for a particular
+ * sensor telemetry.
+ * @param[in] component_name_ptr Name of the sensor.  Example - "accelerometer" This would be prepended with 'vT' by VT library
+ * @param[in] signature_type One of the defined signature types. Currently available types - VT_SIGNATURE_TYPE_FALLCURVE
+ * @param[in] associated_telemetry Telmetries associated with this sensor, separated by commas  Example - "accelerometerX,
+ * accelerometerY, accelerometerZ"
+ * @param[in] telemetry_status_auto_update User specified value to control whether fingerprint computation for the sensor should
+ * be invoked when nx_vt_compute_evaluate_fingerprint_all_sensors is called
+ * @param[in] sensor_handle The sensor specific connection configuration for collecting VT signatures.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
 
 AzureIoTResult_t FreeRTOS_vt_signature_init(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     FreeRTOS_VT_OBJECT* handle,
@@ -80,10 +109,18 @@ AzureIoTResult_t FreeRTOS_vt_signature_init(FreeRTOS_VERIFIED_TELEMETRY_DB* veri
     bool telemetry_status_auto_update,
     VT_SENSOR_HANDLE* sensor_handle);
 
-int32_t prvTelemetryPayloadCreate(
-    char* ucScratchBuffer, unsigned long ucScratchBufferSize, char* telemetryKey, double telemetryValue);
-
-AzureIoTResult_t sendTelemetrySampleDevice(AzureIoTHubClient_t* xAzureIoTHubClient);
+/**
+ * @brief Creates and sends telemetry JSON with message properties containing telemetry status
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] xAzureIoTHubClient Pointer to initialized Azure IoT PnP instance.
+ * @param[in] component_name_ptr Name of the component.
+ * @param[in] component_name_length Length of name of the component.
+ * @param[in] telemetry_data Pointer to buffer containing telemetry data.
+ * @param[in] data_size Length of telemetry data passed in the buffer.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
 
 AzureIoTResult_t FreeRTOS_vt_verified_telemetry_message_create_send(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     AzureIoTHubClient_t* xAzureIoTHubClient,
@@ -91,6 +128,20 @@ AzureIoTResult_t FreeRTOS_vt_verified_telemetry_message_create_send(FreeRTOS_VER
     UINT component_name_length,
     const UCHAR* telemetry_data,
     UINT data_size);
+
+/**
+ * @brief Processes all commands supported by VT Middleware.
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] xAzureIoTHubClient Pointer to initialized Azure IoT PnP instance.
+ * @param[in] component_name_ptr Name of the component.
+ * @param[in] component_name_length Length of name of the component.
+ * @param[in] pnp_command_name_ptr Name of the command invoked.
+ * @param[in] pnp_command_name_length Length of name of the command invoked.
+ * @param[out] status_code Status updated by function based on command execution.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
 
 AzureIoTResult_t FreeRTOS_vt_process_command(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     AzureIoTHubClient_t* xAzureIoTHubClient,
@@ -100,8 +151,30 @@ AzureIoTResult_t FreeRTOS_vt_process_command(FreeRTOS_VERIFIED_TELEMETRY_DB* ver
     UINT pnp_command_name_length,
     UINT* status_code);
 
+/**
+ * @brief Updates Digital Twin with default desired property values when device is booted for the first time
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] xAzureIoTHubClient Pointer to initialized Azure IoT PnP instance.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
+
 AzureIoTResult_t FreeRTOS_vt_properties(
     FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, AzureIoTHubClient_t* xAzureIoTHubClient);
+
+/**
+ * @brief Processes all desired property updates supported by vT Middleware.
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] xAzureIoTHubClient Pointer to initialized Azure IoT PnP instance.
+ * @param[in] component_name_ptr Name of the component.
+ * @param[in] component_name_length Length of name of the component.
+ * @param[in] xReader Pointer to read the JSON payload of command.
+ * @param[in] version Property version stored in digital twin.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
 
 AzureIoTResult_t FreeRTOS_vt_process_property_update(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     AzureIoTHubClient_t* xAzureIoTHubClient,
@@ -110,10 +183,40 @@ AzureIoTResult_t FreeRTOS_vt_process_property_update(FreeRTOS_VERIFIED_TELEMETRY
     AzureIoTJSONReader_t* xReader,
     UINT version);
 
+/**
+ * @brief Computes status of all telemetries which have been initialized to provide Verified Telemetry
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
+
 AzureIoTResult_t FreeRTOS_vt_compute_evaluate_fingerprint_all_sensors(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB);
+
+/**
+ * @brief Updates Digital Twin with default desired property values when device is booted for the first time
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] xAzureIoTHubClient Pointer to initialized Azure IoT PnP instance.
+ * @param[in] message_type Type of document, only valid value are NX_AZURE_IOT_PNP_DESIRED_PROPERTIES or
+ * NX_AZURE_IOT_PNP_PROPERTIES
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
 
 AzureIoTResult_t FreeRTOS_vt_send_desired_property_after_boot(
     FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, AzureIoTHubClient_t* xAzureIoTHubClient, UINT message_type);
+
+/**
+ * @brief Synchronizes VT Settings stored in digital Twin as reported properties at startup.
+ *
+ * @param[in] verified_telemetry_DB Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data.
+ * @param[in] component_name_ptr Name of the component.
+ * @param[in] component_name_length Length of name of the component.
+ * @param[in] json_reader_ptr Pointer to read the JSON payload of command.
+ *
+ * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
+ */
 
 AzureIoTResult_t FreeRTOS_vt_process_reported_property_sync(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     const UCHAR* component_name_ptr,
