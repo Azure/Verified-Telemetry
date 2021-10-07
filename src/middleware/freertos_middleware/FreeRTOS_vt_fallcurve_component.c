@@ -19,7 +19,7 @@
 #include "vt_defs.h"
 #include "vt_fc_api.h"
 
-#define localBufferSize 64
+#define LOCAL_BUFFER_SIZE 64
 
 static const CHAR command_reset_fingerprint[]   = "setResetFingerprintTemplate";
 static const CHAR command_retrain_fingerprint[] = "retrainFingerprintTemplate";
@@ -339,7 +339,7 @@ static UINT sync_fingerprint_template(AzureIoTJSONReader_t* xReader, FreeRTOS_VT
     VT_FALLCURVE_DATABASE_FLATTENED flattened_db;
 
     AzureIoTResult_t xResult;
-    uint8_t pucBufferLocal[localBufferSize];
+    uint8_t pucBufferLocal[LOCAL_BUFFER_SIZE];
     uint32_t pusBytesCopied;
     xResult = AzureIoTJSONReader_NextToken(xReader);
     configASSERT(xResult == eAzureIoTSuccess);
@@ -351,7 +351,7 @@ static UINT sync_fingerprint_template(AzureIoTJSONReader_t* xReader, FreeRTOS_VT
     configASSERT(xResult == eAzureIoTSuccess);
 
     /* Get desired temperature */
-    xResult = AzureIoTJSONReader_GetTokenString(xReader, pucBufferLocal, localBufferSize, &pusBytesCopied);
+    xResult = AzureIoTJSONReader_GetTokenString(xReader, pucBufferLocal, LOCAL_BUFFER_SIZE, &pusBytesCopied);
     configASSERT(xResult == eAzureIoTSuccess);
 
     printf(" num_signatures - %s \n", pucBufferLocal);
@@ -363,9 +363,9 @@ static UINT sync_fingerprint_template(AzureIoTJSONReader_t* xReader, FreeRTOS_VT
 
     xResult = AzureIoTJSONReader_NextToken(xReader);
     configASSERT(xResult == eAzureIoTSuccess);
-    memset(pucBufferLocal, 0, localBufferSize);
+    memset(pucBufferLocal, 0, LOCAL_BUFFER_SIZE);
     /* Get desired temperature */
-    xResult = AzureIoTJSONReader_GetTokenString(xReader, pucBufferLocal, localBufferSize, &pusBytesCopied);
+    xResult = AzureIoTJSONReader_GetTokenString(xReader, pucBufferLocal, LOCAL_BUFFER_SIZE, &pusBytesCopied);
     configASSERT(xResult == eAzureIoTSuccess);
 
     printf(" sampling_interval_us - %s \n", pucBufferLocal);
@@ -378,9 +378,9 @@ static UINT sync_fingerprint_template(AzureIoTJSONReader_t* xReader, FreeRTOS_VT
 
     xResult = AzureIoTJSONReader_NextToken(xReader);
     configASSERT(xResult == eAzureIoTSuccess);
-    memset(pucBufferLocal, 0, localBufferSize);
+    memset(pucBufferLocal, 0, LOCAL_BUFFER_SIZE);
     /* Get desired temperature */
-    xResult = AzureIoTJSONReader_GetTokenString(xReader, pucBufferLocal, localBufferSize, &pusBytesCopied);
+    xResult = AzureIoTJSONReader_GetTokenString(xReader, pucBufferLocal, LOCAL_BUFFER_SIZE, &pusBytesCopied);
     configASSERT(xResult == eAzureIoTSuccess);
 
     printf(" falltime - %s \n", pucBufferLocal);
@@ -392,9 +392,9 @@ static UINT sync_fingerprint_template(AzureIoTJSONReader_t* xReader, FreeRTOS_VT
 
     xResult = AzureIoTJSONReader_NextToken(xReader);
     configASSERT(xResult == eAzureIoTSuccess);
-    memset(pucBufferLocal, 0, localBufferSize);
+    memset(pucBufferLocal, 0, LOCAL_BUFFER_SIZE);
     /* Get desired temperature */
-    xResult = AzureIoTJSONReader_GetTokenString(xReader, pucBufferLocal, localBufferSize, &pusBytesCopied);
+    xResult = AzureIoTJSONReader_GetTokenString(xReader, pucBufferLocal, LOCAL_BUFFER_SIZE, &pusBytesCopied);
     configASSERT(xResult == eAzureIoTSuccess);
 
     printf(" pearson_coeff - %s \n", pucBufferLocal);
