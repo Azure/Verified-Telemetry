@@ -14,7 +14,7 @@ VT_FLOAT fc_calculate_falltime_deviation(VT_ULONG falltime_under_test, VT_ULONG 
     VT_INT32 decimal    = falltime_deviation;
     VT_FLOAT frac_float = falltime_deviation - (VT_FLOAT)decimal;
     VT_INT32 frac       = frac_float * 10000;
-    VTLogDebug("FallTime Deviation: %lu.%lu \r\n", decimal, frac);
+    VTLogDebug("FallTime Deviation: %lu.%lu \r\n", (long unsigned int)decimal, (long unsigned int)frac);
 #endif /* VT_LOG_LEVEL > 2 */
 
     return falltime_deviation;
@@ -28,7 +28,7 @@ VT_FLOAT fc_calculate_pearson_coeff_deviation(VT_FLOAT pearson_coeff_under_test,
     VT_INT32 decimal    = pearson_coeff_deviation;
     VT_FLOAT frac_float = pearson_coeff_deviation - (VT_FLOAT)decimal;
     VT_INT32 frac       = frac_float * 10000;
-    VTLogDebug("Pearson Coeff Deviation: %lu.%lu \r\n", decimal, frac);
+    VTLogDebug("Pearson Coeff Deviation: %lu.%lu \r\n", (long unsigned int)decimal, (long unsigned int)frac);
 #endif /* VT_LOG_LEVEL > 2 */
 
     return pearson_coeff_deviation;

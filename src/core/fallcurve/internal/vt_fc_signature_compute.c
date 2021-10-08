@@ -119,7 +119,7 @@ VT_UINT fc_signature_compute(
     VT_INT32 decimal    = pearson_coeff_computed;
     VT_FLOAT frac_float = pearson_coeff_computed - (VT_FLOAT)decimal;
     VT_INT32 frac       = frac_float * 10000;
-    VTLogDebug("Pearson Coeff: %lu.%lu \r\n", decimal, frac);
+    VTLogDebug("Pearson Coeff: %lu.%lu \r\n", (long unsigned int)decimal, (long unsigned int)frac);
 #endif /* VT_LOG_LEVEL > 2 */
 
     if (sample_length > VT_FC_MIN_FALLTIME_DATAPOINTS && pearson_coeff_computed > VT_FC_MIN_SHAPE_MATCH)

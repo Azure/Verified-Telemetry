@@ -2,12 +2,9 @@ name: Build Core
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
-      - public_preview_1
+    branches: [main]
 
 defaults:
   run:

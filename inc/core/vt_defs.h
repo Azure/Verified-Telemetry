@@ -10,13 +10,15 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#define abs_custom(x) ((x) > 0 ? (x) : -(x))
+
 #define VT_SUCCESS 0x00
 #define VT_ERROR   0x01
 
-#define VT_SIGNATURE_MATCHING                          0x00
-#define VT_SIGNATURE_NOT_MATCHING                      0x01
-#define VT_SIGNATURE_COMPUTE_FAIL                      0x02
-#define VT_SIGNATURE_DB_EMPTY                          0x03
+#define VT_SIGNATURE_MATCHING     0x00
+#define VT_SIGNATURE_NOT_MATCHING 0x01
+#define VT_SIGNATURE_COMPUTE_FAIL 0x02
+#define VT_SIGNATURE_DB_EMPTY     0x03
 #define VT_SIGNATURE_EVAL_DEFAULT_VALUE                0x04
 #define VT_SIGNATURE_DRIFT_DEFAULT_VALUE               0
 #define VT_SIGNATURE_TEMPLATE_CONFIDENCE_DEFAULT_VALUE 0
@@ -50,5 +52,15 @@
 #define VT_GPIO_ID        VT_UINT
 #define VT_GPIO_PORT      VT_VOID
 #define VT_GPIO_PIN       VT_VOID
+
+//defines
+typedef char                                    CHAR;
+typedef unsigned char                           UCHAR;
+typedef int                                     INT;
+typedef unsigned int                            UINT;
+typedef long                                    LONG;
+typedef unsigned long                           ULONG;
+typedef short                                   SHORT;
+typedef unsigned short                          USHORT;
 
 #endif

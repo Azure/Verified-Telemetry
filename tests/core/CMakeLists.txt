@@ -16,7 +16,7 @@ add_executable(${TARGET}
 
 target_link_libraries(${TARGET}
     PRIVATE
-        verified_telemetry
+        az::iot::vt::core
         cmocka-static
 )
 

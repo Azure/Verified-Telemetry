@@ -11,7 +11,6 @@
 VT_VOID vt_fallcurve_object_database_sync(VT_FALLCURVE_OBJECT* fc_object, VT_FALLCURVE_DATABASE_FLATTENED* flattened_db)
 {
     VT_CHAR* token;
-    VT_CHAR* saveptr;
     VT_CHAR* csvString;
     VT_UINT iter;
 
@@ -20,7 +19,7 @@ VT_VOID vt_fallcurve_object_database_sync(VT_FALLCURVE_OBJECT* fc_object, VT_FAL
     iter = 0;
     for (csvString = (VT_CHAR*)flattened_db->sampling_interval_us;; csvString = NULL)
     {
-        token = strtok_r(csvString, ",", &saveptr);
+        token = strtok(csvString, ",");
         if (token == NULL)
         {
             break;
@@ -32,7 +31,7 @@ VT_VOID vt_fallcurve_object_database_sync(VT_FALLCURVE_OBJECT* fc_object, VT_FAL
     iter = 0;
     for (csvString = (VT_CHAR*)flattened_db->falltime;; csvString = NULL)
     {
-        token = strtok_r(csvString, ",", &saveptr);
+        token = strtok(csvString, ",");
         if (token == NULL)
         {
             break;
@@ -44,7 +43,7 @@ VT_VOID vt_fallcurve_object_database_sync(VT_FALLCURVE_OBJECT* fc_object, VT_FAL
     iter = 0;
     for (csvString = (VT_CHAR*)flattened_db->pearson_coeff;; csvString = NULL)
     {
-        token = strtok_r(csvString, ",", &saveptr);
+        token = strtok(csvString, ",");
         if (token == NULL)
         {
             break;
