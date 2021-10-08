@@ -9,10 +9,6 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<link href="navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="resize.js"></script>
-<script type="text/javascript" src="navtreedata.js"></script>
-<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -50,22 +46,6 @@ $(function() {
 /* @license-end */</script>
 <div id="main-nav"></div>
 </div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('files.html',''); initResizable(); });
-/* @license-end */
-</script>
-<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -89,31 +69,36 @@ $(document).ready(function(){initNavTree('files.html',''); initResizable(); });
 <div class="levels">[detail level <span onclick="javascript:toggleLevel(1);">1</span><span onclick="javascript:toggleLevel(2);">2</span><span onclick="javascript:toggleLevel(3);">3</span><span onclick="javascript:toggleLevel(4);">4</span><span onclick="javascript:toggleLevel(5);">5</span>]</div><table class="directory">
 <tr id="row_0_" class="even"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_0_" class="arrow" onclick="toggleFolder('0_')">&#9660;</span><span id="img_0_" class="iconfopen" onclick="toggleFolder('0_')">&#160;</span><a class="el" href="dir_bfccd401955b95cf8c75461437045ac0.html" target="_self">inc</a></td><td class="desc"></td></tr>
 <tr id="row_0_0_"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span id="arr_0_0_" class="arrow" onclick="toggleFolder('0_0_')">&#9660;</span><span id="img_0_0_" class="iconfopen" onclick="toggleFolder('0_0_')">&#160;</span><a class="el" href="dir_c6a5aee7e5b341e7318c4735a0069bb5.html" target="_self">core</a></td><td class="desc"></td></tr>
-<tr id="row_0_0_0_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span id="arr_0_0_0_" class="arrow" onclick="toggleFolder('0_0_0_')">&#9660;</span><span id="img_0_0_0_" class="iconfopen" onclick="toggleFolder('0_0_0_')">&#160;</span><a class="el" href="dir_aa6c90c5be26707a9a373e93e0b6235a.html" target="_self">fallcurve</a></td><td class="desc"></td></tr>
-<tr id="row_0_0_0_0_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><span id="arr_0_0_0_0_" class="arrow" onclick="toggleFolder('0_0_0_0_')">&#9660;</span><span id="img_0_0_0_0_" class="iconfopen" onclick="toggleFolder('0_0_0_0_')">&#160;</span><a class="el" href="dir_ac3871046f9c26f11d1de2f813ed555b.html" target="_self">config</a></td><td class="desc"></td></tr>
-<tr id="row_0_0_0_0_0_" class="even"><td class="entry"><span style="width:80px;display:inline-block;">&#160;</span><span class="icondoc"></span><a class="el" href="vt__fc__config_8h.html" target="_self">vt_fc_config.h</a></td><td class="desc"></td></tr>
-<tr id="row_0_0_0_1_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><span class="icondoc"></span><a class="el" href="vt__fc__api_8h.html" target="_self">vt_fc_api.h</a></td><td class="desc"></td></tr>
-<tr id="row_0_0_1_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><span class="icondoc"></span><a class="el" href="vt__debug_8h.html" target="_self">vt_debug.h</a></td><td class="desc"></td></tr>
-<tr id="row_0_0_2_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><span class="icondoc"></span><a class="el" href="vt__defs_8h.html" target="_self">vt_defs.h</a></td><td class="desc"></td></tr>
+<tr id="row_0_0_0_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span id="arr_0_0_0_" class="arrow" onclick="toggleFolder('0_0_0_')">&#9660;</span><span id="img_0_0_0_" class="iconfopen" onclick="toggleFolder('0_0_0_')">&#160;</span><a class="el" href="dir_ddcf532f8a6ad266c786504417dce83c.html" target="_self">currentsense</a></td><td class="desc"></td></tr>
+<tr id="row_0_0_0_0_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><span id="arr_0_0_0_0_" class="arrow" onclick="toggleFolder('0_0_0_0_')">&#9660;</span><span id="img_0_0_0_0_" class="iconfopen" onclick="toggleFolder('0_0_0_0_')">&#160;</span><a class="el" href="dir_579f37531ce93669b9f676582e076a70.html" target="_self">config</a></td><td class="desc"></td></tr>
+<tr id="row_0_0_0_0_0_" class="even"><td class="entry"><span style="width:80px;display:inline-block;">&#160;</span><a href="vt__cs__config_8h_source.html"><span class="icondoc"></span></a><b>vt_cs_config.h</b></td><td class="desc"></td></tr>
+<tr id="row_0_0_0_1_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="vt__cs__api_8h_source.html"><span class="icondoc"></span></a><b>vt_cs_api.h</b></td><td class="desc"></td></tr>
+<tr id="row_0_0_1_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span id="arr_0_0_1_" class="arrow" onclick="toggleFolder('0_0_1_')">&#9660;</span><span id="img_0_0_1_" class="iconfopen" onclick="toggleFolder('0_0_1_')">&#160;</span><a class="el" href="dir_aa6c90c5be26707a9a373e93e0b6235a.html" target="_self">fallcurve</a></td><td class="desc"></td></tr>
+<tr id="row_0_0_1_0_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><span id="arr_0_0_1_0_" class="arrow" onclick="toggleFolder('0_0_1_0_')">&#9660;</span><span id="img_0_0_1_0_" class="iconfopen" onclick="toggleFolder('0_0_1_0_')">&#160;</span><a class="el" href="dir_ac3871046f9c26f11d1de2f813ed555b.html" target="_self">config</a></td><td class="desc"></td></tr>
+<tr id="row_0_0_1_0_0_" class="even"><td class="entry"><span style="width:80px;display:inline-block;">&#160;</span><a href="vt__fc__config_8h_source.html"><span class="icondoc"></span></a><a class="el" href="vt__fc__config_8h.html" target="_self">vt_fc_config.h</a></td><td class="desc"></td></tr>
+<tr id="row_0_0_1_1_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="vt__fc__api_8h_source.html"><span class="icondoc"></span></a><a class="el" href="vt__fc__api_8h.html" target="_self">vt_fc_api.h</a></td><td class="desc"></td></tr>
+<tr id="row_0_0_2_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="vt__debug_8h_source.html"><span class="icondoc"></span></a><a class="el" href="vt__debug_8h.html" target="_self">vt_debug.h</a></td><td class="desc"></td></tr>
+<tr id="row_0_0_3_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="vt__defs_8h_source.html"><span class="icondoc"></span></a><a class="el" href="vt__defs_8h.html" target="_self">vt_defs.h</a></td><td class="desc"></td></tr>
 <tr id="row_0_1_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span id="arr_0_1_" class="arrow" onclick="toggleFolder('0_1_')">&#9660;</span><span id="img_0_1_" class="iconfopen" onclick="toggleFolder('0_1_')">&#160;</span><a class="el" href="dir_51583f7a90fe4a27d7537ae5d8cd2572.html" target="_self">middleware</a></td><td class="desc"></td></tr>
-<tr id="row_0_1_0_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><span class="icondoc"></span><a class="el" href="nx__verified__telemetry_8h.html" target="_self">nx_verified_telemetry.h</a></td><td class="desc"></td></tr>
-<tr id="row_0_1_1_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><span class="icondoc"></span><a class="el" href="nx__vt__currentsense__component_8h.html" target="_self">nx_vt_currentsense_component.h</a></td><td class="desc"></td></tr>
-<tr id="row_0_1_2_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><span class="icondoc"></span><a class="el" href="nx__vt__fallcurve__component_8h.html" target="_self">nx_vt_fallcurve_component.h</a></td><td class="desc"></td></tr>
-<tr id="row_0_1_3_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><span class="icondoc"></span><a class="el" href="nx__vt__middleware__helper_8h.html" target="_self">nx_vt_middleware_helper.h</a></td><td class="desc"></td></tr>
+<tr id="row_0_1_0_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span id="arr_0_1_0_" class="arrow" onclick="toggleFolder('0_1_0_')">&#9660;</span><span id="img_0_1_0_" class="iconfopen" onclick="toggleFolder('0_1_0_')">&#160;</span><a class="el" href="dir_738c0a3e51a2b782c26bcf4631b4d04e.html" target="_self">azure_rtos_middleware</a></td><td class="desc"></td></tr>
+<tr id="row_0_1_0_0_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="nx__verified__telemetry_8h_source.html"><span class="icondoc"></span></a><a class="el" href="nx__verified__telemetry_8h.html" target="_self">nx_verified_telemetry.h</a></td><td class="desc"></td></tr>
+<tr id="row_0_1_0_1_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="nx__vt__currentsense__component_8h_source.html"><span class="icondoc"></span></a><a class="el" href="nx__vt__currentsense__component_8h.html" target="_self">nx_vt_currentsense_component.h</a></td><td class="desc"></td></tr>
+<tr id="row_0_1_0_2_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="nx__vt__fallcurve__component_8h_source.html"><span class="icondoc"></span></a><a class="el" href="nx__vt__fallcurve__component_8h.html" target="_self">nx_vt_fallcurve_component.h</a></td><td class="desc"></td></tr>
+<tr id="row_0_1_0_3_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="nx__vt__middleware__helper_8h_source.html"><span class="icondoc"></span></a><a class="el" href="nx__vt__middleware__helper_8h.html" target="_self">nx_vt_middleware_helper.h</a></td><td class="desc"></td></tr>
+<tr id="row_0_1_1_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span id="arr_0_1_1_" class="arrow" onclick="toggleFolder('0_1_1_')">&#9660;</span><span id="img_0_1_1_" class="iconfopen" onclick="toggleFolder('0_1_1_')">&#160;</span><a class="el" href="dir_32b3b54a149af6f9355265ca4beadccc.html" target="_self">freertos_middleware</a></td><td class="desc"></td></tr>
+<tr id="row_0_1_1_0_"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="_free_r_t_o_s__verified__telemetry_8h_source.html"><span class="icondoc"></span></a><a class="el" href="_free_r_t_o_s__verified__telemetry_8h.html" target="_self">FreeRTOS_verified_telemetry.h</a></td><td class="desc"></td></tr>
+<tr id="row_0_1_1_1_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="_free_r_t_o_s__vt__fallcurve__component_8h_source.html"><span class="icondoc"></span></a><a class="el" href="_free_r_t_o_s__vt__fallcurve__component_8h.html" target="_self">FreeRTOS_vt_fallcurve_component.h</a></td><td class="desc"></td></tr>
 <tr id="row_0_2_"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span id="arr_0_2_" class="arrow" onclick="toggleFolder('0_2_')">&#9660;</span><span id="img_0_2_" class="iconfopen" onclick="toggleFolder('0_2_')">&#160;</span><a class="el" href="dir_54e9cde3f0eb920985cfdedc73b932ac.html" target="_self">platform</a></td><td class="desc"></td></tr>
-<tr id="row_0_2_0_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><span class="icondoc"></span><a class="el" href="vt__device__driver_8h.html" target="_self">vt_device_driver.h</a></td><td class="desc"></td></tr>
-<tr id="row_0_2_1_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><span class="icondoc"></span><a class="el" href="vt__platform_8h.html" target="_self">vt_platform.h</a></td><td class="desc"></td></tr>
+<tr id="row_0_2_0_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="vt__device__driver_8h_source.html"><span class="icondoc"></span></a><a class="el" href="vt__device__driver_8h.html" target="_self">vt_device_driver.h</a></td><td class="desc"></td></tr>
+<tr id="row_0_2_1_"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a href="vt__platform_8h_source.html"><span class="icondoc"></span></a><a class="el" href="vt__platform_8h.html" target="_self">vt_platform.h</a></td><td class="desc"></td></tr>
 </table>
 </div><!-- directory -->
 </div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="footer">Generated by
-    <a href="http://www.doxygen.org/index.html">
-    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.17
+</small></address>
 </body>
 </html>
