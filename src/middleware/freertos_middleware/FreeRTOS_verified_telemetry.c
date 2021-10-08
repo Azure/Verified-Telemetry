@@ -4,6 +4,9 @@
 
 #include "FreeRTOS_verified_telemetry.h"
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 /* Azure Provisioning/IoT Hub library includes */
 #include "azure_iot_hub_client.h"
 #include "azure_iot_hub_client_properties.h"
@@ -98,8 +101,8 @@ AzureIoTResult_t FreeRTOS_vt_verified_telemetry_message_create_send(FreeRTOS_VER
 {
     AzureIoTMessageProperties_t telemetrymessageProperties;
     uint8_t telemetrymessagePropertyBuffer[128];
-    AzureIoT_MessagePropertiesInit(&telemetrymessageProperties, telemetrymessagePropertyBuffer, 0, 128);
-    AzureIoT_MessagePropertiesAppend(&telemetrymessageProperties,
+    AzureIoTMessage_PropertiesInit(&telemetrymessageProperties, telemetrymessagePropertyBuffer, 0, 128);
+    AzureIoTMessage_PropertiesAppend(&telemetrymessageProperties,
         (const uint8_t*)azureiotMESSAGEPROPERTYSYMBOL,
         sizeof(azureiotMESSAGEPROPERTYSYMBOL) - 1,
         (const uint8_t*)component_name_ptr,
@@ -145,7 +148,7 @@ AzureIoTResult_t FreeRTOS_vt_verified_telemetry_message_create_send(FreeRTOS_VER
                     strcat(scratch_buffer,
                         (((FreeRTOS_VT_OBJECT*)component_pointer)->component.fc.telemetry_status > 0) ? "true" : "false");
 
-                    xResult = AzureIoT_MessagePropertiesAppend(&telemetrymessageProperties,
+                    xResult = AzureIoTMessage_PropertiesAppend(&telemetrymessageProperties,
                         (const uint8_t*)vt_property_name,
                         strlen(vt_property_name),
                         (const uint8_t*)scratch_buffer,

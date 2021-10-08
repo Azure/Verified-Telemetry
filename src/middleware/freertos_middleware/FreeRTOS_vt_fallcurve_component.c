@@ -3,6 +3,9 @@
 
 #include "FreeRTOS_vt_fallcurve_component.h"
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 /* Azure Provisioning/IoT Hub library includes */
 #include "azure_iot_hub_client.h"
 #include "azure_iot_hub_client_properties.h"
