@@ -6,7 +6,6 @@
 /* Azure Provisioning/IoT Hub library includes */
 #include "azure_iot_hub_client.h"
 #include "azure_iot_hub_client_properties.h"
-#include "azure_iot_provisioning_client.h"
 
 /* Azure JSON includes */
 #include "azure_iot_json_reader.h"

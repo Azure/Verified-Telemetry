@@ -9,7 +9,6 @@
 VT_VOID vt_currentsense_object_database_sync(VT_CURRENTSENSE_OBJECT* cs_object, VT_CURRENTSENSE_DATABASE_FLATTENED* flattened_db)
 {
     VT_CHAR* token;
-    VT_CHAR* saveptr;
     VT_CHAR* csvString;
     VT_UINT iter;
 
@@ -27,7 +26,7 @@ VT_VOID vt_currentsense_object_database_sync(VT_CURRENTSENSE_OBJECT* cs_object, 
         iter = 0;
         for (csvString = (VT_CHAR*)flattened_db->repeating_signature_sampling_freq;; csvString = NULL)
         {
-            token = strtok_r(csvString, ",", &saveptr);
+            token = strtok(csvString, ",");
             if (token == NULL)
             {
                 break;
@@ -39,7 +38,7 @@ VT_VOID vt_currentsense_object_database_sync(VT_CURRENTSENSE_OBJECT* cs_object, 
         iter = 0;
         for (csvString = (VT_CHAR*)flattened_db->repeating_signature_freq;; csvString = NULL)
         {
-            token = strtok_r(csvString, ",", &saveptr);
+            token = strtok(csvString, ",");
             if (token == NULL)
             {
                 break;
@@ -51,7 +50,7 @@ VT_VOID vt_currentsense_object_database_sync(VT_CURRENTSENSE_OBJECT* cs_object, 
         iter = 0;
         for (csvString = (VT_CHAR*)flattened_db->repeating_signature_relative_curr_draw;; csvString = NULL)
         {
-            token = strtok_r(csvString, ",", &saveptr);
+            token = strtok(csvString, ",");
             if (token == NULL)
             {
                 break;
@@ -63,7 +62,7 @@ VT_VOID vt_currentsense_object_database_sync(VT_CURRENTSENSE_OBJECT* cs_object, 
         iter = 0;
         for (csvString = (VT_CHAR*)flattened_db->repeating_signature_duty_cycle;; csvString = NULL)
         {
-            token = strtok_r(csvString, ",", &saveptr);
+            token = strtok(csvString, ",");
             if (token == NULL)
             {
                 break;
