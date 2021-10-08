@@ -108,92 +108,68 @@ Step 1 - Include Verified Telemetry library</h2>
 Step 2 - Initialize Verified Telemetry</h2>
 <ol type="1">
 <li>Global Verified Telemetry needs to be initialized with the device specific platform functions</li>
-</ol>
-<ol type="1">
-<li>Similarly, to initalize Verified Telemetry for a particular sensor/telemetry the details of sensor connection must be passed using the nx_vt_signature_init function</li>
-</ol>
-<ol type="1">
+<li>Similarly, to initialize Verified Telemetry for a particular sensor/telemetry the details of sensor connection must be passed using the nx_vt_signature_init function</li>
 <li>An example of usage of <a href="https://azure.github.io/Verified-Telemetry/nx__verified__telemetry_8h.html">nx_vt_init</a> and <a href="https://azure.github.io/Verified-Telemetry/nx__verified__telemetry_8h.html#af097ec10f7efe9e8ef6505166938b46c">nx_vt_signature_init</a> functions is shown below</li>
-</ol>
-<ol type="1">
 <li>Include headers for VT <pre class="fragment"> #include "nx_verified_telemetry.h"
 </pre></li>
-</ol>
-<ol type="1">
 <li>Include header which define platform specific device drivers <pre class="fragment"> #include "sample_vt_device_driver.h"
 </pre></li>
-</ol>
-<ol type="1">
 <li>Define Verified Telemetry DB which will store configuration, platform specific device drivers and runtime information <pre class="fragment"> static NX_VERIFIED_TELEMETRY_DB verified_telemetry_DB;
 </pre></li>
-</ol>
-<ol type="1">
 <li>Define variable of VT_DEVICE_DRIVER type which will contain pointers to platform specific functions required by VT <pre class="fragment"> static VT_DEVICE_DRIVER sample_device_driver;
 </pre></li>
-</ol>
-<ol type="1">
 <li>Define scratch buffer of length VT_RECOMMENDED_BUFFER_SIZE_BYTES (2500 bytes). Thus buffer would be used by the library to store runtime signatures <pre class="fragment"> static char scratch_buffer[VT_RECOMMENDED_BUFFER_SIZE_BYTES];
 </pre></li>
-</ol>
-<ol type="1">
 <li>Define a variables of NX_VT_OBJECT type for each telemetry that will be supporting Verified Telemetry <pre class="fragment"> static NX_VT_OBJECT sample_signature_sensor_1;
  // static NX_VT_OBJECT sample_signature_sensor_2;
  static NX_VT_OBJECT sample_signature_sensor_N;
 </pre></li>
-</ol>
-<ol type="1">
-<li>Define variables of VT_SENSOR_HANDLE type which will contain connection information for each sensor <pre class="fragment"> static VT_SENSOR_HANDLE sample_handle_sensor_1;
- // static VT_SENSOR_HANDLE sample_handle_sensor_2;
- static VT_SENSOR_HANDLE sample_handle_sensor_N;
+<li>Define variables of VT_SENSOR_HANDLE type which will contain connection information for each sensor <pre class="fragment">static VT_SENSOR_HANDLE sample_handle_sensor_1;
+// static VT_SENSOR_HANDLE sample_handle_sensor_2;
+static VT_SENSOR_HANDLE sample_handle_sensor_N;
 </pre></li>
-</ol>
-<ol type="1">
-<li>Define a Verified Telemetry User Initialization wrapper function which will make calls to necessary initialization function from the vT library and return pointer to the configured NX_VERIFIED_TELEMETRY_DB variable <pre class="fragment"> NX_VERIFIED_TELEMETRY_DB* sample_nx_verified_telemetry_user_init()
- {
-     UINT status;
+<li>Define a Verified Telemetry User Initialization wrapper function which will make calls to necessary initialization function from the vT library and return pointer to the configured NX_VERIFIED_TELEMETRY_DB variable <pre class="fragment">NX_VERIFIED_TELEMETRY_DB* sample_nx_verified_telemetry_user_init()
+{
+    UINT status;
 
-     sample_device_driver.adc_init          = &amp;vt_adc_init;
-     sample_device_driver.adc_read          = &amp;vt_adc_read;
-     sample_device_driver.gpio_on           = &amp;vt_gpio_on;
-     sample_device_driver.gpio_off          = &amp;vt_gpio_off;
-     sample_device_driver.tick_init         = &amp;vt_tick_init;
-     sample_device_driver.tick_deinit       = &amp;vt_tick_deinit;
-     sample_device_driver.tick              = &amp;vt_tick;
-     sample_device_driver.interrupt_enable  = &amp;vt_interrupt_enable;
-     sample_device_driver.interrupt_disable = &amp;vt_interrupt_disable;
+    sample_device_driver.adc_init          = &amp;vt_adc_init;
+    sample_device_driver.adc_read          = &amp;vt_adc_read;
+    sample_device_driver.gpio_on           = &amp;vt_gpio_on;
+    sample_device_driver.gpio_off          = &amp;vt_gpio_off;
+    sample_device_driver.tick_init         = &amp;vt_tick_init;
+    sample_device_driver.tick_deinit       = &amp;vt_tick_deinit;
+    sample_device_driver.tick              = &amp;vt_tick;
+    sample_device_driver.interrupt_enable  = &amp;vt_interrupt_enable;
+    sample_device_driver.interrupt_disable = &amp;vt_interrupt_disable;
 
-     if ((status = nx_vt_init(&amp;verified_telemetry_DB, (UCHAR*)"vTDevice", true, &amp;sample_device_driver, scratch_buffer)))
-     {
-         printf("Failed to configure Verified Telemetry settings: error code = 0x%08x\r\n", status);
-     }
+    if ((status = nx_vt_init(&amp;verified_telemetry_DB, (UCHAR*)"vTDevice", true, &amp;sample_device_driver, scratch_buffer)))
+    {
+        printf("Failed to configure Verified Telemetry settings: error code = 0x%08x\r\n", status);
+    }
 
-     sample_handle_sensor_1.adc_id         = vt_adc_id_sensor_1;
-     sample_handle_sensor_1.adc_controller = (void*)&amp;vt_adc_controller_sensor_1;
-     sample_handle_sensor_1.adc_channel    = (void*)&amp;vt_adc_channel_sensor_1;
-     sample_handle_sensor_1.gpio_id        = vt_gpio_id_sensor_1;
-     sample_handle_sensor_1.gpio_port      = (void*)vt_gpio_port_sensor_1;
-     sample_handle_sensor_1.gpio_pin       = (void*)&amp;vt_gpio_pin_sensor_1;
+    sample_handle_sensor_1.adc_id         = vt_adc_id_sensor_1;
+    sample_handle_sensor_1.adc_controller = (void*)&amp;vt_adc_controller_sensor_1;
+    sample_handle_sensor_1.adc_channel    = (void*)&amp;vt_adc_channel_sensor_1;
+    sample_handle_sensor_1.gpio_id        = vt_gpio_id_sensor_1;
+    sample_handle_sensor_1.gpio_port      = (void*)vt_gpio_port_sensor_1;
+    sample_handle_sensor_1.gpio_pin       = (void*)&amp;vt_gpio_pin_sensor_1;
 
-     if ((status = nx_vt_signature_init(&amp;verified_telemetry_DB,
-         &amp;sample_signature_sensor_1,
-         (UCHAR*)"soilMoistureExternal1",
-         VT_SIGNATURE_TYPE_FALLCURVE,
-         (UCHAR*)"soilMoistureExternal1",
-         true,
-         &amp;sample_handle_sensor_1)))
-     {
-         printf("Failed to initialize VT for soilMoistureExternal1 telemetry: error code = 0x%08x\r\n", status);
-     }
+    if ((status = nx_vt_signature_init(&amp;verified_telemetry_DB,
+        &amp;sample_signature_sensor_1,
+        (UCHAR*)"soilMoistureExternal1",
+        VT_SIGNATURE_TYPE_FALLCURVE,
+        (UCHAR*)"soilMoistureExternal1",
+        true,
+        &amp;sample_handle_sensor_1)))
+    {
+        printf("Failed to initialize VT for soilMoistureExternal1 telemetry: error code = 0x%08x\r\n", status);
+    }
 
-     return (&amp;verified_telemetry_DB);
- }
+    return (&amp;verified_telemetry_DB);
+}
 </pre></li>
-</ol>
-<ol type="1">
-<li>Call the Verified Telemetry User Initialization wrapper function and update verified_telemetry_DB <pre class="fragment"> verified_telemetry_DB = sample_pnp_verified_telemetry_user_init();
+<li>Call the Verified Telemetry User Initialization wrapper function and update verified_telemetry_DB <pre class="fragment">verified_telemetry_DB = sample_pnp_verified_telemetry_user_init();
 </pre></li>
-</ol>
-<ol type="1">
 <li>A complete sample can be found <a href="https://github.com/Azure/Verified-Telemetry-Device-Sample/blob/main/MXChip/AZ3166/app/sample_nx_verified_telemetry_init.c">here</a></li>
 </ol>
 <h2><a class="anchor" id="autotoc_md7"></a>
@@ -201,21 +177,15 @@ Step 3 - Use VT Middleware APIs based on the following guidelines</h2>
 <ol type="1">
 <li>Use this function to initialize VT PnP Components <pre class="fragment"> nx_vt_azure_iot_pnp_client_component_add(verified_telemetry_DB, iotpnp_client_ptr)
 </pre></li>
-</ol>
-<ol type="1">
 <li>Call these functions once after boot <pre class="fragment"> nx_vt_send_desired_property_after_boot(verified_telemetry_DB, pnp_client_ptr, message_type)
 
  nx_vt_process_reported_property_sync(
      verified_telemetry_DB, pnp_client_ptr, component_ptr, component_len, &amp;name_value_reader, version)
 </pre></li>
-</ol>
-<ol type="1">
 <li>Call these functions at fixed time intervals <pre class="fragment"> nx_vt_properties(verified_telemetry_DB, &amp;(context-&gt;iotpnp_client))
 
  nx_vt_compute_evaluate_fingerprint_all_sensors(verified_telemetry_DB)
 </pre></li>
-</ol>
-<ol type="1">
 <li>Use this function to send telemetry <pre class="fragment"> nx_vt_verified_telemetry_message_create_send(handle-&gt;verified_telemetry_DB,
      iotpnp_client_ptr,
      handle-&gt;component_name_ptr,
@@ -224,13 +194,9 @@ Step 3 - Use VT Middleware APIs based on the following guidelines</h2>
      (UCHAR*)scratch_buffer,
      buffer_length)
 </pre></li>
-</ol>
-<ol type="1">
 <li>Desired Property Callback <pre class="fragment"> nx_vt_process_property_update(
      verified_telemetry_DB, pnp_client_ptr, component_ptr, component_len, &amp;name_value_reader, version)
 </pre></li>
-</ol>
-<ol type="1">
 <li>Command Callback <pre class="fragment"> nx_vt_process_command(verified_telemetry_DB,
      &amp;(sample_context_ptr-&gt;iotpnp_client),
      UCHAR*)component_name_ptr,
