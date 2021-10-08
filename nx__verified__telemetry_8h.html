@@ -100,7 +100,7 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>VT_SIGNATURE_TYPE_CURRENTSENSE</b>&#160;&#160;&#160;0x02</td></tr>
 <tr class="separator:ae0aac8d32b72f06a55bc75cde8afa1bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b07aee91bd25e50184fd380707dde77"><td class="memItemLeft" align="right" valign="top"><a id="a0b07aee91bd25e50184fd380707dde77"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>VT_MINIMUM_BUFFER_SIZE_BYTES</b>&#160;&#160;&#160;sizeof(<a class="el" href="struct_v_t___c_u_r_r_e_n_t_s_e_n_s_e___r_a_w___s_i_g_n_a_t_u_r_e_s___r_e_a_d_e_r___s_t_r_u_c_t.html">VT_CURRENTSENSE_RAW_SIGNATURES_READER</a>)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>VT_MINIMUM_BUFFER_SIZE_BYTES</b>&#160;&#160;&#160;sizeof(VT_CURRENTSENSE_RAW_SIGNATURES_READER)</td></tr>
 <tr class="separator:a0b07aee91bd25e50184fd380707dde77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -114,10 +114,10 @@ typedef struct <a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a024218d1173ba3a6ff7f4929f5dfc05d"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#a024218d1173ba3a6ff7f4929f5dfc05d">nx_vt_init</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, UCHAR *component_name_ptr, bool enable_verified_telemetry, <a class="el" href="struct_v_t___d_e_v_i_c_e___d_r_i_v_e_r___s_t_r_u_c_t.html">VT_DEVICE_DRIVER</a> *device_driver, CHAR *scratch_buffer, UINT scratch_buffer_length)</td></tr>
+<tr class="memitem:a024218d1173ba3a6ff7f4929f5dfc05d"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#a024218d1173ba3a6ff7f4929f5dfc05d">nx_vt_init</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, UCHAR *component_name_ptr, bool enable_verified_telemetry, VT_DEVICE_DRIVER *device_driver, CHAR *scratch_buffer, UINT scratch_buffer_length)</td></tr>
 <tr class="memdesc:a024218d1173ba3a6ff7f4929f5dfc05d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Global Verified Telemetry using platform specific device drivers.  <a href="nx__verified__telemetry_8h.html#a024218d1173ba3a6ff7f4929f5dfc05d">More...</a><br /></td></tr>
 <tr class="separator:a024218d1173ba3a6ff7f4929f5dfc05d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af097ec10f7efe9e8ef6505166938b46c"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#af097ec10f7efe9e8ef6505166938b46c">nx_vt_signature_init</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, <a class="el" href="struct_n_x___v_t___o_b_j_e_c_t___t_a_g.html">NX_VT_OBJECT</a> *handle, UCHAR *component_name_ptr, UINT signature_type, UCHAR *associated_telemetry, bool telemetry_status_auto_update, <a class="el" href="struct_v_t___s_e_n_s_o_r___h_a_n_d_l_e___s_t_r_u_c_t.html">VT_SENSOR_HANDLE</a> *sensor_handle)</td></tr>
+<tr class="memitem:af097ec10f7efe9e8ef6505166938b46c"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#af097ec10f7efe9e8ef6505166938b46c">nx_vt_signature_init</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, <a class="el" href="struct_n_x___v_t___o_b_j_e_c_t___t_a_g.html">NX_VT_OBJECT</a> *handle, UCHAR *component_name_ptr, UINT signature_type, UCHAR *associated_telemetry, bool telemetry_status_auto_update, VT_SENSOR_HANDLE *sensor_handle)</td></tr>
 <tr class="memdesc:af097ec10f7efe9e8ef6505166938b46c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Verified Telemetry for a particular sensor data stream.  <a href="nx__verified__telemetry_8h.html#af097ec10f7efe9e8ef6505166938b46c">More...</a><br /></td></tr>
 <tr class="separator:af097ec10f7efe9e8ef6505166938b46c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46ff9a72de2b986dc1f1171899e853c0"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#a46ff9a72de2b986dc1f1171899e853c0">nx_vt_process_command</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT *iotpnp_client_ptr, UCHAR *component_name_ptr, UINT component_name_length, UCHAR *pnp_command_name_ptr, UINT pnp_command_name_length, NX_AZURE_IOT_JSON_READER *json_reader_ptr, NX_AZURE_IOT_JSON_WRITER *json_response_ptr, UINT *status_code)</td></tr>
@@ -254,7 +254,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="struct_v_t___d_e_v_i_c_e___d_r_i_v_e_r___s_t_r_u_c_t.html">VT_DEVICE_DRIVER</a> *&#160;</td>
+          <td class="paramtype">VT_DEVICE_DRIVER *&#160;</td>
           <td class="paramname"><em>device_driver</em>, </td>
         </tr>
         <tr>
@@ -670,7 +670,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="struct_v_t___s_e_n_s_o_r___h_a_n_d_l_e___s_t_r_u_c_t.html">VT_SENSOR_HANDLE</a> *&#160;</td>
+          <td class="paramtype">VT_SENSOR_HANDLE *&#160;</td>
           <td class="paramname"><em>sensor_handle</em>&#160;</td>
         </tr>
         <tr>

@@ -75,7 +75,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="_free_r_t_o_s__vt__fallcurve__component_8h_source.html">FreeRTOS_vt_fallcurve_component.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="vt__defs_8h_source.html">vt_defs.h</a>&quot;</code><br />
+<code>#include &quot;vt_defs.h&quot;</code><br />
 </div>
 <p><a href="_free_r_t_o_s__verified__telemetry_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -111,10 +111,10 @@ typedef struct <a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a728a582509ffdbaa0d0a1d5800792c1a"><td class="memItemLeft" align="right" valign="top">AzureIoTResult_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_free_r_t_o_s__verified__telemetry_8h.html#a728a582509ffdbaa0d0a1d5800792c1a">FreeRTOS_vt_init</a> (<a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, UCHAR *component_name_ptr, bool enable_verified_telemetry, <a class="el" href="struct_v_t___d_e_v_i_c_e___d_r_i_v_e_r___s_t_r_u_c_t.html">VT_DEVICE_DRIVER</a> *device_driver)</td></tr>
+<tr class="memitem:a728a582509ffdbaa0d0a1d5800792c1a"><td class="memItemLeft" align="right" valign="top">AzureIoTResult_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_free_r_t_o_s__verified__telemetry_8h.html#a728a582509ffdbaa0d0a1d5800792c1a">FreeRTOS_vt_init</a> (<a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, UCHAR *component_name_ptr, bool enable_verified_telemetry, VT_DEVICE_DRIVER *device_driver)</td></tr>
 <tr class="memdesc:a728a582509ffdbaa0d0a1d5800792c1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Global Verified Telemetry using platform specific device drivers.  <a href="_free_r_t_o_s__verified__telemetry_8h.html#a728a582509ffdbaa0d0a1d5800792c1a">More...</a><br /></td></tr>
 <tr class="separator:a728a582509ffdbaa0d0a1d5800792c1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea7dddb52e0a0c65778caef49c50f773"><td class="memItemLeft" align="right" valign="top">AzureIoTResult_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_free_r_t_o_s__verified__telemetry_8h.html#aea7dddb52e0a0c65778caef49c50f773">FreeRTOS_vt_signature_init</a> (<a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, <a class="el" href="struct_free_r_t_o_s___v_t___o_b_j_e_c_t___t_a_g.html">FreeRTOS_VT_OBJECT</a> *handle, UCHAR *component_name_ptr, UINT signature_type, UCHAR *associated_telemetry, bool telemetry_status_auto_update, <a class="el" href="struct_v_t___s_e_n_s_o_r___h_a_n_d_l_e___s_t_r_u_c_t.html">VT_SENSOR_HANDLE</a> *sensor_handle)</td></tr>
+<tr class="memitem:aea7dddb52e0a0c65778caef49c50f773"><td class="memItemLeft" align="right" valign="top">AzureIoTResult_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_free_r_t_o_s__verified__telemetry_8h.html#aea7dddb52e0a0c65778caef49c50f773">FreeRTOS_vt_signature_init</a> (<a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, <a class="el" href="struct_free_r_t_o_s___v_t___o_b_j_e_c_t___t_a_g.html">FreeRTOS_VT_OBJECT</a> *handle, UCHAR *component_name_ptr, UINT signature_type, UCHAR *associated_telemetry, bool telemetry_status_auto_update, VT_SENSOR_HANDLE *sensor_handle)</td></tr>
 <tr class="memdesc:aea7dddb52e0a0c65778caef49c50f773"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Verified Telemetry for a particular sensor data stream.  <a href="_free_r_t_o_s__verified__telemetry_8h.html#aea7dddb52e0a0c65778caef49c50f773">More...</a><br /></td></tr>
 <tr class="separator:aea7dddb52e0a0c65778caef49c50f773"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93324a01caec4df8321355f4ac0b212a"><td class="memItemLeft" align="right" valign="top">AzureIoTResult_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_free_r_t_o_s__verified__telemetry_8h.html#a93324a01caec4df8321355f4ac0b212a">FreeRTOS_vt_verified_telemetry_message_create_send</a> (<a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, AzureIoTHubClient_t *xAzureIoTHubClient, const UCHAR *component_name_ptr, UINT component_name_length, const UCHAR *telemetry_data, UINT data_size)</td></tr>
@@ -199,7 +199,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="struct_v_t___d_e_v_i_c_e___d_r_i_v_e_r___s_t_r_u_c_t.html">VT_DEVICE_DRIVER</a> *&#160;</td>
+          <td class="paramtype">VT_DEVICE_DRIVER *&#160;</td>
           <td class="paramname"><em>device_driver</em>&#160;</td>
         </tr>
         <tr>
@@ -573,7 +573,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="struct_v_t___s_e_n_s_o_r___h_a_n_d_l_e___s_t_r_u_c_t.html">VT_SENSOR_HANDLE</a> *&#160;</td>
+          <td class="paramtype">VT_SENSOR_HANDLE *&#160;</td>
           <td class="paramname"><em>sensor_handle</em>&#160;</td>
         </tr>
         <tr>

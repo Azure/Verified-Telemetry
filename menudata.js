@@ -30,9 +30,7 @@ var menudata={children:[
 {text:"Globals",url:"globals.html",children:[
 {text:"All",url:"globals.html",children:[
 {text:"f",url:"globals.html#index_f"},
-{text:"n",url:"globals.html#index_n"},
-{text:"v",url:"globals.html#index_v"}]},
+{text:"n",url:"globals.html#index_n"}]},
 {text:"Functions",url:"globals_func.html",children:[
 {text:"f",url:"globals_func.html#index_f"},
-{text:"n",url:"globals_func.html#index_n"},
-{text:"v",url:"globals_func.html#index_v"}]}]}]}]}
+{text:"n",url:"globals_func.html#index_n"}]}]}]}]}
