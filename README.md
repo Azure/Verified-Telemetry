@@ -17,12 +17,12 @@ Refer to the [Verified Telemetry API](https://azure.github.io/Verified-Telemetry
 
 ## Resource Requirements
 
-Verified Telemetry is designed to run on resource contrained MCUs, flash and RAM is limited. Below is our resource requirements for Verified Telemetry:
+Verified Telemetry is designed to run on resource contrained MCUs, flash and RAM is limited. Below is our resource requirements for Verified Telemetry for a size optimized (-Os) binary:
 
 | Type      | Size  |
 | --------- | ----- |
-| **Flash** | 46 KB |
-| **RAM**   | 14 KB |
+| **Flash** | 13.0 kB |
+| **RAM**   | 4.3 kB |
 
 ## Plug and Play
 
