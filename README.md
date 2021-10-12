@@ -22,7 +22,7 @@ Verified Telemetry is designed to run on resource contrained MCUs, flash and RAM
 | Type      | Size  |
 | --------- | ----- |
 | **Flash** | 13.0 kB |
-| **RAM**   | 4.3 kB |
+| **RAM**   | 4.6 kB |
 
 ## Plug and Play
 
