@@ -258,14 +258,36 @@ static VT_FLOAT get_raw_signature_sample_freq(VT_FLOAT signal_freq)
     return sample_freq;
 }
 
+<<<<<<< HEAD
+// VT_VOID cs_calibrate_repeating_signatures_compute_sampling_frequencies(VT_CURRENTSENSE_OBJECT* cs_object,
+//     VT_FLOAT* sampling_frequencies,
+//     VT_UINT sampling_frequencies_buffer_length,
+//     VT_UINT* num_sampling_frequencies)
+// {
+//     //VT_UINT8 fft_ranges       = 
+//     calculate_fft_ranges();
+//     *num_sampling_frequencies = 0;
+//     // for (VT_UINT iter = 0; iter < 1; iter++)
+//     // {
+//     //     if (iter == sampling_frequencies_buffer_length)
+//     //     {
+//     //         break;
+//     //     }
+//         sampling_frequencies[0] = get_calib_range_freq(0);
+//         *num_sampling_frequencies  = *num_sampling_frequencies + 1;
+//     //}
+// }
+=======
+
+>>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
 VT_VOID cs_calibrate_repeating_signatures_compute_sampling_frequencies(VT_CURRENTSENSE_OBJECT* cs_object,
     VT_FLOAT* sampling_frequencies,
     VT_UINT sampling_frequencies_buffer_length,
     VT_UINT* num_sampling_frequencies)
 {
-    VT_UINT8 fft_ranges       = calculate_fft_ranges();
+    VT_UINT8 fft_ranges       =   calculate_fft_ranges();
     *num_sampling_frequencies = 0;
-    for (VT_UINT iter = 0; iter < fft_ranges; iter++)
+    for (VT_UINT iter = 0; iter < fft_ranges ; iter++)
     {
         if (iter == sampling_frequencies_buffer_length)
         {
@@ -348,17 +370,59 @@ VT_VOID cs_calibrate_repeating_signatures_compute_collection_settings(
     }
 #endif /* VT_LOG_LEVEL > 2 */
 
+
+    VT_FLOAT min_ref_freq=VT_CS_ADC_MAX_SAMPLING_FREQ;
+
+    for (VT_UINT iter1 = 0; iter1 < cs_object->raw_signatures_reader->num_repeating_raw_signatures; iter1++){
+
+        if (cs_object->raw_signatures_reader->repeating_raw_signatures[iter1].sampling_frequency < min_ref_freq){
+            min_ref_freq=cs_object->raw_signatures_reader->repeating_raw_signatures[iter1].sampling_frequency;
+        }
+    }
+
+    #if VT_LOG_LEVEL > 2
+    VTLogDebugNoTag("\nMIN FREQ: \n");
+
+        decimal    = min_ref_freq;
+        frac_float = min_ref_freq - (VT_FLOAT)decimal;
+        frac       = fabsf(frac_float) * 10000;
+        VTLogDebugNoTag("%d.%04d \n ", decimal, frac);
+        
+    
+    #endif /* VT_LOG_LEVEL > 2 */
+
     *lowest_sample_freq = VT_CS_ADC_MAX_SAMPLING_FREQ;
+    VT_FLOAT new_freq;
     for (VT_INT iter = 0; iter < VT_CS_MAX_TEST_FREQUENCIES; iter++)
     {
         if (spectogram_calib[iter].magnitude == 0)
         {
             break;
         }
-        top_N_sample_frequencies[iter] = get_raw_signature_sample_freq(spectogram_calib[iter].frequency);
-        if (top_N_sample_frequencies[iter] < *lowest_sample_freq)
+        new_freq = get_raw_signature_sample_freq(spectogram_calib[iter].frequency);
+
+        if(new_freq<min_ref_freq){
+
+           
+            top_N_sample_frequencies[iter]=0;
+        }
+        else{
+            top_N_sample_frequencies[iter]=new_freq;
+        }
+        if ((top_N_sample_frequencies[iter] < *lowest_sample_freq) && ((top_N_sample_frequencies[iter] >min_ref_freq)))
         {
             *lowest_sample_freq = top_N_sample_frequencies[iter];
         }
     }
+    #if VT_LOG_LEVEL > 2
+    VTLogDebugNoTag("\nFINAL TOP N FREQ: \n");
+    for (VT_INT iter = 0; iter < VT_CS_MAX_TEST_FREQUENCIES; iter++)
+    {
+        decimal    = top_N_sample_frequencies[iter];
+        frac_float = top_N_sample_frequencies[iter] - (VT_FLOAT)decimal;
+        frac       = fabsf(frac_float) * 10000;
+        VTLogDebugNoTag("%d.%04d , ", decimal, frac);
+        
+    }
+#endif /* VT_LOG_LEVEL > 2 */
 }

@@ -7,6 +7,7 @@
 #include "vt_cs_api.h"
 #include "vt_defs.h"
 
+
 VT_UINT cs_raw_signature_read(VT_CURRENTSENSE_OBJECT* cs_object,
     VT_FLOAT* repeating_signature_sampling_frequencies,
     VT_UINT num_repeating_signature_sampling_frequencies,

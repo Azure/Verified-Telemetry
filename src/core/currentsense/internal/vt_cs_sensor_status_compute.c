@@ -5,6 +5,11 @@
 #include "vt_cs_raw_signature_read.h"
 #include "vt_cs_sensor_status.h"
 #include "vt_cs_signature_features.h"
+#include <math.h>
+<<<<<<< HEAD
+#include "vt_debug.h"
+=======
+>>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
 
 static VT_VOID cs_sensor_status_with_non_repeating_signature_template(VT_CURRENTSENSE_OBJECT* cs_object)
 {
@@ -72,26 +77,65 @@ static VT_VOID cs_sensor_status_with_repeating_signature_template(VT_CURRENTSENS
 
     VT_FLOAT offset_current_drift = 0;
     VT_FLOAT feature_vector_drift = 0;
+    VT_FLOAT temp_feature_vector_drift = 0;
+    VT_FLOAT temp_relative_current_drift = 0;
+    VT_FLOAT temp_offset_current_drift = 0;
+    
 
     VT_BOOL offset_current_unavailable = false;
 
     VT_UINT signatures_evaluated                  = 0;
     VT_BOOL signature_feature_vector_compute_fail = false;
     VT_BOOL signature_offset_current_compute_fail = false;
+ 
+
+#if VT_LOG_LEVEL > 2
+    VT_INT decimal;
+    VT_FLOAT frac_float;
+    VT_INT frac;
+    #endif
+
+    VT_BOOL sensor_status=true;
+    VT_BOOL temp_sensor_status=true;
+    VT_BOOL offset_curr_status=false;
 
     if (cs_fetch_template_repeating_signature_offset_current(cs_object, &lowest_sample_freq_saved, &offset_current_saved))
     {
         offset_current_unavailable = true;
+        printf("\nerror\n");
     }
     if (!offset_current_unavailable)
+<<<<<<< HEAD
+    #if VT_LOG_LEVEL > 2
+            decimal    = lowest_sample_freq_saved;
+        frac_float = lowest_sample_freq_saved - (VT_FLOAT)decimal;
+        frac       = fabsf(frac_float) * 10000;
+    
+    VTLogDebugNoTag("\nLOWEST TEMPLATE FREQ: %d.%04d : \n", decimal, frac);
+    #endif
+=======
+            
+>>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
     {
         if (cs_repeating_raw_signature_fetch_stored_current_measurement(
                 cs_object, raw_signature, lowest_sample_freq_saved, VT_CS_SAMPLE_LENGTH) == VT_SUCCESS)
         {
             if (cs_repeating_signature_offset_current_compute(cs_object, raw_signature, VT_CS_SAMPLE_LENGTH, &offset_current) ==
                 VT_SUCCESS)
-            {
+            { 
+<<<<<<< HEAD
+                temp_offset_current_drift = cs_repeating_signature_offset_current_evaluate(offset_current, offset_current_saved);
+                if((temp_offset_current_drift)<40){
+                    offset_curr_status=true;
+                    offset_current_drift=temp_offset_current_drift*(50/40);
+                }
+                else{
+                    offset_curr_status=false;
+                    offset_current_drift=temp_offset_current_drift*(50/40);
+                }
+=======
                 offset_current_drift = cs_repeating_signature_offset_current_evaluate(offset_current, offset_current_saved);
+>>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
             }
             else
             {
@@ -103,9 +147,14 @@ static VT_VOID cs_sensor_status_with_repeating_signature_template(VT_CURRENTSENS
             signature_offset_current_compute_fail = true;
         }
     }
-
+    sensor_status=sensor_status && offset_curr_status;
     for (VT_UINT iter = 0; iter < VT_CS_MAX_SIGNATURES; iter++)
-    {
+
+    {signature_feature_vector_compute_fail=false;
+    temp_feature_vector_drift = 0;
+        #if VT_LOG_LEVEL > 2
+    VTLogDebugNoTag("%d",sensor_status);
+    #endif
         if (cs_fetch_template_repeating_signature_feature_vector(cs_object,
                 iter,
                 &sampling_frequency_saved,
@@ -122,7 +171,39 @@ static VT_VOID cs_sensor_status_with_repeating_signature_template(VT_CURRENTSENS
             signature_feature_vector_compute_fail = true;
             break;
         }
+<<<<<<< HEAD
 
+        #if VT_LOG_LEVEL > 2
+        decimal    = sampling_frequency_saved;
+        frac_float = sampling_frequency_saved - (VT_FLOAT)decimal;
+        frac       = fabsf(frac_float) * 10000;
+        VTLogDebugNoTag("\ncalculating for %d.%04d : \n", decimal, frac);
+
+         VTLogDebugNoTag("\nRAW SIG:\n");
+   
+for (VT_INT iter1 = 0; iter1 < VT_CS_SAMPLE_LENGTH; iter1++)
+    {
+        decimal    = raw_signature[iter1];
+        frac_float = raw_signature[iter1] - (VT_FLOAT)decimal;
+        frac       = fabsf(frac_float) * 10000;
+        VTLogDebugNoTag("%d.%04d, ", decimal, frac);
+    }
+VTLogDebugNoTag("\n");
+#endif
+=======
+       
+
+       
+// for (VT_INT iter1 = 0; iter1 < VT_CS_SAMPLE_LENGTH; iter1++)
+//     {
+//         decimal    = raw_signature[iter1];
+//         frac_float = raw_signature[iter1] - (VT_FLOAT)decimal;
+//         frac       = fabsf(frac_float) * 10000;
+//         printf("%d.%04d, ", decimal, frac);
+//     }
+// printf("\n");
+>>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
+    
         if (cs_repeating_signature_feature_vector_compute(cs_object,
                 raw_signature,
                 VT_CS_SAMPLE_LENGTH,
@@ -132,34 +213,104 @@ static VT_VOID cs_sensor_status_with_repeating_signature_template(VT_CURRENTSENS
                 &relative_current_draw))
         {
             signature_feature_vector_compute_fail = true;
-            break;
+           // break;
         }
-        feature_vector_drift += cs_repeating_signature_feature_vector_evaluate(signature_frequency,
+
+    if (sampling_frequency_saved==VT_CS_ADC_MAX_SAMPLING_FREQ){
+        if ((signature_feature_vector_compute_fail==false)){
+
+            temp_relative_current_drift=cs_repeating_signature_relative_current_evaluate(relative_current_draw,relative_current_draw_saved);
+
+            if (temp_relative_current_drift<60.0f){
+                
+            temp_feature_vector_drift = cs_repeating_signature_feature_vector_evaluate(signature_frequency,
+            signature_frequency_saved,
+            duty_cycle,
+            duty_cycle_saved,
+            relative_current_draw,
+            relative_current_draw_saved);}
+
+            else{signature_feature_vector_compute_fail=true;}
+
+            }
+
+            if ((signature_feature_vector_compute_fail==true) || (temp_feature_vector_drift>50)){
+                temp_sensor_status=false;
+                temp_feature_vector_drift=100;
+                }
+            else {
+                temp_sensor_status=true;
+                               
+            }
+            feature_vector_drift=feature_vector_drift +temp_feature_vector_drift;
+            sensor_status=sensor_status && temp_sensor_status;
+
+        signatures_evaluated++;}
+
+    else {
+
+            if ((signature_feature_vector_compute_fail==false)){
+            temp_feature_vector_drift = cs_repeating_signature_feature_vector_evaluate(signature_frequency,
             signature_frequency_saved,
             duty_cycle,
             duty_cycle_saved,
             relative_current_draw,
             relative_current_draw_saved);
-        signatures_evaluated++;
+            }
+            if (signature_feature_vector_compute_fail==true){
+                temp_feature_vector_drift =100;
+            }
+            temp_relative_current_drift=cs_repeating_signature_relative_current_evaluate(relative_current_draw,relative_current_draw_saved);
+            
+            if ((temp_feature_vector_drift<50.0f) || (temp_relative_current_drift<40.0f)){
+                
+                    #if VT_LOG_LEVEL > 2
+                    VTLogDebugNoTag("LED correct");
+                    #endif
+                temp_sensor_status=true;
+            }
+            else{
+                    #if VT_LOG_LEVEL > 2
+                    VTLogDebugNoTag("LED correct");
+                    #endif
+                temp_sensor_status=false;
+            }
+
+            sensor_status=sensor_status && temp_sensor_status;
+
+            if(temp_feature_vector_drift<(temp_relative_current_drift*(50/30))){
+                feature_vector_drift=feature_vector_drift +temp_feature_vector_drift;
+            }
+            else{
+                feature_vector_drift=feature_vector_drift +(temp_relative_current_drift*(50/30));
+            }
+            signatures_evaluated++;  }
+
+    
+
+
+
     }
     if (signatures_evaluated)
     {
         feature_vector_drift /= signatures_evaluated;
     }
 
-    if (signature_feature_vector_compute_fail || signature_offset_current_compute_fail)
+    if (signature_offset_current_compute_fail)
     {
         cs_object->sensor_status = VT_SIGNATURE_COMPUTE_FAIL;
         cs_object->sensor_drift  = 100;
     }
+
+    
+
     else if ((signatures_evaluated == 0) && offset_current_unavailable)
     {
         cs_object->sensor_status = VT_SIGNATURE_DB_EMPTY;
         cs_object->sensor_drift  = 100;
     }
-    else if ((offset_current_drift > VT_CS_MAX_AVG_CURR_DRIFT) || (feature_vector_drift > VT_CS_MAX_SIGNATURE_DRIFT))
-    {
-        cs_object->sensor_status = VT_SIGNATURE_NOT_MATCHING;
+ 
+        cs_object->sensor_status = !sensor_status;
         if (signatures_evaluated && (!offset_current_unavailable))
         {
             cs_object->sensor_drift = (offset_current_drift + feature_vector_drift) / 2;
@@ -172,30 +323,22 @@ static VT_VOID cs_sensor_status_with_repeating_signature_template(VT_CURRENTSENS
         {
             cs_object->sensor_drift = offset_current_drift;
         }
-    }
-    else
-    {
-        cs_object->sensor_status = VT_SIGNATURE_MATCHING;
-        if (signatures_evaluated && (!offset_current_unavailable))
-        {
-            cs_object->sensor_drift = (offset_current_drift + feature_vector_drift) / 2;
-        }
-        else if (signatures_evaluated)
-        {
-            cs_object->sensor_drift = feature_vector_drift;
-        }
-        else
-        {
-            cs_object->sensor_drift = offset_current_drift;
-        }
-    }
+    
+  
     return;
 }
 
 VT_VOID cs_sensor_status(VT_CURRENTSENSE_OBJECT* cs_object)
 {
     if (cs_object->fingerprintdb.template_type == VT_CS_NON_REPEATING_SIGNATURE)
-    {
+<<<<<<< HEAD
+    {               
+        #if VT_LOG_LEVEL > 2
+        VTLogDebugNoTag("\nNON REPEATING\n");
+        #endif
+=======
+    {   
+>>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
         cs_sensor_status_with_non_repeating_signature_template(cs_object);
     }
     else

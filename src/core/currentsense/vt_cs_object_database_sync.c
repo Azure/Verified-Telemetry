@@ -13,7 +13,7 @@ VT_VOID vt_currentsense_object_database_sync(VT_CURRENTSENSE_OBJECT* cs_object, 
     VT_UINT iter;
 
     cs_object->fingerprintdb.template_type = atof((VT_CHAR*)flattened_db->template_type);
-
+    //printf("template_type - %d",cs_object->fingerprintdb.template_type);
     if (cs_object->fingerprintdb.template_type == VT_CS_REPEATING_SIGNATURE)
     {
         cs_object->fingerprintdb.template.repeating_signatures.num_signatures =
@@ -72,7 +72,7 @@ VT_VOID vt_currentsense_object_database_sync(VT_CURRENTSENSE_OBJECT* cs_object, 
         }
     }
     else if (cs_object->fingerprintdb.template_type == VT_CS_NON_REPEATING_SIGNATURE)
-    {
+    {   //printf("on off synced");
         cs_object->fingerprintdb.template.non_repeating_signature.avg_curr_off =
             atof((VT_CHAR*)flattened_db->non_repeating_signature_avg_curr_off);
         cs_object->fingerprintdb.template.non_repeating_signature.avg_curr_on =

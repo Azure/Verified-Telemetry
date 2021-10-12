@@ -30,6 +30,7 @@ VT_FLOAT cs_repeating_signature_feature_vector_evaluate(VT_FLOAT signature_frequ
     VT_FLOAT relative_current_draw_under_test,
     VT_FLOAT relative_current_draw_saved);
 VT_FLOAT cs_repeating_signature_offset_current_evaluate(VT_FLOAT offset_current_under_test, VT_FLOAT offset_current_saved);
+VT_FLOAT cs_repeating_signature_relative_current_evaluate(VT_FLOAT offset_current_under_test, VT_FLOAT offset_current_saved);
 VT_FLOAT cs_non_repeating_signature_average_current_evaluate(
     VT_FLOAT avg_curr_on_under_test, VT_FLOAT avg_curr_on_saved, VT_FLOAT avg_curr_off_under_test, VT_FLOAT avg_curr_off_saved);
 

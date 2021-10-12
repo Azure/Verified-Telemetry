@@ -77,14 +77,19 @@ static UINT retrain_reference_currentsense(NX_VT_CURRENTSENSE_COMPONENT* handle)
 static UINT sync_fingerprint_template(NX_AZURE_IOT_JSON_READER* property_value_reader_ptr, NX_VT_CURRENTSENSE_COMPONENT* handle)
 {
     VT_CURRENTSENSE_DATABASE_FLATTENED flattened_db;
-    CHAR jsonKey[20];
+    CHAR jsonKey[40];
+<<<<<<< HEAD
     CHAR jsonValue[40];
+=======
+    CHAR jsonValue[40];   //!!!! INCREASE SIZE
+>>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
     UINT bytes_copied = 0;
 
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
     {
-        return NX_SUCCESS;
+        //return NX_SUCCESS;
+        return NX_NOT_SUCCESSFUL;
     }
     if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
         nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
@@ -99,178 +104,316 @@ static UINT sync_fingerprint_template(NX_AZURE_IOT_JSON_READER* property_value_r
     }
     memset(flattened_db.template_type, 0, sizeof(flattened_db.template_type));
     strncpy((VT_CHAR*)flattened_db.template_type, jsonValue, sizeof(flattened_db.template_type));
+    
+    if (atof((VT_CHAR*)flattened_db.template_type) == VT_CS_NON_REPEATING_SIGNATURE)
+    {
 
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
-    {
-        return NX_SUCCESS;
-    }
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
-    if (((strlen(jsonKey) == (sizeof(average_current_off_json_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)average_current_off_json_property, strlen(jsonKey))))) == 0)
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    memset(flattened_db.non_repeating_signature_avg_curr_off, 0, sizeof(flattened_db.non_repeating_signature_avg_curr_off));
-    strncpy((VT_CHAR*)flattened_db.non_repeating_signature_avg_curr_off, jsonValue, sizeof(flattened_db.non_repeating_signature_avg_curr_off));
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+        {
+            //return NX_SUCCESS;
+            return NX_NOT_SUCCESSFUL;
+        }
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+        if (((strlen(jsonKey) == (sizeof(average_current_off_json_property) - 1)) &&
+                (!(strncmp((CHAR*)jsonKey, (CHAR*)average_current_off_json_property, strlen(jsonKey))))) == 0)
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        memset(flattened_db.non_repeating_signature_avg_curr_off, 0, sizeof(flattened_db.non_repeating_signature_avg_curr_off));
+        strncpy((VT_CHAR*)flattened_db.non_repeating_signature_avg_curr_off, jsonValue, sizeof(flattened_db.non_repeating_signature_avg_curr_off));
 
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
-    {
-        return NX_SUCCESS;
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+        {
+            //return NX_SUCCESS;
+            return NX_NOT_SUCCESSFUL;
+        }
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+        if (((strlen(jsonKey) == (sizeof(average_current_on_json_property) - 1)) &&
+                (!(strncmp((CHAR*)jsonKey, (CHAR*)average_current_on_json_property, strlen(jsonKey))))) == 0)
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        memset(flattened_db.non_repeating_signature_avg_curr_on, 0, sizeof(flattened_db.non_repeating_signature_avg_curr_on));
+        strncpy((VT_CHAR*)flattened_db.non_repeating_signature_avg_curr_on, jsonValue, sizeof(flattened_db.non_repeating_signature_avg_curr_on));
     }
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+    else if (atof((VT_CHAR*)flattened_db.template_type) == VT_CS_REPEATING_SIGNATURE)
     {
-        return NX_NOT_SUCCESSFUL;
-    }
-    VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
-    if (((strlen(jsonKey) == (sizeof(average_current_on_json_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)average_current_on_json_property, strlen(jsonKey))))) == 0)
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    memset(flattened_db.non_repeating_signature_avg_curr_on, 0, sizeof(flattened_db.non_repeating_signature_avg_curr_on));
-    strncpy((VT_CHAR*)flattened_db.non_repeating_signature_avg_curr_on, jsonValue, sizeof(flattened_db.non_repeating_signature_avg_curr_on));
+<<<<<<< HEAD
+=======
+        // if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        //     nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+        // {
+        //     //return NX_SUCCESS;
+        //     return NX_NOT_SUCCESSFUL;
+        // }
+        // if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        //     nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+        // {
+        //     return NX_NOT_SUCCESSFUL;
+        // }
+       
 
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
-    {
-        return NX_SUCCESS;
-    }
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
-    if (((strlen(jsonKey) == (sizeof(num_repeating_signatures_json_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)num_repeating_signatures_json_property, strlen(jsonKey))))) == 0)
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    memset(flattened_db.repeating_signature_num_signatures, 0, sizeof(flattened_db.repeating_signature_num_signatures));
-    strncpy((VT_CHAR*)flattened_db.repeating_signature_num_signatures, jsonValue, sizeof(flattened_db.repeating_signature_num_signatures));
+        // if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        //     nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+        // {
+        //     //return NX_SUCCESS;
+        //     return NX_NOT_SUCCESSFUL;
+        // }
+        // if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+        //     nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+        // {
+        //     return NX_NOT_SUCCESSFUL;
+        // }
+>>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
+        nx_azure_iot_json_reader_next_token(property_value_reader_ptr);
+        nx_azure_iot_json_reader_next_token(property_value_reader_ptr);
+        nx_azure_iot_json_reader_next_token(property_value_reader_ptr);
+        nx_azure_iot_json_reader_next_token(property_value_reader_ptr);
+<<<<<<< HEAD
 
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
-    {
-        return NX_SUCCESS;
-    }
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
-    if (((strlen(jsonKey) == (sizeof(offset_curr_json_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)offset_curr_json_property, strlen(jsonKey))))) == 0)
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    memset(flattened_db.repeating_signature_offset_curr, 0, sizeof(flattened_db.repeating_signature_offset_curr));
-    strncpy((VT_CHAR*)flattened_db.repeating_signature_offset_curr, jsonValue, sizeof(flattened_db.repeating_signature_offset_curr));
 
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
-    {
-        return NX_SUCCESS;
-    }
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
-    if (((strlen(jsonKey) == (sizeof(lowest_sample_freq_json_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)lowest_sample_freq_json_property, strlen(jsonKey))))) == 0)
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    memset(flattened_db.repeating_signature_lowest_sample_freq, 0, sizeof(flattened_db.repeating_signature_lowest_sample_freq));
-    strncpy((VT_CHAR*)flattened_db.repeating_signature_lowest_sample_freq, jsonValue, sizeof(flattened_db.repeating_signature_lowest_sample_freq));
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+        {   
+=======
 
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
-    {
-        return NX_SUCCESS;
-    }
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
-    if (((strlen(jsonKey) == (sizeof(sampling_freq_json_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)sampling_freq_json_property, strlen(jsonKey))))) == 0)
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    memset(flattened_db.repeating_signature_sampling_freq, 0, sizeof(flattened_db.repeating_signature_sampling_freq));
-    strncpy((VT_CHAR*)flattened_db.repeating_signature_sampling_freq, jsonValue, sizeof(flattened_db.repeating_signature_sampling_freq));
+         
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+        {              
+             //return NX_SUCCESS;
+            return NX_NOT_SUCCESSFUL;
+        }
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+        if (((strlen(jsonKey) == (sizeof(num_repeating_signatures_json_property) - 1)) &&
+                (!(strncmp((CHAR*)jsonKey, (CHAR*)num_repeating_signatures_json_property, strlen(jsonKey))))) == 0)
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        memset(flattened_db.repeating_signature_num_signatures, 0, sizeof(flattened_db.repeating_signature_num_signatures));
+        strncpy((VT_CHAR*)flattened_db.repeating_signature_num_signatures, jsonValue, sizeof(flattened_db.repeating_signature_num_signatures));
 
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
-    {
-        return NX_SUCCESS;
-    }
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
-    if (((strlen(jsonKey) == (sizeof(signal_freq_json_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)signal_freq_json_property, strlen(jsonKey))))) == 0)
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    memset(flattened_db.repeating_signature_freq, 0, sizeof(flattened_db.repeating_signature_freq));
-    strncpy((VT_CHAR*)flattened_db.repeating_signature_freq, jsonValue, sizeof(flattened_db.repeating_signature_freq));
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+        {
+            //return NX_SUCCESS;
+            return NX_NOT_SUCCESSFUL;
+        }
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+        if (((strlen(jsonKey) == (sizeof(offset_curr_json_property) - 1)) &&
+                (!(strncmp((CHAR*)jsonKey, (CHAR*)offset_curr_json_property, strlen(jsonKey))))) == 0)
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        memset(flattened_db.repeating_signature_offset_curr, 0, sizeof(flattened_db.repeating_signature_offset_curr));
+        strncpy((VT_CHAR*)flattened_db.repeating_signature_offset_curr, jsonValue, sizeof(flattened_db.repeating_signature_offset_curr));
 
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
-    {
-        return NX_SUCCESS;
-    }
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
-    if (((strlen(jsonKey) == (sizeof(curr_diff_json_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)curr_diff_json_property, strlen(jsonKey))))) == 0)
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    memset(flattened_db.repeating_signature_relative_curr_draw, 0, sizeof(flattened_db.repeating_signature_relative_curr_draw));
-    strncpy((VT_CHAR*)flattened_db.repeating_signature_relative_curr_draw, jsonValue, sizeof(flattened_db.repeating_signature_relative_curr_draw));
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+        {
+>>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
+            //return NX_SUCCESS;
+            return NX_NOT_SUCCESSFUL;
+        }
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+<<<<<<< HEAD
+        if (((strlen(jsonKey) == (sizeof(num_repeating_signatures_json_property) - 1)) &&
+                (!(strncmp((CHAR*)jsonKey, (CHAR*)num_repeating_signatures_json_property, strlen(jsonKey))))) == 0)
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        memset(flattened_db.repeating_signature_num_signatures, 0, sizeof(flattened_db.repeating_signature_num_signatures));
+        strncpy((VT_CHAR*)flattened_db.repeating_signature_num_signatures, jsonValue, sizeof(flattened_db.repeating_signature_num_signatures));
+=======
+        if (((strlen(jsonKey) == (sizeof(lowest_sample_freq_json_property) - 1)) &&
+                (!(strncmp((CHAR*)jsonKey, (CHAR*)lowest_sample_freq_json_property, strlen(jsonKey))))) == 0)
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        memset(flattened_db.repeating_signature_lowest_sample_freq, 0, sizeof(flattened_db.repeating_signature_lowest_sample_freq));
+        strncpy((VT_CHAR*)flattened_db.repeating_signature_lowest_sample_freq, jsonValue, sizeof(flattened_db.repeating_signature_lowest_sample_freq));
+>>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
 
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
-    {
-        return NX_SUCCESS;
-    }
-    if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
-        nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
-    if (((strlen(jsonKey) == (sizeof(duty_cycle_json_property) - 1)) &&
-            (!(strncmp((CHAR*)jsonKey, (CHAR*)duty_cycle_json_property, strlen(jsonKey))))) == 0)
-    {
-        return NX_NOT_SUCCESSFUL;
-    }
-    memset(flattened_db.repeating_signature_duty_cycle, 0, sizeof(flattened_db.repeating_signature_duty_cycle));
-    strncpy((VT_CHAR*)flattened_db.repeating_signature_duty_cycle, jsonValue, sizeof(flattened_db.repeating_signature_duty_cycle));
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+        {
+            //return NX_SUCCESS;
+            return NX_NOT_SUCCESSFUL;
+        }
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+<<<<<<< HEAD
+        if (((strlen(jsonKey) == (sizeof(offset_curr_json_property) - 1)) &&
+                (!(strncmp((CHAR*)jsonKey, (CHAR*)offset_curr_json_property, strlen(jsonKey))))) == 0)
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        memset(flattened_db.repeating_signature_offset_curr, 0, sizeof(flattened_db.repeating_signature_offset_curr));
+        strncpy((VT_CHAR*)flattened_db.repeating_signature_offset_curr, jsonValue, sizeof(flattened_db.repeating_signature_offset_curr));
+=======
+        if (((strlen(jsonKey) == (sizeof(sampling_freq_json_property) - 1)) &&
+                (!(strncmp((CHAR*)jsonKey, (CHAR*)sampling_freq_json_property, strlen(jsonKey))))) == 0)
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        memset(flattened_db.repeating_signature_sampling_freq, 0, sizeof(flattened_db.repeating_signature_sampling_freq));
+        strncpy((VT_CHAR*)flattened_db.repeating_signature_sampling_freq, jsonValue, sizeof(flattened_db.repeating_signature_sampling_freq));
+>>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
 
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+        {
+            //return NX_SUCCESS;
+            return NX_NOT_SUCCESSFUL;
+        }
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+<<<<<<< HEAD
+        if (((strlen(jsonKey) == (sizeof(lowest_sample_freq_json_property) - 1)) &&
+                (!(strncmp((CHAR*)jsonKey, (CHAR*)lowest_sample_freq_json_property, strlen(jsonKey))))) == 0)
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        memset(flattened_db.repeating_signature_lowest_sample_freq, 0, sizeof(flattened_db.repeating_signature_lowest_sample_freq));
+        strncpy((VT_CHAR*)flattened_db.repeating_signature_lowest_sample_freq, jsonValue, sizeof(flattened_db.repeating_signature_lowest_sample_freq));
+=======
+        if (((strlen(jsonKey) == (sizeof(signal_freq_json_property) - 1)) &&
+                (!(strncmp((CHAR*)jsonKey, (CHAR*)signal_freq_json_property, strlen(jsonKey))))) == 0)
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        memset(flattened_db.repeating_signature_freq, 0, sizeof(flattened_db.repeating_signature_freq));
+        strncpy((VT_CHAR*)flattened_db.repeating_signature_freq, jsonValue, sizeof(flattened_db.repeating_signature_freq));
+>>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
+
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+        {
+            //return NX_SUCCESS;
+            return NX_NOT_SUCCESSFUL;
+        }
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+<<<<<<< HEAD
+        if (((strlen(jsonKey) == (sizeof(sampling_freq_json_property) - 1)) &&
+                (!(strncmp((CHAR*)jsonKey, (CHAR*)sampling_freq_json_property, strlen(jsonKey))))) == 0)
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        memset(flattened_db.repeating_signature_sampling_freq, 0, sizeof(flattened_db.repeating_signature_sampling_freq));
+        strncpy((VT_CHAR*)flattened_db.repeating_signature_sampling_freq, jsonValue, sizeof(flattened_db.repeating_signature_sampling_freq));
+=======
+        if (((strlen(jsonKey) == (sizeof(curr_diff_json_property) - 1)) &&
+                (!(strncmp((CHAR*)jsonKey, (CHAR*)curr_diff_json_property, strlen(jsonKey))))) == 0)
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        memset(flattened_db.repeating_signature_relative_curr_draw, 0, sizeof(flattened_db.repeating_signature_relative_curr_draw));
+        strncpy((VT_CHAR*)flattened_db.repeating_signature_relative_curr_draw, jsonValue, sizeof(flattened_db.repeating_signature_relative_curr_draw));
+>>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
+
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+        {
+            //return NX_SUCCESS;
+            return NX_NOT_SUCCESSFUL;
+        }
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+<<<<<<< HEAD
+        if (((strlen(jsonKey) == (sizeof(signal_freq_json_property) - 1)) &&
+                (!(strncmp((CHAR*)jsonKey, (CHAR*)signal_freq_json_property, strlen(jsonKey))))) == 0)
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        memset(flattened_db.repeating_signature_freq, 0, sizeof(flattened_db.repeating_signature_freq));
+        strncpy((VT_CHAR*)flattened_db.repeating_signature_freq, jsonValue, sizeof(flattened_db.repeating_signature_freq));
+
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+        {
+            //return NX_SUCCESS;
+            return NX_NOT_SUCCESSFUL;
+        }
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+        if (((strlen(jsonKey) == (sizeof(curr_diff_json_property) - 1)) &&
+                (!(strncmp((CHAR*)jsonKey, (CHAR*)curr_diff_json_property, strlen(jsonKey))))) == 0)
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        memset(flattened_db.repeating_signature_relative_curr_draw, 0, sizeof(flattened_db.repeating_signature_relative_curr_draw));
+        strncpy((VT_CHAR*)flattened_db.repeating_signature_relative_curr_draw, jsonValue, sizeof(flattened_db.repeating_signature_relative_curr_draw));
+
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonKey, sizeof(jsonKey), &bytes_copied))
+        {
+            //return NX_SUCCESS;
+            return NX_NOT_SUCCESSFUL;
+        }
+        if (nx_azure_iot_json_reader_next_token(property_value_reader_ptr) ||
+            nx_azure_iot_json_reader_token_string_get(property_value_reader_ptr, (UCHAR*)jsonValue, sizeof(jsonValue), &bytes_copied))
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        VTLogInfo("\t%.*s: %.*s\r\n", strlen(jsonKey), jsonKey, bytes_copied, jsonValue);
+=======
+>>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
+        if (((strlen(jsonKey) == (sizeof(duty_cycle_json_property) - 1)) &&
+                (!(strncmp((CHAR*)jsonKey, (CHAR*)duty_cycle_json_property, strlen(jsonKey))))) == 0)
+        {
+            return NX_NOT_SUCCESSFUL;
+        }
+        memset(flattened_db.repeating_signature_duty_cycle, 0, sizeof(flattened_db.repeating_signature_duty_cycle));
+        strncpy((VT_CHAR*)flattened_db.repeating_signature_duty_cycle, jsonValue, sizeof(flattened_db.repeating_signature_duty_cycle));
+    }
     vt_currentsense_object_database_sync(&(handle->cs_object), &flattened_db);
 
     return NX_SUCCESS;
@@ -484,7 +627,7 @@ static UINT nx_vt_currentsense_fingerprint_template_confidence_metric_property(
 static UINT nx_vt_currentsense_fingerprint_template_associated_properties(
     NX_VT_CURRENTSENSE_COMPONENT* handle, NX_AZURE_IOT_PNP_CLIENT* iotpnp_client_ptr)
 {
-    UINT status = true;
+    UINT status = VT_SUCCESS;
 
     VT_CURRENTSENSE_DATABASE_FLATTENED flattened_db;
     bool db_required_to_store          = true;
@@ -624,7 +767,7 @@ UINT nx_vt_currentsense_reported_properties(NX_VT_CURRENTSENSE_COMPONENT* handle
     if ((status = nx_vt_currentsense_telemetry_status_property(
              handle, iotpnp_client_ptr, device_status, toggle_verified_telemetry)))
     {
-        VTLogError("Failed nx_vt_fallcurve_telemetry_status_property for component %.*s: error code = "
+        VTLogError("Failed nx_vt_currentsense_telemetry_status_property for component %.*s: error code = "
                    "0x%08x\r\n\n",
             (INT)handle->component_name_length,
             (CHAR*)handle->component_name_ptr,
@@ -633,7 +776,7 @@ UINT nx_vt_currentsense_reported_properties(NX_VT_CURRENTSENSE_COMPONENT* handle
 
     else if ((status = nx_vt_currentsense_fingerprint_template_associated_properties(handle, iotpnp_client_ptr)))
     {
-        VTLogError("Failed nx_vt_fallcurve_telemetry_status_property for component %.*s: error code = "
+        VTLogError("Failed nx_vt_currentsense_fingerprint_template_associated_properties for component %.*s: error code = "
                    "0x%08x\r\n\n",
             (INT)handle->component_name_length,
             (CHAR*)handle->component_name_ptr,
@@ -644,7 +787,7 @@ UINT nx_vt_currentsense_reported_properties(NX_VT_CURRENTSENSE_COMPONENT* handle
     {
         if ((status = nx_vt_currentsense_fingerprint_type_property(handle, iotpnp_client_ptr)))
         {
-            VTLogError("Failed nx_vt_fallcurve_fingerprint_type_property for component %.*s: error code = 0x%08x\r\n",
+            VTLogError("Failed nx_vt_currentsense_fingerprint_type_property for component %.*s: error code = 0x%08x\r\n",
                 (INT)handle->component_name_length,
                 (CHAR*)handle->component_name_ptr,
                 status);
@@ -760,7 +903,7 @@ UINT nx_vt_currentsense_signature_read(NX_VT_CURRENTSENSE_COMPONENT* handle,
     UINT associated_telemetry_length,
     bool toggle_verified_telemetry)
 {
-    if (handle->associated_telemetry != associated_telemetry ||
+    if (strlen((CHAR*)handle->associated_telemetry) != associated_telemetry_length ||
         strncmp((CHAR*)handle->associated_telemetry, (CHAR*)associated_telemetry, associated_telemetry_length) != 0)
     {
         return (NX_NOT_SUCCESSFUL);
@@ -770,6 +913,7 @@ UINT nx_vt_currentsense_signature_read(NX_VT_CURRENTSENSE_COMPONENT* handle,
         return (NX_NOT_SUCCESSFUL);
     }
     vt_currentsense_object_signature_read(&(handle->cs_object));
+    
     return (NX_AZURE_IOT_SUCCESS);
 }
 
@@ -778,7 +922,7 @@ UINT nx_vt_currentsense_signature_process(NX_VT_CURRENTSENSE_COMPONENT* handle,
     UINT associated_telemetry_length,
     bool toggle_verified_telemetry)
 {
-    if (handle->associated_telemetry != associated_telemetry ||
+    if (strlen((CHAR*)handle->associated_telemetry) != associated_telemetry_length ||
         strncmp((CHAR*)handle->associated_telemetry, (CHAR*)associated_telemetry, associated_telemetry_length) != 0)
     {
         return (NX_NOT_SUCCESSFUL);

@@ -327,7 +327,7 @@ UINT nx_vt_properties(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, NX_AZURE_
                      &device_status,
                      enable_verified_telemetry)))
             {
-                VTLogError("Failed nx_vt_currentsense_telemetry_status_property for component %.*s: error code = "
+                VTLogError("Failed nx_vt_currentsense_reported_properties for component %.*s: error code = "
                            "0x%08x\r\n\n",
                     (INT)((NX_VT_OBJECT*)component_pointer)->component.cs.component_name_length,
                     (CHAR*)((NX_VT_OBJECT*)component_pointer)->component.cs.component_name_ptr,
@@ -601,7 +601,6 @@ UINT nx_vt_azure_iot_pnp_client_component_add(
 UINT nx_vt_signature_read(
     NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, UCHAR* associated_telemetry, UINT associated_telemetry_length)
 {
-    UINT status                    = 0;
     UINT iter                      = 0;
     UINT components_num            = verified_telemetry_DB->components_num;
     void* component_pointer        = verified_telemetry_DB->first_component;
@@ -616,20 +615,23 @@ UINT nx_vt_signature_read(
     {
         if (((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_CURRENTSENSE)
         {
-            status = status || nx_vt_currentsense_signature_read(&(((NX_VT_OBJECT*)component_pointer)->component.cs),
-                                   associated_telemetry,
-                                   associated_telemetry_length,
-                                   enable_verified_telemetry);
+            if (nx_vt_currentsense_signature_read(&(((NX_VT_OBJECT*)component_pointer)->component.cs),
+                    associated_telemetry,
+                    associated_telemetry_length,
+                    enable_verified_telemetry) == VT_SUCCESS)
+            {
+                return VT_SUCCESS;
+            }
         }
         component_pointer = (((NX_VT_OBJECT*)component_pointer)->next_component);
     }
-    return status;
+    
+    return VT_ERROR;
 }
 
 UINT nx_vt_signature_process(
     NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, UCHAR* associated_telemetry, UINT associated_telemetry_length)
 {
-    UINT status                    = 0;
     UINT iter                      = 0;
     UINT components_num            = verified_telemetry_DB->components_num;
     void* component_pointer        = verified_telemetry_DB->first_component;
@@ -644,12 +646,15 @@ UINT nx_vt_signature_process(
     {
         if (((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_CURRENTSENSE)
         {
-            status = status || nx_vt_currentsense_signature_process(&(((NX_VT_OBJECT*)component_pointer)->component.cs),
-                                   associated_telemetry,
-                                   associated_telemetry_length,
-                                   enable_verified_telemetry);
+            if (nx_vt_currentsense_signature_process(&(((NX_VT_OBJECT*)component_pointer)->component.cs),
+                    associated_telemetry,
+                    associated_telemetry_length,
+                    enable_verified_telemetry) == VT_SUCCESS)
+            {
+                return VT_SUCCESS;
+            }
         }
         component_pointer = (((NX_VT_OBJECT*)component_pointer)->next_component);
     }
-    return status;
+    return VT_ERROR;
 }
