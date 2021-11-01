@@ -6,9 +6,8 @@
 #include "vt_debug.h"
 #include "vt_fc_api.h"
 
-#define SAMPLE_COMMAND_SUCCESS_STATUS (200)
-#define SAMPLE_COMMAND_ERROR_STATUS   (500)
-
+#define COMMAND_SUCCESS_STATUS   200
+#define COMMAND_NOT_FOUND_STATUS 404
 #define PROPERTY_NAME_MAX_LENGTH 50
 
 /* Pnp command supported */
@@ -65,7 +64,7 @@ UINT nx_vt_fallcurve_init(NX_VT_FALLCURVE_COMPONENT* handle,
 }
 
 /* reset fingerprint method implementation */
-static UINT reset_refernce_fallcurve(NX_VT_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_JSON_READER* json_reader_ptr)
+static UINT reset_reference_fallcurve(NX_VT_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_JSON_READER* json_reader_ptr)
 {
     uint8_t confidence_metric;
     UINT status                        = vt_fallcurve_object_sensor_calibrate(&(handle->fc_object), &confidence_metric);
@@ -74,7 +73,7 @@ static UINT reset_refernce_fallcurve(NX_VT_FALLCURVE_COMPONENT* handle, NX_AZURE
 }
 
 /* retrain fingerprint method implementation */
-static UINT retrain_refernce_fallcurve(NX_VT_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_JSON_READER* json_reader_ptr)
+static UINT retrain_reference_fallcurve(NX_VT_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_JSON_READER* json_reader_ptr)
 {
     uint8_t confidence_metric;
     UINT status                        = vt_fallcurve_object_sensor_recalibrate(&(handle->fc_object), &confidence_metric);
@@ -411,7 +410,8 @@ UINT nx_vt_fallcurve_process_command(NX_VT_FALLCURVE_COMPONENT* handle,
     NX_AZURE_IOT_JSON_WRITER* json_response_ptr,
     UINT* status_code)
 {
-    UINT dm_status;
+    UINT status;
+    UINT dm_status = COMMAND_SUCCESS_STATUS;
 
     if (handle == NX_NULL)
     {
@@ -425,43 +425,45 @@ UINT nx_vt_fallcurve_process_command(NX_VT_FALLCURVE_COMPONENT* handle,
     }
 
     // Command 1 : Reset Fingerprint
-    if (((pnp_command_name_length == (sizeof(command_reset_fingerprint) - 1)) &&
-            (!(strncmp((CHAR*)pnp_command_name_ptr, (CHAR*)command_reset_fingerprint, pnp_command_name_length)))) == 1)
+    if ((pnp_command_name_length == (sizeof(command_reset_fingerprint) - 1) &&
+            (strncmp((CHAR*)pnp_command_name_ptr, (CHAR*)command_reset_fingerprint, pnp_command_name_length))) == 0)
     {
-        dm_status = (reset_refernce_fallcurve(handle, json_reader_ptr) != NX_AZURE_IOT_SUCCESS) ? SAMPLE_COMMAND_ERROR_STATUS
-                                                                                                : SAMPLE_COMMAND_SUCCESS_STATUS;
-
-        if (hub_store_all_db(handle, iotpnp_client_ptr))
+        status = reset_reference_fallcurve(handle, json_reader_ptr);
+        if (status == NX_AZURE_IOT_SUCCESS)
         {
-            VTLogError("Failed to update db in cloud\r\n");
-        }
-        if (nx_vt_fallcurve_fingerprint_template_confidence_metric_property(handle, iotpnp_client_ptr))
-        {
-            VTLogError("Failed to update Fingerprint Template Confidence Metric\r\n");
+            if (hub_store_all_db(handle, iotpnp_client_ptr))
+            {
+                VTLogError("Failed to update db in cloud\r\n");
+            }
+            else if (nx_vt_fallcurve_fingerprint_template_confidence_metric_property(handle, iotpnp_client_ptr))
+            {
+                VTLogError("Failed to update Fingerprint Template Confidence Metric\r\n");
+            }
         }
     }
 
     // Command 2 : Retrain Fingerprint
-    else if (((pnp_command_name_length == (sizeof(command_retrain_fingerprint) - 1)) &&
-                 (!(strncmp((CHAR*)pnp_command_name_ptr, (CHAR*)command_retrain_fingerprint, pnp_command_name_length)))) == 1)
+    else if ((pnp_command_name_length == (sizeof(command_retrain_fingerprint) - 1) &&
+                 (strncmp((CHAR*)pnp_command_name_ptr, (CHAR*)command_retrain_fingerprint, pnp_command_name_length))) == 0)
     {
-        dm_status = (retrain_refernce_fallcurve(handle, json_reader_ptr) != NX_AZURE_IOT_SUCCESS) ? SAMPLE_COMMAND_ERROR_STATUS
-                                                                                                  : SAMPLE_COMMAND_SUCCESS_STATUS;
-
-        if (hub_store_all_db(handle, iotpnp_client_ptr))
+        status = retrain_reference_fallcurve(handle, json_reader_ptr);
+        if (status == NX_AZURE_IOT_SUCCESS)
         {
-            VTLogError("Failed to update db in cloud\r\n");
-        }
-        if (nx_vt_fallcurve_fingerprint_template_confidence_metric_property(handle, iotpnp_client_ptr))
-        {
-            VTLogError("Failed to update Fingerprint Template Confidence Metric\r\n");
+            if (hub_store_all_db(handle, iotpnp_client_ptr))
+            {
+                VTLogError("Failed to update db in cloud\r\n");
+            }
+            else if (nx_vt_fallcurve_fingerprint_template_confidence_metric_property(handle, iotpnp_client_ptr))
+            {
+                VTLogError("Failed to update Fingerprint Template Confidence Metric\r\n");
+            }
         }
     }
 
     else
     {
-        VTLogError("PnP command=%.*s is not supported on vTInfo  component\r\n", pnp_command_name_length, pnp_command_name_ptr);
-        dm_status = 404;
+        VTLogError("PnP command=%.*s is not supported on vTInfo component\r\n", pnp_command_name_length, pnp_command_name_ptr);
+        dm_status = COMMAND_NOT_FOUND_STATUS;
     }
 
     *status_code = dm_status;

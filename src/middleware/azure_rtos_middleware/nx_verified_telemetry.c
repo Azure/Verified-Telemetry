@@ -116,25 +116,22 @@ UINT nx_vt_process_command(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     NX_AZURE_IOT_JSON_WRITER* json_response_ptr,
     UINT* status_code)
 {
+    UINT components_num             = verified_telemetry_DB->components_num;
+    NX_VT_OBJECT* component_pointer = (NX_VT_OBJECT*)(verified_telemetry_DB->first_component);
 
-    UINT status             = 0;
-    UINT iter               = 0;
-    UINT components_num     = verified_telemetry_DB->components_num;
-    void* component_pointer = verified_telemetry_DB->first_component;
-
-    for (iter = 0; iter < components_num; iter++)
+    for (UINT iter = 0; iter < components_num; iter++)
     {
-        if (((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
+        if (component_pointer->signature_type == VT_SIGNATURE_TYPE_FALLCURVE)
         {
-            if ((status = nx_vt_fallcurve_process_command(&(((NX_VT_OBJECT*)component_pointer)->component.fc),
-                     iotpnp_client_ptr,
-                     component_name_ptr,
-                     component_name_length,
-                     pnp_command_name_ptr,
-                     pnp_command_name_length,
-                     json_reader_ptr,
-                     json_response_ptr,
-                     status_code)) == NX_AZURE_IOT_SUCCESS)
+            if (nx_vt_fallcurve_process_command(&(component_pointer->component.fc),
+                    iotpnp_client_ptr,
+                    component_name_ptr,
+                    component_name_length,
+                    pnp_command_name_ptr,
+                    pnp_command_name_length,
+                    json_reader_ptr,
+                    json_response_ptr,
+                    status_code) == NX_AZURE_IOT_SUCCESS)
             {
                 VTLogInfo("Successfully executed command %.*s on %.*s component\r\n\n",
                     pnp_command_name_length,
@@ -144,17 +141,17 @@ UINT nx_vt_process_command(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
                 return NX_AZURE_IOT_SUCCESS;
             }
         }
-        else if (((NX_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_CURRENTSENSE)
+        else if (component_pointer->signature_type == VT_SIGNATURE_TYPE_CURRENTSENSE)
         {
-            if ((status = nx_vt_currentsense_process_command(&(((NX_VT_OBJECT*)component_pointer)->component.cs),
-                     iotpnp_client_ptr,
-                     component_name_ptr,
-                     component_name_length,
-                     pnp_command_name_ptr,
-                     pnp_command_name_length,
-                     json_reader_ptr,
-                     json_response_ptr,
-                     status_code)) == NX_AZURE_IOT_SUCCESS)
+            if (nx_vt_currentsense_process_command(&(component_pointer->component.cs),
+                    iotpnp_client_ptr,
+                    component_name_ptr,
+                    component_name_length,
+                    pnp_command_name_ptr,
+                    pnp_command_name_length,
+                    json_reader_ptr,
+                    json_response_ptr,
+                    status_code) == NX_AZURE_IOT_SUCCESS)
             {
                 VTLogInfo("Successfully executed command %.*s on %.*s component\r\n\n",
                     pnp_command_name_length,
@@ -164,7 +161,8 @@ UINT nx_vt_process_command(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
                 return NX_AZURE_IOT_SUCCESS;
             }
         }
-        component_pointer = (((NX_VT_OBJECT*)component_pointer)->next_component);
+
+        component_pointer = component_pointer->next_component;
     }
 
     return NX_NOT_SUCCESSFUL;
