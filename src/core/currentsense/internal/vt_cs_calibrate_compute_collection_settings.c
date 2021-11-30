@@ -258,7 +258,6 @@ static VT_FLOAT get_raw_signature_sample_freq(VT_FLOAT signal_freq)
     return sample_freq;
 }
 
-<<<<<<< HEAD
 // VT_VOID cs_calibrate_repeating_signatures_compute_sampling_frequencies(VT_CURRENTSENSE_OBJECT* cs_object,
 //     VT_FLOAT* sampling_frequencies,
 //     VT_UINT sampling_frequencies_buffer_length,
@@ -277,9 +276,6 @@ static VT_FLOAT get_raw_signature_sample_freq(VT_FLOAT signal_freq)
 //         *num_sampling_frequencies  = *num_sampling_frequencies + 1;
 //     //}
 // }
-=======
-
->>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
 VT_VOID cs_calibrate_repeating_signatures_compute_sampling_frequencies(VT_CURRENTSENSE_OBJECT* cs_object,
     VT_FLOAT* sampling_frequencies,
     VT_UINT sampling_frequencies_buffer_length,

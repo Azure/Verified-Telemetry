@@ -9,6 +9,12 @@ The quality of sensor data is fundamental for driving IoT adoption. Since IoT se
 
 Verified Telemetry (VT) is a state-of-the-art solution to determine the health of the sensor, i.e., working or faulty, which is consequently used to determine the quality of the sensed data. This is achieved by devising an intelligent “sensor fingerprint”, a set of unique electrical characteristics that differs between working and faulty sensors. The fingerprints can detect faults for a wide variety of off-the-shelf sensors and can be easily implemented with lightweight software code running on the IoT device. This novel approach empowers customers with a reliable and automated way to remotely measure and observe the health of the sensor in real-time alongside the data collected. The data associated with a validated fingerprint results in Verified Telemetry.
 
+Verified Telemetry uses two technologies - FallCurve for analog sensors, CurrentSense for Digital Sensors. 
+
+### Fall Curve
+
+It reads the 
+
 ![VT_Overview](./docs/Azure_VT.PNG)
 
 ## API documentation

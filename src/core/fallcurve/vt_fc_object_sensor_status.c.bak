@@ -18,7 +18,7 @@ VT_VOID vt_fallcurve_object_sensor_status(VT_FALLCURVE_OBJECT* fc_object, VT_UIN
     VT_BOOL signature_evaluate_fail = false;
 
     for (VT_UINT iter = 0; iter < VT_FC_MAX_SIGNATURES; iter++)
-    {
+    {  
         if (fc_fetch_signature(fc_object, iter, &sampling_interval_us_saved, &falltime_saved, &pearson_coeff_saved))
         {
             break;

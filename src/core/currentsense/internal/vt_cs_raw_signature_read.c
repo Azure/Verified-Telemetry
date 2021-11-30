@@ -12,11 +12,7 @@ static VT_CURRENTSENSE_OBJECT* cs_object_reference;
 
 static VT_BOOL cs_downsample_half_adc_buffer(
     VT_CURRENTSENSE_RAW_SIGNATURE_BUFFER* raw_signature_buffer, VT_UINT adc_read_buffer_start_index)
-<<<<<<< HEAD
 {   //printf("cs_downsample \n");
-=======
-{   
->>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
     if (raw_signature_buffer->num_datapoints == raw_signature_buffer->sample_length)
     {
         return RAW_SIGNATURE_BUFFER_FILLED;
@@ -42,9 +38,20 @@ static VT_BOOL cs_downsample_half_adc_buffer(
 
         raw_signature_buffer->current_measured[raw_signature_buffer->num_datapoints] =
             ((cs_object_reference->raw_signatures_reader->adc_read_buffer[iter] *
-                 *(cs_object_reference->sensor_handle->adc_ref_volt) * VOLT_TO_MILLIVOLT) /
-                (VT_FLOAT)pow(2, *(cs_object_reference->sensor_handle->adc_resolution))) *
-            (*(cs_object_reference->sensor_handle->currentsense_mV_to_mA));
+                 cs_object_reference->sensor_handle->currentsense_adc_ref_volt * VOLT_TO_MILLIVOLT) /
+                (VT_FLOAT)pow(2, cs_object_reference->sensor_handle->currentsense_adc_resolution)) *
+            (cs_object_reference->sensor_handle->currentsense_mV_to_mA);
+
+        
+    //                 VT_INT decimal;
+    //  VT_FLOAT frac_float;
+    //  VT_INT frac;
+
+    //          decimal    = cs_object_reference->raw_signatures_reader->adc_read_buffer[iter];
+    //     frac_float = cs_object_reference->raw_signatures_reader->adc_read_buffer[iter] - (VT_FLOAT)decimal;
+    //     frac       = fabsf(frac_float) * 10000;
+    //     printf("%d.%04d, ", decimal, frac);
+        
 
         raw_signature_buffer->num_datapoints++;
         //printf("num_datapoints - %d ",raw_signature_buffer->num_datapoints);
@@ -59,6 +66,7 @@ static VT_BOOL cs_downsample_half_adc_buffer(
 
 static VT_VOID cs_downsample_non_repeating_raw_signature_buffer()
 {
+        //printf("IN DOWNSAMPLE");
     VT_UINT samples_stored = cs_object_reference->raw_signatures_reader->non_repeating_raw_signature.num_datapoints;
     VT_FLOAT downsample_factor=1;
     /* Don't downsample if one round of data collection / two rounds of half buffer collection is not done */
@@ -93,6 +101,7 @@ static VT_VOID cs_downsample_non_repeating_raw_signature_buffer()
     */
     VT_UINT samples_stored_after_modification       = 0;
     VT_UINT adc_buffer_next_datapoint_to_read_index = 0;
+    
 
     for (VT_UINT iter = 0; iter < samples_stored; iter++)
     {
@@ -106,8 +115,12 @@ static VT_VOID cs_downsample_non_repeating_raw_signature_buffer()
         cs_object_reference->raw_signatures_reader->non_repeating_raw_signature
             .current_measured[samples_stored_after_modification] =
             cs_object_reference->raw_signatures_reader->non_repeating_raw_signature.current_measured[iter];
+
+
+    
         samples_stored_after_modification++;
     }
+    //printf("out of downsample\r");
     //int sampling_frequency_temp;
     //sampling_frequency_temp=(int)cs_object_reference->raw_signatures_reader->non_repeating_raw_signature.sampling_frequency;
     //printf("sampling_frequency_temp before %d \n",sampling_frequency_temp);
@@ -135,16 +148,12 @@ static VT_BOOL cs_adc_buffer_to_repeating_raw_signature_buffers(VT_UINT adc_read
 {   //printf("repeating cs_adc_buffer \n");
     VT_BOOL all_raw_signature_buffers_filled = true;
     for (VT_UINT iter = 0; iter < cs_object_reference->raw_signatures_reader->num_repeating_raw_signatures; iter++)
-<<<<<<< HEAD
     {   //HEREprintf("rep \n");
         //in this expression, all_raw_signature_buffers_filled = all_raw_signature_buffers_filled && ()
         //once all_raw_signature_buffers_filled is false, cs_downsample_half_adc_buffer fucntion is not called again
         //which causes the code to run serially and not paralelley
         //thats why rep is called but cs_downsample_half_adc_buffer is not
         //hence 5000, 78 and 12 is being called serially.
-=======
-    {   
->>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
         bool flag= cs_downsample_half_adc_buffer(
                 &cs_object_reference->raw_signatures_reader->repeating_raw_signatures[iter], adc_read_buffer_start_index);
         all_raw_signature_buffers_filled =all_raw_signature_buffers_filled && flag;
@@ -161,7 +170,7 @@ static VT_BOOL cs_adc_buffer_to_repeating_raw_signature_buffers(VT_UINT adc_read
 }
 
 static VT_VOID cs_adc_buffer_to_non_repeating_raw_signature_buffer(VT_UINT adc_read_buffer_start_index)
-{
+{   
     /* Downsample existing non-repeating raw signature buffer to accomodate more datapoints */
     // VTLogDebug("cs_downsample_non_repeating_raw_signature_buffer() \r\n");
     cs_downsample_non_repeating_raw_signature_buffer();
@@ -174,7 +183,7 @@ static VT_VOID cs_adc_buffer_to_non_repeating_raw_signature_buffer(VT_UINT adc_r
 }
 
 static VT_VOID cs_raw_signature_read_half_complete_callback()
-{   //printf("half callback\n");
+{   
     // VTLogDebug("cs_raw_signature_read_half_complete_callback() \r\n");
     VT_BOOL repeating_raw_signature_buffers_filled = false;
 
@@ -223,6 +232,7 @@ static VT_VOID cs_raw_signature_read_full_complete_callback()
         cs_object_reference->raw_signatures_reader->adc_read_buffer,
         VT_CS_SAMPLE_LENGTH,
         cs_object_reference->raw_signatures_reader->adc_read_sampling_frequency,
+        &cs_object_reference->raw_signatures_reader->adc_read_sampling_frequency,
         &cs_raw_signature_read_half_complete_callback,
         &cs_raw_signature_read_full_complete_callback);
 
@@ -257,7 +267,6 @@ static VT_UINT find_closest_floor_stored_sampling_frequency(
     VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT desired_sampling_frequency, VT_FLOAT* closest_floor_sampling_frequency)
 {
     VT_FLOAT min_diff = 65535;
-<<<<<<< HEAD
     //VT_FLOAT min_freq=65535;
 
     // for (VT_UINT iter1 = 0; iter1 < cs_object->raw_signatures_reader->num_repeating_raw_signatures; iter1++){
@@ -271,21 +280,6 @@ static VT_UINT find_closest_floor_stored_sampling_frequency(
     //     *closest_floor_sampling_frequency =VT_CS_FMIN;
     //     return VT_SUCCESS;
     // }
-=======
-    VT_FLOAT min_freq=65535;
-
-    for (VT_UINT iter1 = 0; iter1 < cs_object->raw_signatures_reader->num_repeating_raw_signatures; iter1++){
-        if (cs_object->raw_signatures_reader->repeating_raw_signatures[iter1].sampling_frequency < min_freq){
-            min_freq=cs_object->raw_signatures_reader->repeating_raw_signatures[iter1].sampling_frequency;
-        }
-    }
-
-    if(desired_sampling_frequency<min_freq){
-        ;
-        *closest_floor_sampling_frequency =min_freq;
-        return VT_SUCCESS;
-    }
->>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
 
     for (VT_UINT iter = 0; iter < cs_object->raw_signatures_reader->num_repeating_raw_signatures; iter++)
     {
@@ -395,19 +389,17 @@ VT_UINT cs_raw_signature_read(VT_CURRENTSENSE_OBJECT* cs_object,
         cs_object_reference->raw_signatures_reader->adc_read_sampling_frequency,
         sample_length);
 
-<<<<<<< HEAD
  //cs_object_reference->raw_signatures_reader->num_repeating_raw_signatures=1;
-=======
- 
->>>>>>> c08847240ee5e21382d04c27a17b53f52cb801f3
     // VTLogDebug("adc_buffer_read() \r\n");
     /* Start current acquisition */
+    
     cs_object_reference->device_driver->adc_buffer_read(cs_object_reference->sensor_handle->adc_id,
         cs_object_reference->sensor_handle->adc_controller,
         cs_object_reference->sensor_handle->adc_channel,
         cs_object_reference->raw_signatures_reader->adc_read_buffer,
         VT_CS_SAMPLE_LENGTH,
         cs_object_reference->raw_signatures_reader->adc_read_sampling_frequency,
+        &cs_object_reference->raw_signatures_reader->adc_read_sampling_frequency,
         &cs_raw_signature_read_half_complete_callback,
         &cs_raw_signature_read_full_complete_callback);
 
@@ -476,6 +468,11 @@ VT_UINT cs_non_repeating_raw_signature_fetch_stored_current_measurement(VT_CURRE
     VT_FLOAT* sampling_frequency,
     VT_UINT* num_datapoints)
 {
+    #if VT_LOG_LEVEL > 2
+    VT_INT decimal;
+    VT_FLOAT frac_float;
+    VT_INT frac;
+#endif /* VT_LOG_LEVEL > 2 */
     /* Check whether the shared buffer size is sufficent and has been initialized correctly */
     if (cs_object->raw_signatures_reader_initialized == false)
     {
@@ -484,7 +481,11 @@ VT_UINT cs_non_repeating_raw_signature_fetch_stored_current_measurement(VT_CURRE
 
     /* Check whether the buffer has been stored with new current data */
     if (cs_object->raw_signatures_reader->non_repeating_raw_signature.num_datapoints == 0)
-    {
+
+    {   
+        #if VT_LOG_LEVEL > 2
+       VTLogDebugNoTag("no non-rep datapoint stored");
+       #endif
         return VT_ERROR;
     }
 
@@ -496,5 +497,15 @@ VT_UINT cs_non_repeating_raw_signature_fetch_stored_current_measurement(VT_CURRE
     {
         non_repeating_raw_signature[iter] = cs_object->raw_signatures_reader->non_repeating_raw_signature.current_measured[iter];
     }
+        #if VT_LOG_LEVEL > 2
+    VTLogDebugNoTag("RAW NON REP SIG : \n");
+    for (VT_INT iter = 0; iter < VT_CS_SAMPLE_LENGTH; iter++)
+    {
+        decimal    = non_repeating_raw_signature[iter];
+        frac_float = non_repeating_raw_signature[iter] - (VT_FLOAT)decimal;
+        frac       = fabsf(frac_float) * 10000;
+        VTLogDebugNoTag("%d.%04d, ", decimal, frac);
+    }
+    #endif
     return VT_SUCCESS;
 }

@@ -58,7 +58,7 @@ uint16_t vt_adc_single_read(uint16_t adc_id, void* adc_controller, void* adc_cha
  * filled with datapoints.
  * @param[in] vt_adc_buffer_read_conv_cplt_callback Pointer to a function that would be called when the buffer is filled with
  * datapoints.
- 
+ *
  * 
  */
 void vt_adc_buffer_read(uint16_t adc_id,

@@ -10,7 +10,7 @@ VT_VOID vt_currentsense_object_database_fetch(VT_CURRENTSENSE_OBJECT* cs_object,
     VT_UINT* template_confidence_metric)
 {
     VT_CHAR string_buffer[40];
-    VT_CHAR string_element[10];
+    VT_CHAR string_element[15];
     VT_INT decimal;
     VT_FLOAT frac_float;
     VT_INT frac;

@@ -86,7 +86,7 @@ static VT_VOID cs_sensor_status_with_repeating_signature_template(VT_CURRENTSENS
     VT_BOOL signature_offset_current_compute_fail = false;
 
 #if VT_LOG_LEVEL > 2
-    VT_INT decimal=0;
+    VT_INT decimal;
     VT_FLOAT frac_float;
     VT_INT frac;
     #endif

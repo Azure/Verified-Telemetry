@@ -25,7 +25,7 @@
 #define VT_DATA_NOT_AVAILABLE                          -1
 
 #define VT_CHARACTERS_IN_A_NUMBER              10
-#define VT_COMPONENT_NAME_MAX_LENGTH           30
+#define VT_COMPONENT_NAME_MAX_LENGTH           50
 #define VT_ASSOCIATED_TELEMETRY_CSV_MAX_LENGTH 100
 
 #define VT_MODE_RUNTIME_EVALUATE 0x00
