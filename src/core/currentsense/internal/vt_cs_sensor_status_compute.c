@@ -193,9 +193,9 @@ VTLogDebugNoTag("\n");
     if (sampling_frequency_saved==VT_CS_ADC_MAX_SAMPLING_FREQ){
         if ((signature_feature_vector_compute_fail==false)){
 
-            temp_relative_current_drift=cs_repeating_signature_relative_current_evaluate(relative_current_draw,relative_current_draw_saved);
+            
 
-            if (temp_relative_current_drift<60.0f){
+            //if (temp_relative_current_drift<60.0f){
                 
             temp_feature_vector_drift = cs_repeating_signature_feature_vector_evaluate(signature_frequency,
             signature_frequency_saved,
@@ -203,18 +203,36 @@ VTLogDebugNoTag("\n");
             duty_cycle_saved,
             relative_current_draw,
             relative_current_draw_saved);}
-
-            else{signature_feature_vector_compute_fail=true;}
-
+                        if (signature_feature_vector_compute_fail==true){
+                temp_feature_vector_drift =100;
             }
+            //}
 
-            if ((signature_feature_vector_compute_fail==true) || (temp_feature_vector_drift>50)){
-                temp_sensor_status=false;
-                temp_feature_vector_drift=100;
-                }
-            else {
-                temp_sensor_status=true;
+            // else{signature_feature_vector_compute_fail=true;}
+
+            // }
+
+            // if ((signature_feature_vector_compute_fail==true) || (temp_feature_vector_drift>50)){
+            //     temp_sensor_status=false;
+            //     temp_feature_vector_drift=100;
+            //     }
+            // else {
+            //     temp_sensor_status=true;
                                
+            // }
+            temp_relative_current_drift=cs_repeating_signature_relative_current_evaluate(relative_current_draw,relative_current_draw_saved);
+                        if ((temp_feature_vector_drift<50.0f) || (temp_relative_current_drift<55.0f)){
+                
+                    #if VT_LOG_LEVEL > 2
+                    VTLogDebugNoTag("component correct");
+                    #endif
+                temp_sensor_status=true;
+            }
+            else{
+                    #if VT_LOG_LEVEL > 2
+                    VTLogDebugNoTag("component faulty");
+                    #endif
+                temp_sensor_status=false;
             }
             feature_vector_drift=feature_vector_drift +temp_feature_vector_drift;
             sensor_status=sensor_status && temp_sensor_status;

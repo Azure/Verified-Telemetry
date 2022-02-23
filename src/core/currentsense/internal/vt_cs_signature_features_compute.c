@@ -11,173 +11,563 @@
 #define VT_CS_LOW_STD_DEVIATION_THRESHOLD 1.0f
 #define VT_CS_PEAK_DETECTOR_SEED_POINTS   2
 
-static VT_VOID autocorrelation(VT_FLOAT* raw_signature, VT_FLOAT* lag_array, VT_INT sample_length, VT_INT lag_length)
-{
-    VT_FLOAT var_sum_average = 0;
-    for (VT_INT iter1 = 0; iter1 < sample_length; iter1++)
-    {
-        var_sum_average += raw_signature[iter1];
-    }
-    var_sum_average /= sample_length;
-    for (VT_INT iter1 = 0; iter1 < sample_length; iter1++)
-    {
-        raw_signature[iter1] -= var_sum_average;
-    }
-    for (VT_INT iter1 = 0; iter1 < lag_length; iter1++)
-    {
-        lag_array[iter1] = raw_signature[iter1];
-    }
-    VT_INT iter2 = 0;
-    VT_INT iter3 = 0;
-    for (iter3 = 0; iter3 < (sample_length - lag_length); iter3++)
-    {
-        var_sum_average = 0;
-        for (iter2 = 0; iter2 < lag_length; iter2++)
-        {
-            var_sum_average += (raw_signature[(iter3 + iter2)] * lag_array[iter2]);
-        }
-        raw_signature[iter3] = var_sum_average;
-    }
-    for (VT_INT iter1 = 1; iter1 < sample_length - lag_length; iter1++)
-    {
-        if (raw_signature[0])
-        {
-            raw_signature[iter1] /= raw_signature[0];
-        }
-    }
-    raw_signature[0] = 1;
-}
+#define TOPNPEAKS 3
+#define VT_ACR_DEVIATION 1
 
-static VT_UINT check_acr_peak_present(VT_FLOAT* raw_signature,
-    VT_UINT* index,
-    VT_UINT period,
-    VT_UINT* period_total,
-    VT_UINT* peaks,
-    VT_FLOAT minimum_correlation_for_peak)
-{   
+// static VT_VOID autocorrelation(VT_FLOAT* raw_signature, VT_FLOAT* lag_array, VT_INT sample_length, VT_INT lag_length)
+// {
+//         #if VT_LOG_LEVEL > 2
+//         VT_INT decimal;
+//     VT_FLOAT frac_float;
+//     VT_INT frac;
 
-    VT_FLOAT maxval=raw_signature[*index];
-    VT_UINT maxvalindex=*index;
+//             VT_INT decimal1;
+//     VT_FLOAT frac_float1;
+//     VT_INT frac1;
+//     #endif
+//     VT_FLOAT var_sum_average = 0;
+//     for (VT_INT iter1 = 0; iter1 < sample_length; iter1++)
+//     {
+//         var_sum_average += raw_signature[iter1];
+//     }
+//     var_sum_average /= sample_length;
+//     for (VT_INT iter1 = 0; iter1 < sample_length; iter1++)
+//     {
+//         raw_signature[iter1] -= var_sum_average;
+//     }
+//     for (VT_INT iter1 = 0; iter1 < lag_length; iter1++)
+//     {
+//         lag_array[iter1] = raw_signature[iter1];
+//     }
+//     VT_INT iter2 = 0;
+//     VT_INT iter3 = 0;
 
-    if(*index>=VT_CS_SAMPLE_LENGTH-VT_CS_AUTO_CORRELATION_LAG){
-        maxval=0;
-        for (VT_UINT iterx=*index-1;iterx<VT_CS_SAMPLE_LENGTH-VT_CS_AUTO_CORRELATION_LAG;iterx++){
-            if (raw_signature[iterx]>maxval){
-            maxval=raw_signature[iterx];
-            maxvalindex=iterx;
-            }
+//     printf("\n");
+//             for (VT_INT iter = 0; iter < VT_CS_SAMPLE_LENGTH; iter++)
+//     {
+//         decimal    = raw_signature[iter];
+//         frac_float = raw_signature[iter] - (VT_FLOAT)decimal;
+//         frac       = fabsf(frac_float) * 10000;
+//         VTLogDebugNoTag("%d.%04d, ", decimal, frac);
+//     }
+//     printf("\n");
 
-        }
+//     for (iter3 = 0; iter3 < (sample_length - lag_length); iter3++)
+//     {
+//         var_sum_average = 0;
+       
 
-    }
-    else{
-    for(VT_INT iter=-1; iter<2;iter++){ //make 2 a macro
-        if((raw_signature[(*index)+iter]>maxval) &&(((*index)+iter)!=0 ) && (fabs((double)iter)<period)) {
-            maxval=raw_signature[(*index)+iter];
-            maxvalindex=(*index)+iter;
-        }
-        }}
 
-    if (maxval>minimum_correlation_for_peak){
+
+//         for (iter2 = 0; iter2 < lag_length; iter2++)
+//         {   
+//             var_sum_average += (raw_signature[(iter3 + iter2)] * lag_array[iter2]);
+
+//         //     if(iter3<5){
+
+//         // decimal    = raw_signature[(iter3 + iter2)];
+//         // frac_float = raw_signature[(iter3 + iter2)] - (VT_FLOAT)decimal;
+//         // frac       = fabsf(frac_float) * 10000;
+
+//         //         decimal1    = lag_array[iter2];
+//         // frac_float1 = lag_array[iter2] - (VT_FLOAT)decimal1;
+//         // frac1       = fabsf(frac_float1) * 10000;
+
+
+//         // VTLogDebugNoTag("%d.%04d * %d.%04d \n", decimal, frac,decimal1,frac1);}
+//         }
+//         raw_signature[iter3] = var_sum_average;
+//     }
+//     for (VT_INT iter1 = 1; iter1 < sample_length - lag_length; iter1++)
+//     {
+//         if (raw_signature[0])
+//         {
+//             raw_signature[iter1] /= raw_signature[0];
+//         }
+//     }
+//     raw_signature[0] = 1;
+// }
+
+// static VT_UINT check_acr_peak_present(VT_FLOAT* raw_signature,
+//     VT_UINT* index,
+//     VT_UINT period,
+//     VT_UINT* period_total,
+//     VT_UINT* peaks,
+//     VT_FLOAT minimum_correlation_for_peak)
+// {   
+
+//     VT_FLOAT maxval=raw_signature[*index];
+//     VT_UINT maxvalindex=*index;
+
+//     if(*index>=VT_CS_SAMPLE_LENGTH-VT_CS_AUTO_CORRELATION_LAG){
+//         maxval=0;
+//         for (VT_UINT iterx=*index-1;iterx<VT_CS_SAMPLE_LENGTH-VT_CS_AUTO_CORRELATION_LAG;iterx++){
+//             if (raw_signature[iterx]>maxval){
+//             maxval=raw_signature[iterx];
+//             maxvalindex=iterx;
+//             }
+
+//         }
+
+//     }
+//     else{
+//     for(VT_INT iter=-1; iter<2;iter++){ //make 2 a macro
+//         if((raw_signature[(*index)+iter]>maxval) &&(((*index)+iter)!=0 ) && (fabs((double)iter)<period)) {
+//             maxval=raw_signature[(*index)+iter];
+//             maxvalindex=(*index)+iter;
+//         }
+//         }}
+
+//     if (maxval>minimum_correlation_for_peak){
         
         
-        *peaks += 1;
-        *period_total += maxvalindex;
-        *index = maxvalindex + period; 
-        #if VT_LOG_LEVEL > 2
-        VTLogDebugNoTag("SUCCESS : peaks = %d, period_total = %d, index= %d \n",*peaks,*period_total,*index);
-        #endif
-        return VT_SUCCESS;}    
+//         *peaks += 1;
+//         *period_total += maxvalindex;
+//         *index = maxvalindex + period; 
+//         #if VT_LOG_LEVEL > 2
+//         VTLogDebugNoTag("SUCCESS : peaks = %d, period_total = %d, index= %d \n",*peaks,*period_total,*index);
+//         #endif
+//         return VT_SUCCESS;}    
 
 
-    else
+//     else
 
-    {
-               #if VT_LOG_LEVEL > 2
-        VTLogDebugNoTag("FAILURE : peaks = %d, period_total = %d, index= %d \n",*peaks,*period_total,*index);
-        #endif
+//     {
+//                #if VT_LOG_LEVEL > 2
+//         VTLogDebugNoTag("FAILURE : peaks = %d, period_total = %d, index= %d \n",*peaks,*period_total,*index);
+//         #endif
     
-        return VT_ERROR;
-    }
-}
+//         return VT_ERROR;
+//     }
+// }
 
-static VT_UINT period_calculate(VT_FLOAT* raw_signature, VT_FLOAT* period)
-{
-    VT_FLOAT raw_signature_copy[VT_CS_SAMPLE_LENGTH] = {0};
-    VT_FLOAT lag_array[VT_CS_AUTO_CORRELATION_LAG]   = {0};
-    VT_UINT peaks                                    = 0;
-    VT_UINT index                                    = 0;
-    VT_UINT period_total                             = 0;
-    *period                                          = 0;
+// static VT_UINT period_calculate(VT_FLOAT* raw_signature, VT_FLOAT* period)
+// {
+//     VT_FLOAT raw_signature_copy[VT_CS_SAMPLE_LENGTH] = {0};
+//     VT_FLOAT lag_array[VT_CS_AUTO_CORRELATION_LAG]   = {0};
+//     VT_UINT peaks                                    = 0;
+//     VT_UINT index                                    = 0;
+//     VT_UINT period_total                             = 0;
+//     *period                                          = 0;
 
-    #if VT_LOG_LEVEL > 2
+//     #if VT_LOG_LEVEL > 2
+//         VT_INT decimal;
+//     VT_FLOAT frac_float;
+//     VT_INT frac;
+//     #endif
+
+//     for (VT_UINT iter = 0; iter < VT_CS_SAMPLE_LENGTH; iter++)
+//     {
+//         raw_signature_copy[iter] = raw_signature[iter];
+//     }
+//     autocorrelation(raw_signature_copy, lag_array, VT_CS_SAMPLE_LENGTH, VT_CS_AUTO_CORRELATION_LAG);
+//     #if VT_LOG_LEVEL > 2
+//         VTLogDebugNoTag("\nACR RAW: \n");
+//     for (VT_INT iter = 0; iter < VT_CS_SAMPLE_LENGTH; iter++)
+//     {
+//         decimal    = raw_signature_copy[iter];
+//         frac_float = raw_signature_copy[iter] - (VT_FLOAT)decimal;
+//         frac       = fabsf(frac_float) * 10000;
+//         VTLogDebugNoTag("%d.%04d, ", decimal, frac);
+//     }
+//     printf("\n");
+//     #endif
+
+
+//     for (VT_UINT iter = 2; iter < VT_CS_SAMPLE_LENGTH - VT_CS_AUTO_CORRELATION_LAG - 2; iter++) 
+//     {
+//         index = iter;
+ 
+//         bool cond1=(raw_signature_copy[iter] > raw_signature_copy[iter - 1]) || (raw_signature_copy[iter] > raw_signature_copy[iter - 2]);
+//         bool cond2=(raw_signature_copy[iter] > raw_signature_copy[iter + 1]) || (raw_signature_copy[iter] > raw_signature_copy[iter + 2]);
+//         VT_UINT flag=(int)cond1+(int)cond2;
+
+//         if (flag==2)
+
+//         {
+
+//             period_total = 0;
+//             peaks        = 0;
+//             while (index < VT_CS_SAMPLE_LENGTH - VT_CS_AUTO_CORRELATION_LAG + 1)  //make 2 a macro
+            
+//             {       
+//                 #if VT_LOG_LEVEL > 2
+//         VTLogDebugNoTag("ENTERED IN : peaks = %d, period_total = %d, index= %d, iter= %d \n",peaks,period_total,index,iter);
+//         #endif
+//                 if (check_acr_peak_present(raw_signature_copy, &index, iter, &period_total, &peaks, VT_CS_MIN_CORRELATION) ==
+//                     VT_ERROR)
+
+//                     break;
+//                 }
+//             }
+//             if (index > VT_CS_SAMPLE_LENGTH - VT_CS_AUTO_CORRELATION_LAG)
+//             {   
+//                 *period = iter;
+//                 break;
+//             }
+//         }
+    
+
+//     if (peaks < 2)
+//     {
+//         *period = 0;
+//         return VT_ERROR;
+//     }
+//     else
+//     {
+//         *period = (((period_total * 2.0f) / (VT_FLOAT)peaks) - (VT_FLOAT)(2.0f * (*period))) / (VT_FLOAT)(peaks - 1);
+//         return VT_SUCCESS;
+//     }
+// }
+static VT_FLOAT autocovariance(VT_FLOAT* raw_sig, VT_UINT lag){
+
+    
+
+    VT_FLOAT covar[VT_CS_SAMPLE_LENGTH]={0};
+    VT_FLOAT raw_sig_copy[VT_CS_SAMPLE_LENGTH]={0};
+    VT_FLOAT covariance=0;
+    VT_FLOAT mean=0;
+    VT_FLOAT autocvr=0;
+
+    
         VT_INT decimal;
     VT_FLOAT frac_float;
     VT_INT frac;
-    #endif
 
-    for (VT_UINT iter = 0; iter < VT_CS_SAMPLE_LENGTH; iter++)
-    {
-        raw_signature_copy[iter] = raw_signature[iter];
+    for(int i=0;i<VT_CS_SAMPLE_LENGTH;i++){
+        mean=mean+raw_sig[i];
     }
-    autocorrelation(raw_signature_copy, lag_array, VT_CS_SAMPLE_LENGTH, VT_CS_AUTO_CORRELATION_LAG);
-    #if VT_LOG_LEVEL > 2
-        VTLogDebugNoTag("\nACR RAW: \n");
-    for (VT_INT iter = 0; iter < VT_CS_SAMPLE_LENGTH; iter++)
-    {
-        decimal    = raw_signature_copy[iter];
-        frac_float = raw_signature_copy[iter] - (VT_FLOAT)decimal;
-        frac       = fabsf(frac_float) * 10000;
-        VTLogDebugNoTag("%d.%04d, ", decimal, frac);
+    mean=mean/VT_CS_SAMPLE_LENGTH;
+
+    for(int i=0;i<VT_CS_SAMPLE_LENGTH;i++){
+        raw_sig_copy[i]=raw_sig[i];
     }
-    printf("\n");
-    #endif
-
-
-    for (VT_UINT iter = 2; iter < VT_CS_SAMPLE_LENGTH - VT_CS_AUTO_CORRELATION_LAG - 2; iter++) 
-    {
-        index = iter;
- 
-        bool cond1=(raw_signature_copy[iter] > raw_signature_copy[iter - 1]) || (raw_signature_copy[iter] > raw_signature_copy[iter - 2]);
-        bool cond2=(raw_signature_copy[iter] > raw_signature_copy[iter + 1]) || (raw_signature_copy[iter] > raw_signature_copy[iter + 2]);
-        VT_UINT flag=(int)cond1+(int)cond2;
-
-        if (flag==2)
-
-        {
-
-            period_total = 0;
-            peaks        = 0;
-            while (index < VT_CS_SAMPLE_LENGTH - VT_CS_AUTO_CORRELATION_LAG + 1)  //make 2 a macro
-            
-            {       
-                #if VT_LOG_LEVEL > 2
-        //VTLogDebugNoTag("ENTERED IN : peaks = %d, period_total = %d, index= %d, iter= %d \n",peaks,period_total,index,iter);
-        #endif
-                if (check_acr_peak_present(raw_signature_copy, &index, iter, &period_total, &peaks, VT_CS_MIN_CORRELATION) ==
-                    VT_ERROR)
-
-                    break;
-                }
-            }
-            if (index > VT_CS_SAMPLE_LENGTH - VT_CS_AUTO_CORRELATION_LAG)
-            {   
-                *period = iter;
-                break;
-            }
-        }
     
 
-    if (peaks < 2)
-    {
-        *period = 0;
-        return VT_ERROR;
+    for(int i=lag;i<VT_CS_SAMPLE_LENGTH;i++){
+   
+        covariance = (raw_sig_copy[i]-mean) * (raw_sig_copy[i - lag]-mean);
+        covar[i-lag]=covariance;
+        
+
     }
+
+    for(int i=0;i<VT_CS_SAMPLE_LENGTH;i++){
+        autocvr=autocvr+covar[i];
+    }
+
+
+    autocvr=autocvr/(float)(VT_CS_SAMPLE_LENGTH);
+
+
+   
+    return autocvr;
+
+}
+
+static VT_VOID autocorrelation(VT_FLOAT* raw_signature, VT_FLOAT* acr_sig){
+
+VT_FLOAT acf[VT_CS_SAMPLE_LENGTH] = {0};
+
+        int decimal;
+    VT_FLOAT frac_float;
+    VT_INT frac;
+
+    VT_FLOAT div=0;
+    bool less;
+
+for (int i=0;i<128;i++){
+
+acr_sig[i]=autocovariance(raw_signature, i);
+}
+div=acr_sig[0];
+
+
+// printf("\nACR FUNC:\n");
+//     for (VT_INT iter = 0; iter < VT_CS_SAMPLE_LENGTH; iter++)
+//     {
+//         decimal    = acr_sig[iter];
+//         frac_float = acr_sig[iter] - (VT_FLOAT)decimal;
+//         frac       = fabsf(frac_float) * 10000;
+//         VTLogDebugNoTag("%d.%04d, ", decimal, frac);
+//     }
+//     printf("\ndiv:");
+
+//         decimal    = div;
+//         frac_float = div - (VT_FLOAT)decimal;
+//         frac       = fabsf(frac_float) * 10000;
+//         VTLogDebugNoTag("%d.%04d, ", decimal, frac);
+
+for (int i=0;i<VT_CS_SAMPLE_LENGTH;i++){
+
+acr_sig[i]=(float)acr_sig[i]/(float)div;
+}
+
+
+
+printf("\nACR FUNC:\n");
+    for (VT_INT iter = 0; iter < VT_CS_SAMPLE_LENGTH; iter++)
+    {
+        decimal    =acr_sig[iter];
+        frac_float = acr_sig[iter] - (VT_FLOAT)decimal;
+        frac       = fabsf(frac_float) * 10000;
+        if(acr_sig[iter]<0 && acr_sig[iter]>-1){
+            VTLogDebugNoTag("-%d.%04d, ", decimal, frac);
+        }
+        else{
+        VTLogDebugNoTag("%d.%04d, ", decimal, frac);}
+    }
+    printf("\n");
+
+
+}
+
+
+static VT_UINT gettopNidx(VT_INT* topNidx,VT_FLOAT* acr_sig){
+VT_INT idx=0;
+VT_FLOAT max=-100;
+VT_UINT found=0;
+VT_UINT foundonce=0;
+
+VT_FLOAT raw_sig[VT_CS_SAMPLE_LENGTH]={0};
+
+    for(int i=0;i<VT_CS_SAMPLE_LENGTH;i++){
+        raw_sig[i]=acr_sig[i];
+    }
+
+for(int i=0;i<TOPNPEAKS;i++){
+    max=-100;
+    found=0;
+    for(int j=1;j<VT_CS_SAMPLE_LENGTH/2;j++){
+        if (raw_sig[j]>max && raw_sig[j] > 0.2 && raw_sig[j]>raw_sig[j-1] && raw_sig[j]>raw_sig[j+1]){
+            found=1;
+            max=raw_sig[j];
+            idx=j;
+        }
+            }
+        
+        if(found){
+        //raw_sig[idx]=(raw_sig[idx-1]+raw_sig[idx+1])/2; 
+        foundonce=1; 
+        raw_sig[idx]=-100;
+        // raw_sig[idx-1]=raw_sig[idx];
+        topNidx[i]=idx;}
+
+
+}
+if (foundonce){return 1;}
+else {return 0;}
+
+}
+
+static VT_UINT check_acr_peaks(VT_FLOAT* acr_sig,
+    VT_UINT* index,
+    VT_UINT period,
+    VT_FLOAT* energy,
+    VT_UINT* peaks,
+    VT_UINT* totaljump,VT_UINT* totalhighpeaks)
+{   
+
+    if(period==*index){
+        *energy=*energy+acr_sig[*index];
+        *index=*index+period;
+        *peaks=*peaks+1;
+        *totaljump=*totaljump+period;
+                #if VT_LOG_LEVEL > 2
+        VTLogDebugNoTag("SUCCESSi : peaks = %d, energy = %d, index= %d \n",*peaks,*energy,*index);
+        #endif
+       
+        return 1;
+    }
+
+    VT_FLOAT maxval=acr_sig[*index];
+    VT_UINT maxvalindex=*index;
+    VT_UINT deviation=0;
+    
+    // if(*index>=VT_CS_SAMPLE_LENGTH-VT_CS_AUTO_CORRELATION_LAG){
+    //     maxval=0;
+    //     for (VT_UINT iterx=*index-1;iterx<VT_CS_SAMPLE_LENGTH-VT_CS_AUTO_CORRELATION_LAG;iterx++){
+    //         if (raw_signature[iterx]>maxval){
+    //         maxval=raw_signature[iterx];
+    //         maxvalindex=iterx;
+    //         }
+
+    //     }
+
+    // }
+    if(*index<VT_CS_SAMPLE_LENGTH-1){
+    for(VT_INT iter=-1; iter<2;iter++){ //make 2 a macro
+        if((acr_sig[(*index)+iter]>maxval) &&(((*index)+iter)!=0 ) && (fabs((double)iter)<period)&& (((*index)+iter)<VT_CS_SAMPLE_LENGTH-1)) {
+            maxval=acr_sig[(*index)+iter];
+            maxvalindex=(*index)+iter;
+            deviation=iter;
+        }
+        }}
+    else {
+        printf("\nseen till end! \n");
+        return 0;}
+
+
+    // if(*peaks<2 && maxval<0.2 ){
+    //     printf("\nsmall second peak\n");
+    //     return 0;
+    // }
+    if((maxval>0.2) || (maxvalindex>64 && maxval>0.1)){
+        printf("\n high peak detected at %d\n",maxvalindex);
+        *totalhighpeaks=*totalhighpeaks+1;
+    }
+
+    if (maxval>acr_sig[maxvalindex-1] && maxval>acr_sig[maxvalindex+1]){
+                
+        *peaks += 1;
+        *totaljump=*totaljump+period+deviation;
+        *index = maxvalindex + period; 
+        if(*peaks<2){
+        *energy=*energy+maxval;}
+        #if VT_LOG_LEVEL > 2
+        VTLogDebugNoTag("SUCCESS : peaks = %d, energy = %d, index= %d \n",*peaks,maxval,maxvalindex);
+        #endif
+        return 1;}    
+
+
     else
+
     {
-        *period = (((period_total * 2.0f) / (VT_FLOAT)peaks) - (VT_FLOAT)(2.0f * (*period))) / (VT_FLOAT)(peaks - 1);
-        return VT_SUCCESS;
+        #if VT_LOG_LEVEL > 2
+        VTLogDebugNoTag("FAIL : peaks = %d, energy = %d, index= %d \n",*peaks,maxval,maxvalindex);
+        #endif
+    
+        return 0;
     }
+}
+
+static VT_UINT analyze(VT_INT start,VT_FLOAT* acr_sig, VT_FLOAT* period, VT_FLOAT* energy,VT_UINT* peaks_){
+    if(start==-1){
+        return 0;
+    }
+
+VT_UINT index=start;
+VT_FLOAT energy_=0;
+VT_UINT peaks=0;
+VT_UINT totaljump=0;
+VT_UINT period_=start;
+VT_UINT totalhighpeaks=0;
+
+        VT_INT decimal;
+    VT_FLOAT frac_float;
+    VT_INT frac;
+printf("\nanalyzing start point %d\n",start);
+while(check_acr_peaks(acr_sig,&index,period_,&energy_,&peaks,&totaljump,&totalhighpeaks)==1){
+
+}
+*period=(float)totaljump/(float)peaks;
+*energy=energy_/2;
+*peaks_=peaks;
+printf("\nFINAL ANALYSIS: start= %d, peaks= %d ",start,peaks);
+        decimal    =*energy;
+        frac_float = *energy - (VT_FLOAT)decimal;
+        frac       = fabsf(frac_float) * 10000;
+        if(*energy<0 && *energy>-1){
+            VTLogDebugNoTag("energy = %d.%04d, ", decimal, frac);
+        }
+        else{
+        VTLogDebugNoTag("energy = %d.%04d, ", decimal, frac);}
+
+        decimal    =*period;
+        frac_float = *period - (VT_FLOAT)decimal;
+        frac       = fabsf(frac_float) * 10000;
+        if(*period<0 && *period>-1){
+            VTLogDebugNoTag("period = %d.%04d, ", decimal, frac);
+        }
+        else{
+        VTLogDebugNoTag("period = %d.%04d, \n", decimal, frac);}
+
+
+if((peaks<((int)(VT_CS_SAMPLE_LENGTH/start))-2) || peaks<2){
+    printf("less peaks - NOT TAKEN\n");
+    return 0;
+}
+if(totalhighpeaks<1){
+    printf("\nless high peaks - NOT TAKEN");
+    return 0;
+}
+
+// printf("\nFINAL ANALYSIS: start= %d, peaks= %d ",start,peaks);
+//         decimal    =*energy;
+//         frac_float = *energy - (VT_FLOAT)decimal;
+//         frac       = fabsf(frac_float) * 10000;
+//         if(*energy<0 && *energy>-1){
+//             VTLogDebugNoTag("energy = %d.%04d, ", decimal, frac);
+//         }
+//         else{
+//         VTLogDebugNoTag("energy = %d.%04d, ", decimal, frac);}
+
+//         decimal    =*period;
+//         frac_float = *period - (VT_FLOAT)decimal;
+//         frac       = fabsf(frac_float) * 10000;
+//         if(*period<0 && *period>-1){
+//             VTLogDebugNoTag("period = %d.%04d, ", decimal, frac);
+//         }
+//         else{
+//         VTLogDebugNoTag("period = %d.%04d, \n", decimal, frac);}
+
+return 1;
+}
+
+
+static VT_UINT period_calculate(VT_FLOAT* raw_signature, VT_FLOAT* period)
+{
+VT_FLOAT acr_signal[VT_CS_SAMPLE_LENGTH] = {0};
+        VT_INT decimal;
+    VT_FLOAT frac_float;
+    VT_INT frac;
+
+autocorrelation(raw_signature, acr_signal);
+
+//VT_FLOAT acr_signal_copy[VT_CS_SAMPLE_LENGTH]={0};
+VT_INT topNidx[TOPNPEAKS]={0};
+VT_FLOAT period_=0;
+VT_FLOAT energy=0;
+VT_FLOAT maxenergy=0;
+VT_UINT maxpeaks=0;
+VT_UINT result=0;
+VT_UINT resulttemp;
+VT_UINT peaks=0;
+
+for(int i=0;i<TOPNPEAKS;i++){
+    topNidx[i]=-1;
+}
+
+
+if(!gettopNidx(topNidx,acr_signal)){
+    return VT_ERROR;
+}
+
+for(int i=0;i<TOPNPEAKS;i++){
+    printf(" %d ",topNidx[i]);
+}
+
+for(int i=0;i<TOPNPEAKS;i++){
+    printf("\nseeing start point %d\n",i);
+    energy=0;
+    period_=0;
+    resulttemp=analyze(topNidx[i],acr_signal,&period_,&energy,&peaks);
+result= result || resulttemp;
+if(((energy>maxenergy) || ((((maxenergy-energy)/maxenergy)<0.2) && peaks<maxpeaks)) && resulttemp){
+    maxpeaks=peaks;
+    *period=period_;
+    maxenergy=energy;
+
+}
+
+
+}
+
+if(result){
+    return VT_SUCCESS;
+}
+else {return VT_ERROR;}
+
 }
 
 static VT_FLOAT average_calculate(
@@ -280,6 +670,23 @@ static VT_VOID binary_state_current_compute(VT_FLOAT* raw_signature,
     VT_UINT* datapoints_active,
     VT_UINT* datapoints_standby)
 {
+#if VT_LOG_LEVEL > 2
+    VT_INT decimal;
+    VT_FLOAT frac_float;
+    VT_INT frac;
+#endif /* VT_LOG_LEVEL > 2 */
+        #if VT_LOG_LEVEL > 2
+    VTLogDebugNoTag("RAW SIG in BINARY COMPUTE : \n");
+    for (VT_INT iter = 0; iter < VT_CS_SAMPLE_LENGTH; iter++)
+    {
+        decimal    = raw_signature[iter];
+        frac_float = raw_signature[iter] - (VT_FLOAT)decimal;
+        frac       = fabsf(frac_float) * 10000;
+        VTLogDebugNoTag("%d.%04d, ", decimal, frac);
+    }
+    #endif
+
+
     VT_FLOAT state_array[VT_CS_SAMPLE_LENGTH]   = {0};
     bool datapoint_visited[VT_CS_SAMPLE_LENGTH] = {0};
     VT_UINT low_state_count                     = 0;
@@ -470,7 +877,16 @@ VT_UINT cs_repeating_signature_feature_vector_compute(VT_CURRENTSENSE_OBJECT* cs
     binary_state_current_compute(
             raw_signature, category_array,raw_signature_length, &curr_draw_active, &curr_draw_standby, &datapoints_active, &datapoints_standby);
 
- 
+     #if VT_LOG_LEVEL > 2
+    VTLogDebugNoTag("\nactive points : \n");
+    for (VT_INT iter = 0; iter < VT_CS_SAMPLE_LENGTH; iter++)
+    {
+
+        VTLogDebugNoTag("%d, ", category_array[iter]);
+    }
+    printf("\n");
+    #endif
+    
     
 
 #if VT_LOG_LEVEL > 2

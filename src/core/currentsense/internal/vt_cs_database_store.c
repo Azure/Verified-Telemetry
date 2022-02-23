@@ -2,7 +2,7 @@
    Licensed under the MIT License. */
 #include "vt_cs_database.h"
 #include "vt_debug.h"
-#include "math.h"
+#include <math.h>
 
 VT_UINT cs_store_repeating_signature_feature_vector(VT_CURRENTSENSE_OBJECT* cs_object,
     VT_FLOAT sampling_frequency,
@@ -16,13 +16,13 @@ VT_UINT cs_store_repeating_signature_feature_vector(VT_CURRENTSENSE_OBJECT* cs_o
         return VT_ERROR;
     }
 
-    // for(VT_UINT iter=0;iter<cs_object->fingerprintdb.template.repeating_signatures.num_signatures){
-    //     if(((abs(cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].signature_freq-signature_frequency))/cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].signature_freq)<0.1){
-    //         VTLogDebug("Similar frequency already stored");
-    //         return VT_SUCCESS;
+    for(VT_UINT iter=0;iter<cs_object->fingerprintdb.template.repeating_signatures.num_signatures;iter++){
+        if(((abs(cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].signature_freq-signature_frequency))/cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].signature_freq)<0.15){
+            VTLogDebug("Similar frequency already stored");
+            return VT_SUCCESS;
 
 
-    // }
+    }}
 
     cs_object->fingerprintdb.template.repeating_signatures.signatures[num_signatures].sampling_freq      = sampling_frequency;
     cs_object->fingerprintdb.template.repeating_signatures.signatures[num_signatures].signature_freq     = signature_frequency;

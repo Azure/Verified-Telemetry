@@ -156,6 +156,7 @@ static VT_VOID calculate_top_N_signal_frequencies(
     cs_fft_windowing(signal, VT_CS_SAMPLE_LENGTH, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
     cs_fft_compute(signal, VT_CS_SAMPLE_LENGTH);
     cs_fft_complex_to_magnitude(signal, VT_CS_SAMPLE_LENGTH);
+    
 
     VTLogDebug("FFT: \r\n");
 #if VT_LOG_LEVEL > 2
@@ -214,6 +215,17 @@ static VT_VOID calculate_top_N_signal_frequencies(
             signal[peak_index + 1].real = average_of_peak_neighbour;
         }
     }
+
+        VTLogDebug("Signal after major peak: \r\n");
+#if VT_LOG_LEVEL > 2
+    for (VT_INT iter = 0; iter < VT_CS_SAMPLE_LENGTH / 2; iter++)
+    {
+        decimal    = signal[iter].real;
+        frac_float = signal[iter].real - (VT_FLOAT)decimal;
+        frac       = fabsf(frac_float) * 10000;
+        VTLogDebugNoTag("%d.%04d, ", decimal, frac);
+    }
+#endif /* VT_LOG_LEVEL > 2 */
 
     VTLogDebug("Test Frequencies: \r\n");
 #if VT_LOG_LEVEL > 2
@@ -377,7 +389,7 @@ VT_VOID cs_calibrate_repeating_signatures_compute_collection_settings(
     }
 
     #if VT_LOG_LEVEL > 2
-    VTLogDebugNoTag("\nMIN FREQ: \n");
+    VTLogDebugNoTag("\nMIN REF FREQ: \n");
 
         decimal    = min_ref_freq;
         frac_float = min_ref_freq - (VT_FLOAT)decimal;
@@ -410,6 +422,8 @@ VT_VOID cs_calibrate_repeating_signatures_compute_collection_settings(
             *lowest_sample_freq = top_N_sample_frequencies[iter];
         }
     }
+
+    
     #if VT_LOG_LEVEL > 2
     VTLogDebugNoTag("\nFINAL TOP N FREQ: \n");
     for (VT_INT iter = 0; iter < VT_CS_MAX_TEST_FREQUENCIES; iter++)

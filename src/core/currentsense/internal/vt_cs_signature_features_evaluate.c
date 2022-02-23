@@ -12,7 +12,25 @@ VT_FLOAT cs_repeating_signature_feature_vector_evaluate(VT_FLOAT signature_frequ
     VT_FLOAT relative_current_draw_saved)
 {
     VT_FLOAT signature_drift = 0;
-    signature_drift += fabsf((signature_frequency_under_test - signature_frequency_saved) / signature_frequency_saved) * 100.0f;
+    VT_FLOAT harmonic = 0;
+    //signature_drift += fabsf((signature_frequency_under_test - signature_frequency_saved) / signature_frequency_saved) * 100.0f;
+
+    if(signature_frequency_saved>signature_frequency_under_test){
+        harmonic=signature_frequency_saved/signature_frequency_under_test;
+        if(fabsf((harmonic)-round(harmonic))<0.2){
+        signature_drift += fabsf((signature_frequency_under_test - signature_frequency_saved/harmonic) / signature_frequency_saved) * 100.0f;
+        }
+    }
+    if(signature_frequency_saved<signature_frequency_under_test){
+        harmonic=signature_frequency_under_test/signature_frequency_saved;
+        if(fabsf((harmonic)-round(harmonic))<0.2){
+        signature_drift += fabsf((signature_frequency_under_test/harmonic - signature_frequency_saved) / signature_frequency_saved) * 100.0f;
+        }
+    }
+
+
+
+
     signature_drift += fabsf((duty_cycle_under_test - duty_cycle_saved) / duty_cycle_saved) * 100.0f;
     signature_drift +=
         fabsf((relative_current_draw_under_test - relative_current_draw_saved) / relative_current_draw_saved) * 100.0f;
