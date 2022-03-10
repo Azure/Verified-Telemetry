@@ -546,19 +546,20 @@ if(!gettopNidx(topNidx,acr_signal)){
 for(int i=0;i<TOPNPEAKS;i++){
     printf(" %d ",topNidx[i]);
 }
-
+//.
 for(int i=0;i<TOPNPEAKS;i++){
-    printf("\nseeing start point %d\n",i);
+    //printf("\nseeing start point %d\n",i);
     energy=0;
     period_=0;
     resulttemp=analyze(topNidx[i],acr_signal,&period_,&energy,&peaks);
 result= result || resulttemp;
-if(((energy>maxenergy) || ((((maxenergy-energy)/maxenergy)<0.2) && peaks<maxpeaks)) && resulttemp){
+if(peaks>maxpeaks && resulttemp){
     maxpeaks=peaks;
     *period=period_;
     maxenergy=energy;
-
 }
+
+
 
 
 }
@@ -973,6 +974,7 @@ if (sampling_frequency==VT_CS_ADC_MAX_SAMPLING_FREQ){
         
 
 #if VT_LOG_LEVEL > 2
+        VTLogDebug(" period_calculate = VT_SUCCESS\r\n");
         decimal    = *signature_frequency;
         frac_float = *signature_frequency - (VT_FLOAT)decimal;
         frac       = fabsf(frac_float) * 10000;
@@ -994,6 +996,36 @@ if (sampling_frequency==VT_CS_ADC_MAX_SAMPLING_FREQ){
 #endif /* VT_LOG_LEVEL > 2 */
 
         return VT_SUCCESS;
+    }
+    else
+    {
+        *signature_frequency=0;
+        *duty_cycle=0;
+
+    #if VT_LOG_LEVEL > 2
+            VTLogDebug(" period_calculate = VT_NOT_SUCCESS\r\n");
+            decimal    = *signature_frequency;
+            frac_float = *signature_frequency - (VT_FLOAT)decimal;
+            frac       = fabsf(frac_float) * 10000;
+            VTLogDebug("Repeating Signature Frequency = %d.%04d\r\n", decimal, frac);
+    #endif /* VT_LOG_LEVEL > 2 */
+
+    #if VT_LOG_LEVEL > 2
+            decimal    = *relative_current_draw;
+            frac_float = *relative_current_draw - (VT_FLOAT)decimal;
+            frac       = fabsf(frac_float) * 10000;
+            VTLogDebug("Repeating Signature Relative Curr Draw = %d.%04d\r\n", decimal, frac);
+    #endif /* VT_LOG_LEVEL > 2 */
+
+    #if VT_LOG_LEVEL > 2
+            decimal    = *duty_cycle;
+            frac_float = *duty_cycle - (VT_FLOAT)decimal;
+            frac       = fabsf(frac_float) * 10000;
+            VTLogDebug("Repeating Signature Duty Cycle = %d.%04d\r\n", decimal, frac);
+    #endif /* VT_LOG_LEVEL > 2 */
+
+            return VT_SUCCESS;
+
     }
 
     VTLogDebug("Error in computing feature vectors for repeating signature\r\n");

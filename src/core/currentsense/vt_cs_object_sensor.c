@@ -3,7 +3,8 @@
 #include "vt_cs_api.h"
 
 VT_VOID vt_currentsense_object_sensor_calibrate(VT_CURRENTSENSE_OBJECT* cs_object)
-{
+{   cs_object->Calibration_Done_Count=0;
+    cs_object->Initial_Calibration_Done=false;
     cs_object->mode = VT_MODE_CALIBRATE;
 }
 

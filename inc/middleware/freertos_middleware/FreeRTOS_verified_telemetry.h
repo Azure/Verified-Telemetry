@@ -188,6 +188,9 @@ AzureIoTResult_t FreeRTOS_vt_properties(
  * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
  */
 
+UINT MultiCalibration_store_cs_object(
+    FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, int32_t MultiCalibrationCount);
+
 AzureIoTResult_t FreeRTOS_vt_process_property_update(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     AzureIoTHubClient_t* xAzureIoTHubClient,
     const UCHAR* component_name_ptr,

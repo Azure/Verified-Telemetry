@@ -8,6 +8,7 @@
 #include "vt_defs.h"
 
 VT_VOID cs_reset_db(VT_CURRENTSENSE_OBJECT* cs_object);
+VT_VOID cs_reset_Repeatability_Data_Array(VT_CURRENTSENSE_OBJECT* cs_object);
 VT_UINT cs_store_repeating_signature_feature_vector(VT_CURRENTSENSE_OBJECT* cs_object,
     VT_FLOAT sampling_frequency,
     VT_FLOAT signature_frequency,

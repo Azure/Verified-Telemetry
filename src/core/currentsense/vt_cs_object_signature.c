@@ -52,6 +52,7 @@
 //     }
 // }
 
+
 VT_VOID vt_currentsense_object_signature_read(VT_CURRENTSENSE_OBJECT* cs_object)
 {
     VTLogDebug("Signature read started \r\n");
@@ -109,7 +110,7 @@ VT_VOID vt_currentsense_object_signature_process(VT_CURRENTSENSE_OBJECT* cs_obje
         case VT_MODE_CALIBRATE:
             VTLogDebug("Calibrating Sensor Fingerprint \r\n");
             cs_calibrate_sensor(cs_object);
-            cs_object->mode = VT_MODE_RUNTIME_EVALUATE;
+            printf(" Calibration_Done_Count : %d MultiCalibration_Count : %d ",cs_object->Calibration_Done_Count,MULTICALIBRATION_COUNT);
             printf("\n NUM SIG = %d \n", cs_object->fingerprintdb.template.repeating_signatures.num_signatures);
             printf(" final T type : %d", cs_object->fingerprintdb.template_type);
             break;

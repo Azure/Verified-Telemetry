@@ -25,6 +25,7 @@
 #define azureiotPROPERTY_SUCCESS                   "success"
 #define azureiotPROPERTY_STATUS_SUCCESS            200
 #define azureiotPROPERTY_ENABLE_VERIFIED_TELEMETRY "enableVerifiedTelemetry"
+#define azureiotPROPERTY_MULTICALIBRATION "MultiCalibration"
 #define PROPERTY_NAME_MAX_LENGTH                   50
 #define azureiotMESSAGEPROPERTYSYMBOL              "$.sub"
 
@@ -339,6 +340,72 @@ static AzureIoTResult_t send_reported_property(AzureIoTHubClient_t* xAzureIoTHub
     return xResult;
 }
 
+static AzureIoTResult_t send_reported_property_int32_t(AzureIoTHubClient_t* xAzureIoTHubClient,
+    const UCHAR* component_name_ptr,
+    UINT component_name_length,
+    int32_t status,
+    UINT version,
+    UCHAR* property_name,
+    UINT property_name_length)
+{
+    AzureIoTJSONWriter_t xWriter;
+    uint8_t local_scratch_buffer[256];
+    AzureIoTResult_t xResult;
+    int32_t lBytesWritten;
+
+    xResult = AzureIoTJSONWriter_Init(&xWriter, local_scratch_buffer, sizeof(local_scratch_buffer));
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    xResult = AzureIoTJSONWriter_AppendBeginObject(&xWriter);
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    xResult = AzureIoTHubClientProperties_BuilderBeginComponent(
+        xAzureIoTHubClient, &xWriter, (const uint8_t*)component_name_ptr, component_name_length);
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    xResult = AzureIoTHubClientProperties_BuilderBeginResponseStatus(xAzureIoTHubClient,
+        &xWriter,
+        (const uint8_t*)property_name,
+        property_name_length,
+        azureiotPROPERTY_STATUS_SUCCESS,
+        version,
+        (const uint8_t*)azureiotPROPERTY_SUCCESS,
+        strlen(azureiotPROPERTY_SUCCESS));
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    xResult = AzureIoTJSONWriter_AppendInt32(&xWriter, status);
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    xResult = AzureIoTHubClientProperties_BuilderEndResponseStatus(xAzureIoTHubClient, &xWriter);
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    xResult = AzureIoTHubClientProperties_BuilderEndComponent(xAzureIoTHubClient, &xWriter);
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    xResult = AzureIoTJSONWriter_AppendEndObject(&xWriter);
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    lBytesWritten = AzureIoTJSONWriter_GetBytesUsed(&xWriter);
+
+    if (lBytesWritten < 0)
+    {
+        LogError(("Error getting the bytes written for the properties confirmation JSON"));
+    }
+    else
+    {
+        LogDebug(("Sending acknowledged writable property. Payload: %.*s", lBytesWritten, local_scratch_buffer));
+        xResult = AzureIoTHubClient_SendPropertiesReported(xAzureIoTHubClient, local_scratch_buffer, lBytesWritten, NULL);
+
+        if (xResult != eAzureIoTSuccess)
+        {
+            LogError(("There was an error sending the reported properties: 0x%08x", xResult));
+        }
+    }
+
+    return xResult;
+}
+
+
 UINT FreeRTOS_vt_device_status_property(
     FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, bool device_status, AzureIoTHubClient_t* xAzureIoTHubClient)
 {
@@ -534,6 +601,25 @@ UINT FreeRTOS_vt_signature_process(
     return eAzureIoTErrorFailed;
 }
 
+UINT MultiCalibration_store_cs_object(
+    FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, int32_t MultiCalibrationCount)
+{
+    UINT iter                      = 0;
+    UINT components_num            = verified_telemetry_DB->components_num;
+    void* component_pointer        = verified_telemetry_DB->first_component;
+
+
+    for (iter = 0; iter < components_num; iter++)
+    {
+        if (((FreeRTOS_VT_OBJECT*)component_pointer)->signature_type == VT_SIGNATURE_TYPE_CURRENTSENSE)
+        {
+            ((FreeRTOS_VT_OBJECT*)component_pointer)->component.cs.cs_object.MultiCalibration_Count=MultiCalibrationCount;
+        }
+        component_pointer = (((FreeRTOS_VT_OBJECT*)component_pointer)->next_component);
+    }
+    return eAzureIoTSuccess;
+}
+
 AzureIoTResult_t FreeRTOS_vt_process_property_update(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     AzureIoTHubClient_t* xAzureIoTHubClient,
     const UCHAR* component_name_ptr,
@@ -542,6 +628,7 @@ AzureIoTResult_t FreeRTOS_vt_process_property_update(FreeRTOS_VERIFIED_TELEMETRY
     UINT version)
 {
     bool parsed_value = false;
+    int32_t MultiCalibrationCount =3;
     AzureIoTResult_t xResult;
 
     if (verified_telemetry_DB->component_name_length != component_name_length ||
@@ -576,6 +663,37 @@ AzureIoTResult_t FreeRTOS_vt_process_property_update(FreeRTOS_VERIFIED_TELEMETRY
             strlen("enableVerifiedTelemetry"));
         configASSERT(xResult == eAzureIoTSuccess);
 
+        printf("response done");
+
+        return eAzureIoTSuccess;
+    }
+    else if (AzureIoTJSONReader_TokenIsTextEqual(xReader,
+            (const uint8_t*)azureiotPROPERTY_MULTICALIBRATION,
+            strlen(azureiotPROPERTY_MULTICALIBRATION)))
+    {
+        xResult = AzureIoTJSONReader_NextToken(xReader);
+        configASSERT(xResult == eAzureIoTSuccess);
+
+        /* Get desired temperature */
+        xResult = AzureIoTJSONReader_GetTokenInt32(xReader, &MultiCalibrationCount);
+        configASSERT(xResult == eAzureIoTSuccess);
+
+        xResult = AzureIoTJSONReader_NextToken(xReader);
+        configASSERT(xResult == eAzureIoTSuccess);
+
+        VTLogInfo("Received Multi Calibration Twin update with value : %d\r\n", (int)MultiCalibrationCount);
+
+        MultiCalibration_store_cs_object(verified_telemetry_DB,MultiCalibrationCount);
+
+        xResult = send_reported_property_int32_t(xAzureIoTHubClient,
+            component_name_ptr,
+            component_name_length,
+            MultiCalibrationCount,
+            version,
+            (UCHAR*)azureiotPROPERTY_MULTICALIBRATION,
+            strlen(azureiotPROPERTY_MULTICALIBRATION));
+        configASSERT(xResult == eAzureIoTSuccess);
+        
         printf("response done");
 
         return eAzureIoTSuccess;
@@ -618,7 +736,7 @@ AzureIoTResult_t FreeRTOS_vt_properties(
                     (CHAR*)((FreeRTOS_VT_OBJECT*)component_pointer)->component.fc.component_name_ptr,
                     xResult);
             }
-
+            
             if (((FreeRTOS_VT_OBJECT*)component_pointer)->component.fc.property_sent == 0)
             {
                 if ((xResult = FreeRTOS_vt_fallcurve_fingerprint_type_property(

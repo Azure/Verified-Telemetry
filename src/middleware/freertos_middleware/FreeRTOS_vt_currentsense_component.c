@@ -291,16 +291,21 @@ static AzureIoTResult_t FreeRTOS_vt_currentsense_fingerprint_template_associated
     VT_CURRENTSENSE_DATABASE_FLATTENED flattened_db;
     bool db_required_to_store          = true;
     VT_UINT template_confidence_metric = 0;
+    printf("fetch start \n");
     vt_currentsense_object_database_fetch(
         &(handle->cs_object), &flattened_db, &db_required_to_store, &template_confidence_metric);
-
+    printf("fetch complete \n");
+    ///here we have a check 
     if (db_required_to_store)
-    {
+    {       
+        printf("db_required_to_store true \n");
+
         if ((xResult = FreeRTOS_vt_currentsense_fingerprint_template_property(handle, xAzureIoTHubClient, &flattened_db))!=eAzureIoTSuccess)
         {
             VTLogError("Failed to update fingerprint template reported property: error code = 0x%08x\r\n", xResult);
             return xResult;
         }
+        printf("template property done \n");
         if ((xResult = FreeRTOS_vt_currentsense_fingerprint_template_confidence_metric_property(
                  handle, xAzureIoTHubClient, template_confidence_metric))!=eAzureIoTSuccess)
         {
@@ -499,9 +504,6 @@ static AzureIoTResult_t sync_fingerprint_template(AzureIoTJSONReader_t* xReader,
     memset(flattened_db.template_type, 0, sizeof(flattened_db.template_type));
     strncpy((VT_CHAR*)flattened_db.template_type, (const char*)pucBufferLocal, sizeof(flattened_db.template_type) - 1);
 
-    if (atof((VT_CHAR*)flattened_db.template_type) == VT_CS_NON_REPEATING_SIGNATURE)
-    {
-
 
     xResult = AzureIoTJSONReader_NextToken(xReader);
     configASSERT(xResult == eAzureIoTSuccess);
@@ -531,10 +533,6 @@ static AzureIoTResult_t sync_fingerprint_template(AzureIoTJSONReader_t* xReader,
     printf(" non_repeating_signature_avg_curr_on - %s \n", pucBufferLocal);
     memset(flattened_db.non_repeating_signature_avg_curr_on, 0, sizeof(flattened_db.non_repeating_signature_avg_curr_on));
     strncpy((VT_CHAR*)flattened_db.non_repeating_signature_avg_curr_on, (const char*)pucBufferLocal, sizeof(flattened_db.non_repeating_signature_avg_curr_on) - 1);
-    }
-
-    else if (atof((VT_CHAR*)flattened_db.template_type) == VT_CS_REPEATING_SIGNATURE)
-    {
 
 
     xResult = AzureIoTJSONReader_NextToken(xReader);
@@ -542,20 +540,6 @@ static AzureIoTResult_t sync_fingerprint_template(AzureIoTJSONReader_t* xReader,
 
     xResult = AzureIoTJSONReader_NextToken(xReader);
     configASSERT(xResult == eAzureIoTSuccess);
-
-    xResult = AzureIoTJSONReader_NextToken(xReader);
-    configASSERT(xResult == eAzureIoTSuccess);
-
-    xResult = AzureIoTJSONReader_NextToken(xReader);
-    configASSERT(xResult == eAzureIoTSuccess);
-
-    xResult = AzureIoTJSONReader_NextToken(xReader);
-    configASSERT(xResult == eAzureIoTSuccess);
-
-    xResult = AzureIoTJSONReader_NextToken(xReader);
-    configASSERT(xResult == eAzureIoTSuccess);
-
-
     memset(pucBufferLocal, 0, LOCAL_BUFFER_SIZE);
     /* Get desired temperature */
     xResult = AzureIoTJSONReader_GetTokenString(xReader, pucBufferLocal, LOCAL_BUFFER_SIZE, &pusBytesCopied);
@@ -648,8 +632,7 @@ static AzureIoTResult_t sync_fingerprint_template(AzureIoTJSONReader_t* xReader,
     printf(" repeating_signature_duty_cycle - %s \n", pucBufferLocal);
     memset(flattened_db.repeating_signature_duty_cycle, 0, sizeof(flattened_db.repeating_signature_duty_cycle));
     strncpy((VT_CHAR*)flattened_db.repeating_signature_duty_cycle, (const char*)pucBufferLocal, sizeof(flattened_db.repeating_signature_duty_cycle) - 1);
-    }
-    
+
     xResult = AzureIoTJSONReader_NextToken(xReader);
     configASSERT(xResult == eAzureIoTSuccess); 
 

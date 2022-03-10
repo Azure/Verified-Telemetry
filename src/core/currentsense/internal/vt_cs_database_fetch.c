@@ -94,10 +94,10 @@ VT_VOID cs_fetch_template_repeating_signature_sampling_frequencies(VT_CURRENTSEN
         return;
     }
 
-    if (cs_object->fingerprintdb.template_type != VT_CS_REPEATING_SIGNATURE)
-    {
-        return;
-    }
+    //if (cs_object->fingerprintdb.template_type != VT_CS_REPEATING_SIGNATURE)
+    //{
+    //    return;
+    //}
 
     if (cs_object->fingerprintdb.template.repeating_signatures.num_signatures == 0)
     {
