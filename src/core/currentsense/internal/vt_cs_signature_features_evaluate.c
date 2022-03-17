@@ -20,7 +20,7 @@ VT_FLOAT cs_repeating_signature_feature_vector_evaluate(VT_FLOAT signature_frequ
 
     if(signature_frequency_saved>signature_frequency_under_test){
         harmonic=signature_frequency_saved/signature_frequency_under_test;
-        if((fabsf((harmonic)-round(harmonic))<0.2)||((harmonic>=1.4)&&(harmonic<=1.6))){
+        if((fabsf((harmonic)-(float)round(harmonic))<0.2f)||((harmonic>=1.4f)&&(harmonic<=1.6f))){
             harmonic_found=1;
         signature_drift += fabsf((signature_frequency_under_test - signature_frequency_saved/harmonic) / signature_frequency_saved) * 100.0f;
         }
@@ -28,7 +28,7 @@ VT_FLOAT cs_repeating_signature_feature_vector_evaluate(VT_FLOAT signature_frequ
 
     if(signature_frequency_saved<signature_frequency_under_test){
         harmonic=signature_frequency_under_test/signature_frequency_saved;
-        if((fabsf((harmonic)-round(harmonic))<0.2)||((harmonic>=1.4)&&(harmonic<=1.6))){
+        if((fabsf((harmonic)-(float)round(harmonic))<0.2f)||((harmonic>=1.4f)&&(harmonic<=1.6f))){
             harmonic_found=1;
         signature_drift += fabsf((signature_frequency_under_test/harmonic - signature_frequency_saved) / signature_frequency_saved) * 100.0f;
         }
@@ -51,7 +51,7 @@ VT_FLOAT cs_repeating_signature_feature_vector_evaluate(VT_FLOAT signature_frequ
     int32_t decimal  = signature_drift;
     float frac_float = signature_drift - (float)decimal;
     int32_t frac     = frac_float * 10000;
-    VTLogDebug("Deviation in Repeating Signature Feature Vector: %u.%u \r\n", decimal, frac);
+    VTLogDebug("Deviation in Repeating Signature Feature Vector: %d.%d \r\n", (int)decimal, (int)frac);
 #endif /* VT_LOG_LEVEL > 2 */
     return signature_drift;
 }
@@ -64,7 +64,7 @@ VT_FLOAT cs_repeating_signature_relative_current_evaluate(VT_FLOAT relative_curr
     int32_t decimal  = signature_drift;
     float frac_float = signature_drift - (float)decimal;
     int32_t frac     = frac_float * 10000;
-    VTLogDebug("Deviation in Repeating Signature relative Current: %u.%u \r\n", decimal, frac);
+    VTLogDebug("Deviation in Repeating Signature relative Current: %d.%d \r\n", (int)decimal, (int)frac);
 #endif /* VT_LOG_LEVEL > 2 */
     return signature_drift;
 }
@@ -77,7 +77,7 @@ VT_FLOAT cs_repeating_signature_offset_current_evaluate(VT_FLOAT offset_current_
     int32_t decimal  = signature_drift;
     float frac_float = signature_drift - (float)decimal;
     int32_t frac     = frac_float * 10000;
-    VTLogDebug("Deviation in Repeating Signature Offset Current: %u.%u \r\n", decimal, frac);
+    VTLogDebug("Deviation in Repeating Signature Offset Current: %d.%d \r\n", (int)decimal, (int)frac);
 #endif /* VT_LOG_LEVEL > 2 */
     return signature_drift;
 }
@@ -98,7 +98,7 @@ VT_FLOAT cs_non_repeating_signature_average_current_evaluate(
     int32_t decimal  = (int32_t)signature_drift;
     float frac_float = signature_drift - (float)decimal;
     int32_t frac     = (int32_t)(frac_float * 10000);
-    VTLogDebug("Deviation in Non-Repeating Signature Average Current Draw: %u.%u \r\n", decimal, frac);
+    VTLogDebug("Deviation in Non-Repeating Signature Average Current Draw: %d.%d \r\n", (int)decimal, (int)frac);
 #endif /* VT_LOG_LEVEL > 2 */
     return signature_drift;
 }

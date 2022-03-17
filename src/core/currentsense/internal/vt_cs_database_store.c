@@ -17,7 +17,7 @@ VT_UINT cs_store_repeating_signature_feature_vector(VT_CURRENTSENSE_OBJECT* cs_o
     }
 
     for(VT_UINT iter=0;iter<cs_object->fingerprintdb.template.repeating_signatures.num_signatures;iter++){
-        if(((abs(cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].signature_freq-signature_frequency))/cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].signature_freq)<0.15){
+        if((((float)fabs(cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].signature_freq-signature_frequency))/cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].signature_freq)<0.15f){
             VTLogDebug("Similar frequency already stored");
             return VT_SUCCESS;
 

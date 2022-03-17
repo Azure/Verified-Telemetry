@@ -229,11 +229,6 @@ static VT_FLOAT autocovariance(VT_FLOAT* raw_sig, VT_UINT lag){
     VT_FLOAT mean=0;
     VT_FLOAT autocvr=0;
 
-    
-        VT_INT decimal;
-    VT_FLOAT frac_float;
-    VT_INT frac;
-
     for(int i=0;i<VT_CS_SAMPLE_LENGTH;i++){
         mean=mean+raw_sig[i];
     }
@@ -267,14 +262,16 @@ static VT_FLOAT autocovariance(VT_FLOAT* raw_sig, VT_UINT lag){
 
 static VT_VOID autocorrelation(VT_FLOAT* raw_signature, VT_FLOAT* acr_sig){
 
-VT_FLOAT acf[VT_CS_SAMPLE_LENGTH] = {0};
+//VT_FLOAT acf[VT_CS_SAMPLE_LENGTH] = {0};
 
-        int decimal;
+        #if VT_LOG_LEVEL > 2
+    int decimal;
     VT_FLOAT frac_float;
     VT_INT frac;
+    #endif
 
     VT_FLOAT div=0;
-    bool less;
+    //bool less;
 
 for (int i=0;i<128;i++){
 
@@ -304,8 +301,8 @@ acr_sig[i]=(float)acr_sig[i]/(float)div;
 }
 
 
-
-printf("\nACR FUNC:\n");
+    #if VT_LOG_LEVEL > 2
+    printf("\nACR FUNC:\n");
     for (VT_INT iter = 0; iter < VT_CS_SAMPLE_LENGTH; iter++)
     {
         decimal    =acr_sig[iter];
@@ -318,7 +315,7 @@ printf("\nACR FUNC:\n");
         VTLogDebugNoTag("%d.%04d, ", decimal, frac);}
     }
     printf("\n");
-
+    #endif
 
 }
 
@@ -339,7 +336,7 @@ for(int i=0;i<TOPNPEAKS;i++){
     max=-100;
     found=0;
     for(int j=1;j<VT_CS_SAMPLE_LENGTH/2;j++){
-        if (raw_sig[j]>max && raw_sig[j] > 0.2 && raw_sig[j]>raw_sig[j-1] && raw_sig[j]>raw_sig[j+1]){
+        if (raw_sig[j]>max && raw_sig[j] > 0.2f && raw_sig[j]>raw_sig[j-1] && raw_sig[j]>raw_sig[j+1]){
             found=1;
             max=raw_sig[j];
             idx=j;
@@ -374,7 +371,7 @@ static VT_UINT check_acr_peaks(VT_FLOAT* acr_sig,
         *peaks=*peaks+1;
         *totaljump=*totaljump+period;
                 #if VT_LOG_LEVEL > 2
-        VTLogDebugNoTag("SUCCESSi : peaks = %d, energy = %d, index= %d \n",*peaks,*energy,*index);
+        VTLogDebugNoTag("SUCCESSi : peaks = %d, energy = %d, index= %d \n",(int)*peaks,(int)*energy,(int)*index);
         #endif
        
         return 1;
@@ -412,7 +409,7 @@ static VT_UINT check_acr_peaks(VT_FLOAT* acr_sig,
     //     printf("\nsmall second peak\n");
     //     return 0;
     // }
-    if((maxval>0.2) || (maxvalindex>64 && maxval>0.1)){
+    if((maxval>0.2f) || (maxvalindex>64 && maxval>0.1f)){
         printf("\n high peak detected at %d\n",maxvalindex);
         *totalhighpeaks=*totalhighpeaks+1;
     }
@@ -425,7 +422,7 @@ static VT_UINT check_acr_peaks(VT_FLOAT* acr_sig,
         if(*peaks<2){
         *energy=*energy+maxval;}
         #if VT_LOG_LEVEL > 2
-        VTLogDebugNoTag("SUCCESS : peaks = %d, energy = %d, index= %d \n",*peaks,maxval,maxvalindex);
+        VTLogDebugNoTag("SUCCESS : peaks = %d, energy = %d, index= %d \n",(int)*peaks,(int)maxval,(int)maxvalindex);
         #endif
         return 1;}    
 
@@ -434,7 +431,7 @@ static VT_UINT check_acr_peaks(VT_FLOAT* acr_sig,
 
     {
         #if VT_LOG_LEVEL > 2
-        VTLogDebugNoTag("FAIL : peaks = %d, energy = %d, index= %d \n",*peaks,maxval,maxvalindex);
+        VTLogDebugNoTag("FAIL : peaks = %d, energy = %d, index= %d \n",(int)*peaks,(int)maxval,(int)maxvalindex);
         #endif
     
         return 0;
@@ -453,9 +450,12 @@ VT_UINT totaljump=0;
 VT_UINT period_=start;
 VT_UINT totalhighpeaks=0;
 
-        VT_INT decimal;
+    #if VT_LOG_LEVEL > 2
+    VT_INT decimal;
     VT_FLOAT frac_float;
     VT_INT frac;
+    #endif
+
 printf("\nanalyzing start point %d\n",start);
 while(check_acr_peaks(acr_sig,&index,period_,&energy_,&peaks,&totaljump,&totalhighpeaks)==1){
 
@@ -463,7 +463,8 @@ while(check_acr_peaks(acr_sig,&index,period_,&energy_,&peaks,&totaljump,&totalhi
 *period=(float)totaljump/(float)peaks;
 *energy=energy_/2;
 *peaks_=peaks;
-printf("\nFINAL ANALYSIS: start= %d, peaks= %d ",start,peaks);
+        #if VT_LOG_LEVEL > 2
+        printf("\nFINAL ANALYSIS: start= %d, peaks= %d ",start,peaks);
         decimal    =*energy;
         frac_float = *energy - (VT_FLOAT)decimal;
         frac       = fabsf(frac_float) * 10000;
@@ -481,6 +482,7 @@ printf("\nFINAL ANALYSIS: start= %d, peaks= %d ",start,peaks);
         }
         else{
         VTLogDebugNoTag("period = %d.%04d, \n", decimal, frac);}
+        #endif
 
 
 if((peaks<((int)(VT_CS_SAMPLE_LENGTH/start))-2) || peaks<2){
@@ -518,9 +520,9 @@ return 1;
 static VT_UINT period_calculate(VT_FLOAT* raw_signature, VT_FLOAT* period)
 {
 VT_FLOAT acr_signal[VT_CS_SAMPLE_LENGTH] = {0};
-        VT_INT decimal;
-    VT_FLOAT frac_float;
-    VT_INT frac;
+    //    VT_INT decimal;
+    //VT_FLOAT frac_float;
+    //VT_INT frac;
 
 autocorrelation(raw_signature, acr_signal);
 
@@ -528,7 +530,7 @@ autocorrelation(raw_signature, acr_signal);
 VT_INT topNidx[TOPNPEAKS]={0};
 VT_FLOAT period_=0;
 VT_FLOAT energy=0;
-VT_FLOAT maxenergy=0;
+//VT_FLOAT maxenergy=0;
 VT_UINT maxpeaks=0;
 VT_UINT result=0;
 VT_UINT resulttemp;
@@ -556,7 +558,7 @@ result= result || resulttemp;
 if(peaks>maxpeaks && resulttemp){
     maxpeaks=peaks;
     *period=period_;
-    maxenergy=energy;
+    //maxenergy=energy;
 }
 
 

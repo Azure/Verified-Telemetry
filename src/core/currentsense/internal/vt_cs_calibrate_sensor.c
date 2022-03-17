@@ -27,7 +27,7 @@ VT_UINT Num_Sampling_Freq_In_Repeatability_Data_Array(VT_CURRENTSENSE_OBJECT* cs
     //VT_UINT Num_Sampling_Freq_In_Repeatability_Data_Array = cs_object->fingerprintdb.template.repeating_signatures.Num_Sampling_Freq_In_Repeatability_Data_Array;
     VT_BOOL Sampling_Freq_Found=false;
     VT_UINT multisampling_num_signatures = cs_object->fingerprintdb.template.repeating_signatures.multisampling_num_signatures;
-    bool harmonic_found=false;
+    //bool harmonic_found=false;
     VT_FLOAT harmonic = 0;
 
     for (VT_UINT iter = 0; iter < multisampling_num_signatures; iter++)
@@ -35,14 +35,14 @@ VT_UINT Num_Sampling_Freq_In_Repeatability_Data_Array(VT_CURRENTSENSE_OBJECT* cs
 
         float stored_sampling_frequency=cs_object->fingerprintdb.template.repeating_signatures.Multisampling_Signatures_With_Repeatability_Data_Array[iter].sampling_freq;
         float stored_signature_frequency=cs_object->fingerprintdb.template.repeating_signatures.Multisampling_Signatures_With_Repeatability_Data_Array[iter].signature_freq;
-        float stored_duty_cycle=cs_object->fingerprintdb.template.repeating_signatures.Multisampling_Signatures_With_Repeatability_Data_Array[iter].duty_cycle;
+        //float stored_duty_cycle=cs_object->fingerprintdb.template.repeating_signatures.Multisampling_Signatures_With_Repeatability_Data_Array[iter].duty_cycle;
         float stored_relative_current_draw=cs_object->fingerprintdb.template.repeating_signatures.Multisampling_Signatures_With_Repeatability_Data_Array[iter].relative_curr_draw;
         //float stored_signature_frequency=cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].signature_freq;
         //float stored_duty_cycle=cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].duty_cycle;
         //float stored_relative_current_draw=cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].relative_curr_draw;
 
     //when ever we would compare any freq with 5000, this would go in else, as that case is not needed.
-    if(((stored_sampling_frequency==5000.0)&&(sampling_frequency==5000.0))||((stored_sampling_frequency!=5000.0)&&(sampling_frequency!=5000.0)))
+    if(((stored_sampling_frequency==5000.0f)&&(sampling_frequency==5000.0f))||((stored_sampling_frequency!=5000.0f)&&(sampling_frequency!=5000.0f)))
     {
 
         if( (stored_sampling_frequency>(sampling_frequency-(stored_sampling_frequency*(VT_CS_REP_SAMPLING_FREQUENCY_DIF_ACROSS_CALIBRATIONS_PERCENT_THRESHOLD/(float)100))))&&
@@ -53,15 +53,15 @@ VT_UINT Num_Sampling_Freq_In_Repeatability_Data_Array(VT_CURRENTSENSE_OBJECT* cs
             
             if(stored_signature_frequency>signature_frequency){
                 harmonic=stored_signature_frequency/signature_frequency;
-                if((fabsf((harmonic)-round(harmonic))<0.2)||((harmonic>=1.4)&&(harmonic<=1.6))){
-                harmonic_found=true;
+                if((fabsf((harmonic)-(float)round(harmonic))<0.2f)||((harmonic>=1.4f)&&(harmonic<=1.6f))){
+                //harmonic_found=true;
                 signature_frequency=signature_frequency*harmonic;
                 }
             }
             if(stored_signature_frequency<signature_frequency){
                 harmonic=signature_frequency/stored_signature_frequency;
-                if((fabsf((harmonic)-round(harmonic))<0.2)||((harmonic>=1.4)&&(harmonic<=1.6))){
-                harmonic_found=true;
+                if((fabsf((harmonic)-(float)round(harmonic))<0.2f)||((harmonic>=1.4f)&&(harmonic<=1.6f))){
+                //harmonic_found=true;
                 signature_frequency=signature_frequency/harmonic;
                 }
             }
@@ -79,22 +79,22 @@ VT_UINT Num_Sampling_Freq_In_Repeatability_Data_Array(VT_CURRENTSENSE_OBJECT* cs
                 //    VTLogDebug("\n duty_cycle not reliable \n");
             }
             else
-                VTLogDebug("\n  signature_frequency not reliable \n");
+                {VTLogDebug("\n  signature_frequency not reliable \n");}
             if( (stored_relative_current_draw>(relative_current_draw-(stored_relative_current_draw*(VT_CS_REP_RELATIVE_CURR_DRAW_DIF_ACROSS_CALIBRATIONS_PERCENT_THRESHOLD/(float)100))))&&
                     (stored_relative_current_draw<(relative_current_draw+(stored_relative_current_draw*(VT_CS_REP_RELATIVE_CURR_DRAW_DIF_ACROSS_CALIBRATIONS_PERCENT_THRESHOLD/(float)100))))   )
             {   printf("current_dif_repeatable_count++ \n");
                 cs_object->fingerprintdb.template.repeating_signatures.Multisampling_Signatures_With_Repeatability_Data_Array[iter].current_dif_repeatable_count++;
             }
             else
-                VTLogDebug("\n  relative_current_draw not reliable \n");
+                {VTLogDebug("\n  relative_current_draw not reliable \n");}
             
             break;
         }
         else    
-            VTLogDebug("\n  sampling_frequency not reliable \n");
+            {VTLogDebug("\n  sampling_frequency not reliable \n");}
     }
     else 
-        VTLogDebug("\n  5000 & 4999 case ignored \n");
+        {VTLogDebug("\n  5000 & 4999 case ignored \n");}
 
     }
 
@@ -218,7 +218,7 @@ VT_UINT cs_signature_reliability_test_across_calibrations(VT_CURRENTSENSE_OBJECT
     VTLogDebug("Reliable Signature updated in Signature_Reliable_Across_Calibrations \r\n");
     return VT_SUCCESS;
 }
-
+/*
 VT_UINT cs_remove_unreliable_signatures(VT_CURRENTSENSE_OBJECT* cs_object,
                                             VT_BOOL *Signature_Reliable_Across_Calibrations)
 {
@@ -249,7 +249,7 @@ VT_UINT cs_remove_unreliable_signatures(VT_CURRENTSENSE_OBJECT* cs_object,
         cs_object->fingerprintdb.template.repeating_signatures.repeating_valid=false;
 
 }
-
+*/
 
 static VT_UINT cs_calibrate_repeating_signature_template(VT_CURRENTSENSE_OBJECT* cs_object)
 {
@@ -266,7 +266,7 @@ static VT_UINT cs_calibrate_repeating_signature_template(VT_CURRENTSENSE_OBJECT*
     VT_FLOAT duty_cycle;
     VT_FLOAT offset_current;
 
-    VT_BOOL Signature_Reliable_Across_Calibrations[VT_CS_MAX_SIGNATURES]={false};
+    //VT_BOOL Signature_Reliable_Across_Calibrations[VT_CS_MAX_SIGNATURES]={false};
 
 #if VT_LOG_LEVEL > 2
     VT_INT decimal;
@@ -283,8 +283,8 @@ static VT_UINT cs_calibrate_repeating_signature_template(VT_CURRENTSENSE_OBJECT*
             continue;
         }
         for (VT_UINT i = iterf+1; i < VT_CS_MAX_TEST_FREQUENCIES; i++){
-        if(((((fabs(top_N_frequencies[iterf]-top_N_frequencies[i]))/(double)top_N_frequencies[iterf])<0.1)&&(top_N_frequencies[i]!=5000.0)&&(top_N_frequencies[iterf]!=5000.0))||
-                ((top_N_frequencies[iterf]==5000.0) && (top_N_frequencies[i]==5000.0)))
+        if(((((fabs(top_N_frequencies[iterf]-top_N_frequencies[i]))/(double)top_N_frequencies[iterf])<0.1)&&(top_N_frequencies[i]!=5000.0f)&&(top_N_frequencies[iterf]!=5000.0f))||
+                ((top_N_frequencies[iterf]==5000.0f) && (top_N_frequencies[i]==5000.0f)))
                 {
             top_N_frequencies[i]=0;
 
@@ -527,10 +527,10 @@ VT_UINT cs_non_repeating_signature_reliability_test_across_calibrations(
                 cs_object->fingerprintdb.template.non_repeating_signature.avg_curr_on_off_repeatable_count++;
             }
         else 
-            VTLogDebug(" avg_curr_off not reliable \r\n");
+            {VTLogDebug(" avg_curr_off not reliable \r\n");}
         }
     else
-        VTLogDebug(" avg_curr_on not reliable \r\n");
+        {VTLogDebug(" avg_curr_on not reliable \r\n");}
 
     VTLogDebug("Modified Average Current for Non-Repeating Signatures value stored in DB \r\n");
     return VT_SUCCESS;
@@ -714,9 +714,9 @@ static uint16_t cs_check_non_repeating_signature_after_multicalibration(VT_CURRE
 {
 
     if(cs_object->fingerprintdb.template.non_repeating_signature.avg_curr_on_off_repeatable_count>=MIN_MULTICALIBRATION_MATCHING_COUNT)
-        cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid=true;
+        {cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid=true;}
     else 
-        cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid=false;
+        {cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid=false;}
 
 
         return VT_SUCCESS;
@@ -791,7 +791,9 @@ VT_VOID cs_calibrate_sensor(VT_CURRENTSENSE_OBJECT* cs_object)
         {
             cs_store_repeating_signature_feature_vector_after_multicalibration(cs_object);
             cs_check_non_repeating_signature_after_multicalibration(cs_object);
+            #if VT_LOG_LEVEL > 2
             print_db(cs_object);
+            #endif
             cs_object->mode = VT_MODE_RUNTIME_EVALUATE;
         }
 
