@@ -110,6 +110,7 @@ typedef struct VT_CURRENTSENSE_OBJECT_STRUCT
     VT_UINT8 sensor_drift;
     VT_UINT8 template_confidence_metric;
     VT_UINT8 db_updated;
+    VT_BOOL hist_array[VT_HISTORY_ARRAY_LENGTH];
 } VT_CURRENTSENSE_OBJECT;
 
 typedef struct VT_CURRENTSENSE_DATABASE_FLATTENED

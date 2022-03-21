@@ -701,9 +701,12 @@ static uint16_t cs_store_repeating_signature_feature_vector_after_multicalibrati
     }
 
     if(cs_object->fingerprintdb.template.repeating_signatures.num_signatures>0)
-        cs_object->fingerprintdb.template.repeating_signatures.repeating_valid=true;
+        {cs_object->fingerprintdb.template.repeating_signatures.repeating_valid=true;}
     else 
+        {
         cs_object->fingerprintdb.template.repeating_signatures.repeating_valid=false;
+        cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status=true;
+        }
 
 
     return VT_SUCCESS;
@@ -716,7 +719,10 @@ static uint16_t cs_check_non_repeating_signature_after_multicalibration(VT_CURRE
     if(cs_object->fingerprintdb.template.non_repeating_signature.avg_curr_on_off_repeatable_count>=MIN_MULTICALIBRATION_MATCHING_COUNT)
         {cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid=true;}
     else 
-        {cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid=false;}
+        {
+        cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid=false;
+        cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status=true;
+        }
 
 
         return VT_SUCCESS;

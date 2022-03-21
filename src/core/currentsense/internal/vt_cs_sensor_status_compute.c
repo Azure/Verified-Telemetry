@@ -442,14 +442,44 @@ VTLogDebugNoTag("\n");
     return;
 }
 
+
+VT_VOID average_status(VT_CURRENTSENSE_OBJECT* cs_object){
+
+    VT_UINT sum=0;
+
+    for(int i=VT_HISTORY_ARRAY_LENGTH-1;i>0;i--){
+        cs_object->hist_array[i]=cs_object->hist_array[i-1];
+            }
+    cs_object->hist_array[0]=cs_object->sensor_status;
+
+    printf("\nHIST ARRAY: ");
+
+    for(int i=0;i<VT_HISTORY_ARRAY_LENGTH;i++){
+        sum=sum+cs_object->hist_array[i];
+        printf("%d",cs_object->hist_array[i]);
+            }
+printf("\n%d",sum);
+    if(sum>=ceil((float)VT_HISTORY_ARRAY_LENGTH/2)){
+        cs_object->sensor_status=true;
+    }
+    else{
+        cs_object->sensor_status=false;
+    }
+
+
+    printf("\nFINAL STATUS:%d\n",cs_object->sensor_status);
+
+
+}
 VT_VOID cs_sensor_status(VT_CURRENTSENSE_OBJECT* cs_object)
 {
-             
+
         #if VT_LOG_LEVEL > 2
         VTLogDebugNoTag("\nNON REPEATING signature valid :  %s\n",(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid?"true":"false"));
         #endif
         if(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid==true)
             cs_sensor_status_with_non_repeating_signature_template(cs_object);
+
 
         #if VT_LOG_LEVEL > 2
         VTLogDebugNoTag("\nREPEATING signature valid : %s\n",(cs_object->fingerprintdb.template.repeating_signatures.repeating_valid?"true":"false"));
@@ -457,9 +487,37 @@ VT_VOID cs_sensor_status(VT_CURRENTSENSE_OBJECT* cs_object)
         if(cs_object->fingerprintdb.template.repeating_signatures.repeating_valid==true)
             cs_sensor_status_with_repeating_signature_template(cs_object);
 
+        cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status=!cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status;
+
+        if(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status){
+            cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status=0;
+        }
+        else{
+            cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status=1;
+        }
+
+        if(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid==true && cs_object->fingerprintdb.template.repeating_signatures.repeating_valid==true){
+            cs_object->sensor_status=
+            cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status & cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status;
+
+        }
+        else{
         cs_object->sensor_status=
             cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status|cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status;
-        
+        }
+
+        average_status(cs_object);
+        cs_object->sensor_status=!cs_object->sensor_status;
+
+        cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status=!cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status;
+
+        if(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status){
+            cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status=0;
+        }
+        else{
+            cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status=1;
+        }
+
         #if VT_LOG_LEVEL > 2        
         VTLogDebugNoTag("\n repeating_sensor_status : %s\n",(cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status?"false":"true"));
         VTLogDebugNoTag("\n non_repeating_sensor_status : %s\n",(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status?"false":"true"));
