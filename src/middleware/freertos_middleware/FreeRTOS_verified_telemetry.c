@@ -539,7 +539,7 @@ AzureIoTResult_t FreeRTOS_vt_compute_evaluate_fingerprint_all_sensors(FreeRTOS_V
 }
 
 AzureIoTResult_t FreeRTOS_vt_signature_read(
-    FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, UCHAR* associated_telemetry, UINT associated_telemetry_length)
+    FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, UCHAR* associated_telemetry, UINT associated_telemetry_length,UINT mode)
 {
     UINT iter                      = 0;
     UINT components_num            = verified_telemetry_DB->components_num;
@@ -559,7 +559,7 @@ AzureIoTResult_t FreeRTOS_vt_signature_read(
             if (FreeRTOS_vt_currentsense_signature_read(&(((FreeRTOS_VT_OBJECT*)component_pointer)->component.cs),
                     associated_telemetry,
                     associated_telemetry_length,
-                    enable_verified_telemetry) == eAzureIoTSuccess)
+                    enable_verified_telemetry,mode) == eAzureIoTSuccess)
             {
                 
                 return eAzureIoTSuccess;

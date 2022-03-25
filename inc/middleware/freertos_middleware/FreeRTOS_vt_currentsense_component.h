@@ -60,7 +60,7 @@ AzureIoTResult_t FreeRTOS_vt_currentsense_process_reported_property_sync(FreeRTO
 AzureIoTResult_t FreeRTOS_vt_currentsense_signature_read(FreeRTOS_VT_CURRENTSENSE_COMPONENT* handle,
     UCHAR* associated_telemetry,
     UINT associated_telemetry_length,
-    bool toggle_verified_telemetry);
+    bool toggle_verified_telemetry,UINT mode);
 
 AzureIoTResult_t FreeRTOS_vt_currentsense_signature_process(FreeRTOS_VT_CURRENTSENSE_COMPONENT* handle,
     UCHAR* associated_telemetry,

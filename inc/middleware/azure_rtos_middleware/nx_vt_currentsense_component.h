@@ -135,7 +135,7 @@ UINT nx_vt_currentsense_process_reported_property_sync(NX_VT_CURRENTSENSE_COMPON
 UINT nx_vt_currentsense_signature_read(NX_VT_CURRENTSENSE_COMPONENT* handle,
     UCHAR* associated_telemetry,
     UINT associated_telemetry_length,
-    bool toggle_verified_telemetry);
+    bool toggle_verified_telemetry,UINT mode);
 
 /**
  * @brief Process the raw current data stored. Get status in normal operation, calibrate and recalibrate based on commands.

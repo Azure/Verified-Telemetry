@@ -69,7 +69,7 @@ void vt_adc_buffer_read(uint16_t adc_id,
     float desired_sampling_frequency,
     float* set_sampling_frequency,
     void (*vt_adc_buffer_read_conv_half_cplt_callback)(),
-    void (*vt_adc_buffer_read_conv_cplt_callback)());
+    uint16_t (*vt_adc_buffer_read_conv_cplt_callback)(uint16_t mode));
 
 /**
  * @brief Set a GPIO Pin to HIGH

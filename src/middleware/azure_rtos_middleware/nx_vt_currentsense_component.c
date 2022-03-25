@@ -832,7 +832,7 @@ UINT nx_vt_currentsense_process_reported_property_sync(NX_VT_CURRENTSENSE_COMPON
 UINT nx_vt_currentsense_signature_read(NX_VT_CURRENTSENSE_COMPONENT* handle,
     UCHAR* associated_telemetry,
     UINT associated_telemetry_length,
-    bool toggle_verified_telemetry)
+    bool toggle_verified_telemetry, UINT mode)
 {
     if (strlen((CHAR*)handle->associated_telemetry) != associated_telemetry_length ||
         strncmp((CHAR*)handle->associated_telemetry, (CHAR*)associated_telemetry, associated_telemetry_length) != 0)
@@ -843,7 +843,7 @@ UINT nx_vt_currentsense_signature_read(NX_VT_CURRENTSENSE_COMPONENT* handle,
     {
         return (NX_NOT_SUCCESSFUL);
     }
-    vt_currentsense_object_signature_read(&(handle->cs_object));
+    vt_currentsense_object_signature_read(&(handle->cs_object),mode);
 
     return (NX_AZURE_IOT_SUCCESS);
 }

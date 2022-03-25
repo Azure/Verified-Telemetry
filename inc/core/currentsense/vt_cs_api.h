@@ -145,7 +145,7 @@ VT_VOID vt_currentsense_object_sensor_fetch_status(
     VT_CURRENTSENSE_OBJECT* cs_object, VT_UINT* sensor_status, VT_UINT* sensor_drift);
 
 // Start reading current signature
-VT_VOID vt_currentsense_object_signature_read(VT_CURRENTSENSE_OBJECT* cs_object);
+VT_VOID vt_currentsense_object_signature_read(VT_CURRENTSENSE_OBJECT* cs_object,UINT mode);
 
 // Stop reading current signature and process it
 VT_VOID vt_currentsense_object_signature_process(VT_CURRENTSENSE_OBJECT* cs_object);

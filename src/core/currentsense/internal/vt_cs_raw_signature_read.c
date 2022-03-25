@@ -213,19 +213,23 @@ static VT_VOID cs_raw_signature_read_half_complete_callback()
     }
 }
 
-static VT_VOID cs_raw_signature_read_full_complete_callback()
+static VT_UINT cs_raw_signature_read_full_complete_callback(VT_UINT mode)
 {   //printf("full callback\n");
     // VTLogDebug("cs_raw_signature_read_full_complete_callback() \r\n");
     VT_BOOL repeating_raw_signature_buffers_filled = false;
+    VT_UINT stop_read=false;
 
     if (cs_object_reference->raw_signatures_reader->non_repeating_raw_signature_stop_collection &&
         cs_object_reference->raw_signatures_reader->repeating_raw_signature_buffers_filled)
-    {
-        return;
+    {   
+        stop_read=true;
+        return stop_read;
+        
     }
 
     /* Restart current acquisition */
     // VTLogDebug("adc_buffer_read() \r\n");
+    if (mode==1){
     cs_object_reference->device_driver->adc_buffer_read(cs_object_reference->sensor_handle->adc_id,
         cs_object_reference->sensor_handle->adc_controller,
         cs_object_reference->sensor_handle->adc_channel,
@@ -235,6 +239,7 @@ static VT_VOID cs_raw_signature_read_full_complete_callback()
         &cs_object_reference->raw_signatures_reader->adc_read_sampling_frequency,
         &cs_raw_signature_read_half_complete_callback,
         &cs_raw_signature_read_full_complete_callback);
+    }
 
     /* Transfer data from adc buffer to non repeating signature buffer */
     // VTLogDebug("cs_adc_buffer_to_non_repeating_raw_signature_buffer() \r\n");
@@ -242,7 +247,7 @@ static VT_VOID cs_raw_signature_read_full_complete_callback()
 
     if (cs_object_reference->raw_signatures_reader->repeating_raw_signature_buffers_filled)
     {
-        return;
+        return stop_read;
     }
 
     /* Transfer data from adc buffer to repeating signature buffers */
@@ -251,7 +256,11 @@ static VT_VOID cs_raw_signature_read_full_complete_callback()
     {
         cs_object_reference->raw_signatures_reader->repeating_raw_signature_ongoing_collection = false;
         cs_object_reference->raw_signatures_reader->repeating_raw_signature_buffers_filled     = true;
+        stop_read=true;
+        return stop_read;
     }
+
+    return stop_read;
 }
 
 static VT_VOID cs_raw_signature_buffer_init(
@@ -335,7 +344,7 @@ static VT_UINT upsample_stored_current_measurement(VT_CURRENTSENSE_OBJECT* cs_ob
 VT_UINT cs_raw_signature_read(VT_CURRENTSENSE_OBJECT* cs_object,
     VT_FLOAT* repeating_signature_sampling_frequencies,
     VT_UINT num_repeating_signature_sampling_frequencies,
-    VT_UINT sample_length)
+    VT_UINT sample_length,UINT mode)
 {
     /* Update local reference */
     cs_object_reference = cs_object;

@@ -53,7 +53,7 @@
 // }
 
 
-VT_VOID vt_currentsense_object_signature_read(VT_CURRENTSENSE_OBJECT* cs_object)
+VT_VOID vt_currentsense_object_signature_read(VT_CURRENTSENSE_OBJECT* cs_object,UINT mode)
 {
     VTLogDebug("Signature read started \r\n");
     VT_FLOAT sampling_frequencies[VT_CS_MAX_SIGNATURES];
@@ -70,7 +70,7 @@ VT_VOID vt_currentsense_object_signature_read(VT_CURRENTSENSE_OBJECT* cs_object)
             cs_object, sampling_frequencies, VT_CS_MAX_SIGNATURES, &num_sampling_frqeuencies);
     }
 
-    cs_raw_signature_read(cs_object, sampling_frequencies, num_sampling_frqeuencies, VT_CS_SAMPLE_LENGTH);
+    cs_raw_signature_read(cs_object, sampling_frequencies, num_sampling_frqeuencies, VT_CS_SAMPLE_LENGTH,mode);
 }
 
 VT_VOID vt_currentsense_object_signature_process(VT_CURRENTSENSE_OBJECT* cs_object)

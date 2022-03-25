@@ -599,7 +599,7 @@ UINT nx_vt_azure_iot_pnp_client_component_add(
 }
 
 UINT nx_vt_signature_read(
-    NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, UCHAR* associated_telemetry, UINT associated_telemetry_length)
+    NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, UCHAR* associated_telemetry, UINT associated_telemetry_length,UINT mode)
 {
     UINT iter                      = 0;
     UINT components_num            = verified_telemetry_DB->components_num;
@@ -618,7 +618,7 @@ UINT nx_vt_signature_read(
             if (nx_vt_currentsense_signature_read(&(((NX_VT_OBJECT*)component_pointer)->component.cs),
                     associated_telemetry,
                     associated_telemetry_length,
-                    enable_verified_telemetry) == VT_SUCCESS)
+                    enable_verified_telemetry,mode) == VT_SUCCESS)
             {
                 return VT_SUCCESS;
             }

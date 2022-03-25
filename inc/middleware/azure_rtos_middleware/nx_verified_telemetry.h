@@ -262,7 +262,7 @@ UINT nx_vt_azure_iot_pnp_client_component_add(
  * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
  */
 UINT nx_vt_signature_read(
-    NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, UCHAR* associated_telemetry, UINT associated_telemetry_length);
+    NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, UCHAR* associated_telemetry, UINT associated_telemetry_length,UINT mode);
 
 /**
  * @brief Processes the collected VT signatures for the sensor mapped to the telemetry string passed
