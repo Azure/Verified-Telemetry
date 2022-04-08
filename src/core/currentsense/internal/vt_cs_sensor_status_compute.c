@@ -329,7 +329,7 @@ VTLogDebugNoTag("\n");
                     (cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].current_dif_valid==true))
             {   
                 printf(" \n both signature_freq_and_duty_cycle_valid & current_dif_valid valid  \n");
-                if((temp_feature_vector_drift<50.0f) || (temp_relative_current_drift<55.0f))
+                if((temp_feature_vector_drift<50.0f) && (temp_relative_current_drift<50.0f))
                 {
                     temp_sensor_status=true;
                     feature_vector_drift=feature_vector_drift+(temp_feature_vector_drift+temp_relative_current_drift)/2;
@@ -351,7 +351,7 @@ VTLogDebugNoTag("\n");
             else if(cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].current_dif_valid==true)
             {
                 printf(" \n only current_dif_valid  \n");
-                if(temp_relative_current_drift<55.0f)
+                if(temp_relative_current_drift<50.0f)
                 {
                     temp_sensor_status=true;
                     feature_vector_drift=feature_vector_drift+temp_relative_current_drift;
