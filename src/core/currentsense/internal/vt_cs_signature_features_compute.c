@@ -485,7 +485,7 @@ while(check_acr_peaks(acr_sig,&index,period_,&energy_,&peaks,&totaljump,&totalhi
         #endif
 
 
-if((peaks<((int)(VT_CS_SAMPLE_LENGTH/start))-2) || peaks<2){
+if((peaks<((int)(VT_CS_SAMPLE_LENGTH/start))-3) || peaks<2){
     printf("less peaks - NOT TAKEN\n");
     return 0;
 }
