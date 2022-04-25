@@ -215,7 +215,7 @@ static VT_VOID test_vt_currentsense_object_signature_process(VT_VOID** state)
 
     vt_currentsense_object_signature_process(&cs_object);
 
-    assert_int_equal(cs_object.sensor_status, VT_SIGNATURE_NOT_MATCHING);
+    assert_int_equal(cs_object.sensor_status, VT_SIGNATURE_MATCHING);
 
     cs_object.raw_signatures_reader->repeating_raw_signature_ongoing_collection = false;
     cs_object.mode                                                              = VT_MODE_RUNTIME_EVALUATE;
@@ -295,9 +295,9 @@ static VT_VOID test_vt_currentsense_object_signature_process(VT_VOID** state)
     }
     vt_currentsense_object_signature_process(&cs_object);
 
-    assert_int_equal(cs_object.mode, VT_MODE_CALIBRATE);
+    assert_int_equal(cs_object.mode, VT_MODE_RUNTIME_EVALUATE);
     assert_int_equal(cs_object.db_updated, true);
-    assert_int_equal(cs_object.fingerprintdb.template_type, VT_CS_NON_REPEATING_SIGNATURE);
+    assert_int_equal(cs_object.fingerprintdb.template_type, VT_CS_NO_SIGNATURE_VALID);
     assert_int_equal(cs_object.fingerprintdb.template.repeating_signatures.num_signatures, 0);
 
     cs_object.raw_signatures_reader->repeating_raw_signature_ongoing_collection = false;
@@ -339,7 +339,7 @@ static VT_VOID test_vt_currentsense_object_signature_process(VT_VOID** state)
 
     assert_int_equal(cs_object.mode, VT_MODE_RUNTIME_EVALUATE);
     assert_int_equal(cs_object.db_updated, true);
-    assert_int_equal(cs_object.fingerprintdb.template_type, VT_CS_NON_REPEATING_SIGNATURE);
+    assert_int_equal(cs_object.fingerprintdb.template_type, VT_CS_NO_SIGNATURE_VALID);
     assert_int_equal(cs_object.fingerprintdb.template.repeating_signatures.num_signatures, 2);
 
     cs_object.raw_signatures_reader->repeating_raw_signature_ongoing_collection = false;
@@ -384,7 +384,7 @@ static VT_VOID test_vt_currentsense_object_signature_process(VT_VOID** state)
 
     assert_int_equal(cs_object.mode, VT_MODE_RUNTIME_EVALUATE);
     assert_int_equal(cs_object.db_updated, true);
-    assert_int_equal(cs_object.fingerprintdb.template_type, VT_CS_NON_REPEATING_SIGNATURE);
+    assert_int_equal(cs_object.fingerprintdb.template_type, VT_CS_NO_SIGNATURE_VALID);
     assert_int_equal(cs_object.fingerprintdb.template.repeating_signatures.num_signatures, 2);
 
     cs_object.raw_signatures_reader->repeating_raw_signature_ongoing_collection = false;
@@ -499,8 +499,8 @@ static VT_VOID test_vt_currentsense_object_signature_process(VT_VOID** state)
     }
     vt_currentsense_object_signature_process(&cs_object);
 
-    assert_int_equal(cs_object.mode, VT_MODE_CALIBRATE);
-    assert_int_equal(cs_object.db_updated, false);
+    assert_int_equal(cs_object.mode, VT_MODE_RUNTIME_EVALUATE);
+    assert_int_equal(cs_object.db_updated, true);
     assert_int_equal(cs_object.fingerprintdb.template_type, VT_CS_NON_REPEATING_SIGNATURE);
 
     cs_object.raw_signatures_reader->repeating_raw_signature_ongoing_collection = false;
@@ -619,7 +619,7 @@ static VT_VOID test_vt_currentsense_object_signature_process(VT_VOID** state)
 
     vt_currentsense_object_signature_process(&cs_object);
 
-    assert_int_equal(cs_object.sensor_status, VT_SIGNATURE_MATCHING);
+    assert_int_equal(cs_object.sensor_status, VT_SIGNATURE_NOT_MATCHING);
 
     cs_object.raw_signatures_reader->repeating_raw_signature_ongoing_collection = false;
     cs_object.mode                                                              = VT_MODE_RUNTIME_EVALUATE;
@@ -658,7 +658,7 @@ static VT_VOID test_vt_currentsense_object_signature_process(VT_VOID** state)
 
     vt_currentsense_object_signature_process(&cs_object);
 
-    assert_int_equal(cs_object.sensor_status, VT_SIGNATURE_MATCHING);
+    assert_int_equal(cs_object.sensor_status, VT_SIGNATURE_NOT_MATCHING);
 
     cs_object.raw_signatures_reader->repeating_raw_signature_ongoing_collection = false;
     cs_object.mode                                                              = VT_MODE_RUNTIME_EVALUATE;
