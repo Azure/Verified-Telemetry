@@ -27,7 +27,7 @@ jobs:
       - name: Build profiling target for gcov
         run: |
           cmake -Bbuild -GNinja -DCMAKE_BUILD_TYPE=Profiling -DVT_UNIT_TESTING=ON -DVT_CODE_COVERAGE=ON
-          cmake --build build
+          cmake --build build --verbose
 
       - name: Run unit tests
         run: |
