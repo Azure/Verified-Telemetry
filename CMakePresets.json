@@ -4,7 +4,7 @@
         {
             "name": "profiling",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/profiling",
+            "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Profiling",
                 "VT_UNIT_TESTING": "ON",
