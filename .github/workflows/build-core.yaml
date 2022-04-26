@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install build dependencies
         run: sudo apt-get install ninja-build
@@ -39,7 +39,7 @@ jobs:
           cmake --build build --target vt_core_test_coverage
 
       - name: Upload code coverage
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./build/vt_core_test_coverage.xml
