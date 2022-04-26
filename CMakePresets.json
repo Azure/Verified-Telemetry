@@ -1,0 +1,22 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "profiling",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/profiling",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Profiling",
+                "VT_UNIT_TESTING": "ON",
+                "VT_CODE_COVERAGE": "ON"
+            }
+        }            
+    ],
+    "buildPresets": [
+        {
+            "name": "profiling",
+            "configurePreset": "profiling",
+            "verbose": true
+        }
+    ]
+}
