@@ -2,11 +2,11 @@
     "version": 3,
     "configurePresets": [
         {
-            "name": "profiling",
+            "name": "coverage",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Profiling",
+                "CMAKE_BUILD_TYPE": "Coverage",
                 "VT_UNIT_TESTING": "ON",
                 "VT_CODE_COVERAGE": "ON"
             }
@@ -14,8 +14,8 @@
     ],
     "buildPresets": [
         {
-            "name": "profiling",
-            "configurePreset": "profiling",
+            "name": "coverage",
+            "configurePreset": "coverage",
             "verbose": true
         }
     ]
