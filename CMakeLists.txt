@@ -8,7 +8,7 @@ set(CMAKE_C_STANDARD 99)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
-option(VT_UNIT_TESTING "Build unit test projects" ON)
+option(VT_UNIT_TESTING "Build unit test projects" OFF)
 option(VT_CODE_COVERAGE "Run code coverage" OFF)
 
 project(vt LANGUAGES C)
