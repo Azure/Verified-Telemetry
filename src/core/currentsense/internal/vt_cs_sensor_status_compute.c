@@ -487,37 +487,43 @@ VT_VOID cs_sensor_status(VT_CURRENTSENSE_OBJECT* cs_object)
         if(cs_object->fingerprintdb.template.repeating_signatures.repeating_valid==true)
             cs_sensor_status_with_repeating_signature_template(cs_object);
 
-        cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status=!cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status;
+        if(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid==true || cs_object->fingerprintdb.template.repeating_signatures.repeating_valid==true)
+        {
+            cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status=!cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status;
 
-        if(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status){
-            cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status=0;
-        }
-        else{
-            cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status=1;
-        }
+            if(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status){
+                cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status=0;
+            }
+            else{
+                cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status=1;
+            }
 
-        if(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid==true && cs_object->fingerprintdb.template.repeating_signatures.repeating_valid==true){
+            if(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid==true && cs_object->fingerprintdb.template.repeating_signatures.repeating_valid==true){
+                cs_object->sensor_status=
+                cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status | cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status;
+
+            }
+            else{
             cs_object->sensor_status=
-            cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status | cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status;
+                cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status|cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status;
+            }
 
+            average_status(cs_object);
+            cs_object->sensor_status=!cs_object->sensor_status;
+
+            cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status=!cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status;
+
+            if(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status){
+                cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status=0;
+            }
+            else{
+                cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status=1;
+            }
         }
-        else{
-        cs_object->sensor_status=
-            cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status|cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status;
+        else 
+        {
+            cs_object->sensor_status=VT_SIGNATURE_DB_EMPTY;
         }
-
-        average_status(cs_object);
-        cs_object->sensor_status=!cs_object->sensor_status;
-
-        cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status=!cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status;
-
-        if(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status){
-            cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status=0;
-        }
-        else{
-            cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status=1;
-        }
-
         #if VT_LOG_LEVEL > 2        
         VTLogDebugNoTag("\n repeating_sensor_status : %s\n",(cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status?"false":"true"));
         VTLogDebugNoTag("\n non_repeating_sensor_status : %s\n",(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status?"false":"true"));
