@@ -75,6 +75,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="_free_r_t_o_s__vt__fallcurve__component_8h_source.html">FreeRTOS_vt_fallcurve_component.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_free_r_t_o_s__vt__currentsense__component_8h_source.html">FreeRTOS_vt_currentsense_component.h</a>&quot;</code><br />
 <code>#include &quot;vt_defs.h&quot;</code><br />
 </div>
 <p><a href="_free_r_t_o_s__verified__telemetry_8h_source.html">Go to the source code of this file.</a></p>
@@ -99,6 +100,9 @@ Macros</h2></td></tr>
 <tr class="memitem:ae0aac8d32b72f06a55bc75cde8afa1bb"><td class="memItemLeft" align="right" valign="top"><a id="ae0aac8d32b72f06a55bc75cde8afa1bb"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>VT_SIGNATURE_TYPE_CURRENTSENSE</b>&#160;&#160;&#160;0x02</td></tr>
 <tr class="separator:ae0aac8d32b72f06a55bc75cde8afa1bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b07aee91bd25e50184fd380707dde77"><td class="memItemLeft" align="right" valign="top"><a id="a0b07aee91bd25e50184fd380707dde77"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>VT_MINIMUM_BUFFER_SIZE_BYTES</b>&#160;&#160;&#160;sizeof(VT_CURRENTSENSE_RAW_SIGNATURES_READER)</td></tr>
+<tr class="separator:a0b07aee91bd25e50184fd380707dde77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -111,9 +115,9 @@ typedef struct <a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a728a582509ffdbaa0d0a1d5800792c1a"><td class="memItemLeft" align="right" valign="top">AzureIoTResult_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_free_r_t_o_s__verified__telemetry_8h.html#a728a582509ffdbaa0d0a1d5800792c1a">FreeRTOS_vt_init</a> (<a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, UCHAR *component_name_ptr, bool enable_verified_telemetry, VT_DEVICE_DRIVER *device_driver)</td></tr>
-<tr class="memdesc:a728a582509ffdbaa0d0a1d5800792c1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Global Verified Telemetry using platform specific device drivers.  <a href="_free_r_t_o_s__verified__telemetry_8h.html#a728a582509ffdbaa0d0a1d5800792c1a">More...</a><br /></td></tr>
-<tr class="separator:a728a582509ffdbaa0d0a1d5800792c1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad13a557120cc6a8a922ce1e1ee023a5d"><td class="memItemLeft" align="right" valign="top">AzureIoTResult_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_free_r_t_o_s__verified__telemetry_8h.html#ad13a557120cc6a8a922ce1e1ee023a5d">FreeRTOS_vt_init</a> (<a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, UCHAR *component_name_ptr, bool enable_verified_telemetry, VT_DEVICE_DRIVER *device_driver, CHAR *scratch_buffer, UINT scratch_buffer_length)</td></tr>
+<tr class="memdesc:ad13a557120cc6a8a922ce1e1ee023a5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Global Verified Telemetry using platform specific device drivers.  <a href="_free_r_t_o_s__verified__telemetry_8h.html#ad13a557120cc6a8a922ce1e1ee023a5d">More...</a><br /></td></tr>
+<tr class="separator:ad13a557120cc6a8a922ce1e1ee023a5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea7dddb52e0a0c65778caef49c50f773"><td class="memItemLeft" align="right" valign="top">AzureIoTResult_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_free_r_t_o_s__verified__telemetry_8h.html#aea7dddb52e0a0c65778caef49c50f773">FreeRTOS_vt_signature_init</a> (<a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, <a class="el" href="struct_free_r_t_o_s___v_t___o_b_j_e_c_t___t_a_g.html">FreeRTOS_VT_OBJECT</a> *handle, UCHAR *component_name_ptr, UINT signature_type, UCHAR *associated_telemetry, bool telemetry_status_auto_update, VT_SENSOR_HANDLE *sensor_handle)</td></tr>
 <tr class="memdesc:aea7dddb52e0a0c65778caef49c50f773"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Verified Telemetry for a particular sensor data stream.  <a href="_free_r_t_o_s__verified__telemetry_8h.html#aea7dddb52e0a0c65778caef49c50f773">More...</a><br /></td></tr>
 <tr class="separator:aea7dddb52e0a0c65778caef49c50f773"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -126,8 +130,11 @@ Functions</h2></td></tr>
 <tr class="memitem:a3a805aaa58eebde1e1dd34fdd4bb4490"><td class="memItemLeft" align="right" valign="top">AzureIoTResult_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_free_r_t_o_s__verified__telemetry_8h.html#a3a805aaa58eebde1e1dd34fdd4bb4490">FreeRTOS_vt_properties</a> (<a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, AzureIoTHubClient_t *xAzureIoTHubClient)</td></tr>
 <tr class="memdesc:a3a805aaa58eebde1e1dd34fdd4bb4490"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates Digital Twin with default desired property values when device is booted for the first time.  <a href="_free_r_t_o_s__verified__telemetry_8h.html#a3a805aaa58eebde1e1dd34fdd4bb4490">More...</a><br /></td></tr>
 <tr class="separator:a3a805aaa58eebde1e1dd34fdd4bb4490"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16798dfb2bc8fd199c3076d669c0d1b5"><td class="memItemLeft" align="right" valign="top">AzureIoTResult_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_free_r_t_o_s__verified__telemetry_8h.html#a16798dfb2bc8fd199c3076d669c0d1b5">FreeRTOS_vt_process_property_update</a> (<a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, AzureIoTHubClient_t *xAzureIoTHubClient, const UCHAR *component_name_ptr, UINT component_name_length, AzureIoTJSONReader_t *xReader, UINT version)</td></tr>
-<tr class="memdesc:a16798dfb2bc8fd199c3076d669c0d1b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes all desired property updates supported by vT Middleware.  <a href="_free_r_t_o_s__verified__telemetry_8h.html#a16798dfb2bc8fd199c3076d669c0d1b5">More...</a><br /></td></tr>
+<tr class="memitem:a39d9fbb43480afa323548f9203e64b4e"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_free_r_t_o_s__verified__telemetry_8h.html#a39d9fbb43480afa323548f9203e64b4e">MultiCalibration_store_cs_object</a> (<a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, int32_t MultiCalibrationCount)</td></tr>
+<tr class="memdesc:a39d9fbb43480afa323548f9203e64b4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes all desired property updates supported by vT Middleware.  <a href="_free_r_t_o_s__verified__telemetry_8h.html#a39d9fbb43480afa323548f9203e64b4e">More...</a><br /></td></tr>
+<tr class="separator:a39d9fbb43480afa323548f9203e64b4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16798dfb2bc8fd199c3076d669c0d1b5"><td class="memItemLeft" align="right" valign="top"><a id="a16798dfb2bc8fd199c3076d669c0d1b5"></a>
+AzureIoTResult_t&#160;</td><td class="memItemRight" valign="bottom"><b>FreeRTOS_vt_process_property_update</b> (<a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, AzureIoTHubClient_t *xAzureIoTHubClient, const UCHAR *component_name_ptr, UINT component_name_length, AzureIoTJSONReader_t *xReader, UINT version)</td></tr>
 <tr class="separator:a16798dfb2bc8fd199c3076d669c0d1b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd67e0baf83345b4076f6f88f00d5704"><td class="memItemLeft" align="right" valign="top">AzureIoTResult_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_free_r_t_o_s__verified__telemetry_8h.html#abd67e0baf83345b4076f6f88f00d5704">FreeRTOS_vt_compute_evaluate_fingerprint_all_sensors</a> (<a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB)</td></tr>
 <tr class="memdesc:abd67e0baf83345b4076f6f88f00d5704"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes status of all telemetries which have been initialized to provide Verified Telemetry.  <a href="_free_r_t_o_s__verified__telemetry_8h.html#abd67e0baf83345b4076f6f88f00d5704">More...</a><br /></td></tr>
@@ -138,6 +145,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a614455d087f5835f948782cca383ba01"><td class="memItemLeft" align="right" valign="top">AzureIoTResult_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_free_r_t_o_s__verified__telemetry_8h.html#a614455d087f5835f948782cca383ba01">FreeRTOS_vt_process_reported_property_sync</a> (<a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, const UCHAR *component_name_ptr, UINT component_name_length, AzureIoTJSONReader_t *json_reader_ptr)</td></tr>
 <tr class="memdesc:a614455d087f5835f948782cca383ba01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Synchronizes VT Settings stored in digital Twin as reported properties at startup.  <a href="_free_r_t_o_s__verified__telemetry_8h.html#a614455d087f5835f948782cca383ba01">More...</a><br /></td></tr>
 <tr class="separator:a614455d087f5835f948782cca383ba01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90f396caa60213057d695ef722c78bed"><td class="memItemLeft" align="right" valign="top"><a id="a90f396caa60213057d695ef722c78bed"></a>
+AzureIoTResult_t&#160;</td><td class="memItemRight" valign="bottom"><b>FreeRTOS_vt_signature_read</b> (<a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, UCHAR *associated_telemetry, UINT associated_telemetry_length, UINT mode)</td></tr>
+<tr class="separator:a90f396caa60213057d695ef722c78bed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88917f7f8db8d2bcba03eef7a36f92ce"><td class="memItemLeft" align="right" valign="top"><a id="a88917f7f8db8d2bcba03eef7a36f92ce"></a>
+UINT&#160;</td><td class="memItemRight" valign="bottom"><b>FreeRTOS_vt_signature_process</b> (<a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, UCHAR *associated_telemetry, UINT associated_telemetry_length)</td></tr>
+<tr class="separator:a88917f7f8db8d2bcba03eef7a36f92ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="abd67e0baf83345b4076f6f88f00d5704"></a>
@@ -172,8 +185,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a728a582509ffdbaa0d0a1d5800792c1a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a728a582509ffdbaa0d0a1d5800792c1a">&#9670;&nbsp;</a></span>FreeRTOS_vt_init()</h2>
+<a id="ad13a557120cc6a8a922ce1e1ee023a5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad13a557120cc6a8a922ce1e1ee023a5d">&#9670;&nbsp;</a></span>FreeRTOS_vt_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -200,7 +213,19 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">VT_DEVICE_DRIVER *&#160;</td>
-          <td class="paramname"><em>device_driver</em>&#160;</td>
+          <td class="paramname"><em>device_driver</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">CHAR *&#160;</td>
+          <td class="paramname"><em>scratch_buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UINT&#160;</td>
+          <td class="paramname"><em>scratch_buffer_length</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -295,77 +320,6 @@ Functions</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">pnp_command_name_ptr</td><td>Name of the command invoked. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">pnp_command_name_length</td><td>Length of name of the command invoked. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">status_code</td><td>Status updated by function based on command execution.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">NX_AZURE_IOT_SUCCESS</td><td>upon success or an error code upon failure. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a16798dfb2bc8fd199c3076d669c0d1b5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a16798dfb2bc8fd199c3076d669c0d1b5">&#9670;&nbsp;</a></span>FreeRTOS_vt_process_property_update()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">AzureIoTResult_t FreeRTOS_vt_process_property_update </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *&#160;</td>
-          <td class="paramname"><em>verified_telemetry_DB</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">AzureIoTHubClient_t *&#160;</td>
-          <td class="paramname"><em>xAzureIoTHubClient</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const UCHAR *&#160;</td>
-          <td class="paramname"><em>component_name_ptr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">UINT&#160;</td>
-          <td class="paramname"><em>component_name_length</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">AzureIoTJSONReader_t *&#160;</td>
-          <td class="paramname"><em>xReader</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">UINT&#160;</td>
-          <td class="paramname"><em>version</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Processes all desired property updates supported by vT Middleware. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">verified_telemetry_DB</td><td>Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">xAzureIoTHubClient</td><td>Pointer to initialized Azure IoT PnP instance. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">component_name_ptr</td><td>Name of the component. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">component_name_length</td><td>Length of name of the component. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">xReader</td><td>Pointer to read the JSON payload of command. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">version</td><td>Property version stored in digital twin.</td></tr>
   </table>
   </dd>
 </dl>
@@ -666,6 +620,53 @@ accelerometerY, accelerometerZ" </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">component_name_length</td><td>Length of name of the component. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">telemetry_data</td><td>Pointer to buffer containing telemetry data. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">data_size</td><td>Length of telemetry data passed in the buffer.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">NX_AZURE_IOT_SUCCESS</td><td>upon success or an error code upon failure. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a39d9fbb43480afa323548f9203e64b4e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39d9fbb43480afa323548f9203e64b4e">&#9670;&nbsp;</a></span>MultiCalibration_store_cs_object()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">UINT MultiCalibration_store_cs_object </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_free_r_t_o_s___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">FreeRTOS_VERIFIED_TELEMETRY_DB</a> *&#160;</td>
+          <td class="paramname"><em>verified_telemetry_DB</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>MultiCalibrationCount</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Processes all desired property updates supported by vT Middleware. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">verified_telemetry_DB</td><td>Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">xAzureIoTHubClient</td><td>Pointer to initialized Azure IoT PnP instance. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">component_name_ptr</td><td>Name of the component. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">component_name_length</td><td>Length of name of the component. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">xReader</td><td>Pointer to read the JSON payload of command. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">version</td><td>Property version stored in digital twin.</td></tr>
   </table>
   </dd>
 </dl>

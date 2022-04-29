@@ -144,9 +144,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a44f7374f9f470f0652b9cebf0dbd8183"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#a44f7374f9f470f0652b9cebf0dbd8183">nx_vt_azure_iot_pnp_client_component_add</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, NX_AZURE_IOT_PNP_CLIENT *pnp_client_ptr)</td></tr>
 <tr class="memdesc:a44f7374f9f470f0652b9cebf0dbd8183"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds VT Information Interfaces that are initialized to the nx_pnp_client object.  <a href="nx__verified__telemetry_8h.html#a44f7374f9f470f0652b9cebf0dbd8183">More...</a><br /></td></tr>
 <tr class="separator:a44f7374f9f470f0652b9cebf0dbd8183"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7358a90f8b82c462e2aad6e4ace327e"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#aa7358a90f8b82c462e2aad6e4ace327e">nx_vt_signature_read</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, UCHAR *associated_telemetry, UINT associated_telemetry_length)</td></tr>
-<tr class="memdesc:aa7358a90f8b82c462e2aad6e4ace327e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts reading VT signatures for the sensor mapped to the telemetry string passed.  <a href="nx__verified__telemetry_8h.html#aa7358a90f8b82c462e2aad6e4ace327e">More...</a><br /></td></tr>
-<tr class="separator:aa7358a90f8b82c462e2aad6e4ace327e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e2a54fd6dc03ab8ebe85cbb06af623e"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#a8e2a54fd6dc03ab8ebe85cbb06af623e">nx_vt_signature_read</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, UCHAR *associated_telemetry, UINT associated_telemetry_length, UINT mode)</td></tr>
+<tr class="memdesc:a8e2a54fd6dc03ab8ebe85cbb06af623e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts reading VT signatures for the sensor mapped to the telemetry string passed.  <a href="nx__verified__telemetry_8h.html#a8e2a54fd6dc03ab8ebe85cbb06af623e">More...</a><br /></td></tr>
+<tr class="separator:a8e2a54fd6dc03ab8ebe85cbb06af623e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3e4a395187bbdf56c1f516419a0fd6b"><td class="memItemLeft" align="right" valign="top">UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nx__verified__telemetry_8h.html#af3e4a395187bbdf56c1f516419a0fd6b">nx_vt_signature_process</a> (<a class="el" href="struct_n_x___v_e_r_i_f_i_e_d___t_e_l_e_m_e_t_r_y___d_b___t_a_g.html">NX_VERIFIED_TELEMETRY_DB</a> *verified_telemetry_DB, UCHAR *associated_telemetry, UINT associated_telemetry_length)</td></tr>
 <tr class="memdesc:af3e4a395187bbdf56c1f516419a0fd6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes the collected VT signatures for the sensor mapped to the telemetry string passed.  <a href="nx__verified__telemetry_8h.html#af3e4a395187bbdf56c1f516419a0fd6b">More...</a><br /></td></tr>
 <tr class="separator:af3e4a395187bbdf56c1f516419a0fd6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -687,7 +687,7 @@ Functions</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">verified_telemetry_DB</td><td>Pointer to variable of type VERIFIED_TELEMETRY_DB storing Verified Telemetry data. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">handle</td><td>Pointer to variable of type NX_VT_OBJECT storing collection settings and configuration data for a particular sensor telemetry. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">component_name_ptr</td><td>Name of the sensor. Example - "accelerometer" This would be prepended with 'vT' by VT library </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">signature_type</td><td>One of the defined signature types. Currently available types - VT_SIGNATURE_TYPE_FALLCURVE </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">signature_type</td><td>One of the defined signature types. Currently available types - VT_SIGNATURE_TYPE_FALLCURVE, VT_SIGNATURE_TYPE_CURRENTSENSE </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">associated_telemetry</td><td>Telmetries associated with this sensor, separated by commas Example - "accelerometerX,
 accelerometerY, accelerometerZ" </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">telemetry_status_auto_update</td><td>User specified value to control whether fingerprint computation for the sensor should be invoked when nx_vt_compute_evaluate_fingerprint_all_sensors is called </td></tr>
@@ -754,8 +754,8 @@ accelerometerY, accelerometerZ" </td></tr>
 
 </div>
 </div>
-<a id="aa7358a90f8b82c462e2aad6e4ace327e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7358a90f8b82c462e2aad6e4ace327e">&#9670;&nbsp;</a></span>nx_vt_signature_read()</h2>
+<a id="a8e2a54fd6dc03ab8ebe85cbb06af623e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e2a54fd6dc03ab8ebe85cbb06af623e">&#9670;&nbsp;</a></span>nx_vt_signature_read()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -776,7 +776,13 @@ accelerometerY, accelerometerZ" </td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">UINT&#160;</td>
-          <td class="paramname"><em>associated_telemetry_length</em>&#160;</td>
+          <td class="paramname"><em>associated_telemetry_length</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UINT&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

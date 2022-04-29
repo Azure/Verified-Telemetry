@@ -30,7 +30,9 @@ var menudata={children:[
 {text:"Globals",url:"globals.html",children:[
 {text:"All",url:"globals.html",children:[
 {text:"f",url:"globals.html#index_f"},
+{text:"m",url:"globals.html#index_m"},
 {text:"n",url:"globals.html#index_n"}]},
 {text:"Functions",url:"globals_func.html",children:[
 {text:"f",url:"globals_func.html#index_f"},
+{text:"m",url:"globals_func.html#index_m"},
 {text:"n",url:"globals_func.html#index_n"}]}]}]}]}
