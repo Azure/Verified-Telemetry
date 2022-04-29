@@ -27,6 +27,10 @@ VT_UINT vt_currentsense_object_initialize(VT_CURRENTSENSE_OBJECT* cs_object,
 
     cs_object->raw_signatures_reader_initialized = false;
 
+    for (int i=0;i<VT_HISTORY_ARRAY_LENGTH;i++){
+        cs_object->hist_array[i]=1;
+    }
+
     if (raw_signatures_buffer_size < sizeof(VT_CURRENTSENSE_RAW_SIGNATURES_READER))
     {
         return VT_ERROR;

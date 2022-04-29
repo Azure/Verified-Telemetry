@@ -21,9 +21,9 @@ target_link_libraries(${TARGET}
 )
 
 target_include_directories(${TARGET}
-  PRIVATE 
-    fallcurve
-    currentsense
+    PRIVATE 
+        fallcurve
+        currentsense
 )
 
 add_test(

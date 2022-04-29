@@ -12,6 +12,7 @@ extern "C" {
 
 /* Azure Provisioning/IoT Hub library includes */
 #include "FreeRTOS_vt_fallcurve_component.h"
+#include "FreeRTOS_vt_currentsense_component.h"
 #include "vt_defs.h"
 
 #define FREERTOS_AZURE_IOT_PNP_PROPERTIES 0x00000004
@@ -19,9 +20,12 @@ extern "C" {
 #define VT_SIGNATURE_TYPE_FALLCURVE    0x01
 #define VT_SIGNATURE_TYPE_CURRENTSENSE 0x02
 
+#define VT_MINIMUM_BUFFER_SIZE_BYTES sizeof(VT_CURRENTSENSE_RAW_SIGNATURES_READER)
+
 union FreeRTOS_VT_SIGNATURE_COMPONENT_UNION_TAG {
     /* FallCurve Component */
     FreeRTOS_VT_FALLCURVE_COMPONENT fc;
+    FreeRTOS_VT_CURRENTSENSE_COMPONENT cs;
 };
 
 typedef struct FreeRTOS_VT_OBJECT_TAG
@@ -65,6 +69,12 @@ typedef struct FreeRTOS_VERIFIED_TELEMETRY_DB_TAG
     /* Device Status Property Sent*/
     bool device_status_property_sent;
 
+    /* Pointer to byte buffer passed from application layer, used for fingerprint calculation/storage */
+    CHAR* scratch_buffer;
+
+    /* Length of byte buffer passed from application layer, used for fingerprint calculation/storage */
+    UINT scratch_buffer_length;
+
 } FreeRTOS_VERIFIED_TELEMETRY_DB;
 
 /**
@@ -82,7 +92,9 @@ typedef struct FreeRTOS_VERIFIED_TELEMETRY_DB_TAG
 AzureIoTResult_t FreeRTOS_vt_init(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     UCHAR* component_name_ptr,
     bool enable_verified_telemetry,
-    VT_DEVICE_DRIVER* device_driver);
+    VT_DEVICE_DRIVER* device_driver,
+    CHAR* scratch_buffer,
+    UINT scratch_buffer_length);
 
 /**
  * @brief Initializes Verified Telemetry for a particular sensor data stream
@@ -176,6 +188,9 @@ AzureIoTResult_t FreeRTOS_vt_properties(
  * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
  */
 
+UINT MultiCalibration_store_cs_object(
+    FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, int32_t MultiCalibrationCount);
+
 AzureIoTResult_t FreeRTOS_vt_process_property_update(FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
     AzureIoTHubClient_t* xAzureIoTHubClient,
     const UCHAR* component_name_ptr,
@@ -222,6 +237,12 @@ AzureIoTResult_t FreeRTOS_vt_process_reported_property_sync(FreeRTOS_VERIFIED_TE
     const UCHAR* component_name_ptr,
     UINT component_name_length,
     AzureIoTJSONReader_t* json_reader_ptr);
+
+AzureIoTResult_t FreeRTOS_vt_signature_read(
+    FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, UCHAR* associated_telemetry, UINT associated_telemetry_length,UINT mode);
+
+UINT FreeRTOS_vt_signature_process(
+    FreeRTOS_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, UCHAR* associated_telemetry, UINT associated_telemetry_length);
 
 #ifdef __cplusplus
 }

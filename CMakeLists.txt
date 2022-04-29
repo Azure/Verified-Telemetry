@@ -4,6 +4,7 @@
 cmake_minimum_required (VERSION 3.14 FATAL_ERROR)
 
 set(CMAKE_C_STANDARD 99)
+#set(VT_MIDDLEWARE_RTOS "FREERTOS" CACHE STRING "Set VT Middleware to FreeRTOS")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 

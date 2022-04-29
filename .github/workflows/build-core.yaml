@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install build dependencies
         run: sudo apt-get install ninja-build
@@ -24,10 +24,10 @@ jobs:
       - name: Install coverage utility
         run: pip install gcovr
 
-      - name: Build project
+      - name: Build coverage target for gcov
         run: |
-          cmake -Bbuild -GNinja -DCMAKE_BUILD_TYPE=Debug -DVT_UNIT_TESTING=ON -DVT_CODE_COVERAGE=ON
-          cmake --build build
+          cmake -Bbuild -GNinja -DCMAKE_BUILD_TYPE=Coverage -DVT_UNIT_TESTING=ON -DVT_CODE_COVERAGE=ON
+          cmake --build build --verbose
 
       - name: Run unit tests
         run: |
@@ -39,7 +39,7 @@ jobs:
           cmake --build build --target vt_core_test_coverage
 
       - name: Upload code coverage
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./build/vt_core_test_coverage.xml

@@ -1,0 +1,22 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "coverage",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Coverage",
+                "VT_UNIT_TESTING": "ON",
+                "VT_CODE_COVERAGE": "ON"
+            }
+        }            
+    ],
+    "buildPresets": [
+        {
+            "name": "coverage",
+            "configurePreset": "coverage",
+            "verbose": true
+        }
+    ]
+}

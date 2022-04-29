@@ -52,21 +52,24 @@ uint16_t vt_adc_single_read(uint16_t adc_id, void* adc_controller, void* adc_cha
  * connected.
  * @param[in] adc_read_buffer Buffer in which datapoints would be stored.
  * @param[in] buffer_length Length of buffer in which datapoints would be stored / Number of datapoints to collect.
+ * @param[in] desired_sampling_frequency Sampling frequency at which data from ADC should be ideally sampled.
+ * @param[in] set_sampling_frequency Pointer to a variable which would store sampling frequency at which data from ADC would be sampled.
  * @param[in] vt_adc_buffer_read_conv_half_cplt_callback Pointer to a function that would be called when half of the buffer is
  * filled with datapoints.
  * @param[in] vt_adc_buffer_read_conv_cplt_callback Pointer to a function that would be called when the buffer is filled with
  * datapoints.
- *
- * @retval ADC value.
+ 
+ * 
  */
-uint16_t vt_adc_buffer_read(uint16_t adc_id,
+void vt_adc_buffer_read(uint16_t adc_id,
     void* adc_controller,
     void* adc_channel,
     float* adc_read_buffer,
     uint16_t buffer_length,
-    float sampling_frequency,
+    float desired_sampling_frequency,
+    float* set_sampling_frequency,
     void (*vt_adc_buffer_read_conv_half_cplt_callback)(),
-    void (*vt_adc_buffer_read_conv_cplt_callback)());
+    uint16_t (*vt_adc_buffer_read_conv_cplt_callback)(uint16_t mode));
 
 /**
  * @brief Set a GPIO Pin to HIGH

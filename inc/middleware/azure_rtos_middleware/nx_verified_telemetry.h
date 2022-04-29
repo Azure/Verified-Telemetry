@@ -108,7 +108,7 @@ UINT nx_vt_init(NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB,
  * @param[in] handle Pointer to variable of type NX_VT_OBJECT storing collection settings and configuration data for a particular
  * sensor telemetry.
  * @param[in] component_name_ptr Name of the sensor.  Example - "accelerometer" This would be prepended with 'vT' by VT library
- * @param[in] signature_type One of the defined signature types. Currently available types - VT_SIGNATURE_TYPE_FALLCURVE
+ * @param[in] signature_type One of the defined signature types. Currently available types - VT_SIGNATURE_TYPE_FALLCURVE, VT_SIGNATURE_TYPE_CURRENTSENSE
  * @param[in] associated_telemetry Telmetries associated with this sensor, separated by commas  Example - "accelerometerX,
  * accelerometerY, accelerometerZ"
  * @param[in] telemetry_status_auto_update User specified value to control whether fingerprint computation for the sensor should
@@ -262,7 +262,7 @@ UINT nx_vt_azure_iot_pnp_client_component_add(
  * @retval NX_AZURE_IOT_SUCCESS upon success or an error code upon failure.
  */
 UINT nx_vt_signature_read(
-    NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, UCHAR* associated_telemetry, UINT associated_telemetry_length);
+    NX_VERIFIED_TELEMETRY_DB* verified_telemetry_DB, UCHAR* associated_telemetry, UINT associated_telemetry_length,UINT mode);
 
 /**
  * @brief Processes the collected VT signatures for the sensor mapped to the telemetry string passed

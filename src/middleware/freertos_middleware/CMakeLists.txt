@@ -6,6 +6,7 @@ set(TARGET verified_telemetry_freertos)
 add_library(${TARGET}
     "FreeRTOS_verified_telemetry.c" 
     "FreeRTOS_vt_fallcurve_component.c"
+    "FreeRTOS_vt_currentsense_component.c"
 )
 
 add_library(az::iot::vt 
