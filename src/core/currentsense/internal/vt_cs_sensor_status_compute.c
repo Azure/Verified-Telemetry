@@ -500,7 +500,7 @@ VT_VOID cs_sensor_status(VT_CURRENTSENSE_OBJECT* cs_object)
 
             if(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid==true && cs_object->fingerprintdb.template.repeating_signatures.repeating_valid==true){
                 cs_object->sensor_status=
-                cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status | cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status;
+                cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status & cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status;
 
             }
             else{
