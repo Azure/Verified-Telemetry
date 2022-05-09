@@ -792,7 +792,9 @@ static VT_VOID test_vt_currentsense_object_signature_process(VT_VOID** state)
 
     vt_currentsense_object_signature_process(&cs_object);
 
-    cs_object.mode = VT_MODE_RUNTIME_EVALUATE;
+    cs_object.mode                                                               = VT_MODE_RUNTIME_EVALUATE;
+    cs_object.fingerprintdb.template.non_repeating_signature.non_repeating_valid = true;
+    cs_object.fingerprintdb.template.repeating_signatures.repeating_valid        = true;
     vt_currentsense_object_signature_process(&cs_object);
 }
 
