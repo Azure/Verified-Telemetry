@@ -9,7 +9,9 @@ VT_UINT cs_fetch_template_repeating_signature_feature_vector(VT_CURRENTSENSE_OBJ
     VT_FLOAT* sampling_frequency,
     VT_FLOAT* signature_frequency,
     VT_FLOAT* duty_cycle,
-    VT_FLOAT* relative_current_draw)
+    VT_FLOAT* relative_current_draw,
+    VT_FLOAT* average_current_draw,
+    VT_FLOAT* sec_sig_freq)
 {
     if (cs_object->fingerprintdb.template.repeating_signatures.num_signatures == 0)
     {
@@ -24,8 +26,10 @@ VT_UINT cs_fetch_template_repeating_signature_feature_vector(VT_CURRENTSENSE_OBJ
 
     *sampling_frequency    = cs_object->fingerprintdb.template.repeating_signatures.signatures[signature_iter].sampling_freq;
     *signature_frequency   = cs_object->fingerprintdb.template.repeating_signatures.signatures[signature_iter].signature_freq;
+    *sec_sig_freq   = cs_object->fingerprintdb.template.repeating_signatures.signatures[signature_iter].sec_signature_freq;
     *duty_cycle            = cs_object->fingerprintdb.template.repeating_signatures.signatures[signature_iter].duty_cycle;
     *relative_current_draw = cs_object->fingerprintdb.template.repeating_signatures.signatures[signature_iter].relative_curr_draw;
+    *average_current_draw = cs_object->fingerprintdb.template.repeating_signatures.signatures[signature_iter].current_average;
     return VT_SUCCESS;
 }
 

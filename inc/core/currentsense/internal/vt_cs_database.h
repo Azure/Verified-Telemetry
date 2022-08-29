@@ -23,7 +23,9 @@ VT_UINT cs_fetch_template_repeating_signature_feature_vector(VT_CURRENTSENSE_OBJ
     VT_FLOAT* sampling_frequency,
     VT_FLOAT* signature_frequency,
     VT_FLOAT* duty_cycle,
-    VT_FLOAT* relative_current_draw);
+    VT_FLOAT* relative_current_draw,
+    VT_FLOAT* average_current_draw,
+    VT_FLOAT* sec_sig_freq);
 VT_UINT cs_fetch_template_repeating_signature_offset_current(
     VT_CURRENTSENSE_OBJECT* cs_object, VT_FLOAT* lowest_sample_freq, VT_FLOAT* offset_current);
 VT_UINT cs_fetch_template_non_repeating_signature_average_current(

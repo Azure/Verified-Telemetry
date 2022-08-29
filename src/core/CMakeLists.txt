@@ -28,10 +28,12 @@ add_library(${TARGET}
     "currentsense/internal/vt_cs_database_reset.c"
     "currentsense/internal/vt_cs_database_store.c"
     "currentsense/internal/vt_cs_fft.c"
+    
     "currentsense/internal/vt_cs_raw_signature_read.c"
     "currentsense/internal/vt_cs_sensor_status_compute.c"
     "currentsense/internal/vt_cs_signature_features_compute.c"
     "currentsense/internal/vt_cs_signature_features_evaluate.c"
+    "currentsense/internal/kmeans1.c"
 )
 
 add_library(az::iot::vt::core 

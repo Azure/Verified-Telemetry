@@ -82,7 +82,7 @@ static VT_UINT calculate_fft_ranges()
     VT_FLOAT f_low = (VT_CS_ADC_MAX_SAMPLING_FREQ / 2) / VT_CS_SAMPLE_LENGTH;
     while (true)
     {
-        if (f_low < VT_CS_FMIN)
+        if (f_low < VT_CS_ADC_MIN_SAMPLING_FREQ)
         {
             break;
         }

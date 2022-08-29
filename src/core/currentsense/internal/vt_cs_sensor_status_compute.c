@@ -17,6 +17,8 @@ static VT_VOID cs_sensor_status_with_non_repeating_signature_template(VT_CURRENT
     VT_FLOAT avg_curr_on_saved;
     VT_FLOAT avg_curr_off;
     VT_FLOAT avg_curr_off_saved;
+    VT_FLOAT avg_curr_off_drift;
+    VT_FLOAT avg_curr_on_drift;
 
     VT_FLOAT avg_curr_drift = 0;
 
@@ -31,9 +33,9 @@ static VT_VOID cs_sensor_status_with_non_repeating_signature_template(VT_CURRENT
                     cs_object, raw_signature, num_datapoints, &avg_curr_on, &avg_curr_off) == VT_SUCCESS)
             {
                 avg_curr_drift = cs_non_repeating_signature_average_current_evaluate(
-                    avg_curr_on, avg_curr_on_saved, avg_curr_off, avg_curr_off_saved);
+                    avg_curr_on, avg_curr_on_saved, avg_curr_off, avg_curr_off_saved,&avg_curr_off_drift,&avg_curr_on_drift);
 
-                if (avg_curr_drift > VT_CS_MAX_AVG_CURR_DRIFT)
+                if (avg_curr_off_drift > VT_CS_MAX_AVG_CURR_DRIFT || avg_curr_on_drift > VT_CS_MAX_AVG_CURR_DRIFT)
                 {   VTLogDebugNoTag("\n non_repeating_signature -  VT_SIGNATURE_NOT_MATCHING \n");
                     //cs_object->sensor_status = VT_SIGNATURE_NOT_MATCHING;
                     cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status=VT_SIGNATURE_NOT_MATCHING;
@@ -75,18 +77,24 @@ static VT_VOID cs_sensor_status_with_repeating_signature_template(VT_CURRENTSENS
     VT_FLOAT offset_current_saved;
 
     VT_FLOAT sampling_frequency_saved;
-    VT_FLOAT signature_frequency;
+    VT_FLOAT signature_frequency[VT_CS_ACRFFT_MAX_PEAKS];
     VT_FLOAT duty_cycle;
     VT_FLOAT relative_current_draw;
     VT_FLOAT signature_frequency_saved;
+    VT_FLOAT sec_sig_freq;
     VT_FLOAT duty_cycle_saved;
     VT_FLOAT relative_current_draw_saved;
+    VT_FLOAT average_current_draw;
+    VT_FLOAT average_current_draw_saved;
 
     VT_FLOAT offset_current_drift = 0;
     VT_FLOAT feature_vector_drift = 0;
     VT_FLOAT temp_feature_vector_drift = 0;
     VT_FLOAT temp_relative_current_drift = 0;
     VT_FLOAT temp_offset_current_drift = 0;
+
+    VT_FLOAT current_cluster_1_standby;
+    VT_FLOAT current_cluster_2_active;
     
 
     VT_BOOL offset_current_unavailable = false;
@@ -110,7 +118,7 @@ static VT_VOID cs_sensor_status_with_repeating_signature_template(VT_CURRENTSENS
         offset_current_unavailable = true;
         printf("\nerror\n");
     }
-    if (!offset_current_unavailable)
+    if (!offset_current_unavailable){
     #if VT_LOG_LEVEL > 2
             decimal    = lowest_sample_freq_saved;
         frac_float = lowest_sample_freq_saved - (VT_FLOAT)decimal;
@@ -118,7 +126,7 @@ static VT_VOID cs_sensor_status_with_repeating_signature_template(VT_CURRENTSENS
     
     VTLogDebugNoTag("\nLOWEST TEMPLATE FREQ: %d.%04d : \n", decimal, frac);
     #endif
-    {
+    
         if (cs_repeating_raw_signature_fetch_stored_current_measurement(
                 cs_object, raw_signature, lowest_sample_freq_saved, VT_CS_SAMPLE_LENGTH) == VT_SUCCESS)
         {   
@@ -145,7 +153,7 @@ static VT_VOID cs_sensor_status_with_repeating_signature_template(VT_CURRENTSENS
             signature_offset_current_compute_fail = true;
         }
     }
-    sensor_status=sensor_status && offset_curr_status;
+    //sensor_status=sensor_status && offset_curr_status;
     for (VT_UINT iter = 0; iter < cs_object->fingerprintdb.template.repeating_signatures.num_signatures; iter++)
 
     {
@@ -159,7 +167,9 @@ static VT_VOID cs_sensor_status_with_repeating_signature_template(VT_CURRENTSENS
                 &sampling_frequency_saved,
                 &signature_frequency_saved,
                 &duty_cycle_saved,
-                &relative_current_draw_saved))
+                &relative_current_draw_saved,
+                &average_current_draw_saved,
+                &sec_sig_freq))
         {
             break;
         }
@@ -172,10 +182,17 @@ static VT_VOID cs_sensor_status_with_repeating_signature_template(VT_CURRENTSENS
         }
 
         #if VT_LOG_LEVEL > 2
-        decimal    = sampling_frequency_saved;
+
+
+              decimal    = sampling_frequency_saved;
         frac_float = sampling_frequency_saved - (VT_FLOAT)decimal;
         frac       = fabsf(frac_float) * 10000;
         VTLogDebugNoTag("\ncalculating for %d.%04d : \n", decimal, frac);
+
+                decimal    = sec_sig_freq;
+        frac_float = sec_sig_freq - (VT_FLOAT)decimal;
+        frac       = fabsf(frac_float) * 10000;
+        VTLogDebugNoTag("\nsec sig freq %d.%04d : \n", decimal, frac);
 
          VTLogDebugNoTag("\nRAW SIG:\n");
    
@@ -193,9 +210,12 @@ VTLogDebugNoTag("\n");
                 raw_signature,
                 VT_CS_SAMPLE_LENGTH,
                 sampling_frequency_saved,
-                &signature_frequency,
+                signature_frequency,
                 &duty_cycle,
-                &relative_current_draw))
+                &relative_current_draw,
+                &current_cluster_1_standby,
+                &current_cluster_2_active,
+                &average_current_draw))
         {
             signature_feature_vector_compute_fail = true;
            // break;
@@ -313,7 +333,8 @@ VTLogDebugNoTag("\n");
             duty_cycle,
             duty_cycle_saved,
             relative_current_draw,
-            relative_current_draw_saved);
+            relative_current_draw_saved,
+            sec_sig_freq);
             }
             }
             if (signature_feature_vector_compute_fail==true){
@@ -322,7 +343,7 @@ VTLogDebugNoTag("\n");
 
             if(cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].current_dif_valid==true)
             {
-            temp_relative_current_drift=cs_repeating_signature_relative_current_evaluate(relative_current_draw,relative_current_draw_saved);
+            temp_relative_current_drift=cs_repeating_signature_relative_current_evaluate(relative_current_draw,relative_current_draw_saved,average_current_draw,average_current_draw_saved);
             }
 
             if((cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].signature_freq_and_duty_cycle_valid==true)&&
@@ -402,19 +423,21 @@ VTLogDebugNoTag("\n");
     if (signatures_evaluated)
     {
         feature_vector_drift /= signatures_evaluated;
+        cs_object->sensor_drift = feature_vector_drift;
     }
 
-    if (signature_offset_current_compute_fail)
-    {
-        //cs_object->sensor_status = VT_SIGNATURE_COMPUTE_FAIL;
-        VTLogDebugNoTag("\n repeating_signature -  VT_SIGNATURE_COMPUTE_FAIL \n");
-        cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status=VT_SIGNATURE_COMPUTE_FAIL;
-        cs_object->sensor_drift  = 100;
-    }
+    // if (signature_offset_current_compute_fail)
+    // {
+    //     //cs_object->sensor_status = VT_SIGNATURE_COMPUTE_FAIL;
+    //     VTLogDebugNoTag("\n repeating_signature -  VT_SIGNATURE_COMPUTE_FAIL \n");
+    //     cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status=VT_SIGNATURE_COMPUTE_FAIL;
+    //     cs_object->sensor_drift  = 100;
+    // }
 
     
 
-    else if ((signatures_evaluated == 0) && offset_current_unavailable)
+    //else if ((signatures_evaluated == 0) && offset_current_unavailable)
+    else if ((signatures_evaluated == 0))
     {
         //cs_object->sensor_status = VT_SIGNATURE_DB_EMPTY;
         VTLogDebugNoTag("\n repeating_signature -  VT_SIGNATURE_DB_EMPTY \n");
@@ -425,18 +448,18 @@ VTLogDebugNoTag("\n");
         VTLogDebugNoTag("\n repeating_signature -  (!sensor_status), repeating_sensor_status : %d \n",cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status);
         //cs_object->sensor_status = !sensor_status;
         
-        if (signatures_evaluated && (!offset_current_unavailable))
-        {
-            cs_object->sensor_drift = (offset_current_drift + feature_vector_drift) / 2;
-        }
-        else if (signatures_evaluated)
-        {
-            cs_object->sensor_drift = feature_vector_drift;
-        }
-        else
-        {
-            cs_object->sensor_drift = offset_current_drift;
-        }
+        // if (signatures_evaluated && (!offset_current_unavailable))
+        // {
+        //     cs_object->sensor_drift = (offset_current_drift + feature_vector_drift) / 2;
+        // }
+        // if (signatures_evaluated)
+        // {
+        //     cs_object->sensor_drift = feature_vector_drift;
+        // }
+        // else
+        // {
+        //     cs_object->sensor_drift = offset_current_drift;
+        // }
     
   
     return;
@@ -488,8 +511,14 @@ VT_VOID cs_sensor_status(VT_CURRENTSENSE_OBJECT* cs_object)
             cs_sensor_status_with_repeating_signature_template(cs_object);
 
         if(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid==true || cs_object->fingerprintdb.template.repeating_signatures.repeating_valid==true)
-        {
+        {            printf("\nnon rep : %d", cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status);
+            printf("\n rep : %d", cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status);
+            
             cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status=!cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status;
+            
+            
+
+
 
             if(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status){
                 cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status=0;
@@ -500,12 +529,12 @@ VT_VOID cs_sensor_status(VT_CURRENTSENSE_OBJECT* cs_object)
 
             if(cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid==true && cs_object->fingerprintdb.template.repeating_signatures.repeating_valid==true){
                 cs_object->sensor_status=
-                cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status & cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status;
+                cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status | cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status;
 
             }
             else{
             cs_object->sensor_status=
-                cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status|cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status;
+                cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status | cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status;
             }
 
             average_status(cs_object);

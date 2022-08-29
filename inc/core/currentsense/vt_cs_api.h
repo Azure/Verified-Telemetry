@@ -42,10 +42,22 @@ typedef struct VT_CURRENTSENSE_REPEATING_SIGNATURE_FEATURE_VECTOR_STRUCT
 {
     VT_FLOAT sampling_freq;
     VT_FLOAT signature_freq;
+    VT_FLOAT sec_signature_freq;
+    VT_FLOAT betasig_freqs[VT_CS_NUM_TRUTHS];
+    VT_FLOAT betasig_freqs_count;
     VT_FLOAT relative_curr_draw;
+    VT_FLOAT current_cluster_1_standby;
+    VT_FLOAT current_cluster_1_standby_repeatable_count;
+    VT_BOOL  current_cluster_1_standby_valid;
+    VT_FLOAT current_cluster_2_active;
+    VT_FLOAT current_cluster_2_active_repeatable_count;
+    VT_BOOL current_cluster_2_active_valid;
+    VT_FLOAT current_average;
+    VT_FLOAT current_average_repeatable_count;
+    VT_BOOL current_average_valid;
     VT_FLOAT duty_cycle;
     VT_UINT sampling_freq_repeatable_count;
-    VT_UINT signature_freq_and_duty_cycle_repeatable_count;
+    VT_UINT signature_freq_and_duty_cycle_repeatable_count[VT_CS_NUM_TRUTHS];
     VT_UINT current_dif_repeatable_count;
     VT_BOOL signature_freq_and_duty_cycle_valid;
     VT_BOOL current_dif_valid;
@@ -69,6 +81,7 @@ typedef struct VT_CURRENTSENSE_REPEATING_SIGNATURES_TEMPLATE_STRUCT
     VT_UINT multisampling_num_signatures;
     VT_FLOAT offset_current;
     VT_FLOAT lowest_sample_freq;
+    VT_FLOAT lowest_sample_freq_across_cycles;
     VT_BOOL repeating_valid;//not required now
     VT_BOOL repeating_sensor_status;//not req, as now the status would be linked to each signature, insted of whole repeating 
     VT_CURRENTSENSE_REPEATING_SIGNATURE_FEATURE_VECTOR signatures[VT_CS_MAX_SIGNATURES];
@@ -123,7 +136,11 @@ typedef struct VT_CURRENTSENSE_DATABASE_FLATTENED
     VT_UCHAR repeating_signature_lowest_sample_freq[VT_CHARACTERS_IN_A_NUMBER];
     VT_UCHAR repeating_signature_sampling_freq[VT_CHARACTERS_IN_A_NUMBER * VT_CS_MAX_SIGNATURES];
     VT_UCHAR repeating_signature_freq[VT_CHARACTERS_IN_A_NUMBER * VT_CS_MAX_SIGNATURES];
+    VT_UCHAR repeating_sec_signature_freq[VT_CHARACTERS_IN_A_NUMBER * VT_CS_MAX_SIGNATURES];
     VT_UCHAR repeating_signature_relative_curr_draw[VT_CHARACTERS_IN_A_NUMBER * VT_CS_MAX_SIGNATURES];
+    VT_UCHAR repeating_signature_relative_curr_cluster_1_standby[VT_CHARACTERS_IN_A_NUMBER * VT_CS_MAX_SIGNATURES];
+    VT_UCHAR repeating_signature_relative_curr_cluster_2_active[VT_CHARACTERS_IN_A_NUMBER * VT_CS_MAX_SIGNATURES];
+    VT_UCHAR repeating_signature_relative_curr_average[VT_CHARACTERS_IN_A_NUMBER * VT_CS_MAX_SIGNATURES];
     VT_UCHAR repeating_signature_duty_cycle[VT_CHARACTERS_IN_A_NUMBER * VT_CS_MAX_SIGNATURES];
 } VT_CURRENTSENSE_DATABASE_FLATTENED;
 

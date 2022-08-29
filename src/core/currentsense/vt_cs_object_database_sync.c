@@ -42,9 +42,9 @@ VT_VOID vt_currentsense_object_database_sync(VT_CURRENTSENSE_OBJECT* cs_object, 
     VT_CHAR* csvString;
     VT_UINT iter;
 
-    VT_INT decimal;
+    int32_t decimal;
     VT_FLOAT frac_float;
-    VT_INT frac;
+    int32_t frac;
 
     cs_object->fingerprintdb.template_type = atof((VT_CHAR*)flattened_db->template_type);
 
@@ -57,16 +57,20 @@ VT_VOID vt_currentsense_object_database_sync(VT_CURRENTSENSE_OBJECT* cs_object, 
        { 
         cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid=false;
         cs_object->fingerprintdb.template.repeating_signatures.repeating_valid=true;
+        cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status=true;
        }
     else if(cs_object->fingerprintdb.template_type==VT_CS_ONLY_NONREPEATING_SIGNATURE_VALID)
         {
         cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid=true;
         cs_object->fingerprintdb.template.repeating_signatures.repeating_valid=false;
+        cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status=true;
         }
     else if(cs_object->fingerprintdb.template_type==VT_CS_NO_SIGNATURE_VALID)
         {
         cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_valid=false;
         cs_object->fingerprintdb.template.repeating_signatures.repeating_valid=false;
+        cs_object->fingerprintdb.template.repeating_signatures.repeating_sensor_status=true;
+        cs_object->fingerprintdb.template.non_repeating_signature.non_repeating_sensor_status=true;
         }
 
     printf(" \n template type - %d \n", (int)cs_object->fingerprintdb.template_type);
@@ -154,7 +158,27 @@ VT_VOID vt_currentsense_object_database_sync(VT_CURRENTSENSE_OBJECT* cs_object, 
 
         }
 
-        printf("signature_freq : \n");
+        printf("repeating_sec_signature_freq : \n");
+        iter = 0;
+        for (csvString = (VT_CHAR*)flattened_db->repeating_sec_signature_freq;; csvString = NULL)
+        {
+            token = strtok(csvString, ",");
+            if (token == NULL)
+            {
+                break;
+            }
+            cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].sec_signature_freq = atof((VT_CHAR*)token);
+            temp_value=cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].sec_signature_freq;
+            iter++;
+
+        decimal    = temp_value;
+        frac_float = temp_value - (VT_FLOAT)decimal;
+        frac       = fabsf(frac_float) * 10000;
+        printf("\nrepeating_sec_signature_freq: %d.%04d : \n", decimal, frac);
+
+        }
+
+        printf("relative_curr_draw : \n");
         iter = 0;
         for (csvString = (VT_CHAR*)flattened_db->repeating_signature_relative_curr_draw;; csvString = NULL)
         {
@@ -170,7 +194,68 @@ VT_VOID vt_currentsense_object_database_sync(VT_CURRENTSENSE_OBJECT* cs_object, 
         decimal    = temp_value;
         frac_float = temp_value - (VT_FLOAT)decimal;
         frac       = fabsf(frac_float) * 10000;
-        printf("\nsignature_freq: %d.%04d : \n", decimal, frac);
+        printf("\n relative_curr_draw: %d.%04d : \n", decimal, frac);
+
+        }
+
+        printf("current_cluster_1_standby : \n");
+        iter = 0;
+        for (csvString = (VT_CHAR*)flattened_db->repeating_signature_relative_curr_cluster_1_standby;; csvString = NULL)
+        {
+            token = strtok(csvString, ",");
+            if (token == NULL)
+            {
+                break;
+            }
+            cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].current_cluster_1_standby = atof((VT_CHAR*)token);
+            temp_value=cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].current_cluster_1_standby;
+            iter++;
+
+        decimal    = temp_value;
+        frac_float = temp_value - (VT_FLOAT)decimal;
+        frac       = fabsf(frac_float) * 10000;
+        printf("\n current_cluster_1_standby: %d.%04d : \n", decimal, frac);
+
+        }
+
+
+        printf("current_cluster_2_active : \n");
+        iter = 0;
+        for (csvString = (VT_CHAR*)flattened_db->repeating_signature_relative_curr_cluster_2_active;; csvString = NULL)
+        {
+            token = strtok(csvString, ",");
+            if (token == NULL)
+            {
+                break;
+            }
+            cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].current_cluster_2_active = atof((VT_CHAR*)token);
+            temp_value=cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].current_cluster_2_active;
+            iter++;
+
+        decimal    = temp_value;
+        frac_float = temp_value - (VT_FLOAT)decimal;
+        frac       = fabsf(frac_float) * 10000;
+        printf("\n current_cluster_2_active: %d.%04d : \n", decimal, frac);
+
+        }
+
+        printf("current_average : \n");
+        iter = 0;
+        for (csvString = (VT_CHAR*)flattened_db->repeating_signature_relative_curr_average;; csvString = NULL)
+        {
+            token = strtok(csvString, ",");
+            if (token == NULL)
+            {
+                break;
+            }
+            cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].current_average = atof((VT_CHAR*)token);
+            temp_value=cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].current_average;
+            iter++;
+
+        decimal    = temp_value;
+        frac_float = temp_value - (VT_FLOAT)decimal;
+        frac       = fabsf(frac_float) * 10000;
+        printf("\n current_average: %d.%04d : \n", decimal, frac);
 
         }
 
