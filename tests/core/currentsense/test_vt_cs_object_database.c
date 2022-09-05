@@ -25,13 +25,14 @@ static VT_FLOAT test_relative_curr_draw_values[VT_CS_MAX_SIGNATURES] = {32.54f, 
 static VT_FLOAT test_sampling_freq_values[VT_CS_MAX_SIGNATURES]      = {5000.0f, 12.80f, 15.34f, 78.34f, 0.13f};
 static VT_FLOAT test_signature_freq_values[VT_CS_MAX_SIGNATURES]     = {333.4f, 24.32f, 65.97f, 56.23f, 0.456f};
 
+VT_CURRENTSENSE_OBJECT cs_object;
+VT_CURRENTSENSE_DATABASE_FLATTENED flattened_db;
+VT_BOOL db_updated_flag;
+VT_UINT template_confidence_metric;
+
 // vt_currentsense_object_database_fetch() & vt_currentsense_object_database_sync()
 static VT_VOID test_vt_currentsense_object_database_fetch_sync(VT_VOID** state)
 {
-    VT_CURRENTSENSE_OBJECT cs_object;
-    VT_CURRENTSENSE_DATABASE_FLATTENED flattened_db;
-    VT_BOOL db_updated_flag;
-    VT_UINT template_confidence_metric;
 
     cs_object.fingerprintdb.template_type                                    = VT_CS_REPEATING_SIGNATURE;
     cs_object.fingerprintdb.template.repeating_signatures.lowest_sample_freq = TEST_LOWEST_SAMPLE_FREQ_VALUE;
