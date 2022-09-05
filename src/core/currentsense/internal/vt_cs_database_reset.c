@@ -24,11 +24,16 @@ VT_VOID cs_reset_Repeatability_Data_Array(VT_CURRENTSENSE_OBJECT* cs_object)
     {
     cs_object->fingerprintdb.template.repeating_signatures.Multisampling_Signatures_With_Repeatability_Data_Array[iter].sampling_freq = 0;
     cs_object->fingerprintdb.template.repeating_signatures.Multisampling_Signatures_With_Repeatability_Data_Array[iter].signature_freq = 0;
+    for(int iter1=0;iter1<VT_CS_ACRFFT_MAX_PEAKS;iter1++){
+        cs_object->fingerprintdb.template.repeating_signatures.Multisampling_Signatures_With_Repeatability_Data_Array[iter].betasig_freqs[iter1] = 0;
+        cs_object->fingerprintdb.template.repeating_signatures.Multisampling_Signatures_With_Repeatability_Data_Array[iter].signature_freq_and_duty_cycle_repeatable_count[iter1] = 0;
+
+    }
     cs_object->fingerprintdb.template.repeating_signatures.Multisampling_Signatures_With_Repeatability_Data_Array[iter].duty_cycle = 0;
     cs_object->fingerprintdb.template.repeating_signatures.Multisampling_Signatures_With_Repeatability_Data_Array[iter].relative_curr_draw = 0;
 
     cs_object->fingerprintdb.template.repeating_signatures.Multisampling_Signatures_With_Repeatability_Data_Array[iter].sampling_freq_repeatable_count = 0;
-    cs_object->fingerprintdb.template.repeating_signatures.Multisampling_Signatures_With_Repeatability_Data_Array[iter].signature_freq_and_duty_cycle_repeatable_count = 0;
+    
     cs_object->fingerprintdb.template.repeating_signatures.Multisampling_Signatures_With_Repeatability_Data_Array[iter].current_dif_repeatable_count = 0;
     }
 

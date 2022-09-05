@@ -27,7 +27,7 @@
 
 static const CHAR command_reset_fingerprint[]   = "setResetFingerprintTemplate";
 static const CHAR command_retrain_fingerprint[] = "retrainFingerprintTemplate";
-static uint8_t ucPropertyPayloadBuffer[512];
+static uint8_t ucPropertyPayloadBuffer[1024];
 
 static const CHAR telemetry_name_telemetry_status[]     = "telemetryStatus";
 static const CHAR fingerprint_type_property[]           = "fingerprintType";
@@ -42,7 +42,11 @@ static const CHAR offset_curr_json_property[]              = "offsetCurr";
 static const CHAR lowest_sample_freq_json_property[]       = "lowestSampleFreq";
 static const CHAR sampling_freq_json_property[]            = "samplingFreq";
 static const CHAR signal_freq_json_property[]              = "signalFreq";
+static const CHAR sec_signal_freq_json_property[]              = "secSignalFreq";
 static const CHAR curr_diff_json_property[]                = "currDiff";
+static const CHAR curr_cluster_1_standby_json_property[]   = "currCluster1Standby";
+static const CHAR curr_cluster_2_active_json_property[]    = "currCluster2Active";
+static const CHAR curr_active_json_property[]                = "currAverage";
 static const CHAR duty_cycle_json_property[]               = "dutyCycle";
 
 AzureIoTResult_t FreeRTOS_vt_currentsense_init(FreeRTOS_VT_CURRENTSENSE_COMPONENT* handle,
@@ -187,13 +191,39 @@ VT_CURRENTSENSE_DATABASE_FLATTENED* flattened_db)
     configASSERT(xResult == eAzureIoTSuccess);
 
     xResult = AzureIoTJSONWriter_AppendPropertyWithStringValue(&json_writer,
+             (UCHAR*)sec_signal_freq_json_property,
+             strlen((const char*)sec_signal_freq_json_property),
+             flattened_db->repeating_sec_signature_freq,
+             strlen((CHAR*)flattened_db->repeating_sec_signature_freq));
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    xResult = AzureIoTJSONWriter_AppendPropertyWithStringValue(&json_writer,
              (UCHAR*)curr_diff_json_property,
              strlen((const char*)curr_diff_json_property),
              flattened_db->repeating_signature_relative_curr_draw,
              strlen((CHAR*)flattened_db->repeating_signature_relative_curr_draw));
     configASSERT(xResult == eAzureIoTSuccess);
 
+    xResult = AzureIoTJSONWriter_AppendPropertyWithStringValue(&json_writer,
+             (UCHAR*)curr_cluster_1_standby_json_property,
+             strlen((const char*)curr_cluster_1_standby_json_property),
+             flattened_db->repeating_signature_relative_curr_cluster_1_standby,
+             strlen((CHAR*)flattened_db->repeating_signature_relative_curr_cluster_1_standby));
+    configASSERT(xResult == eAzureIoTSuccess);
 
+    xResult = AzureIoTJSONWriter_AppendPropertyWithStringValue(&json_writer,
+             (UCHAR*)curr_cluster_2_active_json_property,
+             strlen((const char*)curr_cluster_2_active_json_property),
+             flattened_db->repeating_signature_relative_curr_cluster_2_active,
+             strlen((CHAR*)flattened_db->repeating_signature_relative_curr_cluster_2_active));
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    xResult = AzureIoTJSONWriter_AppendPropertyWithStringValue(&json_writer,
+             (UCHAR*)curr_active_json_property,
+             strlen((const char*)curr_active_json_property),
+             flattened_db->repeating_signature_relative_curr_average,
+             strlen((CHAR*)flattened_db->repeating_signature_relative_curr_average));
+    configASSERT(xResult == eAzureIoTSuccess);
 
     xResult = AzureIoTJSONWriter_AppendPropertyWithStringValue(&json_writer,
              (UCHAR*)duty_cycle_json_property,
@@ -213,6 +243,10 @@ VT_CURRENTSENSE_DATABASE_FLATTENED* flattened_db)
 
     lBytesWritten = AzureIoTJSONWriter_GetBytesUsed(&json_writer);
     configASSERT(xResult == eAzureIoTSuccess);
+
+
+    printf(" IoT Hub payload - %s \n", (VT_CHAR*)ucPropertyPayloadBuffer);
+
 
     printf(" property update sent to component -  %s \n ", handle->component_name_ptr);
 
@@ -305,6 +339,7 @@ static AzureIoTResult_t FreeRTOS_vt_currentsense_fingerprint_template_associated
             VTLogError("Failed to update fingerprint template reported property: error code = 0x%08x\r\n", xResult);
             return xResult;
         }
+        handle->cs_object.db_updated = VT_DB_NOT_UPDATED;
         printf("template property done \n");
         if ((xResult = FreeRTOS_vt_currentsense_fingerprint_template_confidence_metric_property(
                  handle, xAzureIoTHubClient, template_confidence_metric))!=eAzureIoTSuccess)
@@ -615,10 +650,70 @@ static AzureIoTResult_t sync_fingerprint_template(AzureIoTJSONReader_t* xReader,
     xResult = AzureIoTJSONReader_GetTokenString(xReader, pucBufferLocal, LOCAL_BUFFER_SIZE, &pusBytesCopied);
     configASSERT(xResult == eAzureIoTSuccess);
 
-    printf(" repeating_signature_relative_curr_draw - %s \n", pucBufferLocal);
+    printf(" repeating_sec_signature_freq - %s \n", pucBufferLocal);
+    memset(flattened_db.repeating_sec_signature_freq, 0, sizeof(flattened_db.repeating_sec_signature_freq));
+    strncpy((VT_CHAR*)flattened_db.repeating_sec_signature_freq, (const char*)pucBufferLocal, sizeof(flattened_db.repeating_sec_signature_freq) - 1);
+
+    xResult = AzureIoTJSONReader_NextToken(xReader);
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    xResult = AzureIoTJSONReader_NextToken(xReader);
+    configASSERT(xResult == eAzureIoTSuccess);
+    memset(pucBufferLocal, 0, LOCAL_BUFFER_SIZE);
+    /* Get desired temperature */
+    xResult = AzureIoTJSONReader_GetTokenString(xReader, pucBufferLocal, LOCAL_BUFFER_SIZE, &pusBytesCopied);
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    printf(" repeating_signature_relative_currdiff - %s \n", pucBufferLocal);
     memset(flattened_db.repeating_signature_relative_curr_draw, 0, sizeof(flattened_db.repeating_signature_relative_curr_draw));
     strncpy((VT_CHAR*)flattened_db.repeating_signature_relative_curr_draw, (const char*)pucBufferLocal, sizeof(flattened_db.repeating_signature_relative_curr_draw) - 1);
     
+
+    xResult = AzureIoTJSONReader_NextToken(xReader);
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    xResult = AzureIoTJSONReader_NextToken(xReader);
+    configASSERT(xResult == eAzureIoTSuccess);
+    memset(pucBufferLocal, 0, LOCAL_BUFFER_SIZE);
+    /* Get desired temperature */
+    xResult = AzureIoTJSONReader_GetTokenString(xReader, pucBufferLocal, LOCAL_BUFFER_SIZE, &pusBytesCopied);
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    printf(" repeating_signature_relative_curr_cluster_1_standby - %s \n", pucBufferLocal);
+    memset(flattened_db.repeating_signature_relative_curr_cluster_1_standby, 0, sizeof(flattened_db.repeating_signature_relative_curr_cluster_1_standby));
+    strncpy((VT_CHAR*)flattened_db.repeating_signature_relative_curr_cluster_1_standby, (const char*)pucBufferLocal, sizeof(flattened_db.repeating_signature_relative_curr_cluster_1_standby) - 1);
+    
+
+    xResult = AzureIoTJSONReader_NextToken(xReader);
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    xResult = AzureIoTJSONReader_NextToken(xReader);
+    configASSERT(xResult == eAzureIoTSuccess);
+    memset(pucBufferLocal, 0, LOCAL_BUFFER_SIZE);
+    /* Get desired temperature */
+    xResult = AzureIoTJSONReader_GetTokenString(xReader, pucBufferLocal, LOCAL_BUFFER_SIZE, &pusBytesCopied);
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    printf(" repeating_signature_relative_curr_cluster_2_active - %s \n", pucBufferLocal);
+    memset(flattened_db.repeating_signature_relative_curr_cluster_2_active, 0, sizeof(flattened_db.repeating_signature_relative_curr_cluster_2_active));
+    strncpy((VT_CHAR*)flattened_db.repeating_signature_relative_curr_cluster_2_active, (const char*)pucBufferLocal, sizeof(flattened_db.repeating_signature_relative_curr_cluster_2_active) - 1);
+    
+    
+    xResult = AzureIoTJSONReader_NextToken(xReader);
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    xResult = AzureIoTJSONReader_NextToken(xReader);
+    configASSERT(xResult == eAzureIoTSuccess);
+    memset(pucBufferLocal, 0, LOCAL_BUFFER_SIZE);
+    /* Get desired temperature */
+    xResult = AzureIoTJSONReader_GetTokenString(xReader, pucBufferLocal, LOCAL_BUFFER_SIZE, &pusBytesCopied);
+    configASSERT(xResult == eAzureIoTSuccess);
+
+    printf(" repeating_signature_relative_curr_average - %s \n", pucBufferLocal);
+    memset(flattened_db.repeating_signature_relative_curr_average, 0, sizeof(flattened_db.repeating_signature_relative_curr_average));
+    strncpy((VT_CHAR*)flattened_db.repeating_signature_relative_curr_average, (const char*)pucBufferLocal, sizeof(flattened_db.repeating_signature_relative_curr_average) - 1);
+    
+
     xResult = AzureIoTJSONReader_NextToken(xReader);
     configASSERT(xResult == eAzureIoTSuccess);
 

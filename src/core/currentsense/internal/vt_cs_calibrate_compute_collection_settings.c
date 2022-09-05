@@ -16,30 +16,22 @@ typedef struct SPECTOGRAM_STRUCT
 
 } SPECTOGRAM;
 
-static VT_UINT calculate_fft_ranges()
-{
-    VT_UINT ranges = 1;
-    VT_FLOAT f_low = (VT_CS_ADC_MAX_SAMPLING_FREQ / 2) / VT_CS_SAMPLE_LENGTH;
-    while (true)
-    {
-        if (f_low < VT_CS_FMIN)
-        {
-            break;
-        }
-        f_low /= (((VT_FLOAT)VT_CS_SAMPLE_LENGTH) / 2.0f);
-        ranges++;
-    }
-    return ranges;
-}
-
 static VT_FLOAT get_calib_range_freq(VT_UINT range_id)
 {
-    VT_FLOAT sampling_freq = VT_CS_ADC_MAX_SAMPLING_FREQ / ((VT_FLOAT)pow(VT_CS_FFT_LENGTH, range_id));
-    VT_FLOAT f_min         = sampling_freq / VT_CS_SAMPLE_LENGTH;
-    if (f_min < VT_CS_FMIN)
-    {
-        sampling_freq = VT_CS_FMIN * VT_CS_SAMPLE_LENGTH;
-    }
+    float exp_divisor=powf(((float)VT_CS_ADC_MAX_SAMPLING_FREQ/VT_CS_ADC_MIN_SAMPLING_FREQ),((float)1/((float)(VT_CS_MAX_SIGNATURES-1))));
+
+        #if VT_LOG_LEVEL > 2
+            VT_INT decimal;
+            VT_FLOAT frac_float;
+            VT_INT frac;
+            decimal    = exp_divisor;
+            frac_float = exp_divisor - (VT_FLOAT)decimal;
+            frac       = fabsf(frac_float) * 10000;
+            VTLogDebugNoTag(" \n exp_divisor %d.%04d : \n", decimal, frac);
+        #endif /* VT_LOG_LEVEL > 2 */
+        
+    float sampling_freq=((float)VT_CS_ADC_MAX_SAMPLING_FREQ)/powf(exp_divisor,range_id);
+
     return sampling_freq;
 }
 
@@ -270,32 +262,14 @@ static VT_FLOAT get_raw_signature_sample_freq(VT_FLOAT signal_freq)
     return sample_freq;
 }
 
-// VT_VOID cs_calibrate_repeating_signatures_compute_sampling_frequencies(VT_CURRENTSENSE_OBJECT* cs_object,
-//     VT_FLOAT* sampling_frequencies,
-//     VT_UINT sampling_frequencies_buffer_length,
-//     VT_UINT* num_sampling_frequencies)
-// {
-//     //VT_UINT8 fft_ranges       = 
-//     calculate_fft_ranges();
-//     *num_sampling_frequencies = 0;
-//     // for (VT_UINT iter = 0; iter < 1; iter++)
-//     // {
-//     //     if (iter == sampling_frequencies_buffer_length)
-//     //     {
-//     //         break;
-//     //     }
-//         sampling_frequencies[0] = get_calib_range_freq(0);
-//         *num_sampling_frequencies  = *num_sampling_frequencies + 1;
-//     //}
-// }
 VT_VOID cs_calibrate_repeating_signatures_compute_sampling_frequencies(VT_CURRENTSENSE_OBJECT* cs_object,
     VT_FLOAT* sampling_frequencies,
     VT_UINT sampling_frequencies_buffer_length,
     VT_UINT* num_sampling_frequencies)
 {
-    VT_UINT8 fft_ranges       =   calculate_fft_ranges();
+    //VT_UINT8 fft_ranges       =   calculate_fft_ranges();
     *num_sampling_frequencies = 0;
-    for (VT_UINT iter = 0; iter < fft_ranges ; iter++)
+    for (VT_UINT iter = 0; iter < VT_CS_NUM_EXP_RANGES ; iter++)
     {
         if (iter == sampling_frequencies_buffer_length)
         {
@@ -303,7 +277,21 @@ VT_VOID cs_calibrate_repeating_signatures_compute_sampling_frequencies(VT_CURREN
         }
         sampling_frequencies[iter] = get_calib_range_freq(iter);
         *num_sampling_frequencies  = *num_sampling_frequencies + 1;
+        #if VT_LOG_LEVEL > 2
+            VT_INT decimal;
+            VT_FLOAT frac_float;
+            VT_INT frac;
+            decimal    = sampling_frequencies[iter];
+            frac_float = sampling_frequencies[iter] - (VT_FLOAT)decimal;
+            frac       = fabsf(frac_float) * 10000;
+            VTLogDebugNoTag("%d.%04d : ", decimal, frac);
+        #endif /* VT_LOG_LEVEL > 2 */
     }
+
+    #if VT_LOG_LEVEL > 2
+    printf("Number of Sampling freq : %d \n",*num_sampling_frequencies);
+    #endif /* VT_LOG_LEVEL > 2 */
+
 }
 
 VT_VOID cs_calibrate_repeating_signatures_compute_collection_settings(
@@ -322,7 +310,7 @@ VT_VOID cs_calibrate_repeating_signatures_compute_collection_settings(
         spectogram_calib[iter].magnitude = 0;
         spectogram_calib[iter].frequency = 0;
     }
-    VT_UINT calib_ranges                          = calculate_fft_ranges();
+    VT_UINT calib_ranges                          = VT_CS_NUM_EXP_RANGES;
     VT_FLOAT adc_read_signal[VT_CS_SAMPLE_LENGTH] = {0};
     COMPLEX signal[VT_CS_SAMPLE_LENGTH];
     for (VT_UINT iter = 0; iter < VT_CS_SAMPLE_LENGTH; iter++)

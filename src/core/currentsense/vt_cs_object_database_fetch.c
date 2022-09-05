@@ -11,9 +11,9 @@ VT_VOID vt_currentsense_object_database_fetch(VT_CURRENTSENSE_OBJECT* cs_object,
 {
     VT_CHAR string_buffer[40];
     VT_CHAR string_element[15];
-    VT_INT decimal;
+    int32_t decimal;
     VT_FLOAT frac_float;
-    VT_INT frac;
+    int32_t frac;
 
     memset(string_buffer, 0, sizeof(string_buffer));
     snprintf(string_buffer, sizeof(string_buffer), "%03d", cs_object->fingerprintdb.template_type);
@@ -69,6 +69,7 @@ VT_VOID vt_currentsense_object_database_fetch(VT_CURRENTSENSE_OBJECT* cs_object,
         }
         strcpy((VT_CHAR*)flattened_db->repeating_signature_sampling_freq, string_buffer);
         
+
         memset(string_buffer, 0, sizeof(string_buffer));
         for (VT_UINT iter = 0; iter < 5; iter++)
         {
@@ -89,6 +90,23 @@ VT_VOID vt_currentsense_object_database_fetch(VT_CURRENTSENSE_OBJECT* cs_object,
         memset(string_buffer, 0, sizeof(string_buffer));
         for (VT_UINT iter = 0; iter < 5; iter++)
         {
+            decimal = cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].sec_signature_freq;
+            frac_float =
+                cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].sec_signature_freq - (VT_FLOAT)decimal;
+            frac = frac_float * 10000;
+            memset(string_element, 0, sizeof(string_element));
+            snprintf(string_element, sizeof(string_element), "%d.%04d", decimal, frac);
+            if (iter > 0)
+            {
+                strcat(string_buffer, ",");
+            }
+            strcat(string_buffer, string_element);
+        }
+        strcpy((VT_CHAR*)flattened_db->repeating_sec_signature_freq, string_buffer);
+
+        memset(string_buffer, 0, sizeof(string_buffer));
+        for (VT_UINT iter = 0; iter < 5; iter++)
+        {
             decimal = cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].relative_curr_draw;
             frac_float =
                 cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].relative_curr_draw - (VT_FLOAT)decimal;
@@ -102,6 +120,61 @@ VT_VOID vt_currentsense_object_database_fetch(VT_CURRENTSENSE_OBJECT* cs_object,
             strcat(string_buffer, string_element);
         }
         strcpy((VT_CHAR*)flattened_db->repeating_signature_relative_curr_draw, string_buffer);
+
+
+        memset(string_buffer, 0, sizeof(string_buffer));
+        for (VT_UINT iter = 0; iter < 5; iter++)
+        {
+            decimal = cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].current_cluster_1_standby;
+            frac_float =
+                cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].current_cluster_1_standby - (VT_FLOAT)decimal;
+            frac = frac_float * 10000;
+            memset(string_element, 0, sizeof(string_element));
+            snprintf(string_element, sizeof(string_element), "%d.%04d", decimal, frac);
+            if (iter > 0)
+            {
+                strcat(string_buffer, ",");
+            }
+            strcat(string_buffer, string_element);
+        }
+        strcpy((VT_CHAR*)flattened_db->repeating_signature_relative_curr_cluster_1_standby, string_buffer);
+
+
+        memset(string_buffer, 0, sizeof(string_buffer));
+        for (VT_UINT iter = 0; iter < 5; iter++)
+        {
+            decimal = cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].current_cluster_2_active;
+            frac_float =
+                cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].current_cluster_2_active - (VT_FLOAT)decimal;
+            frac = frac_float * 10000;
+            memset(string_element, 0, sizeof(string_element));
+            snprintf(string_element, sizeof(string_element), "%d.%04d", decimal, frac);
+            if (iter > 0)
+            {
+                strcat(string_buffer, ",");
+            }
+            strcat(string_buffer, string_element);
+        }
+        strcpy((VT_CHAR*)flattened_db->repeating_signature_relative_curr_cluster_2_active, string_buffer);
+
+
+        memset(string_buffer, 0, sizeof(string_buffer));
+        for (VT_UINT iter = 0; iter < 5; iter++)
+        {
+            decimal = cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].current_average;
+            frac_float =
+                cs_object->fingerprintdb.template.repeating_signatures.signatures[iter].current_average - (VT_FLOAT)decimal;
+            frac = frac_float * 10000;
+            memset(string_element, 0, sizeof(string_element));
+            snprintf(string_element, sizeof(string_element), "%d.%04d", decimal, frac);
+            if (iter > 0)
+            {
+                strcat(string_buffer, ",");
+            }
+            strcat(string_buffer, string_element);
+        }
+        strcpy((VT_CHAR*)flattened_db->repeating_signature_relative_curr_average, string_buffer);
+
 
         memset(string_buffer, 0, sizeof(string_buffer));
         for (VT_UINT iter = 0; iter < 5; iter++)
@@ -119,8 +192,14 @@ VT_VOID vt_currentsense_object_database_fetch(VT_CURRENTSENSE_OBJECT* cs_object,
         }
         strcpy((VT_CHAR*)flattened_db->repeating_signature_duty_cycle, string_buffer);
 
+
     
     *template_confidence_metric = cs_object->template_confidence_metric;
+
+    if(cs_object->Calibration_Done_Count>=MULTICALIBRATION_COUNT)
+    {
+        cs_object->db_updated = VT_DB_UPDATED;
+    }
 
     if (cs_object->db_updated == VT_DB_NOT_UPDATED)
     {
