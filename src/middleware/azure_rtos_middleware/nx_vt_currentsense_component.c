@@ -11,7 +11,6 @@
 
 /* Pnp command supported */
 static const CHAR command_reset_fingerprint[]   = "setResetFingerprintTemplate";
-static const CHAR command_retrain_fingerprint[] = "retrainFingerprintTemplate";
 
 /* Names of properties for desired/reporting */
 
@@ -67,12 +66,7 @@ static UINT reset_reference_currentsense(NX_VT_CURRENTSENSE_COMPONENT* handle)
     return (NX_AZURE_IOT_SUCCESS);
 }
 
-/* retrain fingerprint method implementation */
-static UINT retrain_reference_currentsense(NX_VT_CURRENTSENSE_COMPONENT* handle)
-{
-    vt_currentsense_object_sensor_recalibrate(&(handle->cs_object));
-    return (NX_AZURE_IOT_SUCCESS);
-}
+
 
 static UINT sync_fingerprint_template(NX_AZURE_IOT_JSON_READER* property_value_reader_ptr, NX_VT_CURRENTSENSE_COMPONENT* handle)
 {
@@ -758,14 +752,6 @@ UINT nx_vt_currentsense_process_command(NX_VT_CURRENTSENSE_COMPONENT* handle,
     {
         dm_status = (reset_reference_currentsense(handle) != NX_AZURE_IOT_SUCCESS) ? SAMPLE_COMMAND_ERROR_STATUS
                                                                                    : SAMPLE_COMMAND_SUCCESS_STATUS;
-    }
-
-    // Command 2 : Retrain Fingerprint
-    else if (((pnp_command_name_length == (sizeof(command_retrain_fingerprint) - 1)) &&
-                 (!(strncmp((CHAR*)pnp_command_name_ptr, (CHAR*)command_retrain_fingerprint, pnp_command_name_length)))) == 1)
-    {
-        dm_status = (retrain_reference_currentsense(handle) != NX_AZURE_IOT_SUCCESS) ? SAMPLE_COMMAND_ERROR_STATUS
-                                                                                     : SAMPLE_COMMAND_SUCCESS_STATUS;
     }
 
     else

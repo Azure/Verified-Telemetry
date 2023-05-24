@@ -13,7 +13,6 @@
 
 /* Pnp command supported */
 static const CHAR command_reset_fingerprint[]   = "setResetFingerprintTemplate";
-static const CHAR command_retrain_fingerprint[] = "retrainFingerprintTemplate";
 
 /* Names of properties for desired/reporting */
 
@@ -69,15 +68,6 @@ static UINT reset_refernce_fallcurve(NX_VT_FALLCURVE_COMPONENT* handle, NX_AZURE
 {
     uint8_t confidence_metric;
     UINT status                        = vt_fallcurve_object_sensor_calibrate(&(handle->fc_object), &confidence_metric);
-    handle->template_confidence_metric = confidence_metric;
-    return (status);
-}
-
-/* retrain fingerprint method implementation */
-static UINT retrain_refernce_fallcurve(NX_VT_FALLCURVE_COMPONENT* handle, NX_AZURE_IOT_JSON_READER* json_reader_ptr)
-{
-    uint8_t confidence_metric;
-    UINT status                        = vt_fallcurve_object_sensor_recalibrate(&(handle->fc_object), &confidence_metric);
     handle->template_confidence_metric = confidence_metric;
     return (status);
 }
@@ -430,23 +420,6 @@ UINT nx_vt_fallcurve_process_command(NX_VT_FALLCURVE_COMPONENT* handle,
     {
         dm_status = (reset_refernce_fallcurve(handle, json_reader_ptr) != NX_AZURE_IOT_SUCCESS) ? SAMPLE_COMMAND_ERROR_STATUS
                                                                                                 : SAMPLE_COMMAND_SUCCESS_STATUS;
-
-        if (hub_store_all_db(handle, iotpnp_client_ptr))
-        {
-            VTLogError("Failed to update db in cloud\r\n");
-        }
-        if (nx_vt_fallcurve_fingerprint_template_confidence_metric_property(handle, iotpnp_client_ptr))
-        {
-            VTLogError("Failed to update Fingerprint Template Confidence Metric\r\n");
-        }
-    }
-
-    // Command 2 : Retrain Fingerprint
-    else if (((pnp_command_name_length == (sizeof(command_retrain_fingerprint) - 1)) &&
-                 (!(strncmp((CHAR*)pnp_command_name_ptr, (CHAR*)command_retrain_fingerprint, pnp_command_name_length)))) == 1)
-    {
-        dm_status = (retrain_refernce_fallcurve(handle, json_reader_ptr) != NX_AZURE_IOT_SUCCESS) ? SAMPLE_COMMAND_ERROR_STATUS
-                                                                                                  : SAMPLE_COMMAND_SUCCESS_STATUS;
 
         if (hub_store_all_db(handle, iotpnp_client_ptr))
         {

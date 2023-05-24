@@ -5,7 +5,7 @@
 #include <math.h>
 #include "vt_cs_fft.h"
 #include "kmeans1.h"
-
+#include <string.h>
 
 #define VT_CS_BUFFER_COUNT_UP             0x01
 #define VT_CS_BUFFER_COUNT_DOWN           0x02
@@ -17,7 +17,13 @@
 #define TOPNPEAKS 3
 #define VT_ACR_DEVIATION 1
 
+Pointer ConfigObjsVar[VT_CS_SAMPLE_LENGTH+1];
+Pointer ConfigCentersVar[2];
+int ConfigClustersVar[VT_CS_SAMPLE_LENGTH+1];
 
+int ConfigClusterCountsVar[2];
+float DominantVar[VT_CS_SAMPLE_LENGTH+1];
+ 
 void print_floatx(float input)
 {
 
@@ -1004,12 +1010,35 @@ static VT_VOID binary_state_current_compute(VT_FLOAT* raw_signature,
 	config.distance_method = d_distance;
 	config.centroid_method = d_centroid;
 
-	config.objs = calloc(config.num_objs, sizeof(Pointer));
-	config.centers = calloc(config.k, sizeof(Pointer));
-	config.clusters = calloc(config.num_objs, sizeof(int));
+	// config.objs = calloc(config.num_objs, sizeof(Pointer));
+	// config.centers = calloc(config.k, sizeof(Pointer));
+	// config.clusters = calloc(config.num_objs, sizeof(int));
 
-	int* clustercounts=calloc(config.k,sizeof(int));
-	float* dominant=calloc(config.num_objs,sizeof(float));
+	// int* clustercounts=calloc(config.k,sizeof(int));
+	// float* dominant=calloc(config.num_objs,sizeof(float));
+
+    
+    // Pointer ConfigObjsVar[config.num_objs];
+    // Pointer ConfigCentersVar[config.k];
+    // int ConfigClustersVar[config.num_objs];
+    
+    // int ConfigClusterCountsVar[config.k];
+    // float DominantVar[config.num_objs];
+
+    memset(ConfigObjsVar, 0, sizeof(ConfigObjsVar));
+    memset(ConfigCentersVar, 0, sizeof(ConfigCentersVar));
+    memset(ConfigClustersVar, 0, sizeof(ConfigClustersVar));
+    memset(ConfigClustersVar, 0, sizeof(ConfigClustersVar));
+    memset(ConfigClusterCountsVar, 0, sizeof(ConfigClusterCountsVar));
+    memset(DominantVar, 0, sizeof(DominantVar));
+
+	config.objs = (void *)ConfigObjsVar;
+	config.centers = (void *)ConfigCentersVar;
+	config.clusters = (void *)ConfigClustersVar;
+
+	int* clustercounts=(int *)ConfigClusterCountsVar;
+	float* dominant=(void *)DominantVar;
+
 
 	/* populate objs */
 	for (i = 0; i < config.num_objs - 1; i++)
@@ -1105,11 +1134,11 @@ printf("\n");
 	
 	
 
-	free(config.objs);
-	free(config.clusters);
-	free(config.centers);
-    free(clustercounts);
-    free(dominant);
+	// free(config.objs);
+	// free(config.clusters);
+	// free(config.centers);
+    // free(clustercounts);
+    // free(dominant);
 
 }
 

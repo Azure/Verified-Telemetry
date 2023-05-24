@@ -205,71 +205,6 @@ void vt_interrupt_disable()
 {
     // do nothing
 }
-
-// vt_fallcurve_object_sensor_calibrate() & vt_fallcurve_object_sensor_recalibrate()
-static VT_VOID test_vt_fallcurve_object_sensor_calibrate_recalibrate(VT_VOID** state)
-{
-    VT_FALLCURVE_OBJECT fc_object;
-    VT_DEVICE_DRIVER device_driver;
-    VT_SENSOR_HANDLE sensor_handle;
-    fc_object.device_driver = &device_driver;
-    fc_object.sensor_handle = &sensor_handle;
-    VT_UINT8 confidence_metric;
-    fc_object.device_driver->adc_single_read_init = &vt_adc_single_read_init;
-    fc_object.device_driver->gpio_on              = &vt_gpio_on;
-    fc_object.device_driver->gpio_off             = &vt_gpio_off;
-    fc_object.device_driver->tick_init            = &vt_tick_init;
-    fc_object.device_driver->tick_deinit          = &vt_tick_deinit;
-    fc_object.device_driver->tick                 = &vt_tick;
-    fc_object.device_driver->interrupt_enable     = &vt_interrupt_enable;
-    fc_object.device_driver->interrupt_disable    = &vt_interrupt_disable;
-
-    fc_object.device_driver->adc_single_read = &vt_adc_single_read_zero_voltage_response;
-    assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_ERROR);
-    assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_ERROR);
-
-    fc_object.device_driver->adc_single_read = &vt_adc_single_read_constant_voltage_response;
-    assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_ERROR);
-    assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_ERROR);
-
-    fc_object.device_driver->adc_single_read = &vt_adc_single_read_step_voltage_response;
-    assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_ERROR);
-    assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_ERROR);
-
-    fc_object.device_driver->adc_single_read = &vt_adc_single_read_exponential_rise_voltage_response;
-    assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_ERROR);
-    assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_ERROR);
-
-    fc_object.device_driver->adc_single_read = &vt_adc_single_read_triangular_voltage_response;
-    assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_ERROR);
-    assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_ERROR);
-
-    fc_object.device_driver->adc_single_read = &vt_adc_single_read_exponential_fall_voltage_response;
-    assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_SUCCESS);
-    assert_int_equal(fc_object.fingerprintdb.num_signatures, 1);
-    assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_SUCCESS);
-    assert_int_equal(fc_object.fingerprintdb.num_signatures, 2);
-    assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_SUCCESS);
-    assert_int_equal(fc_object.fingerprintdb.num_signatures, 3);
-    assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_SUCCESS);
-    assert_int_equal(fc_object.fingerprintdb.num_signatures, 4);
-    assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_SUCCESS);
-    assert_int_equal(fc_object.fingerprintdb.num_signatures, 5);
-    assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_ERROR);
-    assert_int_equal(fc_object.fingerprintdb.num_signatures, 5);
-
-    fc_object.device_driver->adc_single_read = &vt_adc_single_read_fast_exponential_fall_voltage_response;
-    assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_SUCCESS);
-
-    fc_object.device_driver->adc_single_read = &vt_adc_single_read_slow_exponential_fall_voltage_response;
-    assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_SUCCESS);
-
-    fc_object.device_driver->adc_single_read_init = &vt_adc_single_read_init_inconsistent_voltage_response;
-    fc_object.device_driver->adc_single_read      = &vt_adc_single_read_inconsistent_voltage_response;
-    assert_int_equal(vt_fallcurve_object_sensor_calibrate(&fc_object, &confidence_metric), VT_ERROR);
-    assert_int_equal(vt_fallcurve_object_sensor_recalibrate(&fc_object, &confidence_metric), VT_ERROR);
-}
-
 // vt_fallcurve_object_sensor_status()
 static VT_VOID test_vt_fallcurve_object_sensor_status(VT_VOID** state)
 {
@@ -353,7 +288,6 @@ static VT_VOID test_vt_fallcurve_object_sensor_status(VT_VOID** state)
 VT_INT test_vt_fc_object_sensor()
 {
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test(test_vt_fallcurve_object_sensor_calibrate_recalibrate),
         cmocka_unit_test(test_vt_fallcurve_object_sensor_status),
     };
 

@@ -17,6 +17,4 @@ VT_VOID cs_calibrate_repeating_signatures_compute_collection_settings(
 
 VT_VOID cs_calibrate_sensor(VT_CURRENTSENSE_OBJECT* cs_object);
 
-VT_VOID cs_recalibrate_sensor(VT_CURRENTSENSE_OBJECT* cs_object);
-
 #endif

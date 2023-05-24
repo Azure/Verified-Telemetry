@@ -301,48 +301,6 @@ static VT_VOID test_vt_currentsense_object_signature_process(VT_VOID** state)
     assert_int_equal(cs_object.fingerprintdb.template.repeating_signatures.num_signatures, 0);
 
     cs_object.raw_signatures_reader->repeating_raw_signature_ongoing_collection = false;
-    cs_object.mode                                                              = VT_MODE_RECALIBRATE;
-    cs_object.raw_signatures_reader_initialized                                 = true;
-    cs_object.raw_signatures_reader->repeating_raw_signature_buffers_filled     = true;
-    cs_object.db_updated                                                        = false;
-    cs_object.raw_signatures_reader->num_repeating_raw_signatures               = 0;
-
-    cs_object.raw_signatures_reader->repeating_raw_signatures[0].sampling_frequency =
-        TEST_REPEATING_RAW_SIGNATURE_0_SAMPLING_FREQ;
-    cs_object.raw_signatures_reader->repeating_raw_signatures[0].sample_length = TEST_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH;
-    for (VT_UINT iter1 = 0; iter1 < TEST_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH; iter1++)
-    {
-        cs_object.raw_signatures_reader->repeating_raw_signatures[0].current_measured[iter1] =
-            repeating_raw_signature_5000_hz[iter1];
-    }
-    cs_object.raw_signatures_reader->num_repeating_raw_signatures++;
-
-    cs_object.raw_signatures_reader->repeating_raw_signatures[1].sampling_frequency =
-        TEST_REPEATING_RAW_SIGNATURE_1_SAMPLING_FREQ;
-    cs_object.raw_signatures_reader->repeating_raw_signatures[1].sample_length = TEST_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH;
-    for (VT_UINT iter1 = 0; iter1 < TEST_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH; iter1++)
-    {
-        cs_object.raw_signatures_reader->repeating_raw_signatures[1].current_measured[iter1] =
-            repeating_raw_signature_12_hz[iter1];
-    }
-    cs_object.raw_signatures_reader->num_repeating_raw_signatures++;
-
-    cs_object.raw_signatures_reader->non_repeating_raw_signature.num_datapoints = TEST_NON_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH;
-    cs_object.raw_signatures_reader->non_repeating_raw_signature.sample_length  = TEST_NON_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH;
-    cs_object.raw_signatures_reader->non_repeating_raw_signature.sampling_frequency =
-        TEST_NON_REPEATING_RAW_SIGNATURE_SAMPLING_FREQ;
-    for (VT_UINT iter1 = 0; iter1 < TEST_NON_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH; iter1++)
-    {
-        cs_object.raw_signatures_reader->non_repeating_raw_signature.current_measured[iter1] = non_repeating_raw_signature[iter1];
-    }
-    vt_currentsense_object_signature_process(&cs_object);
-
-    assert_int_equal(cs_object.mode, VT_MODE_RUNTIME_EVALUATE);
-    assert_int_equal(cs_object.db_updated, true);
-    assert_int_equal(cs_object.fingerprintdb.template_type, VT_CS_NO_SIGNATURE_VALID);
-    assert_int_equal(cs_object.fingerprintdb.template.repeating_signatures.num_signatures, 1);
-
-    cs_object.raw_signatures_reader->repeating_raw_signature_ongoing_collection = false;
     cs_object.mode                                                              = VT_MODE_RUNTIME_EVALUATE;
     cs_object.raw_signatures_reader_initialized                                 = true;
     cs_object.raw_signatures_reader->repeating_raw_signature_buffers_filled     = true;
@@ -501,45 +459,6 @@ static VT_VOID test_vt_currentsense_object_signature_process(VT_VOID** state)
 
     assert_int_equal(cs_object.mode, VT_MODE_CALIBRATE);
     // assert_int_equal(cs_object.db_updated, true);
-    assert_int_equal(cs_object.fingerprintdb.template_type, VT_CS_NO_SIGNATURE_VALID);
-
-    cs_object.raw_signatures_reader->repeating_raw_signature_ongoing_collection = false;
-    cs_object.mode                                                              = VT_MODE_RECALIBRATE;
-    cs_object.raw_signatures_reader_initialized                                 = true;
-    cs_object.raw_signatures_reader->repeating_raw_signature_buffers_filled     = true;
-    cs_object.db_updated                                                        = false;
-    cs_object.raw_signatures_reader->num_repeating_raw_signatures               = 0;
-
-    cs_object.raw_signatures_reader->repeating_raw_signatures[0].sampling_frequency =
-        TEST_REPEATING_RAW_SIGNATURE_0_SAMPLING_FREQ;
-    cs_object.raw_signatures_reader->repeating_raw_signatures[0].sample_length = TEST_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH;
-    for (VT_UINT iter1 = 0; iter1 < TEST_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH; iter1++)
-    {
-        cs_object.raw_signatures_reader->repeating_raw_signatures[0].current_measured[iter1] = repeating_raw_signature_5000_hz[0];
-    }
-    cs_object.raw_signatures_reader->num_repeating_raw_signatures++;
-
-    cs_object.raw_signatures_reader->repeating_raw_signatures[1].sampling_frequency =
-        TEST_REPEATING_RAW_SIGNATURE_1_SAMPLING_FREQ;
-    cs_object.raw_signatures_reader->repeating_raw_signatures[1].sample_length = TEST_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH;
-    for (VT_UINT iter1 = 0; iter1 < TEST_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH; iter1++)
-    {
-        cs_object.raw_signatures_reader->repeating_raw_signatures[1].current_measured[iter1] = repeating_raw_signature_12_hz[0];
-    }
-    cs_object.raw_signatures_reader->num_repeating_raw_signatures++;
-
-    cs_object.raw_signatures_reader->non_repeating_raw_signature.num_datapoints = TEST_NON_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH;
-    cs_object.raw_signatures_reader->non_repeating_raw_signature.sample_length  = TEST_NON_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH;
-    cs_object.raw_signatures_reader->non_repeating_raw_signature.sampling_frequency =
-        TEST_NON_REPEATING_RAW_SIGNATURE_SAMPLING_FREQ;
-    for (VT_UINT iter1 = 0; iter1 < TEST_NON_REPEATING_RAW_SIGNATURE_SAMPLE_LENGTH; iter1++)
-    {
-        cs_object.raw_signatures_reader->non_repeating_raw_signature.current_measured[iter1] = non_repeating_raw_signature[iter1];
-    }
-    vt_currentsense_object_signature_process(&cs_object);
-
-    assert_int_equal(cs_object.mode, VT_MODE_RUNTIME_EVALUATE);
-    assert_int_equal(cs_object.db_updated, true);
     assert_int_equal(cs_object.fingerprintdb.template_type, VT_CS_NO_SIGNATURE_VALID);
 
     cs_object.raw_signatures_reader->repeating_raw_signature_ongoing_collection = false;
