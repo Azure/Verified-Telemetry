@@ -1,5 +1,10 @@
-[![build](https://github.com/Azure/Verified-Telemetry/workflows/Build%20Core/badge.svg)](https://github.com/Azure/Verified-Telemetry/actions/workflows/build-core.yaml)
 [![codecov](https://codecov.io/gh/Azure/verified-telemetry/branch/main/graph/badge.svg?token=7JFQ2EX3BV)](https://codecov.io/gh/Azure/verified-telemetry)
+
+# PROJECT ARCHIVED
+
+This repository has been archived and is now read-only. It will continue to be available for viewing purposes, however caution should be used as security fixes are no longer being applied.
+
+---
 
 # Verified Telemetry for Azure IoT
 
