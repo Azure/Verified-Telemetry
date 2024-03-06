@@ -154,8 +154,6 @@ VT_UINT vt_currentsense_object_initialize(VT_CURRENTSENSE_OBJECT* cs_object,
 // Set mode to calibrate
 VT_VOID vt_currentsense_object_sensor_calibrate(VT_CURRENTSENSE_OBJECT* cs_object);
 
-// Set mode to re-calibrate
-VT_VOID vt_currentsense_object_sensor_recalibrate(VT_CURRENTSENSE_OBJECT* cs_object);
 
 // Fetch Status
 VT_VOID vt_currentsense_object_sensor_fetch_status(

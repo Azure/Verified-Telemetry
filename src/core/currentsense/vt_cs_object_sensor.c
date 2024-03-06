@@ -8,11 +8,6 @@ VT_VOID vt_currentsense_object_sensor_calibrate(VT_CURRENTSENSE_OBJECT* cs_objec
     cs_object->mode = VT_MODE_CALIBRATE;
 }
 
-VT_VOID vt_currentsense_object_sensor_recalibrate(VT_CURRENTSENSE_OBJECT* cs_object)
-{
-    cs_object->mode = VT_MODE_RECALIBRATE;
-}
-
 VT_VOID vt_currentsense_object_sensor_fetch_status(
     VT_CURRENTSENSE_OBJECT* cs_object, VT_UINT* sensor_status, VT_UINT* sensor_drift)
 {

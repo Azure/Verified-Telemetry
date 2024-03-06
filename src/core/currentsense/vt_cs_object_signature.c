@@ -114,11 +114,5 @@ VT_VOID vt_currentsense_object_signature_process(VT_CURRENTSENSE_OBJECT* cs_obje
             printf("\n NUM SIG = %d \n", cs_object->fingerprintdb.template.repeating_signatures.num_signatures);
             printf(" final T type : %d", cs_object->fingerprintdb.template_type);
             break;
-
-        case VT_MODE_RECALIBRATE:
-            VTLogDebug("Recalibrating Sensor Fingerprint \r\n");
-            cs_recalibrate_sensor(cs_object);
-            cs_object->mode = VT_MODE_RUNTIME_EVALUATE;
-            break;
     }
 }

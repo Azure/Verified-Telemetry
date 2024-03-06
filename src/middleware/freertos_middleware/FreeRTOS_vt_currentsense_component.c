@@ -26,7 +26,6 @@
 #define LOCAL_BUFFER_SIZE 64
 
 static const CHAR command_reset_fingerprint[]   = "setResetFingerprintTemplate";
-static const CHAR command_retrain_fingerprint[] = "retrainFingerprintTemplate";
 static uint8_t ucPropertyPayloadBuffer[1024];
 
 static const CHAR telemetry_name_telemetry_status[]     = "telemetryStatus";
@@ -95,13 +94,6 @@ static AzureIoTResult_t reset_reference_currentsense(FreeRTOS_VT_CURRENTSENSE_CO
     return (eAzureIoTSuccess);
 }
 
-static AzureIoTResult_t retrain_reference_currentsense(FreeRTOS_VT_CURRENTSENSE_COMPONENT* handle)
-{
-    
-    vt_currentsense_object_sensor_recalibrate(&(handle->cs_object));
-    
-    return (eAzureIoTSuccess);
-}
 
 static AzureIoTResult_t FreeRTOS_vt_currentsense_fingerprint_template_property(FreeRTOS_VT_CURRENTSENSE_COMPONENT* handle,
 AzureIoTHubClient_t* xAzureIoTHubClient,
@@ -795,15 +787,6 @@ AzureIoTResult_t FreeRTOS_vt_currentsense_process_command(FreeRTOS_VT_CURRENTSEN
             (!(strncmp((CHAR*)pnp_command_name_ptr, (CHAR*)command_reset_fingerprint, pnp_command_name_length)))) == 1)
     {   
         xResult = (reset_reference_currentsense(handle) != eAzureIoTSuccess) ? eAzureIoTErrorFailed : eAzureIoTSuccess;
-
-    }
-
-    // Command 2 : Retrain Fingerprint
-    else if (((pnp_command_name_length == (sizeof(command_retrain_fingerprint) - 1)) &&
-                 (!(strncmp((CHAR*)pnp_command_name_ptr, (CHAR*)command_retrain_fingerprint, pnp_command_name_length)))) == 1)
-    {
-        xResult = (retrain_reference_currentsense(handle) != eAzureIoTSuccess) ? eAzureIoTErrorFailed : eAzureIoTSuccess;
-        //printf("Retrain_refernce_fallcurve \n");
 
     }
 

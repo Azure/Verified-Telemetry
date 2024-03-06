@@ -22,16 +22,6 @@ static VT_VOID test_vt_currentsense_object_sensor_calibrate(VT_VOID** state)
     assert_int_equal(cs_object.mode, VT_MODE_CALIBRATE);
 }
 
-// vt_currentsense_object_sensor_recalibrate()
-static VT_VOID test_vt_currentsense_object_sensor_recalibrate(VT_VOID** state)
-{
-    VT_CURRENTSENSE_OBJECT cs_object;
-
-    cs_object.mode = 0x00;
-    vt_currentsense_object_sensor_recalibrate(&cs_object);
-    assert_int_equal(cs_object.mode, VT_MODE_RECALIBRATE);
-}
-
 // vt_currentsense_object_sensor_fetch_status()
 static VT_VOID test_vt_currentsense_object_sensor_fetch_status(VT_VOID** state)
 {
@@ -50,7 +40,6 @@ VT_INT test_vt_cs_object_sensor()
 {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_vt_currentsense_object_sensor_calibrate),
-        cmocka_unit_test(test_vt_currentsense_object_sensor_recalibrate),
         cmocka_unit_test(test_vt_currentsense_object_sensor_fetch_status),
     };
 

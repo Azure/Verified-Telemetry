@@ -24,7 +24,6 @@
 #define LOCAL_BUFFER_SIZE 64
 
 static const CHAR command_reset_fingerprint[]   = "setResetFingerprintTemplate";
-static const CHAR command_retrain_fingerprint[] = "retrainFingerprintTemplate";
 static uint8_t ucPropertyPayloadBuffer[256];
 
 static const CHAR telemetry_name_telemetry_status[]     = "telemetryStatus";
@@ -78,14 +77,6 @@ static AzureIoTResult_t reset_refernce_fallcurve(FreeRTOS_VT_FALLCURVE_COMPONENT
 {
     uint8_t confidence_metric;
     AzureIoTResult_t status            = vt_fallcurve_object_sensor_calibrate(&(handle->fc_object), &confidence_metric);
-    handle->template_confidence_metric = confidence_metric;
-    return (status);
-}
-
-static AzureIoTResult_t retrain_refernce_fallcurve(FreeRTOS_VT_FALLCURVE_COMPONENT* handle)
-{
-    uint8_t confidence_metric;
-    AzureIoTResult_t status            = vt_fallcurve_object_sensor_recalibrate(&(handle->fc_object), &confidence_metric);
     handle->template_confidence_metric = confidence_metric;
     return (status);
 }
@@ -491,22 +482,6 @@ AzureIoTResult_t FreeRTOS_vt_fallcurve_process_command(FreeRTOS_VT_FALLCURVE_COM
     {
         xResult = (reset_refernce_fallcurve(handle) != eAzureIoTSuccess) ? eAzureIoTErrorFailed : eAzureIoTSuccess;
         printf("reset_refernce_fallcurve \n");
-        if (hub_store_all_db(handle, xAzureIoTHubClient))
-        {
-            VTLogError("Failed to update db in cloud\r\n");
-        }
-        if (FreeRTOS_vt_fallcurve_fingerprint_template_confidence_metric_property(handle, xAzureIoTHubClient))
-        {
-            VTLogError("Failed to update Fingerprint Template Confidence Metric\r\n");
-        }
-    }
-
-    // Command 2 : Retrain Fingerprint
-    else if (((pnp_command_name_length == (sizeof(command_retrain_fingerprint) - 1)) &&
-                 (!(strncmp((CHAR*)pnp_command_name_ptr, (CHAR*)command_retrain_fingerprint, pnp_command_name_length)))) == 1)
-    {
-        xResult = (retrain_refernce_fallcurve(handle) != eAzureIoTSuccess) ? eAzureIoTErrorFailed : eAzureIoTSuccess;
-        printf("Retrain_refernce_fallcurve \n");
         if (hub_store_all_db(handle, xAzureIoTHubClient))
         {
             VTLogError("Failed to update db in cloud\r\n");
